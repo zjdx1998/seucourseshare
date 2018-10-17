@@ -1,0 +1,134 @@
+% ---------------------------------------------------------------
+% Article Class (This is a LaTeX2e document)  ********************
+% ----------------------------------------------------------------
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage{amsmath,amsthm}
+\usepackage{amsfonts}
+\usepackage{algorithm} %//format of the algorithm
+\usepackage{algorithmic} %//format of the algorithm
+\usepackage{xeCJK}
+\usepackage{fontspec}
+\usepackage{listings}
+\lstset{language=C++,
+                basicstyle=\ttfamily,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{black}\ttfamily,
+                breaklines=true, %对过长的代码自动换行
+                breakautoindent=true,%
+				breakindent=4em, %
+				numbers=left,
+				escapeinside=``,
+                morecomment=[l][\color{magenta}]{\#}                
+}
+\setCJKmainfont{SimSun}
+\setCJKmonofont{SimSun}
+\setmainfont{Times New Roman}
+
+% THEOREMS -------------------------------------------------------
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\theoremstyle{remark}
+\newtheorem{rem}[thm]{Remark}
+\numberwithin{equation}{section}
+% ----------------------------------------------------------------
+\begin{document}
+
+\title{第五次作业}%
+\author{余泽晨}%
+\date{\today}
+\maketitle
+
+
+%\begin{abstract}
+%这是算法作业的模板
+%\end{abstract}
+
+% ----------------------------------------------------------------
+\section{5-1}
+算法StackKnapSack实施对子集树的栈式分支限界法搜索.其中假定各物品依其单位重量从大到小排好序.相应的排序过程可在算法的预处理阶段完成.
+
+算法中E是当前扩展节点,cw是该节点相应的重量,cp是相应的价值,up是价值上界.算法的while循环不断扩展节点.在while循环内部,算法首先检查当前扩展节点的左儿子节点的可行性.如果该节点是可行节点,则将它加入子集树和活节点栈中.当前扩展节点的右儿子节点一定是可行节点,仅当该节点满足上界约束时,将它加入子集树和活节点栈中.
+
+每次搜索完当前扩展节点时,取下一扩展节点,将下一扩展节点从活节点栈中删除,当搜索完当前扩展节点且活节点栈为空时,结束while循环,返回最大价值.
+\begin{algorithm}[H]
+\caption{Part 1}
+\textbf{Input:}  \\
+\textbf{Output:} 最大价值$bestp$. \\
+\begin{lstlisting}
+template<class Tw, class Tp>
+Type Knap<Tw, Tp>::StackKnapSack() {
+//栈式分支限界法,返回最大价值
+	//定义活节点栈的容量为1000
+	H = new stack<HeapNode<Tp, Tw>>(1000);
+	//初始化
+	int i = 1;
+	E = 0;
+	cw = cp = 0;
+	Tp bestp = 0;//当前最优值
+	Tp up = Bound(1);//价值上界
+	//搜索子集空间树
+	while (true) {
+		//检查当前扩展节点的左儿子节点
+		Tw wt = cw + w[i];
+		if (wt <= c) {
+		//左儿子为可行节点
+			if (cp + p[i] > bestp)
+				bestp = cp + p[i];
+			AddNode(up,cp + p[i],cw+w[i],true,i + 1);
+		}
+		up = Bound(i + 1);
+		//检查当前扩展节点的右儿子节点
+		if (up >= bestp)//右子树可能含有最优解
+			AddNode(up,cp,cw,false,i+1);
+		//检查活节点栈是否为空
+		if (H->Empty())return bestp;
+		//取下一扩展节点
+		HeapNode<Tp, Tw> N;
+		N = H->Pop();
+		E = N.ptr;
+		cw = N.weight;
+		cp = N.profit;
+		up = N.uprofit;
+		i = N.level;
+	}
+}
+\end{lstlisting}
+\end{algorithm}
+AddNode将新节点加入子集树和活节点栈中
+\begin{algorithm}[H]
+\caption{Part 2}
+\textbf{Input:} 价值上界$up$,当前价值$cp$,当前重量$cw$,左儿子节点标志$ch$,结点层数$lev$. \\
+\textbf{Output:}  \\
+\begin{lstlisting}
+template<class Tp, class Tw>
+void Knap<T>::AddNode(Tp up, Tp cp, Tw cw, bool ch, int lev) {
+//将新节点加入子集树和活节点栈中
+	bbnode* b = new bbnode;
+	b->parent = E;
+	b->Lchild = ch;
+	HeapNode<Tp, Tw> N;
+	N.uprofit = up;
+	N.profit = cp;
+	N.weight = cw;
+	N.level = lev;
+	N.ptr = b;
+	if (lev <= n)
+		H->Push(N);
+}
+\end{lstlisting}
+\end{algorithm}
+
+栈式分支限界法与回溯法的主要区别在于对当前的扩展节点的扩展方式不同.
+
+在栈式分支限界法中,每个活节点只有一次机会成为扩展节点,将儿子节点中的所有可能包含最优解的可行解加入活节点栈中,然后从活节点栈中取下一扩展节点,重复上一步骤,直到活节点栈为空为止.
+
+在回溯法中,每个活结点可能有不止一次的机会成为扩展节点,每次成为扩展节点之后,按照一定顺序检索儿子节点,找到一个可能包含最优解的可行解之后,将这个儿子节点作为下一扩展节点,重复上一步骤,直到整个解空间树遍历一遍为止(剪枝包含的解也算遍历过).
+
+\end{document}
+% ----------------------------------------------------------------

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Player</string>
+    <string name="hello">hello</string>
+    <string name="str_err_nosd">No SD Card</string>
+    <string name="str_pause">pause</string>
+    <string name="str_play">play</string>
+    <string name="str_stop">stop</string>
+</resources>

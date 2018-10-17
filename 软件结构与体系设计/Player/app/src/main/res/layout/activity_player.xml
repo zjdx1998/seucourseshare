@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:gravity="center"
+    android:background="#000000"
+    tools:context=".PlayerActivity">
+
+    <VideoView
+        android:id="@+id/videoPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
+<!--<LinearLayout-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="fill_parent"-->
+    <!--android:weightSum="1">-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/myTextView1"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="0.04"-->
+        <!--android:text="@string/hello"-->
+        <!--android:textColor="@android:color/holo_blue_bright"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<SurfaceView-->
+        <!--android:id="@+id/surfaceView1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="0.93"></SurfaceView>-->
+
+    <!--<SeekBar android:id="@+id/seekBar" android:layout_height="wrap_content" android:layout_width="fill_parent" />-->
+
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="95dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:weightSum="1">-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/play"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:src="@drawable/play" />-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/pause"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
+            <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:src="@drawable/pause" />-->
+
+        <!--&lt;!&ndash;<ImageButton android:id="@+id/reset"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:src="@drawable/reset"&ndash;&gt;-->
+        <!--/>-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/stop"-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:src="@drawable/stop" />-->
+    <!--</LinearLayout>-->
+<!--</LinearLayout>-->
+
