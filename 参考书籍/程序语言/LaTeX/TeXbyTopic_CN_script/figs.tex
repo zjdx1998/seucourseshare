@@ -1,0 +1,32 @@
+\def\figfont{\footnotesize\sl}
+\endinput
+
+\showboxbreadth=20 \showboxdepth=6 \output{}
+\overfullrule0pt
+
+%\def\figure#1{\leavevmode
+%    \vbox{\hsize=12cm \parindent=0pt \offinterlineskip #1}}
+
+\expandafter\ifx\csname figtest\endcsname\relax 
+
+\begingroup\globaldefs=1 \let\figtest\noindent
+
+\newdimen\fbh \fbh=60pt % dimension for easy scaling:
+\newdimen\fbw \fbw=60pt % height and width of character box
+
+\newdimen\dh \newdimen\dw % height and width of current character box
+\newdimen\lh % height of previous character box
+\newdimen\lw \lw=.4pt % line weight, instead of default .4pt
+
+\endgroup\fi
+
+\def\hdotfill{\noindent
+    \leaders\hbox{\vrule width 1pt height\lw 
+                  \kern4pt 
+                  \vrule width.5pt height\lw}\hfill\hbox{}
+    \par}
+\def\hlinefill{\noindent
+    \leaders\hbox{\vrule width 5.5pt height\lw         }\hfill\hbox{}
+    \par}
+\def\stippel{$\qquad\qquad\qquad\qquad$}
+\endinput

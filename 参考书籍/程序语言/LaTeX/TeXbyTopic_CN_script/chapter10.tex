@@ -1,0 +1,511 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{9}
+
+\begin{document}
+
+%\chapter{Grouping}\label{group}
+\chapter{编组}\label{group}
+
+%\TeX\ has a grouping mechanism that is able to confine most
+%changes to a~particular locality. This chapter explains
+%what sort of actions can be local, and how groups are formed.
+\TeX\ 提供的编组机制可以将大多数改变限制在局部范围内。
+此章解释哪些操作是局部的，以及编组是如何形成的。
+
+%\label{cschap:bgroup}\label{cschap:egroup}\label{cschap:begingroup}\label{cschap:endgroup}\label{cschap:aftergroup}\label{cschap:global}\label{cschap:globaldefs}
+%\begin{inventory}
+%\item [\cs{bgroup}] 
+%Implicit beginning of group character.
+%\item [\cs{egroup}] 
+%Implicit end of group character.
+%\item [\cs{begingroup}] 
+%Open a group that must be closed with \cs{endgroup}.
+%\item [\cs{endgroup}] 
+%Close a group that was opened with \cs{begingroup}.
+%\item [\cs{aftergroup}] 
+%Save the next token for insertion after the current group ends.
+%\item [\cs{global}] 
+%Make assignments, macro definitions, and arithmetic global.
+%\item [\cs{globaldefs}] 
+%Parameter for overriding \cs{global} prefixes.
+%\IniTeX\ default:~0.
+%\end{inventory}
+\label{cschap:bgroup}\label{cschap:egroup}\label{cschap:begingroup}\label{cschap:endgroup}%
+\label{cschap:aftergroup}\label{cschap:global}\label{cschap:globaldefs}
+\begin{inventory}
+\item [\cs{bgroup}] 
+隐式的编组开始符。
+\item [\cs{egroup}] 
+隐式的编组结束符。
+\item [\cs{begingroup}] 
+开始一个必须用 \cs{endgroup} 结束的编组。
+\item [\cs{endgroup}] 
+结束一个用\cs{begingroup}开始的编组。
+\item [\cs{aftergroup}] 
+保存下一个记号，并在当前编组结束后插入它。
+\item [\cs{global}] 
+使得赋值，宏定义和算术运算是全局的。
+\item [\cs{globaldefs}] 
+用于覆盖 \cs{global} 前缀的参数。
+\IniTeX\ 默认值：0。
+\end{inventory}
+
+%%\point The grouping mechanism
+%\section{The grouping mechanism}
+%\point The grouping mechanism
+\section{编组机制}
+
+%A group is a sequence of tokens starting with a
+%`beginning of group' token,
+%and ending with an `end of group'
+%token, and in which all such tokens are properly balanced. 
+一个编组是一串记号，以`组开始'记号开头，以`组结束'记号结尾，
+而且这两种记号在其中是配对的。
+
+%The \indexterm{grouping} mechanism of \TeX\ is not the same as
+%the block structured `scoping'
+%of ordinary programming languages.
+%Most languages with block structure are only able  to have
+%local definitions. \TeX's grouping mechanism is stronger: 
+%most assignments made inside a group
+%are local to that group unless explicitly indicated otherwise,
+%and outside the group old values are restored.
+\TeX\ 的\indexterm{编组}机制与普通编程语言的块作用域不同。
+大多数语言的块结构中只能有局部定义。
+\TeX\ 的编组机制更加强大：编组中的大多数赋值是局部的，
+在离开该编组后旧的值将被还原，但可以显式指明全局赋值。
+
+%An example of local definitions
+%\begin{verbatim}
+%{\def\a{b}}\a
+%\end{verbatim}
+%gives an `undefined control sequence'
+%message because \cs{a} is only defined inside the group.
+%Similarly, the code
+%\begin{verbatim}
+%\count0=1 {\count0=2 } \showthe\count0
+%\end{verbatim}
+%will display the value~1; the assignment made inside the group
+%is undone at the end of the group.
+下面局部定义的例子
+\begin{verbatim}
+{\def\a{b}}\a
+\end{verbatim}
+将给出 `undefined control sequence' 的错误，
+因为 \cs{a} 是在编组内部定义的，类似地，下列代码
+\begin{verbatim}
+\count0=1 {\count0=2 } \showthe\count0
+\end{verbatim}
+显示的值为~1；编组内的赋值在该编组结束后将被撤销。
+
+%Bookkeeping of values that are to be restored outside the group
+%is done through the mechanism
+%of the \indexterm{save stack}. Overflow of the save stack is treated
+%in Chapter~\ref{error}. The save stack is also used for
+%a few other purposes: in calls such as \hbox{\verb>\hbox to 100pt{...}>}
+%the specification \hbox{\n{to 100pt}} is put on the save
+%stack before a new level of grouping is opened.
+对编组结束时要还原的值的记录是通过\indexterm{保存堆栈}的结构来实现的。
+保存堆栈的溢出问题在第~\ref{error}~章中介绍。
+这个保存堆栈还有另外几个用途：比如在调用 \hbox{\verb>\hbox to 100pt{...}>} 时，
+在开始新层级的编组之前，所指定的 \hbox{\n{to 100pt}} 将被放入保存堆栈中。
+
+%In order to prevent a lot of trouble with the save stack,
+%\IniTeX\ does not allow dumping a format inside a group.
+%The \cs{end} command is allowed to occur inside a group,
+%but \TeX\ will give a diagnostic message about this.
+为避免给保存堆栈造成各种麻烦，
+\IniTeX\ 不允许在编组内用 \cs{dump} 命令转储格式文件。
+\cs{end} 命令可以出现在编组内，但 \TeX\ 将对此给出一个诊断信息。
+
+%The \cs{aftergroup} control sequence saves a token for
+%insertion after the current group. Several tokens can be
+%set aside by this command, and they are inserted in the left-to-right
+%order in which they were stated.
+%This is treated in Chapter~\ref{expand}.
+控制系列 \cs{aftergroup} 保存一个记号，并在当前编组结束后插入它。
+此命令可以放置多个记号，这些记号将按出现的先后顺序被插入。
+此命令将在第~\ref{expand}~章中讨论.
+
+
+%%\point[global:assign] Local and global assignments
+%\section{Local and global assignments}
+%\index{assignment!global|(}
+%\index{assignment!local|(}
+%\label{global:assign}
+%\point[global:assign] Local and global assignments
+\section{局部和全局赋值}
+\index{assignment!global|(}
+\index{assignment!local|(}
+\label{global:assign}
+
+%An assignment or macro definition
+%is usually made global by prefixing it with \csidx{global},
+%but non-zero values of the \gr{integer parameter}
+%\csidx{globaldefs} override \cs{global}
+%specifications: if \cs{globaldefs} is positive every assignment
+%is implicitly prefixed with \cs{global}, and if
+%\cs{globaldefs} is negative, \cs{global} is
+%ignored. Ordinarily this parameter is zero.
+给赋值或宏定义加上 \csidx{global} 前缀，通常可让它们成为全局的，
+但 \gr{integer parameter} \csidx{globaldefs} 的非零值将覆盖\cs{global} 指定：
+如果 \cs{globaldefs} 为正数，每个赋值都被隐式地添加 \cs{global} 前缀，
+而如果 \cs{globaldefs} 为负数，\cs{global} 将会被忽略。
+通常这个参数的取值为零。
+
+%Some assignment are always global: the \gr{global assignment}s are
+%\begin{description}%\FlushRight:no
+%\item [\gr{font assignment}]
+%assignments involving \cs{fontdimen}, \cs{hyphenchar}, 
+%and \cs{skew\-char}.
+%\item [\gr{hyphenation assignment}]
+%\cs{hyphenation} and \cs{patterns} commands
+%(see Chapter~\ref{line:break}).
+%\item [\gr{box size assignment}]
+%altering box dimensions with \cs{ht}, \cs{dp}, and~\cs{wd}
+%(see Chapter~\ref{boxes}).
+%\item [\gr{interaction mode assignment}]
+%run modes for a \TeX\ job (see Chapter~\ref{run}).
+%\item [\gr{intimate assignment}]
+%assignments to a \gr{special integer} or \gr{special dimen};
+%see %Chapters \ref{number} and~\ref{glue}.
+%pages \pageref{special:int:list} and~\pageref{special:dimen:list}.
+%\end{description}
+有些赋值总是全局的：所有的 \gr{global assignment} 如下：
+\begin{description}%\FlushRight:no
+\item [\gr{font assignment}]
+\cs{fontdimen}、\cs{hyphenchar} 和 \cs{skew\-char} 的赋值。
+\item [\gr{hyphenation assignment}]
+\cs{hyphenation} 和 \cs{patterns} 命令（见第~\ref{line:break}~章）。
+\item [\gr{box size assignment}]
+用 \cs{ht}、\cs{dp} 和 \cs{wd} 修改盒子尺寸（见第~\ref{boxes}~章）。
+\item [\gr{interaction mode assignment}]
+\TeX\ 任务的运行模式（见第~\ref{run}~章）。
+\item [\gr{intimate assignment}]
+对 \gr{special integer} 或 \gr{special dimen} 的赋值；
+见 %Chapters \ref{number} and~\ref{glue}.
+第~\pageref{special:int:list} 和 \pageref{special:dimen:list} 页。
+\end{description}
+
+%\index{assignment!global|)}
+%\index{assignment!local|)}
+\index{assignment!global|)}
+\index{assignment!local|)}
+
+%\section{Group delimiters}
+\section{编组定界符}
+
+%The open and closing \indextermsub{group}{delimiters} can be character
+%tokens of category code~1\index{category!1} for `beginning of group'
+%and code~2\index{category!2} for `end of group'
+%(\indextermbus{explicit}{braces}), or control sequence tokens that are
+%\cs{let} to such characters (\indextermbus{implicit}{braces}), such as
+%the \cs{bgroup} and \cs{egroup} in plain \TeX.  Implicit and explicit
+%braces can match to delimit a group; see for instance the example in
+%section~\ref{sec:aftergroup}.
+\indextermsub{编组}{定界符}可以由类别码为 1 \index{category!1}的`组开始符'%
+和类别码为 2 \index{category!2}的`组结束符' 组成（\indextermbus{显式}{花括号}），
+或者用 \cs{let} 等价到这两类字符的控制序列组成（\indextermbus{隐式}{花括号}），
+正如 plain \TeX\ 中的 \cs{bgroup} 和 \cs{egroup}。
+隐式和显式花括号可以配对以定界一个编组；比如见第~\ref{sec:aftergroup}~节的例子。
+
+%Groups can also be delimited by \csidx{begingroup} and
+%\csidx{endgroup}. These two control sequences must
+%be used together: they cannot be matched with implicit
+%or explicit braces, nor can they function as the braces
+%surrounding, for instance, boxed material.
+编组也可以用 \csidx{begingroup} 和 \csidx{endgroup} 定界。
+这两个控制序列必须一起使用，它们不能与隐式或显式花括号配对，
+也不能像花括号那样用于围住盒内素材等。
+
+%Delimiting with \cs{begingroup} and \cs{endgroup} can
+%\label{begin:end:macros}%
+%provide a limited form of run-time error checking. 
+%In between these two group delimiters an excess
+%open or close brace would result in
+%\begin{verbatim}
+%\begingroup ... } ... \endgroup
+%\end{verbatim}
+%or
+%\begin{verbatim}
+%\begingroup ... { ... \endgroup
+%\end{verbatim}
+%In both cases \TeX\ gives an error message about improper
+%balancing. Using \cs{bgroup} and \cs{egroup} here would
+%make an error much harder to find, because of the incorrect
+%matching that would occur. This idea is used in the environment
+%macros of several formats.
+用 \cs{begingroup} 和 \cs{endgroup} 定界%
+\label{begin:end:macros}%
+可以提供一种有限的运行时错误检测。
+在这两个编组定界符之间一个多余的开或闭花括号将有
+\begin{verbatim}
+\begingroup ... } ... \endgroup
+\end{verbatim}
+或者
+\begin{verbatim}
+\begingroup ... { ... \endgroup
+\end{verbatim}
+的形式。对这两种情形 \TeX\ 都将给出括号不配对的错误信息。
+这里若改用 \cs{bgroup} 和 \cs{egroup} 将使得错误更加难以发现，
+因为出现了不正确的配对。这个想法在多种环境宏中用到。
+
+%The choice of the brace characters for the beginning and end of group
+%characters is not hard-wired in \TeX. It is arranged
+%\cstoidx bgroup\par\cstoidx egroup\par
+%like this in the plain format:
+%\begin{verbatim}
+%\catcode`\{=1 % left brace is begin-group character
+%\catcode`\}=2 % right brace is end-group character
+%\end{verbatim}
+%Implicit braces have also been defined in the plain format:
+%\begin{verbatim}
+%\let\bgroup={ \let\egroup=}
+%\end{verbatim}
+\TeX\ 并没有硬性规定花括号作为组开始和结束符。
+在 plain 格式中，它是类似这样编写的：
+\cstoidx bgroup\par\cstoidx egroup\par
+\begin{verbatim}
+\catcode`\{=1 % left brace is begin-group character
+\catcode`\}=2 % right brace is end-group character
+\end{verbatim}
+隐式花括号也在 plain 格式中定义：
+\begin{verbatim}
+\let\bgroup={ \let\egroup=}
+\end{verbatim}
+
+%Special cases are the following:
+%\begin{itemize} \item The replacement text of a macro must be enclosed
+%in  explicit beginning and end of group character tokens.
+%\item  The open and close braces for boxes, \cs{vadjust},
+%and \cs{insert} can be implicit. This makes it possible
+%to define, for instance
+%\begin{verbatim}
+%\def\openbox#1{\setbox#1=\hbox\bgroup}
+%\def\closebox#1{\egroup\box#1}
+%\openbox{15}Foo bar\closebox{15}
+%\end{verbatim}
+%\item The right-hand side of a token list assignment and the
+%argument of the commands \cs{write}, \cs{message}, \cs{errmessage}, 
+%\cs{uppercase}, \cs{lowercase}, 
+%\cs{special}, and \cs{mark} is a \gr{general text}, defined
+%as
+%\begin{Disp} \gr{general text} $\longrightarrow$ \gr{filler}\lb
+%      \gr{balanced text}\gr{right brace}\end{Disp}
+%meaning that the left brace can be implicit, but the closing
+%right brace must be an explicit character token with category
+%code~2\index{category!2}.
+%\end{itemize}
+下面列出一些特殊情形：
+\begin{itemize}
+\item 宏的替换文本必须用显式组开始符和组结束符围住。
+\item 盒子、\cs{vadjust} 和 \cs{insert} 的开始和结束花括号可以是隐式的。
+这样就可能像下面这样定义
+\begin{verbatim}
+\def\openbox#1{\setbox#1=\hbox\bgroup}
+\def\closebox#1{\egroup\box#1}
+\openbox{15}Foo bar\closebox{15}
+\end{verbatim}
+\item 记号列赋值的右边，以及命令 \cs{write}、\cs{message}、\cs{errmessage}、 
+\cs{uppercase}、\cs{lowercase}、\cs{special} 和 \cs{mark} 的参量是
+\gr{general text}，定义为
+\begin{Disp} \gr{general text} $\longrightarrow$ \gr{filler}\lb
+      \gr{balanced text}\gr{right brace}\end{Disp}
+这意味着左花括号可以是隐式的，但右花括号必须是类别码 2 \index{category!2}
+的显式字符记号。
+\end{itemize}
+
+%In cases where an implicit left brace suffices, and where
+%expansion is not explicitly inhibited, \TeX\ will
+%expand tokens until a left brace is encountered. This
+%is the basis for such constructs as
+%\verb=\uppercase\expandafter{\romannumeral80}=,
+%which in this unexpanded form do not adhere to the
+%syntax. If the first unexpandable token is not a left
+%brace \TeX\ gives an error message.
+在可以使用隐式花括号的情形中，如果展开没被显式禁止，
+\TeX\ 将展开记号直到遇到一个左花括号。
+这是 \verb=\uppercase\expandafter{\romannumeral80}= 这种写法的原理，
+在未展开之前这样的写法并不符合语法。
+如果第一个不可展开的记号不是一个左花括号，
+\TeX\ 将给出一个错误信息。
+
+%The grammar of \TeX\ (see Chapter~\ref{gramm})  uses
+%\gr{left brace} and \gr{right brace} for explicit
+%characters, that is, character tokens,
+%and \n{\lb} and~\n{\rb} 
+%for possibly implicit characters,
+%\altt
+%that is, control sequences that have been \cs{let} to such
+%explicit characters.
+在 \TeX\ 的文法（见第~\ref{gramm}~章）中，
+用 \gr{left brace} 和 \gr{right brace} 表示显式字符，即字符记号；
+而用 \n{\lb} 和 \n{\rb} 表示可能为隐式的字符，
+即已经用 \cs{let} 等价到这些显式字符的控制序列。
+
+%\section{More about braces}
+%\index{braces|(}
+\section{花括号进阶}
+\index{braces|(}
+
+%\subsection{Brace counters}
+\subsection{花括号计数器}
+
+%\TeX\ has two counters for keeping  track of grouping levels:
+%the {\it master counter} and the {\it balance counter}.
+%Both of these counters are syntactic counters: they count the
+%explicit brace character tokens, but are not affected by implicit
+%braces (such as \cs{bgroup}) that are semantically equivalent
+%to an explicit brace.
+\TeX\ 有两个计数器用于记录编组的层级：{\it 主计数器}和{\it 平衡计数器}。
+%\footnote{译注：见 The \TeX Book 附录 D 第 5 节。}
+这两个计数器都是语法计数器：它们计算显式花括号记号的个数，
+但不受语义上与显式花括号等价的隐式花括号（比如 \cs{bgroup}）的影响。
+
+%The balance counter handles braces in all cases except in
+%alignment. Its workings are intuitively clear: it goes up
+%by one for every opening and down for every closing
+%brace that is not being skipped. Thus
+%\begin{verbatim}
+%\iffalse{\fi
+%\end{verbatim}
+%increases the balance counter if
+%this statement is merely scanned (for instance if it
+%appears in a macro definition text); if this statement
+%is executed the brace is skipped, so there is no effect on
+%the balance counter.
+平衡计数器处理除了阵列之外的所有情形。其工作原理直观而清晰：
+对每个左花括号增加一，对每个右花括号减少一，
+只要该花括号不被跳过。因此对于下面的语句
+\begin{verbatim}
+\iffalse{\fi
+\end{verbatim}
+在它仅仅被扫描时（比如它出现在宏定义文本中）将增加平衡计数器的值；
+而在它被执行时花括号将被跳过，从而不会改变平衡计数器的值。
+
+%The master counter is more tricky;
+%it is used in alignments instead of the balance counter.
+%This counter records all braces, even when they are skipped
+%such as in \verb>\iffalse{\fi>.
+%For this counter uncounted skipped braces are still possible:
+%the alphabetic constants \n{`\lb} and \n{`\rb} have
+%no effect on this counter when they are
+%use by the execution processor as a~\gr{number};
+%they do affect this counter when they are seen by the 
+%input processor (which merely sees characters, and not
+%the context).
+主计数器更加复杂；在阵列中只使用主计数器，不使用平衡计数器。
+这个计数器记录所有花括号，即使在被跳过时，像 \verb>\iffalse{\fi> 这种。
+对这个计数器，未计数的已跳过花括号还是可能的：
+当字母表常数 \n{`\lb} 和 \n{`\rb} 被执行处理器作为 \gr{number} 使用时，
+不影响这个计数器；当它们被输入处理器查看（仅查看字符，不含上下文）时，
+确实会影响这个计数器。
+
+%%\spoint The brace as a token
+%\subsection{The brace as a token}
+%\spoint The brace as a token
+\subsection{花括号作为记号}
+
+%Explicit braces are character tokens, and as such they are
+%unexpandable. This implies that they survive until the
+%last stages of \TeX\ processing. For example,
+%\begin{verbatim}
+%\count255=1{2}
+%\end{verbatim}
+%will assign~1 to \cs{count255},
+%and print~`2', because the
+%opening brace functions as a delimiter for the number~1.
+%Similarly
+%\begin{verbatim}
+%f{f}
+%\end{verbatim}
+%will prevent \TeX\ from forming
+%an `\hbox{ff}' ligature.
+显式花扩号是字符记号，而作为字符记号它们是不可展开的。
+这表示它们直到 \TeX\ 处理的最后一个阶段还是存在的。例如，
+\begin{verbatim}
+\count255=1{2}
+\end{verbatim}
+将给 \cs{count255} 赋值~1，并排印~`2'，
+因为左花括号充当了数字 1 的定界符。类似地，
+\begin{verbatim}
+f{f}
+\end{verbatim}
+将阻止 \TeX\ 形成 `\hbox{ff}' 连写。
+
+%From the fact that braces are unexpandable,
+%it follows that their nesting is independent
+%of the nesting of conditionals. For instance
+%\begin{verbatim}
+%\iftrue{\else}\fi
+%\end{verbatim}
+%will give an open brace,
+%as conditionals are handled by expansion. The closing
+%brace is simply skipped as part of the \gr{false text};
+%any consequences it has for grouping only come into
+%play in a later stage of \TeX\ processing.
+从花括号不可展开的事实，可以得知它们的嵌套与条件语句的嵌套相互独立。
+比如
+\begin{verbatim}
+\iftrue{\else}\fi
+\end{verbatim}
+将给出左花括号，因为条件语句是在展开时处理的。
+右花括号作为 \gr{false text} 的一部分被直接跳过了；
+这对编组的影响在 \TeX\ 处理的后续阶段才显现出来。
+
+%Undelimited macro arguments are either single tokens
+%or groups of tokens enclosed in explicit braces.
+%Thus it is not possible for an explicit open or close brace
+%to be a macro argument. However, braces can be assigned
+%with \cs{let}, for instance as in
+%\begin{verbatim}
+%\let\bgroup={
+%\end{verbatim}
+%This is used in the plain \cs{footnote} macro
+%(see page~\pageref{footnote:ex}).
+非定界的宏参量或者是单个记号，或者是一个用显式花括号围住的编组。
+因此，显式的左或右花括号不能作为宏参量。
+然而，花括号可以用于 \cs{let} 赋值，就像这样
+\begin{verbatim}
+\let\bgroup={
+\end{verbatim}
+这在 plain \TeX\ 的 \cs{footnote} 宏（见第~\pageref{footnote:ex}~页）中用到。
+
+%%\spoint \csc{\char 123} and \csc{\char 125}
+%\subsection{Open and closing brace control symbols}
+%% \csc{\char 123} and \csc{\char 125}}
+%\spoint \csc{\char 123} and \csc{\char 125}
+\subsection{花括号控制符号}
+% \csc{\char 123} and \csc{\char 125}}
+
+%The control sequences \verb-\{- and \verb-\}- do not really belong
+%\cstoidx\char123\par\cstoidx\char125\par
+%in this chapter,  not being concerned with grouping.
+%They have been defined with \cs{let} as synonyms of
+%\cs{lbrace} and \cs{rbrace} respectively,
+%and these control sequences are \cs{delimiter} instructions
+%(see Chapter~\ref{mathchar}).
+控制序列 \verb-\{- 和 \verb-\}- 并不属于这一章，
+\cstoidx\char123\par\cstoidx\char125\par
+也与编组无关。它们被用 \cs{let} 分别定义为
+\cs{lbrace} 和 \cs{rbrace} 的别名，
+而这两个控制序列为 \cs{delimiter} 指令（见第~\ref{mathchar}~章）。
+
+%The Computer Modern Roman font has no braces, but there are
+%braces in the typewriter font, and for mathematics 
+%there are braces of different sizes \ldash and extendable ones \rdash in
+%the extension font.
+计算机现代罗马字体中不包含花括号，但打字机字体中包含；
+而对于数学公式，在扩展字体中有不同尺寸的\ldash 且可伸展的\rdash 花括号。
+
+%\index{braces|)}
+%\endofchapter
+%%%%% end of input file [group]
+\index{braces|)}
+\endofchapter
+%%%% end of input file [group]
+
+\end{document}

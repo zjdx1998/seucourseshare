@@ -1,0 +1,578 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{34}
+
+\begin{document}
+
+%\chapter{Errors, Catastrophes,  and Help}\label{error}
+\chapter{Errors, Catastrophes,  and Help}\label{error}
+
+%When \TeX\ is running, various errors can occur.
+%This chapter treats how errors in the input are displayed,
+%and what sort of overflow of internal data structures
+%of \TeX\ can occur.
+When \TeX\ is running, various errors can occur.
+This chapter treats how errors in the input are displayed,
+and what sort of overflow of internal data structures
+of \TeX\ can occur.
+
+%\label{cschap:errorcontextlines}\label{cschap:errmessage}\label{cschap:errhelp}
+%\begin{inventory}
+%\item [\cs{errorcontextlines}] 
+%      (\TeX3 only)
+%      Number of additional context lines shown in error messages.
+\label{cschap:errorcontextlines}\label{cschap:errmessage}\label{cschap:errhelp}
+\begin{inventory}
+\item [\cs{errorcontextlines}] 
+      (\TeX3 only)
+      Number of additional context lines shown in error messages.
+
+%\item [\cs{errmessage}] 
+%      Report an error, giving the parameter of this command as message.
+\item [\cs{errmessage}] 
+      Report an error, giving the parameter of this command as message.
+
+%\item [\cs{errhelp}] 
+%      Tokens that will be displayed if the user 
+%      asks further help after an \cs{errmessage}.
+\item [\cs{errhelp}] 
+      Tokens that will be displayed if the user 
+      asks further help after an \cs{errmessage}.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point Error messages
+%\section{Error messages}
+%\point Error messages
+\section{Error messages}
+
+%When \TeX\ is running in \cs{errorstopmode} (which it usually is;
+%see Chapter~\ref{run} for the other running modes),
+%errors occurring are reported on the user terminal, and \TeX\
+%asks the user for further instructions.
+%Errors can occur either because of some internal condition
+%of \TeX, or because a macro has issued an \csidx{errmessage}
+%command.
+When \TeX\ is running in \cs{errorstopmode} (which it usually is;
+see Chapter~\ref{run} for the other running modes),
+errors occurring are reported on the user terminal, and \TeX\
+asks the user for further instructions.
+Errors can occur either because of some internal condition
+of \TeX, or because a macro has issued an \csidx{errmessage}
+command.
+
+%If an error occurs \TeX\ shows the input 
+%line 
+%on which the error occurred. If the offending command was
+%not on that line but, for instance, in a macro that was
+%called \ldash possibly indirectly \rdash  from that line,
+%the line of that command is also shown.
+%If the offending command was indirectly called,
+%an additional \csidx{errorcontextlines} number of lines
+%is shown with the preceding macro calls.
+If an error occurs \TeX\ shows the input 
+line 
+on which the error occurred. If the offending command was
+not on that line but, for instance, in a macro that was
+called \ldash possibly indirectly \rdash  from that line,
+the line of that command is also shown.
+If the offending command was indirectly called,
+an additional \csidx{errorcontextlines} number of lines
+is shown with the preceding macro calls.
+
+%A~value of \cs{errorcontextlines}${}=0$ causes \n{...}
+%to be printed as the sole indication that there is a context.
+%Negative values inhibit even this.
+A~value of \cs{errorcontextlines}${}=0$ causes \n{...}
+to be printed as the sole indication that there is a context.
+Negative values inhibit even this.
+
+%For each macro in the sequence that leads to the offending
+%command,
+%\TeX\ attempts to display some
+%preceding and some following tokens.
+%First one line is displayed ending with
+%the \ldash indirectly \rdash  offending command; then, one line lower
+%some following tokens are given. 
+For each macro in the sequence that leads to the offending
+command,
+\TeX\ attempts to display some
+preceding and some following tokens.
+First one line is displayed ending with
+the \ldash indirectly \rdash  offending command; then, one line lower
+some following tokens are given. 
+
+%\begin{example}
+%\begin{verbatim}
+%This paragraph ends \vship1cm with a skip.
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%! Undefined control sequence.
+%l.1 This paragraph ends \vship
+%                              1cm with a skip.
+%\end{verbatim}
+%\end{example}
+\begin{example}
+\begin{verbatim}
+This paragraph ends \vship1cm with a skip.
+\end{verbatim}
+gives
+\begin{verbatim}
+! Undefined control sequence.
+l.1 This paragraph ends \vship
+                              1cm with a skip.
+\end{verbatim}
+\end{example}
+
+%If \TeX\ is not running in some non-stop mode\label{interaction},
+%the user is given the chance to do some
+%\indexterm{error patching}, or to
+%ask for further information. In general the following
+%options are available:
+%\begin{description}\item [\gr{return}]
+%\TeX\ will continue processing. If the error was something
+%innocent that \TeX\ could either ignore or patch itself,
+%this is the easy way out.
+%\item [\n h]
+%Give further details about the error.
+%If the error was caused by an \cs{err\-message} command,
+%the \csidx{errhelp} tokens will be displayed here.
+%\item [\n i]
+%Insert. The user can insert some material. For example,
+%if a control sequence is misspelled, the correct command can
+%sometimes be inserted, as
+%\begin{verbatim}
+%i\vskip
+%\end{verbatim}
+%for the above
+%example. Also, this is an opportunity for inserting
+%\cs{show} commands to inspect \TeX's internal state.
+%However, if \TeX\ is in the middle of
+%scanning something complicated,
+%such commands will not be executed, or will even
+%add to the confusion.
+%\item [\n s]
+%    (\cs{scrollmode})
+%Scroll further errors, but display the messages. 
+%\TeX\ will patch any further errors.
+%This is a handy option, for instance if the error occurs
+%in an alignment, because the number of subsequent errors tends
+%to be rather large.
+%\item [\n r]
+%    (\cs{nonstopmode})
+%Run without stopping. \TeX\ will never stop for user interaction.
+%\item [\n q]
+%    (\cs{batchmode})
+%Quiet running. \TeX\ will never stop for user interaction,
+%and does not give any more terminal output.
+%\item [\n x]
+%Exit. Abort this run of \TeX.
+%\item [\n e]
+%Edit. This option is not available on all \TeX\ system.
+%If it is, the run of \TeX\ is aborted, and an editor is
+%started, opening with the input file, maybe even 
+%on the offending line.
+%\end{description}
+If \TeX\ is not running in some non-stop mode\label{interaction},
+the user is given the chance to do some
+\indexterm{error patching}, or to
+ask for further information. In general the following
+options are available:
+\begin{description}\item [\gr{return}]
+\TeX\ will continue processing. If the error was something
+innocent that \TeX\ could either ignore or patch itself,
+this is the easy way out.
+\item [\n h]
+Give further details about the error.
+If the error was caused by an \cs{err\-message} command,
+the \csidx{errhelp} tokens will be displayed here.
+\item [\n i]
+Insert. The user can insert some material. For example,
+if a control sequence is misspelled, the correct command can
+sometimes be inserted, as
+\begin{verbatim}
+i\vskip
+\end{verbatim}
+for the above
+example. Also, this is an opportunity for inserting
+\cs{show} commands to inspect \TeX's internal state.
+However, if \TeX\ is in the middle of
+scanning something complicated,
+such commands will not be executed, or will even
+add to the confusion.
+\item [\n s]
+    (\cs{scrollmode})
+Scroll further errors, but display the messages. 
+\TeX\ will patch any further errors.
+This is a handy option, for instance if the error occurs
+in an alignment, because the number of subsequent errors tends
+to be rather large.
+\item [\n r]
+    (\cs{nonstopmode})
+Run without stopping. \TeX\ will never stop for user interaction.
+\item [\n q]
+    (\cs{batchmode})
+Quiet running. \TeX\ will never stop for user interaction,
+and does not give any more terminal output.
+\item [\n x]
+Exit. Abort this run of \TeX.
+\item [\n e]
+Edit. This option is not available on all \TeX\ system.
+If it is, the run of \TeX\ is aborted, and an editor is
+started, opening with the input file, maybe even 
+on the offending line.
+\end{description}
+
+
+%%\point Overflow errors
+%\section{Overflow errors}
+%\index{overflow errors|(}
+%\point Overflow errors
+\section{Overflow errors}
+\index{overflow errors|(}
+
+%Harsh reality imposes some restrictions on how elaborate
+%\TeX's workings can get. Some restrictions are imposed by
+%compile-time constants, and are therefore fairly loose, but
+%some depend strongly on the actual computer implementation.
+Harsh reality imposes some restrictions on how elaborate
+\TeX's workings can get. Some restrictions are imposed by
+compile-time constants, and are therefore fairly loose, but
+some depend strongly on the actual computer implementation.
+
+%Here follows the list of all categories of overflow that
+%prompt \TeX\ to report `Capacity exceeded'.
+%Most bounds involved are (determined by) compile-time
+%constants; their values given here in parentheses are those
+%used in the source listing of \TeX\ in~\cite{Knuth:TeXbook}.
+%Actual values may differ, and probably will. Remember
+%that \TeX\ was developed in the good old days when even
+%big computers were fairly small.
+Here follows the list of all categories of overflow that
+prompt \TeX\ to report `Capacity exceeded'.
+Most bounds involved are (determined by) compile-time
+constants; their values given here in parentheses are those
+used in the source listing of \TeX\ in~\cite{Knuth:TeXbook}.
+Actual values may differ, and probably will. Remember
+that \TeX\ was developed in the good old days when even
+big computers were fairly small.
+
+%%\spoint Buffer size {\rm(500)}
+%\subsection{Buffer size (500)}
+%\spoint Buffer size {\rm(500)}
+\subsection{Buffer size (500)}
+
+%Current lines of all files that are open are kept in
+%\TeX's input buffer, as are control sequence names
+%that are being built with \verb-\csname...\endcsname-.
+Current lines of all files that are open are kept in
+\TeX's input buffer, as are control sequence names
+that are being built with \verb-\csname...\endcsname-.
+
+%%\spoint Exception dictionary {\rm(307)}
+%\subsection{Exception dictionary (307)}
+%\spoint Exception dictionary {\rm(307)}
+\subsection{Exception dictionary (307)}
+
+%The maximum number of hyphenation exceptions specified
+%by \cs{hyphenation} must be a prime number.
+%Two arrays with this many halfwords are allocated.
+The maximum number of hyphenation exceptions specified
+by \cs{hyphenation} must be a prime number.
+Two arrays with this many halfwords are allocated.
+
+%Changing this  number makes formats incompatible;
+%that is, \TeX\ can only use a format that was made by
+%an \IniTeX\ with the same value for this constant.
+Changing this  number makes formats incompatible;
+that is, \TeX\ can only use a format that was made by
+an \IniTeX\ with the same value for this constant.
+
+%%\spoint Font memory (20$\,$000)
+%\subsection{Font memory (20,000)}
+%\spoint Font memory (20$\,$000)
+\subsection{Font memory (20,000)}
+
+%Information about fonts is stored in an array of
+%memory words. This is easily overflowed by preloading too
+%many fonts in \IniTeX.
+Information about fonts is stored in an array of
+memory words. This is easily overflowed by preloading too
+many fonts in \IniTeX.
+
+%%\spoint Grouping levels
+%\subsection{Grouping levels}
+%\spoint Grouping levels
+\subsection{Grouping levels}
+
+%The number of open groups  should be recordable 
+%in a quarter word. There is no compile-time constant corresponding
+%to this.
+The number of open groups  should be recordable 
+in a quarter word. There is no compile-time constant corresponding
+to this.
+
+%%\spoint Hash size {\rm(2100)}
+%\subsection{Hash size (2100)}
+%\spoint Hash size {\rm(2100)}
+\subsection{Hash size (2100)}
+
+%Maximum number of control sequences. It is suggested that
+%this number should not exceed 10\% of the main memory size.
+%The values in \TeX\ and \IniTeX\ should agree; also the
+%\n{hash\_prime} values should agree.
+Maximum number of control sequences. It is suggested that
+this number should not exceed 10\% of the main memory size.
+The values in \TeX\ and \IniTeX\ should agree; also the
+\n{hash\_prime} values should agree.
+
+%This value is rather low; for macro packages that are more
+%elaborate than plain \TeX\ a value of about 3000 is more
+%realistic.
+This value is rather low; for macro packages that are more
+elaborate than plain \TeX\ a value of about 3000 is more
+realistic.
+
+%%\spoint Number of strings {\rm(3000)}
+%\subsection{Number of strings (3000)}
+%\spoint Number of strings {\rm(3000)}
+\subsection{Number of strings (3000)}
+
+%The maximum number of strings must be recordable in a half word.
+The maximum number of strings must be recordable in a half word.
+
+%%\spoint Input stack size {\rm(200)}
+%\subsection{Input stack size (200)}
+%\spoint Input stack size {\rm(200)}
+\subsection{Input stack size (200)}
+
+%For each input source an item is allocated on the input stack.
+%Typical input sources are input files (but their simultaneous
+%number is more limited; see below), and token lists
+%such as token variables, macro replacement texts, and
+%alignment templates. A~macro with `runaway recursion'
+%(for example, \verb>\def\mac{{\mac}}>)
+%will overflow this stack.
+For each input source an item is allocated on the input stack.
+Typical input sources are input files (but their simultaneous
+number is more limited; see below), and token lists
+such as token variables, macro replacement texts, and
+alignment templates. A~macro with `runaway recursion'
+(for example, \verb>\def\mac{{\mac}}>)
+will overflow this stack.
+
+%\TeX\ performs some optimization here: before the last call 
+%in a token list all token lists ending with this call are
+%cleared. This process is 
+%similar to `resolving tail recursion' (see Chapter~\ref{macro}).
+\TeX\ performs some optimization here: before the last call 
+in a token list all token lists ending with this call are
+cleared. This process is 
+similar to `resolving tail recursion' (see Chapter~\ref{macro}).
+
+%%\spoint Main memory size (30$\,$000)
+%\subsection{Main memory size (30,000)}
+%\spoint Main memory size (30$\,$000)
+\subsection{Main memory size (30,000)}
+
+%Almost all `dynamic' objects of \TeX, such as macro definition
+%texts and all material on the current page, 
+%are stored in the main memory array. 
+%Formats may already take $20\,000$ words of
+%main memory for macro definitions, and complicated pages containing
+%for instance the \LaTeX\ picture environment may easily
+%overflow this array. 
+Almost all `dynamic' objects of \TeX, such as macro definition
+texts and all material on the current page, 
+are stored in the main memory array. 
+Formats may already take $20\,000$ words of
+main memory for macro definitions, and complicated pages containing
+for instance the \LaTeX\ picture environment may easily
+overflow this array. 
+
+%\TeX's main memory is divided in words, and a half word
+%is supposed to be able to address the whole of the memory.
+%Thus on current 32-bit computers the most common choice
+%is to let the main memory size be at most 64K bytes.
+%A~half word address can then be stored in 16 bits,
+%half a machine word.
+\TeX's main memory is divided in words, and a half word
+is supposed to be able to address the whole of the memory.
+Thus on current 32-bit computers the most common choice
+is to let the main memory size be at most 64K bytes.
+A~half word address can then be stored in 16 bits,
+half a machine word.
+
+%However, so-called `Big \TeX' implementations exist
+%\thecstoidxsub{TeX}{big}
+%that have a main memory larger than 64K words.
+%Most compilers will then allocate  32-bit words for
+%addressing this memory, even if (say) 18 bits would
+%suffice. Big \TeX s therefore become immediately
+%a lot bigger when they cross the 64K threshold.
+%Thus they are usually not found on microcomputers,
+%although virtual memory schemes for these are possible;
+%see for instance~\cite{Thull}.
+However, so-called `Big \TeX' implementations exist
+\thecstoidxsub{TeX}{big}
+that have a main memory larger than 64K words.
+Most compilers will then allocate  32-bit words for
+addressing this memory, even if (say) 18 bits would
+suffice. Big \TeX s therefore become immediately
+a lot bigger when they cross the 64K threshold.
+Thus they are usually not found on microcomputers,
+although virtual memory schemes for these are possible;
+see for instance~\cite{Thull}.
+
+%\TeX\ can have a bigger main memory than \IniTeX;
+%see Chapter~\ref{TeXcomm} for further details.
+\TeX\ can have a bigger main memory than \IniTeX;
+see Chapter~\ref{TeXcomm} for further details.
+
+%%\spoint Parameter stack size {\rm(60)}
+%\subsection{Parameter stack size (60)}
+%\spoint Parameter stack size {\rm(60)}
+\subsection{Parameter stack size (60)}
+
+%Macro parameters may contain macro calls with
+%further parameters. The number of parameters that may occur
+%nested is bounded by the parameter stack size.
+Macro parameters may contain macro calls with
+further parameters. The number of parameters that may occur
+nested is bounded by the parameter stack size.
+
+%%\spoint Pattern memory {\rm(8000)}
+%\subsection{Pattern memory (8000)}
+%\spoint Pattern memory {\rm(8000)}
+\subsection{Pattern memory (8000)}
+
+%Hyphenation patterns are stored in a trie array.
+%The default size of 8000 hyphenation patterns seems sufficient
+%for English or Italian,  for example, but it is not for
+%Dutch or German.
+Hyphenation patterns are stored in a trie array.
+The default size of 8000 hyphenation patterns seems sufficient
+for English or Italian,  for example, but it is not for
+Dutch or German.
+
+%%\spoint Pattern memory ops per language
+%\subsection{Pattern memory ops per language}
+%\spoint Pattern memory ops per language
+\subsection{Pattern memory ops per language}
+
+%The number of hyphenation ops (see the literature about
+%hyphenation: \cite{Liang} and appendix~H of~\cite{Knuth:TeXbook})
+%should be recordable 
+%in a quarter word. There is no compile-time constant corresponding
+%to this. \TeX\ version~2 had the same upper bound, but gave no
+%error message in case of overflow. Again, for languages such
+%as Dutch and German this bound is too low.
+%There are versions of \TeX\ that have a higher bound here.
+The number of hyphenation ops (see the literature about
+hyphenation: \cite{Liang} and appendix~H of~\cite{Knuth:TeXbook})
+should be recordable 
+in a quarter word. There is no compile-time constant corresponding
+to this. \TeX\ version~2 had the same upper bound, but gave no
+error message in case of overflow. Again, for languages such
+as Dutch and German this bound is too low.
+There are versions of \TeX\ that have a higher bound here.
+
+%%\spoint Pool size (32$\,$000)
+%\subsection{Pool size (32,000)}
+%\spoint Pool size (32$\,$000)
+\subsection{Pool size (32,000)}
+
+%Strings are error messages and control sequence names.
+%They are stored using one byte per character.
+%\TeX\ has initially about $23\,000$ characters worth of
+%strings.
+Strings are error messages and control sequence names.
+They are stored using one byte per character.
+\TeX\ has initially about $23\,000$ characters worth of
+strings.
+
+%The pool will overflow if a user defines a large number of
+%control sequences on top of a substantial macro package.
+%However, even if the user does not define any new commands
+%\mdqon
+%overflow may occur: cross"-referencing schemes also
+%\mdqoff
+%work by defining control sequences. For large documents
+%a pool size of $40\,000$ or $60\,000$ is probably sufficient.
+The pool will overflow if a user defines a large number of
+control sequences on top of a substantial macro package.
+However, even if the user does not define any new commands
+\mdqon
+overflow may occur: cross"-referencing schemes also
+\mdqoff
+work by defining control sequences. For large documents
+a pool size of $40\,000$ or $60\,000$ is probably sufficient.
+
+%%\spoint Save size {\rm(600)}
+%\subsection{Save size {\rm(600)}}
+%\spoint Save size {\rm(600)}
+\subsection{Save size {\rm(600)}}
+
+%Quantities that are assigned to inside a group must be
+%restored after the end of that group.
+%The save stack is where the values to be restored are kept;
+%the size of the
+%save stack limits the number of values that can be restored.
+Quantities that are assigned to inside a group must be
+restored after the end of that group.
+The save stack is where the values to be restored are kept;
+the size of the
+save stack limits the number of values that can be restored.
+
+%Alternating global and local assignments to a value
+%will lead to `save stack build-up': for each local
+%assignment following a global assignment the
+%previous value of the variable is saved. Thus an
+%alternation of such assignments will lead to
+%an unnecessary proliferation of items on the save stack.
+Alternating global and local assignments to a value
+will lead to `save stack build-up': for each local
+assignment following a global assignment the
+previous value of the variable is saved. Thus an
+alternation of such assignments will lead to
+an unnecessary proliferation of items on the save stack.
+
+%%\spoint Semantic nest size {\rm(40)}
+%\subsection{Semantic nest size {\rm(40)}}
+%\spoint Semantic nest size {\rm(40)}
+\subsection{Semantic nest size {\rm(40)}}
+
+%Each time \TeX\ switches to a mode nested inside another
+%mode (for instance when processing an \verb-\hbox- inside
+%a \verb-\vbox-) the current state is pushed on the
+%semantic nest stack. The semantic nest size is the maximum
+%number of levels that can be pushed.
+Each time \TeX\ switches to a mode nested inside another
+mode (for instance when processing an \verb-\hbox- inside
+a \verb-\vbox-) the current state is pushed on the
+semantic nest stack. The semantic nest size is the maximum
+number of levels that can be pushed.
+
+%%\spoint Text input levels {\rm(6)}
+%\subsection{Text input levels {\rm(6)}}
+%\spoint Text input levels {\rm(6)}
+\subsection{Text input levels {\rm(6)}}
+
+%The number of nested \verb-\input- files 
+%has to be very limited,
+%as the current lines are all kept in the input buffer.
+The number of nested \verb-\input- files 
+has to be very limited,
+as the current lines are all kept in the input buffer.
+
+%\index{overflow errors|)}
+\index{overflow errors|)}
+
+%\endofchapter
+\endofchapter
+
+\end{document}

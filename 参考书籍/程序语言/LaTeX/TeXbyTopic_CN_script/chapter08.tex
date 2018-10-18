@@ -1,0 +1,1595 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{7}
+
+\begin{document}
+
+%\chapter{Dimensions and Glue}\label{glue}
+\chapter{Dimensions and Glue}\label{glue}
+
+%In \TeX\ vertical and horizontal white space
+%can have a possibility to adjust itself through `stretching' or
+%`shrinking'. An~adjustable white space is called \indexterm{glue}.
+%This chapter treats all technical concepts related to
+%dimensions and glue, and it explains how the badness of stretching or shrinking
+%a  certain amount is calculated.
+In \TeX\ vertical and horizontal white space
+can have a possibility to adjust itself through `stretching' or
+`shrinking'. An~adjustable white space is called \indexterm{glue}.
+This chapter treats all technical concepts related to
+dimensions and glue, and it explains how the badness of stretching or shrinking
+a  certain amount is calculated.
+
+%\label{cschap:dimen}\label{cschap:dimendef}\label{cschap:newdimen}\label{cschap:skip}\label{cschap:skipdef}\label{cschap:newskip}\label{cschap:hskip}\label{cschap:hfil}\label{cschap:hfilneg}\label{cschap:hfill}\label{cschap:hss}\label{cschap:vskip}\label{cschap:vfil}\label{cschap:vfill}\label{cschap:vfilneg}\label{cschap:vss}\label{cschap:kern}\label{cschap:lastkern}\label{cschap:lastskip}\label{cschap:unkern}\label{cschap:unskip}\label{cschap:removelastskip}\label{cschap:advance2}\label{cschap:multiply2}\label{cschap:divide2}
+%\begin{inventory}
+%\item [\cs{dimen}] 
+%      Dimension register prefix.
+\label{cschap:dimen}\label{cschap:dimendef}\label{cschap:newdimen}\label{cschap:skip}\label{cschap:skipdef}\label{cschap:newskip}\label{cschap:hskip}\label{cschap:hfil}\label{cschap:hfilneg}\label{cschap:hfill}\label{cschap:hss}\label{cschap:vskip}\label{cschap:vfil}\label{cschap:vfill}\label{cschap:vfilneg}\label{cschap:vss}\label{cschap:kern}\label{cschap:lastkern}\label{cschap:lastskip}\label{cschap:unkern}\label{cschap:unskip}\label{cschap:removelastskip}\label{cschap:advance2}\label{cschap:multiply2}\label{cschap:divide2}
+\begin{inventory}
+\item [\cs{dimen}] 
+      Dimension register prefix.
+
+%\item [\cs{dimendef}] 
+%      Define a control sequence to be a synonym for
+%      a~\cs{dimen} register.
+\item [\cs{dimendef}] 
+      Define a control sequence to be a synonym for
+      a~\cs{dimen} register.
+
+%\item [\cs{newdimen}] 
+%      Allocate an unused dimen register. 
+\item [\cs{newdimen}] 
+      Allocate an unused dimen register. 
+
+%\item [\cs{skip}] 
+%      Skip register prefix.
+\item [\cs{skip}] 
+      Skip register prefix.
+
+%\item [\cs{skipdef}] 
+%      Define a control sequence to be a synonym for
+%      a~\cs{skip} register.
+\item [\cs{skipdef}] 
+      Define a control sequence to be a synonym for
+      a~\cs{skip} register.
+
+%\item [\cs{newskip}]
+%      Allocate an unused skip register.
+\item [\cs{newskip}]
+      Allocate an unused skip register.
+
+%\item [\cs{ifdim}] 
+%      Compare two dimensions. 
+\item [\cs{ifdim}] 
+      Compare two dimensions. 
+
+%\item [\cs{hskip}]  
+%      Insert in horizontal mode a glue item.
+\item [\cs{hskip}]  
+      Insert in horizontal mode a glue item.
+
+%\item [\csidx{hfil}] 
+%      Equivalent to 
+%      \verb-\hskip 0cm plus 1fil-.
+\item [\csidx{hfil}] 
+      Equivalent to 
+      \verb-\hskip 0cm plus 1fil-.
+
+%\item [\csidx{hfilneg}] 
+%      Equivalent to 
+%      \verb-\hskip 0cm minus 1fil-.
+\item [\csidx{hfilneg}] 
+      Equivalent to 
+      \verb-\hskip 0cm minus 1fil-.
+
+%\item [\csidx{hfill}] 
+%      Equivalent to 
+%      \verb-\hskip 0cm plus 1fill-.
+\item [\csidx{hfill}] 
+      Equivalent to 
+      \verb-\hskip 0cm plus 1fill-.
+
+%\item [\csidx{hss}] 
+%      Equivalent to 
+%      \verb-\hskip 0cm plus 1fil minus 1fil-.
+\item [\csidx{hss}] 
+      Equivalent to 
+      \verb-\hskip 0cm plus 1fil minus 1fil-.
+
+%\item [\cs{vskip}]  
+%      Insert in vertical mode a glue item.
+\item [\cs{vskip}]  
+      Insert in vertical mode a glue item.
+
+%\item [\csidx{vfil}] 
+%      Equivalent to 
+%      \verb-\vskip 0cm plus 1fil-.
+\item [\csidx{vfil}] 
+      Equivalent to 
+      \verb-\vskip 0cm plus 1fil-.
+
+%\item [\csidx{vfill}] 
+%      Equivalent to 
+%      \verb-\vskip 0cm plus 1fill-.
+\item [\csidx{vfill}] 
+      Equivalent to 
+      \verb-\vskip 0cm plus 1fill-.
+
+%\item [\csidx{vfilneg}] 
+%      Equivalent to 
+%      \verb-\vskip 0cm minus 1fil-.
+\item [\csidx{vfilneg}] 
+      Equivalent to 
+      \verb-\vskip 0cm minus 1fil-.
+
+%\item [\csidx{vss}] 
+%      Equivalent to 
+%      \verb-\vskip 0cm plus 1fil minus 1fil-.
+\item [\csidx{vss}] 
+      Equivalent to 
+      \verb-\vskip 0cm plus 1fil minus 1fil-.
+
+%\item [\cs{kern}]  
+%      Add a kern item to the current horizontal or vertical list.
+\item [\cs{kern}]  
+      Add a kern item to the current horizontal or vertical list.
+
+%\item [\cs{lastkern}] 
+%      If the last item on the current list was a kern, the size of it.
+\item [\cs{lastkern}] 
+      If the last item on the current list was a kern, the size of it.
+
+%\item [\cs{lastskip}] 
+%      If the last item on the current list was a~glue, the size of it.
+\item [\cs{lastskip}] 
+      If the last item on the current list was a~glue, the size of it.
+
+%\item [\cs{unkern}] 
+%      If the last item of the current list was a~kern, remove it.
+\item [\cs{unkern}] 
+      If the last item of the current list was a~kern, remove it.
+
+%\item [\cs{unskip}] 
+%      If the last item of the current list was a~glue, remove it.
+\item [\cs{unskip}] 
+      If the last item of the current list was a~glue, remove it.
+
+%\item [\cs{removelastskip}]
+%      Macro to append the negative of the \cs{lastskip}.
+\item [\cs{removelastskip}]
+      Macro to append the negative of the \cs{lastskip}.
+
+%\item [\cs{advance}] 
+%      Arithmetic command to add to or subtract from
+%      a~\gr{numeric variable}.
+\item [\cs{advance}] 
+      Arithmetic command to add to or subtract from
+      a~\gr{numeric variable}.
+
+%\item [\cs{multiply}] 
+%      Arithmetic command to multiply a~\gr{numeric variable}.
+\item [\cs{multiply}] 
+      Arithmetic command to multiply a~\gr{numeric variable}.
+
+%\item [\cs{divide}] 
+%      Arithmetic command to divide a~\gr{numeric variable}.
+\item [\cs{divide}] 
+      Arithmetic command to divide a~\gr{numeric variable}.
+
+%\end{inventory}
+\end{inventory}
+
+
+
+%%\point Definition of \gr{glue} and \gr{dimen}
+%\section{Definition of \gr{glue} and \gr{dimen}}
+%\point Definition of \gr{glue} and \gr{dimen}
+\section{Definition of \gr{glue} and \gr{dimen}}
+
+%This section gives
+%the syntax of the quantities
+%\gr{dimen} and \gr{glue}. 
+%In the next section the practical aspects of glue are treated.
+This section gives
+the syntax of the quantities
+\gr{dimen} and \gr{glue}. 
+In the next section the practical aspects of glue are treated.
+
+%Unfortunately the terminology for glue is slightly confusing.
+%The syntactical quantity~\gr{glue} is a dimension (a distance) with
+%\mdqon
+%possibly a stretch and/""or shrink component.
+%\mdqoff
+%In order to add a glob of `glue' (a white space) to a list one has to
+%let a \gr{glue} be preceded by commands such as \cs{vskip}.
+Unfortunately the terminology for glue is slightly confusing.
+The syntactical quantity~\gr{glue} is a dimension (a distance) with
+\mdqon
+possibly a stretch and/""or shrink component.
+\mdqoff
+In order to add a glob of `glue' (a white space) to a list one has to
+let a \gr{glue} be preceded by commands such as \cs{vskip}.
+
+
+%%\spoint Definition of dimensions
+%\subsection{Definition of dimensions}
+%\spoint Definition of dimensions
+\subsection{Definition of dimensions}
+
+%A~\gr{dimen} is what \TeX\ expects to see when
+%it needs to indicate a dimension; it can be positive or negative.
+%\begin{disp}\gr{dimen} $\longrightarrow$ \gr{optional signs}%
+%     \gr{unsigned dimen}\end{disp}
+%The unsigned part of a \gr{dimen} can be
+%\begin{disp}\gr{unsigned dimen} $\longrightarrow$ \gr{normal dimen}
+%     $|$ \gr{coerced dimen}\nl
+%     \gr{normal dimen} $\longrightarrow$ \gr{internal dimen}
+%     $|$ \gr{factor}\gr{unit of measure}\nl
+%     \gr{coerced dimen} $\longrightarrow$ \gr{internal glue}
+%     \end{disp}
+%That is, we have the following three cases:
+%\begin{itemize} \item an \gr{internal dimen}; this is
+% any register or parameter of \TeX\ that has a \gr{dimen} value:
+% \begin{disp}\PopIndentLevel\gr{internal dimen} $\longrightarrow$
+%      \gr{dimen parameter}\nl
+%      \indent $|$ \gr{special dimen} $|$ \cs{lastkern}\nl
+%      \indent $|$ \gr{dimendef token} $|$ \cs{dimen}\gr{8-bit number}\nl
+%      \indent $|$ \cs{fontdimen}\gr{number}\gr{font}\nl
+%      \indent $|$ \gr{box dimension}\gr{8-bit number}\nl
+%      \gr{dimen parameter} $\longrightarrow$ \cs{boxmaxdepth}\nl
+%      \indent $|$ \cs{delimitershortfall} $|$ \cs{displayindent}\nl
+%      \indent $|$ \cs{displaywidth} $|$ \cs{hangindent}\nl
+%      \indent $|$ \cs{hfuzz} $|$ \cs{hoffset} $|$ \cs{hsize}\nl
+%      \indent $|$ \cs{lineskiplimit} $|$ \cs{mathsurround}\nl
+%      \indent $|$ \cs{maxdepth} $|$ \cs{nulldelimiterspace}\nl
+%      \indent $|$ \cs{overfullrule} $|$ \cs{parindent}\nl
+%      \indent $|$ \cs{predisplaysize} $|$ \cs{scriptspace}\nl
+%      \indent $|$ \cs{splitmaxdepth} $|$ \cs{vfuzz}\nl
+%      \indent $|$ \cs{voffset} $|$ \cs{vsize}
+% \end{disp}
+%\item  a dimension denotation, 
+% consisting of \gr{factor}\gr{unit of measure},
+% for example \verb>0.7\vsize>; or
+%\item an \gr{internal glue} (see below) 
+% coerced to a dimension by omitting
+% the stretch and shrink components, for example \cs{parfillskip}.
+%\end{itemize}
+A~\gr{dimen} is what \TeX\ expects to see when
+it needs to indicate a dimension; it can be positive or negative.
+\begin{disp}\gr{dimen} $\longrightarrow$ \gr{optional signs}%
+     \gr{unsigned dimen}\end{disp}
+The unsigned part of a \gr{dimen} can be
+\begin{disp}\gr{unsigned dimen} $\longrightarrow$ \gr{normal dimen}
+     $|$ \gr{coerced dimen}\nl
+     \gr{normal dimen} $\longrightarrow$ \gr{internal dimen}
+     $|$ \gr{factor}\gr{unit of measure}\nl
+     \gr{coerced dimen} $\longrightarrow$ \gr{internal glue}
+     \end{disp}
+That is, we have the following three cases:
+\begin{itemize} \item an \gr{internal dimen}; this is
+ any register or parameter of \TeX\ that has a \gr{dimen} value:
+ \begin{disp}\PopIndentLevel\gr{internal dimen} $\longrightarrow$
+      \gr{dimen parameter}\nl
+      \indent $|$ \gr{special dimen} $|$ \cs{lastkern}\nl
+      \indent $|$ \gr{dimendef token} $|$ \cs{dimen}\gr{8-bit number}\nl
+      \indent $|$ \cs{fontdimen}\gr{number}\gr{font}\nl
+      \indent $|$ \gr{box dimension}\gr{8-bit number}\nl
+      \gr{dimen parameter} $\longrightarrow$ \cs{boxmaxdepth}\nl
+      \indent $|$ \cs{delimitershortfall} $|$ \cs{displayindent}\nl
+      \indent $|$ \cs{displaywidth} $|$ \cs{hangindent}\nl
+      \indent $|$ \cs{hfuzz} $|$ \cs{hoffset} $|$ \cs{hsize}\nl
+      \indent $|$ \cs{lineskiplimit} $|$ \cs{mathsurround}\nl
+      \indent $|$ \cs{maxdepth} $|$ \cs{nulldelimiterspace}\nl
+      \indent $|$ \cs{overfullrule} $|$ \cs{parindent}\nl
+      \indent $|$ \cs{predisplaysize} $|$ \cs{scriptspace}\nl
+      \indent $|$ \cs{splitmaxdepth} $|$ \cs{vfuzz}\nl
+      \indent $|$ \cs{voffset} $|$ \cs{vsize}
+ \end{disp}
+\item  a dimension denotation, 
+ consisting of \gr{factor}\gr{unit of measure},
+ for example \verb>0.7\vsize>; or
+\item an \gr{internal glue} (see below) 
+ coerced to a dimension by omitting
+ the stretch and shrink components, for example \cs{parfillskip}.
+\end{itemize}
+
+%A dimension denotation is a somewhat complicated entity:
+%\begin{itemize} \item a \gr{factor} is an integer denotation,
+% a decimal constant denotation (a number with an integral and
+% a fractional part),
+% or an \gr{internal integer}
+% \begin{disp}\PopIndentLevel
+%      \gr{factor} $\longrightarrow$ \gr{normal integer} 
+%      $|$ \gr{decimal constant}\nl
+%      \gr{normal integer} $\longrightarrow$ \gr{integer denotation}\nl
+%      \indent $|$ \gr{internal integer}\nl
+%      \gr{decimal constant} $\longrightarrow$ \n{.$_{12}$}
+%      $|$ \n{,$_{12}$}\nl
+%      \indent $|$ \gr{digit}\gr{decimal constant}\nl
+%      \indent $|$ \gr{decimal constant}\gr{digit}
+% \end{disp}
+% An internal integer is a parameter that is `really' an
+%\alt
+% integer (for instance, \cs{count0}), and not coerced from a dimension or glue.
+% See Chapter~\ref{number}
+% for the definition of various kinds of integers.
+%\item a \gr{unit of measure} can be 
+% a \gr{physical unit}, that is, an ordinary unit such as~\n{cm} 
+% (possibly preceded by \n{true}),
+% an internal unit such as~\n{em}, but also an \gr{internal integer}
+% (by conversion to scaled points),
+% an \gr{internal dimen}, or an \gr{internal glue}.
+% \begin{disp}\PopIndentLevel
+%      \gr{unit of measure} $\longrightarrow$
+%      \gr{optional spaces}\gr{internal unit}\nl
+%      \indent $|$ 
+%      \gr{optional \n{true}}\gr{physical unit}\gr{one optional space}\nl 
+%      \gr{internal unit} $\longrightarrow$ 
+%      \n{em}\gr{one optional space}\nl
+%      \indent $|$ \n{ex}\gr{one optional space}
+%              $|$ \gr{internal integer}\nl
+%      \indent $|$ \gr{internal dimen} $|$ \gr{internal glue}
+%      \end{disp}
+%\end{itemize}
+A dimension denotation is a somewhat complicated entity:
+\begin{itemize} \item a \gr{factor} is an integer denotation,
+ a decimal constant denotation (a number with an integral and
+ a fractional part),
+ or an \gr{internal integer}
+ \begin{disp}\PopIndentLevel
+      \gr{factor} $\longrightarrow$ \gr{normal integer} 
+      $|$ \gr{decimal constant}\nl
+      \gr{normal integer} $\longrightarrow$ \gr{integer denotation}\nl
+      \indent $|$ \gr{internal integer}\nl
+      \gr{decimal constant} $\longrightarrow$ \n{.$_{12}$}
+      $|$ \n{,$_{12}$}\nl
+      \indent $|$ \gr{digit}\gr{decimal constant}\nl
+      \indent $|$ \gr{decimal constant}\gr{digit}
+ \end{disp}
+ An internal integer is a parameter that is `really' an
+\alt
+ integer (for instance, \cs{count0}), and not coerced from a dimension or glue.
+ See Chapter~\ref{number}
+ for the definition of various kinds of integers.
+\item a \gr{unit of measure} can be 
+ a \gr{physical unit}, that is, an ordinary unit such as~\n{cm} 
+ (possibly preceded by \n{true}),
+ an internal unit such as~\n{em}, but also an \gr{internal integer}
+ (by conversion to scaled points),
+ an \gr{internal dimen}, or an \gr{internal glue}.
+ \begin{disp}\PopIndentLevel
+      \gr{unit of measure} $\longrightarrow$
+      \gr{optional spaces}\gr{internal unit}\nl
+      \indent $|$ 
+      \gr{optional \n{true}}\gr{physical unit}\gr{one optional space}\nl 
+      \gr{internal unit} $\longrightarrow$ 
+      \n{em}\gr{one optional space}\nl
+      \indent $|$ \n{ex}\gr{one optional space}
+              $|$ \gr{internal integer}\nl
+      \indent $|$ \gr{internal dimen} $|$ \gr{internal glue}
+      \end{disp}
+\end{itemize}
+
+%Some \gr{dimen}s are called \gr{special dimen}s:\label{special:dimen:list}
+%\begin{disp}\gr{special dimen} $\longrightarrow$ \cs{prevdepth}\nl
+%     \indent $|$ \cs{pagegoal} $|$ \cs{pagetotal} $|$ \cs{pagestretch}\nl
+%     \indent $|$ \cs{pagefilstretch} $|$ \cs{pagefillstretch}\nl
+%     \indent $|$ \cs{pagefilllstretch} $|$ \cs{pageshrink} $|$ \cs{pagedepth}
+%     \end{disp}
+%An assignment to any of these is
+%called an \gr{intimate assignment}, and it is automatically
+%global (see Chapter~\ref{group}). The meaning of these 
+%dimensions is explained in Chapter \ref{page:break}, with the
+%exception of \cs{prevdepth} which is treated in
+%Chapter~\ref{baseline}.
+Some \gr{dimen}s are called \gr{special dimen}s:\label{special:dimen:list}
+\begin{disp}\gr{special dimen} $\longrightarrow$ \cs{prevdepth}\nl
+     \indent $|$ \cs{pagegoal} $|$ \cs{pagetotal} $|$ \cs{pagestretch}\nl
+     \indent $|$ \cs{pagefilstretch} $|$ \cs{pagefillstretch}\nl
+     \indent $|$ \cs{pagefilllstretch} $|$ \cs{pageshrink} $|$ \cs{pagedepth}
+     \end{disp}
+An assignment to any of these is
+called an \gr{intimate assignment}, and it is automatically
+global (see Chapter~\ref{group}). The meaning of these 
+dimensions is explained in Chapter \ref{page:break}, with the
+exception of \cs{prevdepth} which is treated in
+Chapter~\ref{baseline}.
+
+%%\spoint Definition of glue
+%\subsection{Definition of glue}
+%\spoint Definition of glue
+\subsection{Definition of glue}
+
+%A \gr{glue} is either some form of glue variable, or
+%a glue denotation with explicitly indicated stretch and
+%shrink. Specifically,
+%\begin{disp}\gr{glue} $\longrightarrow$ \gr{optional signs}\gr{internal glue}
+%     $|$ \gr{dimen}\gr{stretch}\gr{shrink}\nl
+%     \gr{internal glue} $\longrightarrow$ \gr{glue parameter}
+%     $|$ \cs{lastskip}\nl 
+%     \indent $|$ \gr{skipdef token} $|$ \cs{skip}\gr{8-bit number}\nl
+%     \gr{glue parameter} $\longrightarrow$ \cs{abovedisplayshortskip}\nl
+%     \indent $|$ \cs{abovedisplayskip} $|$ \cs{baselineskip}\nl
+%     \indent $|$ \cs{belowdisplayshortskip} $|$ \cs{belowdisplayskip}\nl
+%     \indent $|$ \cs{leftskip} $|$ \cs{lineskip} $|$ \cs{parfillskip}
+%             $|$ \cs{parskip}\nl
+%     \indent $|$ \cs{rightskip} $|$ \cs{spaceskip}
+%             $|$ \cs{splittopskip} $|$ \cs{tabskip}\nl
+%     \indent $|$ \cs{topskip} $|$ \cs{xspaceskip}
+%\end{disp}
+%The stretch and shrink components in a glue denotation
+%are optional, but when both are specified they have to
+%be given in sequence; they are defined as
+%\begin{disp}
+%\gr{stretch} $\longrightarrow$ \n{plus} \gr{dimen}
+%      $|$ \n{plus}\gr{fil dimen} $|$ \gr{optional spaces}\nl
+%\gr{shrink} $\longrightarrow$ \n{minus} \gr{dimen}
+%      $|$ \n{minus}\gr{fil dimen} $|$ \gr{optional spaces}\nl
+%\gr{fil dimen} $\longrightarrow$ \gr{optional signs}\gr{factor}%
+%     \gr{fil unit}\gr{optional spaces}\nl
+%\gr{fil unit} $\longrightarrow$ \n{ $|$ fil $|$ fill $|$ filll}
+%\end{disp}
+A \gr{glue} is either some form of glue variable, or
+a glue denotation with explicitly indicated stretch and
+shrink. Specifically,
+\begin{disp}\gr{glue} $\longrightarrow$ \gr{optional signs}\gr{internal glue}
+     $|$ \gr{dimen}\gr{stretch}\gr{shrink}\nl
+     \gr{internal glue} $\longrightarrow$ \gr{glue parameter}
+     $|$ \cs{lastskip}\nl 
+     \indent $|$ \gr{skipdef token} $|$ \cs{skip}\gr{8-bit number}\nl
+     \gr{glue parameter} $\longrightarrow$ \cs{abovedisplayshortskip}\nl
+     \indent $|$ \cs{abovedisplayskip} $|$ \cs{baselineskip}\nl
+     \indent $|$ \cs{belowdisplayshortskip} $|$ \cs{belowdisplayskip}\nl
+     \indent $|$ \cs{leftskip} $|$ \cs{lineskip} $|$ \cs{parfillskip}
+             $|$ \cs{parskip}\nl
+     \indent $|$ \cs{rightskip} $|$ \cs{spaceskip}
+             $|$ \cs{splittopskip} $|$ \cs{tabskip}\nl
+     \indent $|$ \cs{topskip} $|$ \cs{xspaceskip}
+\end{disp}
+The stretch and shrink components in a glue denotation
+are optional, but when both are specified they have to
+be given in sequence; they are defined as
+\begin{disp}
+\gr{stretch} $\longrightarrow$ \n{plus} \gr{dimen}
+      $|$ \n{plus}\gr{fil dimen} $|$ \gr{optional spaces}\nl
+\gr{shrink} $\longrightarrow$ \n{minus} \gr{dimen}
+      $|$ \n{minus}\gr{fil dimen} $|$ \gr{optional spaces}\nl
+\gr{fil dimen} $\longrightarrow$ \gr{optional signs}\gr{factor}%
+     \gr{fil unit}\gr{optional spaces}\nl
+\gr{fil unit} $\longrightarrow$ \n{ $|$ fil $|$ fill $|$ filll}
+\end{disp}
+
+%The actual definition of \gr{fil unit} is recursive
+%(see Chapter~\ref{gramm}), but these are the only valid
+%possibilities.
+The actual definition of \gr{fil unit} is recursive
+(see Chapter~\ref{gramm}), but these are the only valid
+possibilities.
+
+%%\spoint Conversion of \gr{glue} to \gr{dimen}
+%\subsection{Conversion of \gr{glue} to \gr{dimen}}
+%\spoint Conversion of \gr{glue} to \gr{dimen}
+\subsection{Conversion of \gr{glue} to \gr{dimen}}
+
+%The grammar rule
+%\begin{disp}\gr{dimen} $\longrightarrow$
+%     \gr{factor}\gr{unit of measure}
+%\end{disp}
+%has some noteworthy consequences, caused by the fact
+%that a \gr{unit of measure} need not look like a `unit of measure'
+%at all (see the list above).
+The grammar rule
+\begin{disp}\gr{dimen} $\longrightarrow$
+     \gr{factor}\gr{unit of measure}
+\end{disp}
+has some noteworthy consequences, caused by the fact
+that a \gr{unit of measure} need not look like a `unit of measure'
+at all (see the list above).
+
+%For instance, from this definition we conclude that the statement
+%\begin{verbatim}
+%\dimen0=\lastpenalty\lastpenalty
+%\end{verbatim}
+%is
+%syntactically correct because \cs{lastpenalty} can function
+%both as an integer and as \gr{unit of measure} by taking
+%its value in scaled points.
+%After \verb>\penalty8> the \cs{dimen0} thus defined will
+%have a size of~\n{64sp}.
+For instance, from this definition we conclude that the statement
+\begin{verbatim}
+\dimen0=\lastpenalty\lastpenalty
+\end{verbatim}
+is
+syntactically correct because \cs{lastpenalty} can function
+both as an integer and as \gr{unit of measure} by taking
+its value in scaled points.
+After \verb>\penalty8> the \cs{dimen0} thus defined will
+have a size of~\n{64sp}.
+
+%More importantly, consider the case where the \gr{unit of measure} is
+%an \gr{internal glue}, that is, any sort of glue parameter.
+%Prefixing such a glue with a number (the \gr{factor})
+%makes it a valid \gr{dimen} specification.
+%Thus
+%\begin{verbatim}
+%\skip0=\skip1
+%\end{verbatim}
+%is very different
+%from
+%\begin{verbatim}
+%\skip0=1\skip1
+%\end{verbatim}
+%The first statement makes
+%\cs{skip0} equal to \cs{skip1}, the second converts
+%the \cs{skip1} to a \gr{dimen} before assigning it.
+%In other words, the \cs{skip0} defined by the second statement
+%has no stretch or shrink.
+More importantly, consider the case where the \gr{unit of measure} is
+an \gr{internal glue}, that is, any sort of glue parameter.
+Prefixing such a glue with a number (the \gr{factor})
+makes it a valid \gr{dimen} specification.
+Thus
+\begin{verbatim}
+\skip0=\skip1
+\end{verbatim}
+is very different
+from
+\begin{verbatim}
+\skip0=1\skip1
+\end{verbatim}
+The first statement makes
+\cs{skip0} equal to \cs{skip1}, the second converts
+the \cs{skip1} to a \gr{dimen} before assigning it.
+In other words, the \cs{skip0} defined by the second statement
+has no stretch or shrink.
+
+
+%%\spoint Registers for \cs{dimen} and \cs{skip}
+%\subsection{Registers for \cs{dimen} and \cs{skip}}
+%\spoint Registers for \cs{dimen} and \cs{skip}
+\subsection{Registers for \cs{dimen} and \cs{skip}}
+
+%\TeX\ has registers for storing \gr{dimen} and \gr{glue}
+%values: the \csidx{dimen} and \csidx{skip} registers
+%respectively. These are accessible by the expressions
+%\begin{disp}\cs{dimen}\gr{number}\end{disp} and
+%\begin{disp}\cs{skip}\gr{number}\end{disp}
+%As with all registers of \TeX, these registers are
+%numbered~0--255.
+\TeX\ has registers for storing \gr{dimen} and \gr{glue}
+values: the \csidx{dimen} and \csidx{skip} registers
+respectively. These are accessible by the expressions
+\begin{disp}\cs{dimen}\gr{number}\end{disp} and
+\begin{disp}\cs{skip}\gr{number}\end{disp}
+As with all registers of \TeX, these registers are
+numbered~0--255.
+
+%Synonyms for registers can be made with the \csidx{dimendef} and
+%\csidx{skipdef} commands. Their syntax is
+%\begin{Disp}\cs{dimendef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+%\end{Disp}
+%and 
+%\begin{Disp}\cs{skipdef}\gr{control sequence}\gr{equals}\gr{8-bit number}\end{Disp}
+%For example, after \verb-\skipdef\foo=13- using \cs{foo}
+%is equivalent to using \cs{skip13}.
+Synonyms for registers can be made with the \csidx{dimendef} and
+\csidx{skipdef} commands. Their syntax is
+\begin{Disp}\cs{dimendef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+\end{Disp}
+and 
+\begin{Disp}\cs{skipdef}\gr{control sequence}\gr{equals}\gr{8-bit number}\end{Disp}
+For example, after \verb-\skipdef\foo=13- using \cs{foo}
+is equivalent to using \cs{skip13}.
+
+%Macros \csidx{newdimen} and \csidx{newskip} exist in plain \TeX
+%for allocating an unused dimen or skip register.
+%These macros are defined to be \cs{outer} in the plain format.
+Macros \csidx{newdimen} and \csidx{newskip} exist in plain \TeX
+for allocating an unused dimen or skip register.
+These macros are defined to be \cs{outer} in the plain format.
+
+%\subsection{Arithmetic: addition}
+\subsection{Arithmetic: addition}
+
+%As for integer variables, arithmetic operations exist for
+%\cstoidx advance\par
+%\indextermbus{arithmetic on}{glue}\index{arithmetic! on glue|see{glue, arithmetic on}}:
+%dimen, glue, and muglue (mathematical glue; see page~\pageref{muglue})
+%variables.
+As for integer variables, arithmetic operations exist for
+\cstoidx advance\par
+\indextermbus{arithmetic on}{glue}\index{arithmetic! on glue|see{glue, arithmetic on}}:
+dimen, glue, and muglue (mathematical glue; see page~\pageref{muglue})
+variables.
+
+%The expressions
+%\begin{Disp}\cs{advance}\gr{dimen variable}\gr{optional \n{by}}%
+%     \gr{dimen}\nl
+%     \cs{advance}\gr{glue variable}\gr{optional \n{by}}%
+%     \gr{glue}\nl
+%     \cs{advance}\gr{muglue variable}\gr{optional \n{by}}%
+%     \gr{muglue}\end{Disp}
+%add to the size of a dimen, glue, or muglue.
+The expressions
+\begin{Disp}\cs{advance}\gr{dimen variable}\gr{optional \n{by}}%
+     \gr{dimen}\nl
+     \cs{advance}\gr{glue variable}\gr{optional \n{by}}%
+     \gr{glue}\nl
+     \cs{advance}\gr{muglue variable}\gr{optional \n{by}}%
+     \gr{muglue}\end{Disp}
+add to the size of a dimen, glue, or muglue.
+
+%Advancing a \gr{glue variable} by \gr{glue} is done by
+%adding the natural sizes, and the stretch and shrink components.
+%Because \TeX\ converts between \gr{glue} and \gr{dimen},
+%it is possible to write for instance
+%\begin{verbatim}
+%\advance\skip1 by \dimen1
+%\end{verbatim}
+%or
+%\begin{verbatim}
+%\advance\dimen1 by \skip1
+%\end{verbatim}
+%In the first case  \cs{dimen1} is coerced to \gr{glue} without
+%stretch or shrink; in the second case the \cs{skip1} is coerced
+%to a \gr{dimen} by taking its natural size.
+Advancing a \gr{glue variable} by \gr{glue} is done by
+adding the natural sizes, and the stretch and shrink components.
+Because \TeX\ converts between \gr{glue} and \gr{dimen},
+it is possible to write for instance
+\begin{verbatim}
+\advance\skip1 by \dimen1
+\end{verbatim}
+or
+\begin{verbatim}
+\advance\dimen1 by \skip1
+\end{verbatim}
+In the first case  \cs{dimen1} is coerced to \gr{glue} without
+stretch or shrink; in the second case the \cs{skip1} is coerced
+to a \gr{dimen} by taking its natural size.
+
+%%\spoint Arithmetic: multiplication and division
+%\subsection{Arithmetic: multiplication and division}
+%\spoint Arithmetic: multiplication and division
+\subsection{Arithmetic: multiplication and division}
+
+%Multiplication and division operations exist for glue
+%\cstoidx multiply\par\cstoidx divide\par
+%and dimensions. One may for instance write
+%\begin{verbatim}
+%\multiply\skip1 by 2
+%\end{verbatim}
+%which multiplies the natural size, and the stretch and shrink
+%components of \cs{skip1} by~2.
+Multiplication and division operations exist for glue
+\cstoidx multiply\par\cstoidx divide\par
+and dimensions. One may for instance write
+\begin{verbatim}
+\multiply\skip1 by 2
+\end{verbatim}
+which multiplies the natural size, and the stretch and shrink
+components of \cs{skip1} by~2.
+
+%The second operand of a \cs{multiply} or \cs{divide}
+%operation can only be a \gr{number}, that is, an integer.
+%Introducing the notion of \gr{numeric variable}:
+%\begin{disp}\gr{numeric variable} $\longrightarrow$ \gr{integer variable}
+%     $|$ \gr{dimen variable} \nl
+%     \indent $|$ \gr{glue variable} $|$ \gr{muglue variable}\end{disp}
+%these operations take the form
+%\begin{Disp}\cs{multiply}\gr{numeric variable}\gr{optional \n{by}}%
+%\gr{number}\end{Disp} 
+%and
+%\begin{Disp}\cs{divide}\gr{numeric variable}\gr{optional \n{by}}%
+%\gr{number}\end{Disp}
+The second operand of a \cs{multiply} or \cs{divide}
+operation can only be a \gr{number}, that is, an integer.
+Introducing the notion of \gr{numeric variable}:
+\begin{disp}\gr{numeric variable} $\longrightarrow$ \gr{integer variable}
+     $|$ \gr{dimen variable} \nl
+     \indent $|$ \gr{glue variable} $|$ \gr{muglue variable}\end{disp}
+these operations take the form
+\begin{Disp}\cs{multiply}\gr{numeric variable}\gr{optional \n{by}}%
+\gr{number}\end{Disp} 
+and
+\begin{Disp}\cs{divide}\gr{numeric variable}\gr{optional \n{by}}%
+\gr{number}\end{Disp}
+
+%Glue and dimen can be multiplied by 
+%non-integer quantities:
+%\begin{verbatim}
+%\skip1=2.5\skip2
+%\dimen1=.78\dimen2
+%\end{verbatim}
+%However, in the first line the \cs{skip2} is first coerced
+%to a \gr{dimen} value by omitting its stretch and shrink.
+Glue and dimen can be multiplied by 
+non-integer quantities:
+\begin{verbatim}
+\skip1=2.5\skip2
+\dimen1=.78\dimen2
+\end{verbatim}
+However, in the first line the \cs{skip2} is first coerced
+to a \gr{dimen} value by omitting its stretch and shrink.
+
+%%\point More about dimensions
+%\section{More about dimensions}
+%\point More about dimensions
+\section{More about dimensions}
+
+%%\spoint Units of measurement
+%\subsection{Units of measurement}
+%\spoint Units of measurement
+\subsection{Units of measurement}
+
+%In \TeX\ dimensions can be indicated in the following
+%\indexterm{units of measurement}:
+%\begin{description} 
+%\item [centimetre]
+%    denoted \n{cm} or 
+%\item [millimetre]
+%	denoted \n{mm}; these are SI~units ({\italic Syst\`eme International
+%	d'Unit\'es}, the
+%	international system of standard units of measurements).
+%\item [inch]
+%\n{in}; more common in the Anglo-American world.
+%One inch is 2.54~centimetres.
+%\item [pica]
+%    denoted \n{pc}; one pica is 12~points.
+%\item [point]
+%    denoted \n{pt}; the common system
+%for Anglo-American printers. One inch is 72.27 points.
+%\item [didot point]
+%    denoted \n{dd}; the common system for continental European printers.
+%    Furthermore, 1157 didot points are 1238~points.
+%\item [cicero]
+%    denoted \n{cc}; one cicero is 12~didot points.
+%\item [big point]
+%    denoted \n{bp}; one inch is 72 big points.
+%\item [scaled point]
+%    denoted \n{sp}; this is the smallest unit in \TeX, and all measurements
+%    are integral multiples of one scaled point.
+%    There are $65\,536$ scaled points in a~point.
+%\end{description}
+In \TeX\ dimensions can be indicated in the following
+\indexterm{units of measurement}:
+\begin{description} 
+\item [centimetre]
+    denoted \n{cm} or 
+\item [millimetre]
+	denoted \n{mm}; these are SI~units ({\italic Syst\`eme International
+	d'Unit\'es}, the
+	international system of standard units of measurements).
+\item [inch]
+\n{in}; more common in the Anglo-American world.
+One inch is 2.54~centimetres.
+\item [pica]
+    denoted \n{pc}; one pica is 12~points.
+\item [point]
+    denoted \n{pt}; the common system
+for Anglo-American printers. One inch is 72.27 points.
+\item [didot point]
+    denoted \n{dd}; the common system for continental European printers.
+    Furthermore, 1157 didot points are 1238~points.
+\item [cicero]
+    denoted \n{cc}; one cicero is 12~didot points.
+\item [big point]
+    denoted \n{bp}; one inch is 72 big points.
+\item [scaled point]
+    denoted \n{sp}; this is the smallest unit in \TeX, and all measurements
+    are integral multiples of one scaled point.
+    There are $65\,536$ scaled points in a~point.
+\end{description}
+
+%Decimal fractions can be written using both the
+%Anglo-American system with the decimal point
+%(for example, \n{1in}=\n{72.27pt})
+%and the continental European system with a decimal
+%comma; \n{1in}=\n{72,27pt}.
+Decimal fractions can be written using both the
+Anglo-American system with the decimal point
+(for example, \n{1in}=\n{72.27pt})
+and the continental European system with a decimal
+comma; \n{1in}=\n{72,27pt}.
+
+%Internally \TeX\ works with multiples of a smallest 
+%dimension: the  scaled point.
+%Dimensions larger (in absolute value) than $2^{30}-1$\n{sp},
+%which is about 5.75~metres or 18.9~feet, are illegal.
+Internally \TeX\ works with multiples of a smallest 
+dimension: the  scaled point.
+Dimensions larger (in absolute value) than $2^{30}-1$\n{sp},
+which is about 5.75~metres or 18.9~feet, are illegal.
+
+%Both the pica system and the didot system are of French
+%origin: in 1737 the type founder Pierre Simon Fournier
+%introduced typographical points based on the French foot.
+%Although at first he introduced a system based on lines and
+%points, he later took the point as unit:
+%there are 72 points in an inch,
+%which is one-twelfth of a foot. 
+%About 1770 another founder, Fran\c{c}ois Ambroise Didot, introduced
+%points based on the more common, and slightly longer,
+%`pied du roi'.
+Both the pica system and the didot system are of French
+origin: in 1737 the type founder Pierre Simon Fournier
+introduced typographical points based on the French foot.
+Although at first he introduced a system based on lines and
+points, he later took the point as unit:
+there are 72 points in an inch,
+which is one-twelfth of a foot. 
+About 1770 another founder, Fran\c{c}ois Ambroise Didot, introduced
+points based on the more common, and slightly longer,
+`pied du roi'.
+
+%%\spoint Dimension testing
+%\subsection{Dimension testing}
+%\spoint Dimension testing
+\subsection{Dimension testing}
+
+%Dimensions and natural sizes of glue can be compared with
+%the \cs{ifdim} test. This takes the form
+%\begin{disp}\cs{ifdim}\gr{dimen$_1$}\gr{relation}\gr{dimen$_2$}\end{disp}
+%where the relation can be an \n>, \n<, or~\n= token, 
+%all of category~12\index{category!12}.
+Dimensions and natural sizes of glue can be compared with
+the \cs{ifdim} test. This takes the form
+\begin{disp}\cs{ifdim}\gr{dimen$_1$}\gr{relation}\gr{dimen$_2$}\end{disp}
+where the relation can be an \n>, \n<, or~\n= token, 
+all of category~12\index{category!12}.
+
+%%\spoint Defined dimensions
+%\subsection{Defined dimensions}
+%\spoint Defined dimensions
+\subsection{Defined dimensions}
+
+%\begin{inventory}
+%\item [\cs{z@}]
+% \n{0pt}
+\begin{inventory}
+\item [\cs{z@}]
+ \n{0pt}
+
+%\item [\cs{maxdimen}] 
+%      \n{16383.99999pt}; the largest legal dimension.
+%\end{inventory}
+\item [\cs{maxdimen}] 
+      \n{16383.99999pt}; the largest legal dimension.
+\end{inventory}
+
+%These \gr{dimen}s are predefined in the plain format;
+%for instance
+%\begin{verbatim}
+%\newdimen\z@ \z@=0pt
+%\end{verbatim}
+%Using such abbreviations for commonly used dimensions
+%has at least two advantages. First of all it saves main memory
+%if such a dimension occurs in a macro: a control sequence
+%is one token, whereas a string such as \n{0pt} takes three.
+%Secondly, it saves time in processing, as \TeX\ does not need
+%to perform conversions to arrive at the correct type of
+%object.
+These \gr{dimen}s are predefined in the plain format;
+for instance
+\begin{verbatim}
+\newdimen\z@ \z@=0pt
+\end{verbatim}
+Using such abbreviations for commonly used dimensions
+has at least two advantages. First of all it saves main memory
+if such a dimension occurs in a macro: a control sequence
+is one token, whereas a string such as \n{0pt} takes three.
+Secondly, it saves time in processing, as \TeX\ does not need
+to perform conversions to arrive at the correct type of
+object.
+
+%Control sequences such as \cs{z@}
+%are only available to a user who changes the
+%category code of the `at' sign. Ordinarily, these control sequences
+%appear only in the macros defined in packages such as the
+%plain format.
+Control sequences such as \cs{z@}
+are only available to a user who changes the
+category code of the `at' sign. Ordinarily, these control sequences
+appear only in the macros defined in packages such as the
+plain format.
+
+%%\point More about glue
+%\section{More about glue}
+%\point More about glue
+\section{More about glue}
+
+%Glue items can be added to a vertical list with one of the
+%\alt
+%commands \csidx{vskip}\gr{glue}, \cs{vfil}, \cs{vfill}, \cs{vss} or
+%\cs{vfilneg}; 
+%glue items can be added to a horizontal list with one of the
+%commands \csidx{hskip}\gr{glue}, \cs{hfil}, \cs{hfill}, \cs{hss} or
+%\cs{hfilneg}. We will now treat the properties of glue.
+Glue items can be added to a vertical list with one of the
+\alt
+commands \csidx{vskip}\gr{glue}, \cs{vfil}, \cs{vfill}, \cs{vss} or
+\cs{vfilneg}; 
+glue items can be added to a horizontal list with one of the
+commands \csidx{hskip}\gr{glue}, \cs{hfil}, \cs{hfill}, \cs{hss} or
+\cs{hfilneg}. We will now treat the properties of glue.
+
+%%\spoint Stretch and shrink
+%\subsection{Stretch and shrink}
+%\spoint Stretch and shrink
+\subsection{Stretch and shrink}
+
+%In the syntax given above, \gr{glue} was defined as having
+%\begin{itemize}
+%\item a `natural size', which is a \gr{dimen}, and optionally
+%\item a \indexterm{stretch} and \indexterm{shrink}
+%  component\indexterm{stretch}\indexterm{shrink}
+%  \index{glue!stretch component of}\index{glue!shrink
+%    component of} built out of a \gr{fil dimen}.
+%\end{itemize}
+In the syntax given above, \gr{glue} was defined as having
+\begin{itemize}
+\item a `natural size', which is a \gr{dimen}, and optionally
+\item a \indexterm{stretch} and \indexterm{shrink}
+  component\indexterm{stretch}\indexterm{shrink}
+  \index{glue!stretch component of}\index{glue!shrink
+    component of} built out of a \gr{fil dimen}.
+\end{itemize}
+
+%Each list that \TeX\ builds has amounts of stretch and shrink
+%(possibly zero),
+%which are the sum of the
+%stretch and shrink components of individual pieces of glue in the list. 
+%Stretch and shrink are used if the context in which the list
+%appears requires it to assume a size that is different from
+%its natural size.
+Each list that \TeX\ builds has amounts of stretch and shrink
+(possibly zero),
+which are the sum of the
+stretch and shrink components of individual pieces of glue in the list. 
+Stretch and shrink are used if the context in which the list
+appears requires it to assume a size that is different from
+its natural size.
+
+%There is an important difference in behaviour between stretch
+%and shrink components when they are finite \ldash that is,
+%when the \gr{fildimen} is not \n{fil}(\n{l}(\n{l})). 
+%A~finite amount of shrink is indeed the maximum shrink
+%that \TeX\ will take: the amount of glue specified
+%as
+%\begin{verbatim}
+%5pt minus 3pt
+%\end{verbatim}
+%can shrink to \n{2pt}, but not further.
+%In contrast to this, a finite amount of stretch 
+%can be stretched arbitrarily far. 
+%Such arbitrary stretching
+%has a large `badness', however.
+%Badness calculation is treated below.
+There is an important difference in behaviour between stretch
+and shrink components when they are finite \ldash that is,
+when the \gr{fildimen} is not \n{fil}(\n{l}(\n{l})). 
+A~finite amount of shrink is indeed the maximum shrink
+that \TeX\ will take: the amount of glue specified
+as
+\begin{verbatim}
+5pt minus 3pt
+\end{verbatim}
+can shrink to \n{2pt}, but not further.
+In contrast to this, a finite amount of stretch 
+can be stretched arbitrarily far. 
+Such arbitrary stretching
+has a large `badness', however.
+Badness calculation is treated below.
+
+%\begin{example}
+%The sequence with natural size \n{20pt}
+%\begin{verbatim}
+%\hskip 10pt plus 2pt \hskip 10pt plus 3pt
+%\end{verbatim}
+%has \n{5pt} of stretch, but it has no shrink. In
+%\begin{verbatim}
+%\hskip 10pt minus 2pt \hskip 10pt plus 3pt
+%\end{verbatim}
+%there is \n{3pt} of stretch, and \n{2pt} of shrink,
+%so its minimal size is~\n{18pt}. 
+\begin{example}
+The sequence with natural size \n{20pt}
+\begin{verbatim}
+\hskip 10pt plus 2pt \hskip 10pt plus 3pt
+\end{verbatim}
+has \n{5pt} of stretch, but it has no shrink. In
+\begin{verbatim}
+\hskip 10pt minus 2pt \hskip 10pt plus 3pt
+\end{verbatim}
+there is \n{3pt} of stretch, and \n{2pt} of shrink,
+so its minimal size is~\n{18pt}. 
+
+%Positive shrink is not the same as negative stretch:
+%\begin{verbatim}
+%\hskip 10pt plus -2pt \hskip 10pt plus 3pt
+%\end{verbatim}
+%looks a lot like the previous example, but it cannot
+%be shrunk as there are no \hbox{\n{minus}\gr{dimen}}
+%specifications. It does have \n{1pt} of stretch, however.
+Positive shrink is not the same as negative stretch:
+\begin{verbatim}
+\hskip 10pt plus -2pt \hskip 10pt plus 3pt
+\end{verbatim}
+looks a lot like the previous example, but it cannot
+be shrunk as there are no \hbox{\n{minus}\gr{dimen}}
+specifications. It does have \n{1pt} of stretch, however.
+
+%This is another example of negative amounts of shrink and stretch.
+%It is not possible to stretch
+%glue (in the informal sense) by shrinking it (in the technical
+%sense):
+%\begin{verbatim}
+%\hbox to 5cm{a\hskip 0cm minus -1fil}
+%\end{verbatim}
+%is an underfull box, because \TeX\ looks for a \n{plus}~\gr{dimen}
+%specification when it needs to stretch the contents.
+This is another example of negative amounts of shrink and stretch.
+It is not possible to stretch
+glue (in the informal sense) by shrinking it (in the technical
+sense):
+\begin{verbatim}
+\hbox to 5cm{a\hskip 0cm minus -1fil}
+\end{verbatim}
+is an underfull box, because \TeX\ looks for a \n{plus}~\gr{dimen}
+specification when it needs to stretch the contents.
+
+%Finally,
+%\begin{verbatim}
+%\hskip 10pt plus -3pt \hskip 10pt plus 3pt
+%\end{verbatim}
+%can neither stretch nor shrink.
+%The fact that there is only stretch
+%available means that the sequence cannot
+%shrink. However, the stretch components cancel out: the 
+%total stretch is zero. Another way of looking at this
+%is to consider that for each point that the second glue item would
+%stretch, the first one would `stretch back' one point.
+%\end{example}
+Finally,
+\begin{verbatim}
+\hskip 10pt plus -3pt \hskip 10pt plus 3pt
+\end{verbatim}
+can neither stretch nor shrink.
+The fact that there is only stretch
+available means that the sequence cannot
+shrink. However, the stretch components cancel out: the 
+total stretch is zero. Another way of looking at this
+is to consider that for each point that the second glue item would
+stretch, the first one would `stretch back' one point.
+\end{example}
+
+%Any amount of infinite stretch or shrink overpowers all
+%finite stretch or shrink available:
+%\begin{verbatim}
+%\hbox to 5cm{\hskip 0cm plus 16384pt 
+%              text\hskip 0cm plus 0.0001fil}
+%\end{verbatim}
+%has the \n{text} at the extreme left of the box.
+%There are three orders of `infinity', each  one infinitely
+%stronger than the previous one:
+%\begin{verbatim}
+%\hbox to 5cm{\hskip 0cm plus 16384fil
+%              text\hskip 0cm plus 0.0001fill}
+%\end{verbatim}
+%and
+%\begin{verbatim}
+%\hbox to 5cm{\hskip 0cm plus 16384fill
+%              text\hskip 0cm plus 0.0001filll}
+%\end{verbatim}
+%both have the \n{text} at the left end of the box.
+Any amount of infinite stretch or shrink overpowers all
+finite stretch or shrink available:
+\begin{verbatim}
+\hbox to 5cm{\hskip 0cm plus 16384pt 
+              text\hskip 0cm plus 0.0001fil}
+\end{verbatim}
+has the \n{text} at the extreme left of the box.
+There are three orders of `infinity', each  one infinitely
+stronger than the previous one:
+\begin{verbatim}
+\hbox to 5cm{\hskip 0cm plus 16384fil
+              text\hskip 0cm plus 0.0001fill}
+\end{verbatim}
+and
+\begin{verbatim}
+\hbox to 5cm{\hskip 0cm plus 16384fill
+              text\hskip 0cm plus 0.0001filll}
+\end{verbatim}
+both have the \n{text} at the left end of the box.
+
+
+
+%%\spoint Glue setting
+%\subsection{Glue setting}
+%\spoint Glue setting
+\subsection{Glue setting}
+
+%In the process of \indextermsub{glue}{setting}, the desired width (or height)
+%of a box is compared with the natural dimension of its contents,
+%which is the sum of all natural dimensions of boxes and globs of glue.
+%If the two differ, any available stretchability or shrinkability is used
+%to bridge the gap.
+%To attain the desired dimension of the box
+%only the glue of the highest available order is set:
+%each piece of glue of that order is stretched or shrunk by the
+%same ratio.
+In the process of \indextermsub{glue}{setting}, the desired width (or height)
+of a box is compared with the natural dimension of its contents,
+which is the sum of all natural dimensions of boxes and globs of glue.
+If the two differ, any available stretchability or shrinkability is used
+to bridge the gap.
+To attain the desired dimension of the box
+only the glue of the highest available order is set:
+each piece of glue of that order is stretched or shrunk by the
+same ratio.
+
+%For example, in
+%\begin{verbatim}
+%\hbox to 6pt{\hskip 0pt plus 3pt \hskip 0pt plus 9pt}
+%\end{verbatim}
+%the natural size of the box is~\n{0pt}, and
+%the total stretch is~\n{12pt}. In order to obtain a box
+%of~\n{6pt} each glue item is set with a stretch ratio
+%of~$1/2$. Thus the result is equivalent to
+%\begin{verbatim}
+%\hbox {\hskip 1.5pt \hskip 4.5pt}
+%\end{verbatim}
+%Only the highest order of stretch or shrink is used:
+%in
+%\begin{verbatim}
+%\hbox to 6pt{\hskip 0pt plus 1fil \hskip 0pt plus 9pt}
+%\end{verbatim}
+%the second glue  will assume its natural size of~\n{0pt},
+%and only the first   glue will be stretched.
+For example, in
+\begin{verbatim}
+\hbox to 6pt{\hskip 0pt plus 3pt \hskip 0pt plus 9pt}
+\end{verbatim}
+the natural size of the box is~\n{0pt}, and
+the total stretch is~\n{12pt}. In order to obtain a box
+of~\n{6pt} each glue item is set with a stretch ratio
+of~$1/2$. Thus the result is equivalent to
+\begin{verbatim}
+\hbox {\hskip 1.5pt \hskip 4.5pt}
+\end{verbatim}
+Only the highest order of stretch or shrink is used:
+in
+\begin{verbatim}
+\hbox to 6pt{\hskip 0pt plus 1fil \hskip 0pt plus 9pt}
+\end{verbatim}
+the second glue  will assume its natural size of~\n{0pt},
+and only the first   glue will be stretched.
+
+%\TeX\ will never exceed the maximum value of a finite
+%amount of shrink.
+%A~box that cannot be shrunk enough is called `overfull'.
+%Finite stretchability can be exceeded to provide an
+%escape in difficult situations; however, \TeX\ is likely 
+%to give an \verb-Underfull \hbox- message about this
+%(see page~\pageref{over/underfull}).
+%For an example of infinite shrink see page~\pageref{rlap}.
+\TeX\ will never exceed the maximum value of a finite
+amount of shrink.
+A~box that cannot be shrunk enough is called `overfull'.
+Finite stretchability can be exceeded to provide an
+escape in difficult situations; however, \TeX\ is likely 
+to give an \verb-Underfull \hbox- message about this
+(see page~\pageref{over/underfull}).
+For an example of infinite shrink see page~\pageref{rlap}.
+
+%%\spoint Badness
+%\subsection{Badness}
+%\spoint Badness
+\subsection{Badness}
+
+%When stretching or shrinking a list \TeX\ calculates 
+%\indexterm{badness}\index{badness! calculation}
+%badness based on the
+%ratio between actual stretch and the amount of stretch
+%present in the line. See Chapter~\ref{line:break}
+%for the application  of badness to the paragraph algorithm.
+When stretching or shrinking a list \TeX\ calculates 
+\indexterm{badness}\index{badness! calculation}
+badness based on the
+ratio between actual stretch and the amount of stretch
+present in the line. See Chapter~\ref{line:break}
+for the application  of badness to the paragraph algorithm.
+
+%The formula for badness of a list that is stretched (shrunk) is
+%\label{bad:form}\message{Check roman min}
+%\begin{disp} $\displaystyle b=\hbox{min}\left(10\,000,
+%100\times \left({\hbox{actual amount stretched (shrunk)}
+%\over\hbox{possible amount of stretch (shrink)}}\right)^3\right)$\end{disp}
+%In reality \TeX\ uses a slightly different formula that is
+%easier to calculate, but behaves the same. Since glue setting is
+%one of the main activities of \TeX, this must be performed
+%as efficiently as possible.
+The formula for badness of a list that is stretched (shrunk) is
+\label{bad:form}\message{Check roman min}
+\begin{disp} $\displaystyle b=\hbox{min}\left(10\,000,
+100\times \left({\hbox{actual amount stretched (shrunk)}
+\over\hbox{possible amount of stretch (shrink)}}\right)^3\right)$\end{disp}
+In reality \TeX\ uses a slightly different formula that is
+easier to calculate, but behaves the same. Since glue setting is
+one of the main activities of \TeX, this must be performed
+as efficiently as possible.
+
+%This formula lets the badness be a reasonably small number
+%if the glue set ratio (the fraction in the above expression)
+%is reasonably small, but will let it grow rapidly once
+%the ratio is more than~1. Badness is infinite if the
+%glue would have to shrink more than the allotted amount;
+%stretching glue beyond its maximum is possible, so this
+%provides an  escape for very difficult lines of text or pages.
+This formula lets the badness be a reasonably small number
+if the glue set ratio (the fraction in the above expression)
+is reasonably small, but will let it grow rapidly once
+the ratio is more than~1. Badness is infinite if the
+glue would have to shrink more than the allotted amount;
+stretching glue beyond its maximum is possible, so this
+provides an  escape for very difficult lines of text or pages.
+
+%In \TeX3, the \cs{badness} parameter records the badness
+%of the most recently formed box.
+In \TeX3, the \cs{badness} parameter records the badness
+of the most recently formed box.
+
+%%\spoint Glue and breaking
+%\subsection{Glue and breaking}
+%\spoint Glue and breaking
+\subsection{Glue and breaking}
+
+%\TeX\ can break lines and pages in several kinds of places.
+%One of these places is before a glue item. 
+%The glue is then discarded. For line breaks this is treated
+%in Chapter~\ref{line:break}, 
+%for page breaks see Chapter~\ref{page:break}.
+\TeX\ can break lines and pages in several kinds of places.
+One of these places is before a glue item. 
+The glue is then discarded. For line breaks this is treated
+in Chapter~\ref{line:break}, 
+for page breaks see Chapter~\ref{page:break}.
+
+%There are two macros in plain \TeX, \csidx{hglue} and \csidx{vglue},
+%that give non-disappearing glue in horizontal and
+%vertical mode respectively. For the horizontal case this is
+%accomplished by
+%placing:
+%\begin{verbatim}
+%\vrule width 0pt \nobreak \hskip ...
+%\end{verbatim}
+%Because \TeX\ breaks at the front end of glue,
+%this glue will always stay attached to the rule,
+%and will therefore never disappear.
+%The actual macro definitions are somewhat more complicated,
+%because they take care to preserve the \cs{spacefactor} and the
+%\cs{prevdepth}.
+There are two macros in plain \TeX, \csidx{hglue} and \csidx{vglue},
+that give non-disappearing glue in horizontal and
+vertical mode respectively. For the horizontal case this is
+accomplished by
+placing:
+\begin{verbatim}
+\vrule width 0pt \nobreak \hskip ...
+\end{verbatim}
+Because \TeX\ breaks at the front end of glue,
+this glue will always stay attached to the rule,
+and will therefore never disappear.
+The actual macro definitions are somewhat more complicated,
+because they take care to preserve the \cs{spacefactor} and the
+\cs{prevdepth}.
+
+%%\spoint \cs{kern}
+%\subsection{\cs{kern}}
+%\spoint \cs{kern}
+\subsection{\cs{kern}}
+
+%The \csidx{kern} command specifies
+%a~kern item in whatever mode \TeX\ is currently
+%in. A~kern item is much like a glue item without
+%stretch or shrink.
+%It differs from glue in that it is
+%in general not a legal breakpoint. Thus in
+%\begin{verbatim}
+%.. text .. \hbox{a}\kern0pt\hbox{b}
+%\end{verbatim}
+%\TeX\ will not break lines in between the boxes; in
+%\begin{verbatim}
+%.. text .. \hbox{a}\hskip0pt\hbox{b}
+%\end{verbatim}
+%a line can be broken in between the boxes.
+The \csidx{kern} command specifies
+a~kern item in whatever mode \TeX\ is currently
+in. A~kern item is much like a glue item without
+stretch or shrink.
+It differs from glue in that it is
+in general not a legal breakpoint. Thus in
+\begin{verbatim}
+.. text .. \hbox{a}\kern0pt\hbox{b}
+\end{verbatim}
+\TeX\ will not break lines in between the boxes; in
+\begin{verbatim}
+.. text .. \hbox{a}\hskip0pt\hbox{b}
+\end{verbatim}
+a line can be broken in between the boxes.
+
+%However, if a kern is followed by glue, \TeX\ can break at the
+%kern (provided that it is not in math mode). 
+%In horizontal mode
+%both the kern and the glue then disappear in the break.
+%In vertical mode they are discarded when they are moved to
+%the (empty) current page after the material before
+%the break has been disposed of by the output routine 
+%(see Chapter~\ref{page:break}).
+However, if a kern is followed by glue, \TeX\ can break at the
+kern (provided that it is not in math mode). 
+In horizontal mode
+both the kern and the glue then disappear in the break.
+In vertical mode they are discarded when they are moved to
+the (empty) current page after the material before
+the break has been disposed of by the output routine 
+(see Chapter~\ref{page:break}).
+
+%%\spoint Glue and modes
+%\subsection{Glue and modes}
+%\spoint Glue and modes
+\subsection{Glue and modes}
+
+%All horizontal skip commands are \gr{horizontal command}s and
+%all vertical skip commands are \gr{vertical commands}s.
+%This means that, for instance, an \cs{hskip} command
+%makes \TeX\ start a paragraph if it is given in vertical mode.
+%The \cs{kern} command can be given in both modes.
+All horizontal skip commands are \gr{horizontal command}s and
+all vertical skip commands are \gr{vertical commands}s.
+This means that, for instance, an \cs{hskip} command
+makes \TeX\ start a paragraph if it is given in vertical mode.
+The \cs{kern} command can be given in both modes.
+
+%%\spoint The last  glue item in a list: backspacing
+%\subsection{The last  glue item in a list: backspacing}
+%\spoint The last  glue item in a list: backspacing
+\subsection{The last  glue item in a list: backspacing}
+
+%The last glue item in a list can be measured, and
+%it can be removed in all modes but external vertical mode.
+%The internal variables
+%\csidx{lastskip} and  \csidx{lastkern} can be used
+%to measure the last glob of glue in all modes;
+%if the last glue was not a skip or kern respectively
+%they give~\n{0pt}.
+%In math mode the \cs{lastskip}
+%functions as \gr{internal muglue}, but in general
+%it classifies as \gr{internal glue}.
+%The \cs{lastskip} and \cs{lastkern}
+%are also \n{0pt} if that was the size of the last glue or
+%kern item on the list.
+The last glue item in a list can be measured, and
+it can be removed in all modes but external vertical mode.
+The internal variables
+\csidx{lastskip} and  \csidx{lastkern} can be used
+to measure the last glob of glue in all modes;
+if the last glue was not a skip or kern respectively
+they give~\n{0pt}.
+In math mode the \cs{lastskip}
+functions as \gr{internal muglue}, but in general
+it classifies as \gr{internal glue}.
+The \cs{lastskip} and \cs{lastkern}
+are also \n{0pt} if that was the size of the last glue or
+kern item on the list.
+
+%The operations\label{unskip}
+%\csidx{unskip} and \csidx{unkern} remove the last item of a list,
+%if this is a glue or kern respectively. They have no effect
+%in external vertical mode; in that case the
+%best substitute is 
+%\verb=\vskip-\lastskip= 
+%and~\verb=\kern-\lastkern=.
+The operations\label{unskip}
+\csidx{unskip} and \csidx{unkern} remove the last item of a list,
+if this is a glue or kern respectively. They have no effect
+in external vertical mode; in that case the
+best substitute is 
+\verb=\vskip-\lastskip= 
+and~\verb=\kern-\lastkern=.
+
+%In the process of paragraph building \TeX\ itself performs
+%an important \cs{unskip}: a~paragraph ending with a
+%white line will have a space token inserted by \TeX's input processor.
+%This is removed by an \cs{unskip} before the \cs{parfillskip} glue
+%(see Chapter~\ref{par:end}) is inserted.
+In the process of paragraph building \TeX\ itself performs
+an important \cs{unskip}: a~paragraph ending with a
+white line will have a space token inserted by \TeX's input processor.
+This is removed by an \cs{unskip} before the \cs{parfillskip} glue
+(see Chapter~\ref{par:end}) is inserted.
+
+%Glue is treated by \TeX\ as a special case of leaders,
+%which becomes apparent when \cs{unskip} is applied to
+%leaders: they are removed.
+Glue is treated by \TeX\ as a special case of leaders,
+which becomes apparent when \cs{unskip} is applied to
+leaders: they are removed.
+
+%%\spoint Examples of backspacing
+%\subsection{Examples of backspacing}
+%\spoint Examples of backspacing
+\subsection{Examples of backspacing}
+
+%The plain \TeX\ macro \csidx{removelastskip} is defined
+%as
+%\begin{verbatim}
+%\ifdim\lastskip=0pt \else \vskip-\lastskip \fi
+%\end{verbatim}
+%If the last item on the list was a glue, this macro will
+%backspace by its value, provided its natural size was not zero.
+%In all other cases, nothing is added to the list.
+The plain \TeX\ macro \csidx{removelastskip} is defined
+as
+\begin{verbatim}
+\ifdim\lastskip=0pt \else \vskip-\lastskip \fi
+\end{verbatim}
+If the last item on the list was a glue, this macro will
+backspace by its value, provided its natural size was not zero.
+In all other cases, nothing is added to the list.
+
+%Sometimes an intelligent version of commands such as \cs{vskip}
+%is necessary, in the sense that two subsequent skip commands
+%should result only in the larger of the two glue amounts.
+%On page~\pageref{skip:scheme} such a macro is used:
+%\begin{verbatim}
+%\newskip\tempskipa
+%\def\vspace#1{\tempskipa=#1\relax
+%    \ifvmode \ifdim\tempskipa<\lastskip 
+%             \else \vskip-\lastskip \vskip\tempskipa
+%             \fi
+%    \else \vskip\tempskipa \fi}
+%\end{verbatim}
+%First of all, this tests whether the mode is vertical; 
+%if not, the argument can safely be placed.
+%Copying the argument into a skip register is necessary
+%because \cs{v\-space}\verb>{2pt plus 3pt}> would lead to 
+%problems in an \verb>\ifdim#1<\lastskip> test.
+Sometimes an intelligent version of commands such as \cs{vskip}
+is necessary, in the sense that two subsequent skip commands
+should result only in the larger of the two glue amounts.
+On page~\pageref{skip:scheme} such a macro is used:
+\begin{verbatim}
+\newskip\tempskipa
+\def\vspace#1{\tempskipa=#1\relax
+    \ifvmode \ifdim\tempskipa<\lastskip 
+             \else \vskip-\lastskip \vskip\tempskipa
+             \fi
+    \else \vskip\tempskipa \fi}
+\end{verbatim}
+First of all, this tests whether the mode is vertical; 
+if not, the argument can safely be placed.
+Copying the argument into a skip register is necessary
+because \cs{v\-space}\verb>{2pt plus 3pt}> would lead to 
+problems in an \verb>\ifdim#1<\lastskip> test.
+
+%If the surrounding mode was vertical, the argument
+%should only be placed if it is not less than what is
+%already there. The macro would be incorrect
+%if the test  read
+%\begin{verbatim}
+%        \ifdim\tempskipa>\lastskip 
+%            \vskip-\lastskip \vskip\tempskipa
+%        \fi
+%\end{verbatim}
+%In this case the sequence
+%\begin{verbatim}
+%... last word.\par \vspace{0pt plus 1fil}
+%\end{verbatim}
+%would not place any glue, because after
+%the \cs{par} we are in vertical mode and
+%\cs{lastskip} has a value of \n{0pt}.
+If the surrounding mode was vertical, the argument
+should only be placed if it is not less than what is
+already there. The macro would be incorrect
+if the test  read
+\begin{verbatim}
+        \ifdim\tempskipa>\lastskip 
+            \vskip-\lastskip \vskip\tempskipa
+        \fi
+\end{verbatim}
+In this case the sequence
+\begin{verbatim}
+... last word.\par \vspace{0pt plus 1fil}
+\end{verbatim}
+would not place any glue, because after
+the \cs{par} we are in vertical mode and
+\cs{lastskip} has a value of \n{0pt}.
+
+%%\spoint Glue in trace output
+%\subsection{Glue in trace output}
+%\spoint Glue in trace output
+\subsection{Glue in trace output}
+
+%If the workings of \TeX\ are traced by setting
+%\cs{tracingoutput} positive, or if \TeX\ 
+%writes a box to the log file 
+%(because of a \cs{showbox} command, or because it
+%is overfull or underfull),
+%glue  is denoted by the control sequence \cs{glue}.
+%This is not a \TeX\ command; it merely indicates the presence
+%of glue in the current list.
+If the workings of \TeX\ are traced by setting
+\cs{tracingoutput} positive, or if \TeX\ 
+writes a box to the log file 
+(because of a \cs{showbox} command, or because it
+is overfull or underfull),
+glue  is denoted by the control sequence \cs{glue}.
+This is not a \TeX\ command; it merely indicates the presence
+of glue in the current list.
+
+%The box representation that \TeX\ generated from,
+%\alt
+%for instance, \cs{showbox}
+%inserts a space after every explicit \cs{kern},
+%but no space is inserted after an implicit
+%kern that was inserted by the kerning information in the font
+%\n{tfm} file. Thus \hbox{\verb-\kern 2.0pt-} denotes a kern
+%that was inserted by the user or by a macro, and
+%\verb-\kern2.0pt- denotes an implicit kern.
+The box representation that \TeX\ generated from,
+\alt
+for instance, \cs{showbox}
+inserts a space after every explicit \cs{kern},
+but no space is inserted after an implicit
+kern that was inserted by the kerning information in the font
+\n{tfm} file. Thus \hbox{\verb-\kern 2.0pt-} denotes a kern
+that was inserted by the user or by a macro, and
+\verb-\kern2.0pt- denotes an implicit kern.
+
+%Glue that is inserted automatically (\cs{topskip}, \cs{baselineskip},
+%et cetera) is denoted by name in \TeX's trace output.
+%For example, the box
+%\begin{verbatim}
+%\vbox{\hbox{Vo}\hbox{b}}
+%\end{verbatim}
+%looks like
+%\begin{verbatim}
+%\vbox(18.83331+0.0)x11.66669
+%.\hbox(6.83331+0.0)x11.66669
+%..\tenrm V
+%..\kern-0.83334
+%..\tenrm o
+%.\glue(\baselineskip) 5.05556
+%.\hbox(6.94444+0.0)x5.55557
+%..\tenrm b
+%\end{verbatim}
+%Note the implicit kern inserted between `V' and~`o'.
+Glue that is inserted automatically (\cs{topskip}, \cs{baselineskip},
+et cetera) is denoted by name in \TeX's trace output.
+For example, the box
+\begin{verbatim}
+\vbox{\hbox{Vo}\hbox{b}}
+\end{verbatim}
+looks like
+\begin{verbatim}
+\vbox(18.83331+0.0)x11.66669
+.\hbox(6.83331+0.0)x11.66669
+..\tenrm V
+..\kern-0.83334
+..\tenrm o
+.\glue(\baselineskip) 5.05556
+.\hbox(6.94444+0.0)x5.55557
+..\tenrm b
+\end{verbatim}
+Note the implicit kern inserted between `V' and~`o'.
+
+%\endofchapter
+%%%%% end of input file [glue]
+\endofchapter
+%%%% end of input file [glue]
+
+\end{document}

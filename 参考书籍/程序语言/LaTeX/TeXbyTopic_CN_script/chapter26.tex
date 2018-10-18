@@ -1,0 +1,280 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{25}
+
+\begin{document}
+
+%\chapter{Page Shape}\label{page:shape}
+\chapter{Page Shape}\label{page:shape}
+
+%This chapter treats some of the parameters that 
+%determine the size of the page and how it appears on paper.
+This chapter treats some of the parameters that 
+determine the size of the page and how it appears on paper.
+
+%\label{cschap:topskip}\label{cschap:hoffset}\label{cschap:voffset}\label{cschap:vsize2}\label{cschap:maxdepth}\label{cschap:splitmaxdepth2}
+%\begin{inventory}
+%\item [\cs{topskip}] 
+%      Minimum distance between the top of the page box
+%      and the baseline of the first box on the page. 
+%      Plain \TeX\ default:~\n{10pt}
+\label{cschap:topskip}\label{cschap:hoffset}\label{cschap:voffset}\label{cschap:vsize2}\label{cschap:maxdepth}\label{cschap:splitmaxdepth2}
+\begin{inventory}
+\item [\cs{topskip}] 
+      Minimum distance between the top of the page box
+      and the baseline of the first box on the page. 
+      Plain \TeX\ default:~\n{10pt}
+
+%\item [\cs{hoffset \cs{voffset}}]
+%\mdqon
+%      Distance by which the page is shifted right/""down 
+%\mdqoff
+%      with respect to the reference point.
+\item [\cs{hoffset \cs{voffset}}]
+\mdqon
+      Distance by which the page is shifted right/""down 
+\mdqoff
+      with respect to the reference point.
+
+%\item [\cs{vsize}] 
+%      Height of the page box.
+%      Plain \TeX\ default:~\n{8.9in}
+\item [\cs{vsize}] 
+      Height of the page box.
+      Plain \TeX\ default:~\n{8.9in}
+
+%\item [\cs{maxdepth}] 
+%      Maximum depth of the page box.
+%      Plain \TeX\ default:~\n{4pt}
+\item [\cs{maxdepth}] 
+      Maximum depth of the page box.
+      Plain \TeX\ default:~\n{4pt}
+
+%\item [\cs{splitmaxdepth}] 
+%      Maximum depth of a box split off by a \cs{vsplit} operation. 
+%      Plain \TeX\ default: \cs{maxdimen}
+\item [\cs{splitmaxdepth}] 
+      Maximum depth of a box split off by a \cs{vsplit} operation. 
+      Plain \TeX\ default: \cs{maxdimen}
+
+%\end{inventory}
+\end{inventory}
+
+%%\point The reference point for global positioning
+%\section{The reference point for global positioning}
+%\point The reference point for global positioning
+\section{The reference point for global positioning}
+
+%The \indexterm{page positioning} on the paper is governed by
+%a \TeX\ convention, to which output device drivers
+%must adhere, that the top left point of the page is
+%one inch from the page edges. Unfortunately this
+%may lead to lots of trouble, for instance if a printer
+%(or the page description language it uses)
+%takes, say, the {\em lower\/} left corner as the
+%reference point, and is factory set to US paper sizes,
+%but is used with European standard A4 paper.
+The \indexterm{page positioning} on the paper is governed by
+a \TeX\ convention, to which output device drivers
+must adhere, that the top left point of the page is
+one inch from the page edges. Unfortunately this
+may lead to lots of trouble, for instance if a printer
+(or the page description language it uses)
+takes, say, the {\em lower\/} left corner as the
+reference point, and is factory set to US paper sizes,
+but is used with European standard A4 paper.
+
+%The page is shifted on the paper if one assigns non-zero
+%values to \csidx{hoffset} or \csidx{voffset}: positive values
+%shift to the right and down respectively.
+The page is shifted on the paper if one assigns non-zero
+values to \csidx{hoffset} or \csidx{voffset}: positive values
+shift to the right and down respectively.
+
+%%\point \cs{topskip}
+%\section{\protect\cs{topskip}}
+%\point \cs{topskip}
+\section{\protect\cs{topskip}}
+
+%The \csidx{topskip} ensures to a certain point
+%that the first baseline of a page
+%will be at the same location from page to page,
+%even if font sizes
+%are switched between pages or if the first line has
+%no ascenders.
+The \csidx{topskip} ensures to a certain point
+that the first baseline of a page
+will be at the same location from page to page,
+even if font sizes
+are switched between pages or if the first line has
+no ascenders.
+
+%Before the first box on each page some glue is inserted.
+%This glue has the same stretch and shrink as \cs{topskip}, but
+%the natural size is the natural size of \cs{topskip}
+%minus the height of the first box, or zero if this
+%would be negative.
+Before the first box on each page some glue is inserted.
+This glue has the same stretch and shrink as \cs{topskip}, but
+the natural size is the natural size of \cs{topskip}
+minus the height of the first box, or zero if this
+would be negative.
+
+%Plain \TeX\ sets \cs{topskip} to {\tt 10pt}.
+%Thus the top lines of pages will have their baselines
+%at the same place if
+%the top portion of the characters is ten point or less.
+%For the Computer Modern fonts this condition is satisfied
+%if the font size is less than (about) 13~points; 
+%for larger fonts
+%the baseline of the top line will drop.
+Plain \TeX\ sets \cs{topskip} to {\tt 10pt}.
+Thus the top lines of pages will have their baselines
+at the same place if
+the top portion of the characters is ten point or less.
+For the Computer Modern fonts this condition is satisfied
+if the font size is less than (about) 13~points; 
+for larger fonts
+the baseline of the top line will drop.
+
+%The height of the page box for a page containing only
+%text (and assuming a zero \cs{parskip})
+%will be the \cs{topskip} plus a number of times
+%the \cs{baselineskip}. Thus one can define a macro
+%to compute the \cs{vsize} from the number of lines
+%on a page:
+%\howto Specify page height in lines\par
+%\begin{verbatim}
+%\def\HeightInLines#1{\count@=#1\relax
+%    \advance\count@ by -1\relax
+%    \vsize=\baselineskip
+%    \multiply\vsize by \count@
+%    \advance\vsize by \topskip}
+%\end{verbatim}
+%Calculating the \cs{vsize} this way will prevent
+%underfull boxes for text-only pages.
+The height of the page box for a page containing only
+text (and assuming a zero \cs{parskip})
+will be the \cs{topskip} plus a number of times
+the \cs{baselineskip}. Thus one can define a macro
+to compute the \cs{vsize} from the number of lines
+on a page:
+\howto Specify page height in lines\par
+\begin{verbatim}
+\def\HeightInLines#1{\count@=#1\relax
+    \advance\count@ by -1\relax
+    \vsize=\baselineskip
+    \multiply\vsize by \count@
+    \advance\vsize by \topskip}
+\end{verbatim}
+Calculating the \cs{vsize} this way will prevent
+underfull boxes for text-only pages.
+
+%In cases where the page does not start with a line of text
+%(for instance a rule), the topskip may give unwanted effects.
+%To prevent these, start the page with
+%\begin{verbatim}
+%\hbox{}\kern-\topskip
+%\end{verbatim}
+%followed by what you wanted on top. 
+In cases where the page does not start with a line of text
+(for instance a rule), the topskip may give unwanted effects.
+To prevent these, start the page with
+\begin{verbatim}
+\hbox{}\kern-\topskip
+\end{verbatim}
+followed by what you wanted on top. 
+
+%Analogous to the \cs{topskip}, there is a \cs{splittopskip}
+%for pages generated by a \cs{vsplit} operation; see
+%the next chapter.
+Analogous to the \cs{topskip}, there is a \cs{splittopskip}
+for pages generated by a \cs{vsplit} operation; see
+the next chapter.
+
+%%\point Page height and depth
+%\section{Page height and depth}
+%\point Page height and depth
+\section{Page height and depth}
+
+%\index{page!height|(}
+%\index{page!depth|(}
+\index{page!height|(}
+\index{page!depth|(}
+
+%\TeX\ tries to build pages as a \cs{vbox} of height \csidx{vsize};
+%\alt
+%see also \cs{pagegoal} in the next chapter.
+\TeX\ tries to build pages as a \cs{vbox} of height \csidx{vsize};
+\alt
+see also \cs{pagegoal} in the next chapter.
+
+%If the last item on a page has an excessive depth,
+%that page would be noticeably longer than other pages.
+%To prevent this phenomenon \TeX\ uses \csidx{maxdepth} as
+%the maximum depth of the page box. If adding an item to the
+%page would make the depth exceed this quantity, then the
+%reference point of the page is moved down to make the depth
+%exactly \cs{maxdepth}.
+If the last item on a page has an excessive depth,
+that page would be noticeably longer than other pages.
+To prevent this phenomenon \TeX\ uses \csidx{maxdepth} as
+the maximum depth of the page box. If adding an item to the
+page would make the depth exceed this quantity, then the
+reference point of the page is moved down to make the depth
+exactly \cs{maxdepth}.
+
+%The `raggedbottom' effect is obtained in plain \TeX\
+%\cstoidx raggedbottom\par
+%by giving the \cs{topskip} some finite stretchability:
+%\hbox{\n{10pt plus 60pt}}.
+%Thus the natural height of box~255 can vary when it reaches
+%the output routine.
+%Pages are then shipped out (more or less) as
+%\begin{verbatim}
+%\dimen0=\dp255 \unvbox255
+%\ifraggedbottom \kern-\dimen0 \vfil \fi 
+%\end{verbatim}
+%The \cs{vfil} causes the topskip to be set at natural
+%width, so the effect is one of a fixed top line  and a
+%variable bottom line of the page.
+The `raggedbottom' effect is obtained in plain \TeX\
+\cstoidx raggedbottom\par
+by giving the \cs{topskip} some finite stretchability:
+\hbox{\n{10pt plus 60pt}}.
+Thus the natural height of box~255 can vary when it reaches
+the output routine.
+Pages are then shipped out (more or less) as
+\begin{verbatim}
+\dimen0=\dp255 \unvbox255
+\ifraggedbottom \kern-\dimen0 \vfil \fi 
+\end{verbatim}
+The \cs{vfil} causes the topskip to be set at natural
+width, so the effect is one of a fixed top line  and a
+variable bottom line of the page.
+
+%Before \cs{box255} is unboxed in the plain \TeX\ output routine,
+%\cs{boxmaxdepth} is set to \cs{maxdepth}
+%so that this box will made under the same assumptions
+%that the page builder used when putting together \cs{box255}.
+Before \cs{box255} is unboxed in the plain \TeX\ output routine,
+\cs{boxmaxdepth} is set to \cs{maxdepth}
+so that this box will made under the same assumptions
+that the page builder used when putting together \cs{box255}.
+
+%The depth of box split off by a \cs{vsplit} operation
+%is controlled by the \cs{splitmaxdepth} parameter.
+The depth of box split off by a \cs{vsplit} operation
+is controlled by the \cs{splitmaxdepth} parameter.
+
+%\index{page!height|)}
+%\index{page!depth|)}
+\index{page!height|)}
+\index{page!depth|)}
+
+%\endofchapter
+\endofchapter
+
+\end{document}

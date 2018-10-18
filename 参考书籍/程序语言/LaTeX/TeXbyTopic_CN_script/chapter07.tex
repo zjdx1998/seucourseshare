@@ -1,0 +1,1030 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{6}
+
+\begin{document}
+
+%\chapter{Numbers}\label{number}
+\chapter{Numbers}\label{number}
+
+%In this chapter integers and their
+%denotations will be treated,
+%the conversions that are possible either way, 
+%allocation and use of \cs{count} registers, and
+%arithmetic with integers.
+In this chapter integers and their
+denotations will be treated,
+the conversions that are possible either way, 
+allocation and use of \cs{count} registers, and
+arithmetic with integers.
+
+%\label{cschap:number}\label{cschap:romannumeral}\label{cschap:count}\label{cschap:countdef}\label{cschap:newcount}\label{cschap:advance}\label{cschap:multiply}\label{cschap:divide}
+%\begin{inventory} 
+%\item [\cs{number}] 
+%      Convert a \gr{number} to decimal representation. 
+\label{cschap:number}\label{cschap:romannumeral}\label{cschap:count}\label{cschap:countdef}\label{cschap:newcount}\label{cschap:advance}\label{cschap:multiply}\label{cschap:divide}
+\begin{inventory} 
+\item [\cs{number}] 
+      Convert a \gr{number} to decimal representation. 
+
+%\item [\cs{romannumeral}] 
+%      Convert a positive \gr{number} to lowercase roman representation.
+\item [\cs{romannumeral}] 
+      Convert a positive \gr{number} to lowercase roman representation.
+
+%\item [\cs{ifnum}] 
+%      Test relations between numbers.
+\item [\cs{ifnum}] 
+      Test relations between numbers.
+
+%\item [\cs{ifodd}] 
+%      Test whether a number is odd.
+\item [\cs{ifodd}] 
+      Test whether a number is odd.
+
+%\item [\cs{ifcase}] 
+%      Enumerated case statement.
+\item [\cs{ifcase}] 
+      Enumerated case statement.
+
+
+%\item [\cs{count}] 
+%      Prefix for count registers. 
+\item [\cs{count}] 
+      Prefix for count registers. 
+
+%\item [\cs{countdef}] 
+%      Define a control sequence to be a synonym for
+%      a~\cs{count} register.
+\item [\cs{countdef}] 
+      Define a control sequence to be a synonym for
+      a~\cs{count} register.
+
+%\item [\cs{newcount}] 
+%      Allocate an unused \cs{count} register. 
+\item [\cs{newcount}] 
+      Allocate an unused \cs{count} register. 
+
+%\item [\cs{advance}] 
+%      Arithmetic command to add to or subtract from 
+%      a~\gr{numeric variable}.
+\item [\cs{advance}] 
+      Arithmetic command to add to or subtract from 
+      a~\gr{numeric variable}.
+
+%\item [\cs{multiply}] 
+%      Arithmetic command to multiply a \gr{numeric variable}.
+\item [\cs{multiply}] 
+      Arithmetic command to multiply a \gr{numeric variable}.
+
+%\item [\cs{divide}] 
+%      Arithmetic command to divide a \gr{numeric variable}.
+\item [\cs{divide}] 
+      Arithmetic command to divide a \gr{numeric variable}.
+
+%\end{inventory}
+\end{inventory}
+
+
+%\section{Numbers and \gr{number}s}
+\section{Numbers and \gr{number}s}
+
+%An important part of the grammar of \TeX\ is the rigorous definition
+%of a \gr{number}\index{numbers}, the syntactic entity that
+%\TeX\ expects when semantically an \indexterm{integer} is
+%expected. This definition will take the largest part of this
+%chapter. Towards the end, \cs{count} registers, arithmetic, and tests
+%for numbers are discussed.
+An important part of the grammar of \TeX\ is the rigorous definition
+of a \gr{number}\index{numbers}, the syntactic entity that
+\TeX\ expects when semantically an \indexterm{integer} is
+expected. This definition will take the largest part of this
+chapter. Towards the end, \cs{count} registers, arithmetic, and tests
+for numbers are discussed.
+
+%For clarity of discussion a distinction will be made
+%here between integers and numbers, 
+%but note that a \gr{number} can be both
+%an `integer' and a `number'.
+%`Integer'  will be taken to denote a mathematical number:
+%a~quantity that can be added or multiplied.
+%`Number' will be taken to refer to the printed representation
+%of an integer: a string of digits, in other words.
+For clarity of discussion a distinction will be made
+here between integers and numbers, 
+but note that a \gr{number} can be both
+an `integer' and a `number'.
+`Integer'  will be taken to denote a mathematical number:
+a~quantity that can be added or multiplied.
+`Number' will be taken to refer to the printed representation
+of an integer: a string of digits, in other words.
+
+%\section{Integers}
+\section{Integers}
+
+%Quite a few different sorts of objects can function
+%as integers in \TeX. In this section they will all
+%be treated, accompanied by the relevant lines from
+%the grammar of \TeX.
+Quite a few different sorts of objects can function
+as integers in \TeX. In this section they will all
+be treated, accompanied by the relevant lines from
+the grammar of \TeX.
+
+%First of all, an integer can be positive or negative:
+%\begin{disp}\gr{number} $\longrightarrow$ 
+%\gr{optional signs}\gr{unsigned number}\nl
+%\gr{optional signs} $\longrightarrow$ \gr{optional spaces}\nl
+%\indent $|$ \gr{optional signs}\gr{plus or minus}\gr{optional spaces}
+%\end{disp}
+First of all, an integer can be positive or negative:
+\begin{disp}\gr{number} $\longrightarrow$ 
+\gr{optional signs}\gr{unsigned number}\nl
+\gr{optional signs} $\longrightarrow$ \gr{optional spaces}\nl
+\indent $|$ \gr{optional signs}\gr{plus or minus}\gr{optional spaces}
+\end{disp}
+
+%A first possibility for an unsigned integer is a string of digits
+%in decimal, octal, or hexadecimal notation.
+%Together with the alphabetic constants these will be named
+%here \gr{integer denotation}.
+%Another possibility for an integer is an
+%internal integer quantity, an \gr{internal integer};
+%together with the denotations these form the 
+%\gr{normal integer}s.
+%Lastly an integer can be a \gr{coerced integer}: 
+%an internal \gr{dimen} or \gr{glue}
+%quantity that is converted to an integer value.
+%\begin{disp}\gr{unsigned number} $\longrightarrow$ \gr{normal integer}
+%$|$ \gr{coerced integer}\nl
+%\gr{normal integer} $\longrightarrow$ \gr{integer denotation}
+%$|$ \gr{internal integer}\nl
+%\gr{coerced integer} $\longrightarrow$ \gr{internal dimen}
+%$|$ \gr{internal glue}\end{disp}
+%All of these possibilities will be treated in sequence.
+A first possibility for an unsigned integer is a string of digits
+in decimal, octal, or hexadecimal notation.
+Together with the alphabetic constants these will be named
+here \gr{integer denotation}.
+Another possibility for an integer is an
+internal integer quantity, an \gr{internal integer};
+together with the denotations these form the 
+\gr{normal integer}s.
+Lastly an integer can be a \gr{coerced integer}: 
+an internal \gr{dimen} or \gr{glue}
+quantity that is converted to an integer value.
+\begin{disp}\gr{unsigned number} $\longrightarrow$ \gr{normal integer}
+$|$ \gr{coerced integer}\nl
+\gr{normal integer} $\longrightarrow$ \gr{integer denotation}
+$|$ \gr{internal integer}\nl
+\gr{coerced integer} $\longrightarrow$ \gr{internal dimen}
+$|$ \gr{internal glue}\end{disp}
+All of these possibilities will be treated in sequence.
+
+
+%%\spoint[int:denotation] Denotations: integers
+%\subsection{Denotations: integers}
+%\label{int:denotation}
+%\spoint[int:denotation] Denotations: integers
+\subsection{Denotations: integers}
+\label{int:denotation}
+
+%Anything that looks like a number
+%can be used as a \gr{number}: thus \verb-42- is a number.
+%However, bases other than decimal can also be used:
+%\begin{verbatim}
+%'123
+%\end{verbatim}
+%is the octal notation for $1\times8^2+2\times8^1+3\times8^0=83$,
+%and
+%\begin{verbatim}
+%"123
+%\end{verbatim}
+%is the hexadecimal notation
+%for $1\times16^2+2\times16^1+3\times16^0=291$.
+%\begin{disp}\gr{integer denotation} $\longrightarrow$
+%\gr{integer constant}\gr{one optional space} \nl
+%\indent $|$ \n{\char`\'}\gr{octal constant}\gr{one optional space}\nl
+%\indent $|$ \n{\char`\"}\gr{hexadecimal constant}\gr{one optional space}
+%\end{disp}
+%The octal digits are \n0--\n7; a~digit \n8 or~\n9 following an
+%octal denotation is not part of the number: 
+%after
+%\begin{verbatim}
+%\count0='078
+%\end{verbatim}
+%the \cs{count0} will have the value~7, and the 
+%digit~\n8 is typeset.
+Anything that looks like a number
+can be used as a \gr{number}: thus \verb-42- is a number.
+However, bases other than decimal can also be used:
+\begin{verbatim}
+'123
+\end{verbatim}
+is the octal notation for $1\times8^2+2\times8^1+3\times8^0=83$,
+and
+\begin{verbatim}
+"123
+\end{verbatim}
+is the hexadecimal notation
+for $1\times16^2+2\times16^1+3\times16^0=291$.
+\begin{disp}\gr{integer denotation} $\longrightarrow$
+\gr{integer constant}\gr{one optional space} \nl
+\indent $|$ \n{\char`\'}\gr{octal constant}\gr{one optional space}\nl
+\indent $|$ \n{\char`\"}\gr{hexadecimal constant}\gr{one optional space}
+\end{disp}
+The octal digits are \n0--\n7; a~digit \n8 or~\n9 following an
+octal denotation is not part of the number: 
+after
+\begin{verbatim}
+\count0='078
+\end{verbatim}
+the \cs{count0} will have the value~7, and the 
+digit~\n8 is typeset.
+
+%The hexadecimal digits are \n0--\n9, \n A--\n F, where the \n A--\n F
+%can have category code 11\index{category!11}
+%or~12\index{category!12}. The latter has a somewhat far-fetched
+%justification: the characters resulting from a \cs{string} operation
+%have category code~12.  Lowercase \n a--\n f are not hexadecimal
+%digits, although (in \TeX3) they are used for hexadecimal notation in
+%the `circumflex method' for accessing all character codes (see
+%Chapter~\ref{char}).
+The hexadecimal digits are \n0--\n9, \n A--\n F, where the \n A--\n F
+can have category code 11\index{category!11}
+or~12\index{category!12}. The latter has a somewhat far-fetched
+justification: the characters resulting from a \cs{string} operation
+have category code~12.  Lowercase \n a--\n f are not hexadecimal
+digits, although (in \TeX3) they are used for hexadecimal notation in
+the `circumflex method' for accessing all character codes (see
+Chapter~\ref{char}).
+
+%%\spoint Denotations: characters
+%\subsection{Denotations: characters}
+%\spoint Denotations: characters
+\subsection{Denotations: characters}
+
+%A character token is a pair consisting of a character code,
+%which is a~number in the range 0--255, 
+%and a category code. Both of these codes are accessible,
+%and can be used as a \gr{number}. 
+A character token is a pair consisting of a character code,
+which is a~number in the range 0--255, 
+and a category code. Both of these codes are accessible,
+and can be used as a \gr{number}. 
+
+%The character code of a character token, or of a single letter
+%control sequence, is accessible through the left quote command:
+%both \verb-`a- and~\verb-`\a- denote the character code of~{\tt a},
+%which can be used as an integer. 
+%\begin{disp}\gr{integer denotation} $\longrightarrow$ 
+%\n{\char`\`}\gr{character token}\gr{one optional space}\end{disp}
+The character code of a character token, or of a single letter
+control sequence, is accessible through the left quote command:
+both \verb-`a- and~\verb-`\a- denote the character code of~{\tt a},
+which can be used as an integer. 
+\begin{disp}\gr{integer denotation} $\longrightarrow$ 
+\n{\char`\`}\gr{character token}\gr{one optional space}\end{disp}
+
+%In order to emphasize that accessing the character code is
+%in a sense using a denotation, the syntax of \TeX\ allows
+%an optional space after such a `character constant'.
+%The left quote must have category~12\index{category!12}.
+In order to emphasize that accessing the character code is
+in a sense using a denotation, the syntax of \TeX\ allows
+an optional space after such a `character constant'.
+The left quote must have category~12\index{category!12}.
+
+%%\spoint Internal integers
+%\subsection{Internal integers}
+%\spoint Internal integers
+\subsection{Internal integers}
+
+%The class of \gr{internal integers} can
+%be split into five parts. 
+%The \gr{codename}s and \gr{special integer}s
+%will be treated separately below; furthermore, there are the following.
+The class of \gr{internal integers} can
+be split into five parts. 
+The \gr{codename}s and \gr{special integer}s
+will be treated separately below; furthermore, there are the following.
+
+%\begin{itemize} \item The contents of \cs{count} registers;
+%either explicitly used by writing for instance \cs{count23},
+%or by referring to such a register by means of a
+%control sequence 
+%that was defined by \cs{countdef}:
+%after
+%\begin{verbatim}
+%\countdef\MyCount=23
+%\end{verbatim}
+%\cs{MyCount} is called a
+%\gr{countdef token}, and it is fully equivalent to \cs{count23}.
+\begin{itemize} \item The contents of \cs{count} registers;
+either explicitly used by writing for instance \cs{count23},
+or by referring to such a register by means of a
+control sequence 
+that was defined by \cs{countdef}:
+after
+\begin{verbatim}
+\countdef\MyCount=23
+\end{verbatim}
+\cs{MyCount} is called a
+\gr{countdef token}, and it is fully equivalent to \cs{count23}.
+
+%\item All parameters of \TeX\ that hold integer values;
+%this includes obvious ones such as \cs{linepenalty}, but
+%also parameters such as
+%\cs{hyphenchar}\gr{font} and \cs{parshape}
+%(if a paragraph shape has been defined for $n$ lines,
+%using \cs{parshape} in the context of a \gr{number}
+%will yield this value of~$n$). 
+\item All parameters of \TeX\ that hold integer values;
+this includes obvious ones such as \cs{linepenalty}, but
+also parameters such as
+\cs{hyphenchar}\gr{font} and \cs{parshape}
+(if a paragraph shape has been defined for $n$ lines,
+using \cs{parshape} in the context of a \gr{number}
+will yield this value of~$n$). 
+
+%\item\label{num:chardef} Tokens defined by \cs{chardef} or \cs{mathchardef}.
+%After
+%\begin{verbatim}
+%\chardef\foo=74
+%\end{verbatim}
+%the control sequence \cs{foo}
+%can be used on its own to mean \cs{char74}, but in a context
+%where a \gr{number} is wanted it can be used to denote~74:
+%\begin{verbatim}
+%\count\foo
+%\end{verbatim}
+%is equivalent to \verb=\count74=.
+%This fact is
+%exploited in the allocation routines for registers (see
+%Chapter~\ref{alloc}).
+\item\label{num:chardef} Tokens defined by \cs{chardef} or \cs{mathchardef}.
+After
+\begin{verbatim}
+\chardef\foo=74
+\end{verbatim}
+the control sequence \cs{foo}
+can be used on its own to mean \cs{char74}, but in a context
+where a \gr{number} is wanted it can be used to denote~74:
+\begin{verbatim}
+\count\foo
+\end{verbatim}
+is equivalent to \verb=\count74=.
+This fact is
+exploited in the allocation routines for registers (see
+Chapter~\ref{alloc}).
+
+%A control sequence thus defined by \cs{chardef} is called a 
+%\gr{chardef token}; if it is defined by \cs{mathchardef} it
+%is called a \gr{mathchardef token}.
+A control sequence thus defined by \cs{chardef} is called a 
+\gr{chardef token}; if it is defined by \cs{mathchardef} it
+is called a \gr{mathchardef token}.
+
+%\end{itemize}
+\end{itemize}
+
+%Here is the full list:
+%\begin{disp}\gr{internal integer} $\longrightarrow$
+%\gr{integer parameter} \nl
+%\indent $|$ \gr{special integer} $|$ \cs{lastpenalty}\nl
+%\indent $|$ \gr{countdef token} $|$ \cs{count}\gr{8-bit number}\nl
+%\indent $|$ \gr{chardef token} $|$ \gr{mathchardef token}\nl
+%\indent $|$ \gr{codename}\gr{8-bit number}\nl
+%\indent $|$ \cs{hyphenchar}\gr{font} $|$ \cs{skewchar}\gr{font}
+%$|$ \cs{parshape}\nl
+%\indent $|$ \cs{inputlineno} $|$ \cs{badness}\nl
+%\gr{integer parameter} $\longrightarrow$\vadjust{\nobreak}
+%$|$ \cs{adjdemerits} $|$ \cs{binoppenalty}\nl
+%\indent $|$ \cs{brokenpenalty} $|$ \cs{clubpenalty} $|$ \cs{day}%
+%\nl
+%\indent $|$ \cs{defaulthyphenchar} $|$ \cs{defaultskewchar} \nl
+%\indent $|$ \cs{delimiterfactor} $|$ \cs{displaywidowpenalty} \nl
+%\indent $|$ \cs{doublehyphendemerits} $|$ \cs{endlinechar} 
+%        $|$ \cs{escapechar}\nl
+%\indent $|$ \cs{exhypenpenalty} $|$ \cs{fam} $|$ \cs{finalhyphendemerits}\nl
+%\indent $|$ \cs{floatingpenalty} $|$ \cs{globaldefs} $|$ \cs{hangafter}\nl
+%\indent $|$ \cs{hbadness} $|$ \cs{hyphenpenalty}
+%        $|$ \cs{interlinepenalty}\nl
+%\indent $|$ \cs{linepenalty} $|$ \cs{looseness} $|$ \cs{mag}\nl
+%\indent $|$ \cs{maxdeadcycles} $|$ \cs{month} \nl
+%\indent $|$ \cs{newlinechar} $|$ \cs{outputpenalty} $|$ \cs{pausing}\nl
+%\indent $|$ \cs{postdisplaypenalty} $|$ \cs{predisplaypenalty}\nl
+%\indent $|$ \cs{pretolerance} $|$ \cs{relpenalty} $|$ \cs{showboxbreadth}\nl
+%\indent $|$ \cs{showboxdepth} $|$ \cs{time} $|$ \cs{tolerance}\nl
+%\indent $|$ \cs{tracingcommands} $|$ \cs{tracinglostchars}
+%        $|$ \cs{tracingmacros}\nl
+%\indent $|$ \cs{tracingonline} $|$ \cs{tracingoutput}
+%        $|$ \cs{tracingpages}\nl
+%\indent $|$ \cs{tracingparagraphs} $|$ \cs{tracingrestores}
+%        $|$ \cs{tracingstats}\nl
+%\indent $|$ \cs{uchyph} $|$ \cs{vbadness} $|$ \cs{widowpenalty}
+%        $|$ \cs{year}
+%\end{disp}
+Here is the full list:
+\begin{disp}\gr{internal integer} $\longrightarrow$
+\gr{integer parameter} \nl
+\indent $|$ \gr{special integer} $|$ \cs{lastpenalty}\nl
+\indent $|$ \gr{countdef token} $|$ \cs{count}\gr{8-bit number}\nl
+\indent $|$ \gr{chardef token} $|$ \gr{mathchardef token}\nl
+\indent $|$ \gr{codename}\gr{8-bit number}\nl
+\indent $|$ \cs{hyphenchar}\gr{font} $|$ \cs{skewchar}\gr{font}
+$|$ \cs{parshape}\nl
+\indent $|$ \cs{inputlineno} $|$ \cs{badness}\nl
+\gr{integer parameter} $\longrightarrow$\vadjust{\nobreak}
+$|$ \cs{adjdemerits} $|$ \cs{binoppenalty}\nl
+\indent $|$ \cs{brokenpenalty} $|$ \cs{clubpenalty} $|$ \cs{day}%
+\nl
+\indent $|$ \cs{defaulthyphenchar} $|$ \cs{defaultskewchar} \nl
+\indent $|$ \cs{delimiterfactor} $|$ \cs{displaywidowpenalty} \nl
+\indent $|$ \cs{doublehyphendemerits} $|$ \cs{endlinechar} 
+        $|$ \cs{escapechar}\nl
+\indent $|$ \cs{exhypenpenalty} $|$ \cs{fam} $|$ \cs{finalhyphendemerits}\nl
+\indent $|$ \cs{floatingpenalty} $|$ \cs{globaldefs} $|$ \cs{hangafter}\nl
+\indent $|$ \cs{hbadness} $|$ \cs{hyphenpenalty}
+        $|$ \cs{interlinepenalty}\nl
+\indent $|$ \cs{linepenalty} $|$ \cs{looseness} $|$ \cs{mag}\nl
+\indent $|$ \cs{maxdeadcycles} $|$ \cs{month} \nl
+\indent $|$ \cs{newlinechar} $|$ \cs{outputpenalty} $|$ \cs{pausing}\nl
+\indent $|$ \cs{postdisplaypenalty} $|$ \cs{predisplaypenalty}\nl
+\indent $|$ \cs{pretolerance} $|$ \cs{relpenalty} $|$ \cs{showboxbreadth}\nl
+\indent $|$ \cs{showboxdepth} $|$ \cs{time} $|$ \cs{tolerance}\nl
+\indent $|$ \cs{tracingcommands} $|$ \cs{tracinglostchars}
+        $|$ \cs{tracingmacros}\nl
+\indent $|$ \cs{tracingonline} $|$ \cs{tracingoutput}
+        $|$ \cs{tracingpages}\nl
+\indent $|$ \cs{tracingparagraphs} $|$ \cs{tracingrestores}
+        $|$ \cs{tracingstats}\nl
+\indent $|$ \cs{uchyph} $|$ \cs{vbadness} $|$ \cs{widowpenalty}
+        $|$ \cs{year}
+\end{disp}
+
+%Any internal integer can function as an \gr{internal unit},
+%which  \ldash preceded by \gr{optional spaces} \rdash  
+%can serve as a \gr{unit of measure}.
+%Examples of this are given in Chapter~\ref{glue}.
+Any internal integer can function as an \gr{internal unit},
+which  \ldash preceded by \gr{optional spaces} \rdash  
+can serve as a \gr{unit of measure}.
+Examples of this are given in Chapter~\ref{glue}.
+
+%%\spoint Internal integers: other codes of a character
+%\subsection{Internal integers: other codes of a character}
+%\spoint Internal integers: other codes of a character
+\subsection{Internal integers: other codes of a character}
+
+%The \cs{catcode} command
+%(which was  described in Chapter~\ref{mouth}) 
+%is a \gr{codename}, and like the other code names
+%it can be used as an integer.
+%\begin{disp}\gr{codename} $\longrightarrow$ \cs{catcode} $|$ \cs{mathcode}
+%$|$ \cs{uccode} $|$ \cs{lccode}\nl \indent $|$ \cs{sfcode} $|$ \cs{delcode}
+%\end{disp}
+%A~\gr{codename} has to be followed by an \gr{8-bit number}.
+The \cs{catcode} command
+(which was  described in Chapter~\ref{mouth}) 
+is a \gr{codename}, and like the other code names
+it can be used as an integer.
+\begin{disp}\gr{codename} $\longrightarrow$ \cs{catcode} $|$ \cs{mathcode}
+$|$ \cs{uccode} $|$ \cs{lccode}\nl \indent $|$ \cs{sfcode} $|$ \cs{delcode}
+\end{disp}
+A~\gr{codename} has to be followed by an \gr{8-bit number}.
+
+%Uppercase and lowercase codes were treated in Chapter~\ref{char};
+%the \cs{sfcode} is treated
+%in Chapter~\ref{space};
+%the \cs{mathcode} and~\cs{delcode} are treated in
+%Chapter~\ref{mathchar}.
+Uppercase and lowercase codes were treated in Chapter~\ref{char};
+the \cs{sfcode} is treated
+in Chapter~\ref{space};
+the \cs{mathcode} and~\cs{delcode} are treated in
+Chapter~\ref{mathchar}.
+
+%%\spoint[special:int:list] \gr{special integer}
+%\subsection{\gr{special integer}}
+%\label{special:int:list}
+%\spoint[special:int:list] \gr{special integer}
+\subsection{\gr{special integer}}
+\label{special:int:list}
+
+%One of the subclasses of the internal integers is
+%that of the special integers.
+%\begin{disp}\gr{special integer} $\longrightarrow$
+%\cs{spacefactor} $|$ \cs{prevgraf}\nl
+%\indent $|$ \cs{deadcycles} $|$ \cs{insertpenalties}
+%\end{disp}
+%An assignment to any of these is called an \gr{intimate
+%assignment}, and is automatically global
+%(see Chapter~\ref{group}).
+One of the subclasses of the internal integers is
+that of the special integers.
+\begin{disp}\gr{special integer} $\longrightarrow$
+\cs{spacefactor} $|$ \cs{prevgraf}\nl
+\indent $|$ \cs{deadcycles} $|$ \cs{insertpenalties}
+\end{disp}
+An assignment to any of these is called an \gr{intimate
+assignment}, and is automatically global
+(see Chapter~\ref{group}).
+
+%%\spoint Other internal quantities: coersion to integer
+%\subsection{Other internal quantities: coersion to integer}
+%\spoint Other internal quantities: coersion to integer
+\subsection{Other internal quantities: coersion to integer}
+
+%\TeX\ provides a conversion between dimensions and integers:
+%if an integer is expected, a \gr{dimen} or \gr{glue} used
+%in that context is converted by taking its 
+%(natural) size
+%in scaled points\index{point!scaled}.
+%However, only \gr{internal dimen}s and \gr{internal glue}
+%can be used this way: no dimension or glue denotations
+%can be coerced to integers.
+\TeX\ provides a conversion between dimensions and integers:
+if an integer is expected, a \gr{dimen} or \gr{glue} used
+in that context is converted by taking its 
+(natural) size
+in scaled points\index{point!scaled}.
+However, only \gr{internal dimen}s and \gr{internal glue}
+can be used this way: no dimension or glue denotations
+can be coerced to integers.
+
+%%\spoint Trailing spaces
+%\subsection{Trailing spaces}
+%\spoint Trailing spaces
+\subsection{Trailing spaces}
+
+%The syntax of \TeX\ defines integer denotations (decimal,
+%octal, and hexadecimal) and `back-quoted' character tokens
+%to be followed by \gr{one optional space}. This means that
+%\TeX\ reads the token after the number, absorbing it
+%if it was a space token, and backing up if it was not.
+The syntax of \TeX\ defines integer denotations (decimal,
+octal, and hexadecimal) and `back-quoted' character tokens
+to be followed by \gr{one optional space}. This means that
+\TeX\ reads the token after the number, absorbing it
+if it was a space token, and backing up if it was not.
+
+%Because \TeX's input processor goes into the state `skipping spaces'
+%after it has seen one space token, this
+%scanning behaviour implies that
+%integer denotations can be followed by
+%arbitrarily many space characters in the input. 
+%Also, a line end is admissible.
+%However, only one space token is allowed. 
+Because \TeX's input processor goes into the state `skipping spaces'
+after it has seen one space token, this
+scanning behaviour implies that
+integer denotations can be followed by
+arbitrarily many space characters in the input. 
+Also, a line end is admissible.
+However, only one space token is allowed. 
+
+%%\point Numbers
+%\section{Numbers}
+%\point Numbers
+\section{Numbers}
+
+%\TeX\ can perform an implicit \indextermsub{number}{conversion} from a string
+%\cstoidx number\par\cstoidx romannumeral\par
+%of digits to an integer. Conversion from a representation
+%in decimal, octal, or hexadecimal notation was
+%treated above. The conversion the other way,
+%from an \gr{internal integer} to a printed representation,
+%has to be performed explicitly.
+%\TeX\ provides two conversion routines,
+%\cs{number}, to decimal, and \cs{romannumeral} to
+%\indexterm{roman numerals}.
+%The command \cs{number} is equivalent to \cs{the}
+%when followed by an internal integer.
+%These commands are performed in the expansion processor of \TeX, that is,
+%they are expanded whenever expansion has not been inhibited.
+\TeX\ can perform an implicit \indextermsub{number}{conversion} from a string
+\cstoidx number\par\cstoidx romannumeral\par
+of digits to an integer. Conversion from a representation
+in decimal, octal, or hexadecimal notation was
+treated above. The conversion the other way,
+from an \gr{internal integer} to a printed representation,
+has to be performed explicitly.
+\TeX\ provides two conversion routines,
+\cs{number}, to decimal, and \cs{romannumeral} to
+\indexterm{roman numerals}.
+The command \cs{number} is equivalent to \cs{the}
+when followed by an internal integer.
+These commands are performed in the expansion processor of \TeX, that is,
+they are expanded whenever expansion has not been inhibited.
+
+%Both commands
+%yield a string of tokens with category code~12\index{category!12};
+%their argument is a~\gr{number}.
+%Thus \verb-\romannumeral51-, \verb-\romannumeral\year-,
+%and~\verb-\number\linepenalty- are valid, and so is \verb-\number13-.
+%Applying \cs{number} to a denotation has some uses:
+%it removes leading zeros and superfluous plus and minus signs.
+Both commands
+yield a string of tokens with category code~12\index{category!12};
+their argument is a~\gr{number}.
+Thus \verb-\romannumeral51-, \verb-\romannumeral\year-,
+and~\verb-\number\linepenalty- are valid, and so is \verb-\number13-.
+Applying \cs{number} to a denotation has some uses:
+it removes leading zeros and superfluous plus and minus signs.
+
+%A roman numeral is a string of lowercase `roman digits',
+%which are characters of category code~12.
+%The sequence\howto Uppercase roman numberals\par
+%\begin{verbatim}
+%\uppercase\expandafter{\romannumeral ...}
+%\end{verbatim}
+%gives uppercase roman numerals.
+%This works because \TeX\  expands
+%tokens in order to find the opening brace of the argument
+%of \verb=\uppercase=. If \cs{romannumeral} is applied to
+%a negative number, the result is simply empty.
+A roman numeral is a string of lowercase `roman digits',
+which are characters of category code~12.
+The sequence\howto Uppercase roman numberals\par
+\begin{verbatim}
+\uppercase\expandafter{\romannumeral ...}
+\end{verbatim}
+gives uppercase roman numerals.
+This works because \TeX\  expands
+tokens in order to find the opening brace of the argument
+of \verb=\uppercase=. If \cs{romannumeral} is applied to
+a negative number, the result is simply empty.
+
+%%\point Integer registers
+%\section{Integer registers}
+%\point Integer registers
+\section{Integer registers}
+
+%Integers can be stored in \csidx{count} registers:
+%\begin{Disp}\cs{count}\gr{8-bit number}\end{Disp}
+%is an \gr{integer variable} and an \gr{internal integer}.
+%As an integer variable it can be used in a 
+%\gr{variable assignment}:
+%\begin{Disp}\gr{variable assignment} $\longrightarrow$
+%     \gr{integer variable}\gr{equals}\gr{number} $|$ \dots\end{Disp}
+%As an internal integer it can be used as a \gr{number}:
+%\begin{Disp}\gr{number} $\rightarrow$ \gr{optional signs}\gr{internal integer}
+%     $|$ \dots
+%\end{Disp} 
+Integers can be stored in \csidx{count} registers:
+\begin{Disp}\cs{count}\gr{8-bit number}\end{Disp}
+is an \gr{integer variable} and an \gr{internal integer}.
+As an integer variable it can be used in a 
+\gr{variable assignment}:
+\begin{Disp}\gr{variable assignment} $\longrightarrow$
+     \gr{integer variable}\gr{equals}\gr{number} $|$ \dots\end{Disp}
+As an internal integer it can be used as a \gr{number}:
+\begin{Disp}\gr{number} $\rightarrow$ \gr{optional signs}\gr{internal integer}
+     $|$ \dots
+\end{Disp} 
+
+%Synonyms for \cs{count} registers can be introduced by the
+%\csidx{countdef} command in a \gr{shorthand definition}:
+%\begin{Disp}\cs{countdef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+%\end{Disp} A control sequence defined this way
+%is called a \gr{countdef token}, and it serves as an
+%\gr{internal integer}.
+Synonyms for \cs{count} registers can be introduced by the
+\csidx{countdef} command in a \gr{shorthand definition}:
+\begin{Disp}\cs{countdef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+\end{Disp} A control sequence defined this way
+is called a \gr{countdef token}, and it serves as an
+\gr{internal integer}.
+
+%The plain \TeX\ macro \csidx{newcount}
+%(which is declared \cs{outer}) uses the \cs{countdef} command
+%to allocate an unused \cs{count} register.
+%Counters 0--9 are scratch registers, like all
+%registers with numbers~0--9. 
+%However, counters 0--9 are used for page identification
+%in the \n{dvi} file (see Chapter~\ref{TeXcomm}), 
+%so they should be used as scratch
+%registers only inside a group.
+%Counters 10--22 are
+%used for plain \TeX's bookkeeping of allocation of registers.
+%Counter 255 is also scratch.
+The plain \TeX\ macro \csidx{newcount}
+(which is declared \cs{outer}) uses the \cs{countdef} command
+to allocate an unused \cs{count} register.
+Counters 0--9 are scratch registers, like all
+registers with numbers~0--9. 
+However, counters 0--9 are used for page identification
+in the \n{dvi} file (see Chapter~\ref{TeXcomm}), 
+so they should be used as scratch
+registers only inside a group.
+Counters 10--22 are
+used for plain \TeX's bookkeeping of allocation of registers.
+Counter 255 is also scratch.
+
+%%\point Arithmetic
+%\section{Arithmetic}
+%\point Arithmetic
+\section{Arithmetic}
+
+%The user can perform some \indexterm{arithmetic}
+%in \TeX, and
+%\TeX\ also performs arithmetic internally. User arithmetic
+%is concerned only with integers; the internal arithmetic
+%is mostly on fixed-point quantities, and only in the
+%case of glue setting on floating-point numbers.
+The user can perform some \indexterm{arithmetic}
+in \TeX, and
+\TeX\ also performs arithmetic internally. User arithmetic
+is concerned only with integers; the internal arithmetic
+is mostly on fixed-point quantities, and only in the
+case of glue setting on floating-point numbers.
+
+%%\spoint Arithmetic statements
+%\subsection{Arithmetic statements}
+%\spoint Arithmetic statements
+\subsection{Arithmetic statements}
+
+%\TeX\ allows the user to
+%\cstoidx advance\par\cstoidx multiply\par\cstoidx divide\par
+%perform some arithmetic on integers. The statement
+%\begin{Disp}\cs{advance}\gr{integer variable}\gr{optional \n{by}}%
+%     \gr{number}\end{Disp} 
+%adds the value of the \gr{number}
+% \ldash which may be negative \rdash  to the \gr{integer variable}.
+%Similarly,
+%\begin{Disp}\cs{multiply}\gr{integer variable}\gr{optional \n{by}}%
+%     \gr{number}\end{Disp} 
+%multiplies the value of the \gr{integer variable}, and
+%\begin{Disp}\cs{divide}\gr{integer variable}\gr{optional \n{by}}%
+%     \gr{number}\end{Disp}
+%divides an \gr{integer variable}.
+\TeX\ allows the user to
+\cstoidx advance\par\cstoidx multiply\par\cstoidx divide\par
+perform some arithmetic on integers. The statement
+\begin{Disp}\cs{advance}\gr{integer variable}\gr{optional \n{by}}%
+     \gr{number}\end{Disp} 
+adds the value of the \gr{number}
+ \ldash which may be negative \rdash  to the \gr{integer variable}.
+Similarly,
+\begin{Disp}\cs{multiply}\gr{integer variable}\gr{optional \n{by}}%
+     \gr{number}\end{Disp} 
+multiplies the value of the \gr{integer variable}, and
+\begin{Disp}\cs{divide}\gr{integer variable}\gr{optional \n{by}}%
+     \gr{number}\end{Disp}
+divides an \gr{integer variable}.
+
+%Multiplication and division are also available for any so-called
+%\gr{numeric variable}: their most general form is
+%\begin{disp}\cs{multiply}\gr{numeric variable}\gr{optional \n{by}}\gr{number}
+%\end{disp} where
+%\begin{disp}\gr{numeric variable} $\longrightarrow$
+%\gr{integer variable} $|$ \gr{dimen variable}\nl
+%\indent $|$ \gr{glue variable} $|$ \gr{muglue variable}\end{disp}
+Multiplication and division are also available for any so-called
+\gr{numeric variable}: their most general form is
+\begin{disp}\cs{multiply}\gr{numeric variable}\gr{optional \n{by}}\gr{number}
+\end{disp} where
+\begin{disp}\gr{numeric variable} $\longrightarrow$
+\gr{integer variable} $|$ \gr{dimen variable}\nl
+\indent $|$ \gr{glue variable} $|$ \gr{muglue variable}\end{disp}
+
+%The result of an arithmetic operation should not exceed
+%$2^{30}$ in absolute value.
+The result of an arithmetic operation should not exceed
+$2^{30}$ in absolute value.
+
+%Division of integers yields an integer; that is, the remainder
+%is discarded. This raises the question of how rounding is performed
+%when either operand is negative. In such cases \TeX\ performs
+%the division with the absolute values of the operands, and
+%takes the negative of the result if exactly one operand was negative.
+Division of integers yields an integer; that is, the remainder
+is discarded. This raises the question of how rounding is performed
+when either operand is negative. In such cases \TeX\ performs
+the division with the absolute values of the operands, and
+takes the negative of the result if exactly one operand was negative.
+
+%%\spoint Floating-point arithmetic
+%\subsection{Floating-point arithmetic}
+%\spoint Floating-point arithmetic
+\subsection{Floating-point arithmetic}
+
+%Internally some \indextermsub{floating-point}{arithmetic}
+%is performed, namely
+%in the calculation of glue set ratios.
+%%and slant for accents!!
+%However, machine-dependent aspects of rounding cannot
+%influence the decision process of \TeX, so machine independence
+%of \TeX\ is guaranteed in this respect (sufficient
+%accuracy of rounding is enforced by the \n{Trip} test of~\cite{K:trip}).
+Internally some \indextermsub{floating-point}{arithmetic}
+is performed, namely
+in the calculation of glue set ratios.
+%and slant for accents!!
+However, machine-dependent aspects of rounding cannot
+influence the decision process of \TeX, so machine independence
+of \TeX\ is guaranteed in this respect (sufficient
+accuracy of rounding is enforced by the \n{Trip} test of~\cite{K:trip}).
+
+%%\spoint Fixed-point arithmetic
+%\subsection{Fixed-point arithmetic}
+%\spoint Fixed-point arithmetic
+\subsection{Fixed-point arithmetic}
+
+%All fractional arithmetic in \TeX\ is performed in
+%\indextermsub{fixed-point}{arithmetic}
+%of `scaled integers': multiples of~$2^{-16}$.
+%This ensures the machine independence of \TeX.
+%Printed representations of scaled integers are rounded
+%to 5 decimal digits.
+All fractional arithmetic in \TeX\ is performed in
+\indextermsub{fixed-point}{arithmetic}
+of `scaled integers': multiples of~$2^{-16}$.
+This ensures the machine independence of \TeX.
+Printed representations of scaled integers are rounded
+to 5 decimal digits.
+
+%In ordinary 32-bit implementations of \TeX\ the largest
+%integers are $2^{31}-1$ in absolute size.
+%The user is not allowed to specify
+%dimensions larger in absolute size than~$2^{30}-1$: two
+%such dimensions can be added or subtracted without
+%overflow on a 32-bit system.
+In ordinary 32-bit implementations of \TeX\ the largest
+integers are $2^{31}-1$ in absolute size.
+The user is not allowed to specify
+dimensions larger in absolute size than~$2^{30}-1$: two
+such dimensions can be added or subtracted without
+overflow on a 32-bit system.
+
+%%\point Number testing
+%\section{Number testing}
+%\point Number testing
+\section{Number testing}
+
+%The most general test for integers in \TeX\ is
+%\begin{disp}\cs{ifnum}\gr{number$_1$}\gr{relation}\gr{number$_2$}\end{disp}
+%where \gr{relation} is a~\n<, \n>, or~\n= character,
+%all of category~12\index{category!12}.
+The most general test for integers in \TeX\ is
+\begin{disp}\cs{ifnum}\gr{number$_1$}\gr{relation}\gr{number$_2$}\end{disp}
+where \gr{relation} is a~\n<, \n>, or~\n= character,
+all of category~12\index{category!12}.
+
+%Distinguishing between odd and even numbers is done
+%by \begin{disp}\cs{ifodd}\gr{number}\end{disp}
+Distinguishing between odd and even numbers is done
+by \begin{disp}\cs{ifodd}\gr{number}\end{disp}
+
+%A numeric case statement is provided by
+%\begin{disp}\cs{ifcase}\gr{number}\gr{case$_0$}\cs{or}\n{...}\cs{or}%
+%     \gr{case$_n$}\cs{else}\gr{other cases}\cs{fi}\end{disp}
+%where the \cs{else}-part is optional. The tokens for \gr{case$_i$}
+%are processed if the number turns out to be~$i$; other cases are
+%skipped, similarly to what ordinarily happens in conditionals
+%(see Chapter~\ref{if}).
+A numeric case statement is provided by
+\begin{disp}\cs{ifcase}\gr{number}\gr{case$_0$}\cs{or}\n{...}\cs{or}%
+     \gr{case$_n$}\cs{else}\gr{other cases}\cs{fi}\end{disp}
+where the \cs{else}-part is optional. The tokens for \gr{case$_i$}
+are processed if the number turns out to be~$i$; other cases are
+skipped, similarly to what ordinarily happens in conditionals
+(see Chapter~\ref{if}).
+
+%%\point Remarks
+%\section{Remarks}
+%\point Remarks
+\section{Remarks}
+
+%%\spoint Character constants
+%\subsection{Character constants}
+%\spoint Character constants
+\subsection{Character constants}
+
+%In formats and macro collections numeric constants
+%are often needed. There are several ways to implement these
+%in \TeX. 
+In formats and macro collections numeric constants
+are often needed. There are several ways to implement these
+in \TeX. 
+
+%Firstly,
+%\begin{verbatim}
+%\newcount\SomeConstant \SomeConstant=42
+%\end{verbatim}
+%This is wasteful, as it uses up a \cs{count} register.
+Firstly,
+\begin{verbatim}
+\newcount\SomeConstant \SomeConstant=42
+\end{verbatim}
+This is wasteful, as it uses up a \cs{count} register.
+
+%Secondly,
+%\begin{verbatim}
+%\def\SomeConstant{42}
+%\end{verbatim}
+%Better but accident prone: \TeX\ has to expand to find the number
+% \ldash which in itself is a slight overhead \rdash  and may inadvertently
+%expand some tokens that should have been left alone.
+Secondly,
+\begin{verbatim}
+\def\SomeConstant{42}
+\end{verbatim}
+Better but accident prone: \TeX\ has to expand to find the number
+ \ldash which in itself is a slight overhead \rdash  and may inadvertently
+expand some tokens that should have been left alone.
+
+%Thirdly,
+%\begin{verbatim}
+%\chardef\SomeConstant=42
+%\end{verbatim}
+%This one is fine.
+%A \gr{chardef token} has the same status as a \cs{count}
+%register: both are \gr{internal integer}s.
+%Therefore a number defined this way can be used everywhere that
+%a \cs{count} register is feasible.
+%For large numbers the \cs{chardef} can be replaced by \cs{mathchardef},
+%which runs to \verb>"7FFF>${}=32\,767$.
+%Note that a \gr{mathchardef token} can usually only appear
+%in math mode, but in the context of a number it can appear anywhere.
+Thirdly,
+\begin{verbatim}
+\chardef\SomeConstant=42
+\end{verbatim}
+This one is fine.
+A \gr{chardef token} has the same status as a \cs{count}
+register: both are \gr{internal integer}s.
+Therefore a number defined this way can be used everywhere that
+a \cs{count} register is feasible.
+For large numbers the \cs{chardef} can be replaced by \cs{mathchardef},
+which runs to \verb>"7FFF>${}=32\,767$.
+Note that a \gr{mathchardef token} can usually only appear
+in math mode, but in the context of a number it can appear anywhere.
+
+%%\spoint Expanding too far / how far
+%\subsection{Expanding too far / how far}
+%\spoint Expanding too far / how far
+\subsection{Expanding too far / how far}
+
+%It is a common mistake to write pieces of \TeX\ code
+%where \TeX\ will inadvertently expand something because it
+%is trying to compose a number. For example:
+%\begin{verbatim}
+%\def\par{\endgraf\penalty200}
+%...\par \number\pageno
+%\end{verbatim}
+%Here the page number will be absorbed into the value of the penalty.
+It is a common mistake to write pieces of \TeX\ code
+where \TeX\ will inadvertently expand something because it
+is trying to compose a number. For example:
+\begin{verbatim}
+\def\par{\endgraf\penalty200}
+...\par \number\pageno
+\end{verbatim}
+Here the page number will be absorbed into the value of the penalty.
+
+%Now consider 
+%\begin{verbatim}
+%\newcount\midpenalty \midpenalty=200
+%\def\par{\endgraf\penalty\midpenalty}
+%...\par \number\pageno
+%\end{verbatim}
+%Here the page number is not scooped up by mistake:
+%\TeX\ is trying to locate a \gr{number} after the \cs{penalty},
+%and it finds a \gr{countdef token}. This is {\em not\/}
+%converted to a representation in digits, so there is never any
+%danger of the page number being touched.
+Now consider 
+\begin{verbatim}
+\newcount\midpenalty \midpenalty=200
+\def\par{\endgraf\penalty\midpenalty}
+...\par \number\pageno
+\end{verbatim}
+Here the page number is not scooped up by mistake:
+\TeX\ is trying to locate a \gr{number} after the \cs{penalty},
+and it finds a \gr{countdef token}. This is {\em not\/}
+converted to a representation in digits, so there is never any
+danger of the page number being touched.
+
+%It is possible to convert a \gr{countdef token} first to
+%a representation in digits before assigning it:
+%\begin{verbatim}
+%\penalty\number\midpenalty
+%\end{verbatim}
+%and this brings back again all previous problems of expansion.
+It is possible to convert a \gr{countdef token} first to
+a representation in digits before assigning it:
+\begin{verbatim}
+\penalty\number\midpenalty
+\end{verbatim}
+and this brings back again all previous problems of expansion.
+
+%\endofchapter
+%%%%% end of input file [number]
+\endofchapter
+%%%% end of input file [number]
+
+\end{document}

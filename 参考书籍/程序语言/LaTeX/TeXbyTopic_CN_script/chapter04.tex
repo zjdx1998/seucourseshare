@@ -1,0 +1,647 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{3}
+
+\begin{document}
+
+%\chapter{Fonts}\label{font}
+\chapter{Fonts}\label{font}
+
+%In text mode \TeX\ takes characters from a `current font'.
+%This chapter describes how \indexterm{fonts} are identified to \TeX,
+%and what attributes a font can have.
+In text mode \TeX\ takes characters from a `current font'.
+This chapter describes how \indexterm{fonts} are identified to \TeX,
+and what attributes a font can have.
+
+%\label{cschap:font}\label{cschap:fontname}\label{cschap:nullfont}\label{cschap:hyphenchar}\label{cschap:defaulthyphenchar}\label{cschap:fontdimen}\label{cschap:char47}\label{cschap:noboundary}
+%\begin{inventory}
+%\item [\cs{font}] 
+%      Declare the identifying control sequence of a font.
+\label{cschap:font}\label{cschap:fontname}\label{cschap:nullfont}\label{cschap:hyphenchar}\label{cschap:defaulthyphenchar}\label{cschap:fontdimen}\label{cschap:char47}\label{cschap:noboundary}
+\begin{inventory}
+\item [\cs{font}] 
+      Declare the identifying control sequence of a font.
+
+%\item [\cs{fontname}] 
+%      The external name of a font.
+\item [\cs{fontname}] 
+      The external name of a font.
+
+%\item [\cs{nullfont}] 
+%      Name of an empty font that \TeX\ uses in emergencies.
+\item [\cs{nullfont}] 
+      Name of an empty font that \TeX\ uses in emergencies.
+
+
+%\item [\cs{hyphenchar}] 
+%      Number of the hyphen character of a font.
+\item [\cs{hyphenchar}] 
+      Number of the hyphen character of a font.
+
+%\item [\cs{defaulthyphenchar}] 
+%      Value of \cs{hyphenchar} when a font is loaded.
+%      Plain \TeX\ default:~\verb>`\->.
+\item [\cs{defaulthyphenchar}] 
+      Value of \cs{hyphenchar} when a font is loaded.
+      Plain \TeX\ default:~\verb>`\->.
+
+%\item [\cs{fontdimen}] 
+%      Access various parameters of fonts.
+\item [\cs{fontdimen}] 
+      Access various parameters of fonts.
+
+%\item [\cs{char47}]
+%      Italic correction.
+\item [\cs{char47}]
+      Italic correction.
+
+%\item [\cs{noboundary}] 
+%      Omit implicit boundary character.
+%\end{inventory}
+\item [\cs{noboundary}] 
+      Omit implicit boundary character.
+\end{inventory}
+
+%%\point Fonts
+%\section{Fonts}
+%\point Fonts
+\section{Fonts}
+
+%In  \TeX\ terminology a font is the set of characters that
+%is contained in one external font file. 
+%During processing, \TeX\ decides from
+%what font a character should be taken. This decision is
+%taken separately for text mode and math mode.
+In  \TeX\ terminology a font is the set of characters that
+is contained in one external font file. 
+During processing, \TeX\ decides from
+what font a character should be taken. This decision is
+taken separately for text mode and math mode.
+
+%When \TeX\ is processing ordinary text, characters are taken
+%from the `current font'. 
+%External font file names are coupled to  control sequences
+%by   statements such as
+%\begin{verbatim}
+%\font\MyFont=myfont10
+%\end{verbatim}
+%which makes \TeX\ load the file \n{myfont10.tfm}.
+%Switching the current font to the font described in that file
+%is then done by
+%\begin{verbatim}
+%\MyFont
+%\end{verbatim}
+%The status of the current font
+%can be queried: the sequence
+%\begin{verbatim}
+%\the\font
+%\end{verbatim}
+%produces the control sequence for the current font.
+When \TeX\ is processing ordinary text, characters are taken
+from the `current font'. 
+External font file names are coupled to  control sequences
+by   statements such as
+\begin{verbatim}
+\font\MyFont=myfont10
+\end{verbatim}
+which makes \TeX\ load the file \n{myfont10.tfm}.
+Switching the current font to the font described in that file
+is then done by
+\begin{verbatim}
+\MyFont
+\end{verbatim}
+The status of the current font
+can be queried: the sequence
+\begin{verbatim}
+\the\font
+\end{verbatim}
+produces the control sequence for the current font.
+
+%Math mode completely ignores the current font. Instead
+%it looks  at the `current family', which can contain
+%three fonts: one for text style, one for script style,
+%and one for scriptscript style. This is treated
+%in Chapter~\ref{mathchar}.
+Math mode completely ignores the current font. Instead
+it looks  at the `current family', which can contain
+three fonts: one for text style, one for script style,
+and one for scriptscript style. This is treated
+in Chapter~\ref{mathchar}.
+
+%See \cite{S} for a consistent terminology of fonts and typefaces.
+See \cite{S} for a consistent terminology of fonts and typefaces.
+
+%With `virtual fonts' (see~\cite{K:virt}) it is possible that
+%what looks like one font to \TeX\ resides in more than
+%one physical font file.
+%\alt
+%See further page~\pageref{virtual:fonts}.
+With `virtual fonts' (see~\cite{K:virt}) it is possible that
+what looks like one font to \TeX\ resides in more than
+one physical font file.
+\alt
+See further page~\pageref{virtual:fonts}.
+
+%%\point Font declaration
+%\section{Font declaration}
+%\point Font declaration
+\section{Font declaration}
+
+%Somewhere during a run of \TeX\ or \IniTeX\ 
+%\cstoidx font\par
+%the coupling between an internal identifying control sequence
+%and the external file name of a font has to be made.
+%The syntax of the command for this is
+%\begin{disp}\cs{font}\gr{control sequence}\gr{equals}%
+%\gr{file name}\gr{at clause}\end{disp} 
+%where
+%\begin{disp}\gr{at clause} $\longrightarrow$ \n{at} \gr{dimen}
+%$|$ \n{scaled} \gr{number} $|$ \gr{optional spaces}\end{disp}
+%Font declarations are local to a group.
+Somewhere during a run of \TeX\ or \IniTeX\ 
+\cstoidx font\par
+the coupling between an internal identifying control sequence
+and the external file name of a font has to be made.
+The syntax of the command for this is
+\begin{disp}\cs{font}\gr{control sequence}\gr{equals}%
+\gr{file name}\gr{at clause}\end{disp} 
+where
+\begin{disp}\gr{at clause} $\longrightarrow$ \n{at} \gr{dimen}
+$|$ \n{scaled} \gr{number} $|$ \gr{optional spaces}\end{disp}
+Font declarations are local to a group.
+
+%By the \gr{at clause} the user specifies that some
+%magnified version of the font is wanted. The \gr{at clause} comes
+%in two forms: if the font is given \n{scaled}~{\italic f\/} \TeX\
+%multiplies all its font dimensions for that font by~$f/1000$; 
+%if the font
+%has a design size~{\italic d\/}\n{pt} and 
+%the \gr{at clause} is \n{at}~{\italic p\/}\n{pt}
+%\TeX\ multiplies all font data by~$p/d$.
+%The presence of an \gr{at clause} makes no difference for
+%the external font file (the \n{.tfm} file)
+%that \TeX\ reads for the font; it just multiplies
+%the font dimensions by a constant.
+By the \gr{at clause} the user specifies that some
+magnified version of the font is wanted. The \gr{at clause} comes
+in two forms: if the font is given \n{scaled}~{\italic f\/} \TeX\
+multiplies all its font dimensions for that font by~$f/1000$; 
+if the font
+has a design size~{\italic d\/}\n{pt} and 
+the \gr{at clause} is \n{at}~{\italic p\/}\n{pt}
+\TeX\ multiplies all font data by~$p/d$.
+The presence of an \gr{at clause} makes no difference for
+the external font file (the \n{.tfm} file)
+that \TeX\ reads for the font; it just multiplies
+the font dimensions by a constant.
+
+
+%After such a font declaration, using the defined control sequence
+%will set the current font to the font of the 
+%control sequence.
+After such a font declaration, using the defined control sequence
+will set the current font to the font of the 
+control sequence.
+
+%%\spoint Fonts and \n{tfm} files
+%\subsection{Fonts and \n{tfm} files}
+%\spoint Fonts and \n{tfm} files
+\subsection{Fonts and \n{tfm} files}
+
+%The external file needed for the font is a \n{tfm} 
+%(\TeX\ font metrics) file,
+%which is taken independent of any  \gr{at clause}
+%in the \cs{font} declaration. If the \n{tfm}
+%file has been loaded already (for instance by \IniTeX\
+%when it constructed the format),
+%an assignment of that font file can be reexecuted
+%without needing recourse to the \n{tfm} file.
+The external file needed for the font is a \n{tfm} 
+(\TeX\ font metrics) file,
+which is taken independent of any  \gr{at clause}
+in the \cs{font} declaration. If the \n{tfm}
+file has been loaded already (for instance by \IniTeX\
+when it constructed the format),
+an assignment of that font file can be reexecuted
+without needing recourse to the \n{tfm} file.
+
+%Font design sizes are given in the font metrics files.
+%The \n{cmr10} font, for instance, has a design size
+%of 10~point. However, there is not much in the font
+%that actually has a size of 10~points: the opening and closing
+%parentheses are two examples, but capital
+%letters are considerably smaller.
+Font design sizes are given in the font metrics files.
+The \n{cmr10} font, for instance, has a design size
+of 10~point. However, there is not much in the font
+that actually has a size of 10~points: the opening and closing
+parentheses are two examples, but capital
+letters are considerably smaller.
+
+%%\spoint Querying the current font and font names
+%\subsection{Querying the current font and font names}
+%\spoint Querying the current font and font names
+\subsection{Querying the current font and font names}
+
+%It was already mentioned above that the control sequence
+%which set the current font can be retrieved by the
+%command \verb>\the\font>. This is a special case of
+%\begin{Disp}\cs{the}\gr{font}\end{Disp} where 
+%\begin{disp}\gr{font} $\longrightarrow$
+%\cs{font} $|$ \gr{fontdef token} $|$ \gr{family member}\nl
+%\gr{family member} $\longrightarrow$ 
+%\gr{font range}\gr{4-bit number}\nl
+%\gr{font range} $\longrightarrow$ 
+%\cs{textfont} $|$ \cs{scriptfont} $|$ \cs{scriptscriptfont}\end{disp}
+%A \gr{fontdef token} is a control sequence defined by \cs{font},
+%or the predefined control sequence \cs{nullfont}.
+%The concept of \gr{family member} is only 
+%relevant in math mode.
+It was already mentioned above that the control sequence
+which set the current font can be retrieved by the
+command \verb>\the\font>. This is a special case of
+\begin{Disp}\cs{the}\gr{font}\end{Disp} where 
+\begin{disp}\gr{font} $\longrightarrow$
+\cs{font} $|$ \gr{fontdef token} $|$ \gr{family member}\nl
+\gr{family member} $\longrightarrow$ 
+\gr{font range}\gr{4-bit number}\nl
+\gr{font range} $\longrightarrow$ 
+\cs{textfont} $|$ \cs{scriptfont} $|$ \cs{scriptscriptfont}\end{disp}
+A \gr{fontdef token} is a control sequence defined by \cs{font},
+or the predefined control sequence \cs{nullfont}.
+The concept of \gr{family member} is only 
+relevant in math mode.
+
+%Also, the 
+%\cstoidx fontname\par
+%external name of fonts can be retrieved:
+%\begin{Disp}\cs{fontname}\gr{font}\end{Disp}
+%gives a sequence of character tokens of category~12\index{category!12}
+%(but space characters get category~10\index{category!10}) that spells the font file
+%name, plus an \gr{at clause} if applicable.
+Also, the 
+\cstoidx fontname\par
+external name of fonts can be retrieved:
+\begin{Disp}\cs{fontname}\gr{font}\end{Disp}
+gives a sequence of character tokens of category~12\index{category!12}
+(but space characters get category~10\index{category!10}) that spells the font file
+name, plus an \gr{at clause} if applicable.
+
+%\begin{example} After
+%\begin{verbatim}
+%\font\tenroman=cmr10 \tenroman
+%\end{verbatim}
+%the calls
+%\verb>\the\font> and \verb>\the\tenroman> both give \cs{tenroman}.
+%The call \verb>\fontname\tenroman> gives \n{cmr10}.
+%\end{example}
+\begin{example} After
+\begin{verbatim}
+\font\tenroman=cmr10 \tenroman
+\end{verbatim}
+the calls
+\verb>\the\font> and \verb>\the\tenroman> both give \cs{tenroman}.
+The call \verb>\fontname\tenroman> gives \n{cmr10}.
+\end{example}
+
+%%\spoint \cs{nullfont}
+%\subsection{\cs{nullfont}}
+%\spoint \cs{nullfont}
+\subsection{\cs{nullfont}}
+
+%\TeX\ always knows a font that has no characters: the \csidx{nullfont}.
+%If no font has been specified, or if in math mode a family member
+%is needed that has not been specified, 
+%\TeX\ will take its characters from the nullfont.
+%This control sequence qualifies as a \gr{fontdef token}:
+%it acts like any other control sequence that stands for a font;
+%it just does not have an associated \n{tfm} file.
+\TeX\ always knows a font that has no characters: the \csidx{nullfont}.
+If no font has been specified, or if in math mode a family member
+is needed that has not been specified, 
+\TeX\ will take its characters from the nullfont.
+This control sequence qualifies as a \gr{fontdef token}:
+it acts like any other control sequence that stands for a font;
+it just does not have an associated \n{tfm} file.
+
+%%\point Font information
+%\section{Font information}
+%\point Font information
+\section{Font information}
+
+%During a run of \TeX\ the main information needed about the
+%\index{\n{tfm} files}%
+%font consists of the dimensions of the characters.
+%\TeX\ finds these in the font metrics files, which usually have
+%extension \n{.tfm}. Such files
+%contain \begin{itemize} \item global information: the \cs{fontdimen}
+%parameters, and some other information,
+%\item dimensions and the italic corrections of characters, and
+%\altt 
+%\item ligature and kerning programs for characters.
+%	\end{itemize}
+%Also, the design size of a font is specified in the \n{tfm} file;
+%see above. The definition of the \n{tfm} format can be found
+%in~\cite{Knuth:TeXprogram}.
+During a run of \TeX\ the main information needed about the
+\index{\n{tfm} files}%
+font consists of the dimensions of the characters.
+\TeX\ finds these in the font metrics files, which usually have
+extension \n{.tfm}. Such files
+contain \begin{itemize} \item global information: the \cs{fontdimen}
+parameters, and some other information,
+\item dimensions and the italic corrections of characters, and
+\altt 
+\item ligature and kerning programs for characters.
+	\end{itemize}
+Also, the design size of a font is specified in the \n{tfm} file;
+see above. The definition of the \n{tfm} format can be found
+in~\cite{Knuth:TeXprogram}.
+
+%%\spoint[font:dims] Font dimensions
+%\subsection{Font dimensions}
+%\label{font:dims}
+%\spoint[font:dims] Font dimensions
+\subsection{Font dimensions}
+\label{font:dims}
+
+%Text fonts need to have at least seven \csidx{fontdimen} parameters
+%to describe \indextermsub{font}{dimensions}
+%(but \TeX\ will take zero for unspecified parameters);
+%math symbol and math extension fonts have more
+%(see page~\pageref{fam23:fontdims}).
+%For text fonts the minimal set of seven comprises the following:
+%\begin{enumerate} \item the slant per point; this dimension is used
+%    for the proper horizontal positioning of accents;
+%\item the interword space: this is used unless the user
+%    specifies an explicit \cs{spaceskip};
+%    see Chapter~\ref{space};
+%\item interword stretch: the stretch component of the interword
+%    space;
+%\item interword shrink: the shrink component of
+%    the interword space;
+%\item the x-height: the value of
+%    the \gr{internal unit} \n{ex}, which is usually about the
+%    height of the lowercase letter~`x'; 
+%\item the quad width:
+%    the value of the \gr{internal unit} \n{em}, which is
+%    approximately the width of the capital letter~`M'; and
+%\item the extra space: the space added to the interword space
+%at the end of sentences (that is, when \cs{spacefactor}${}\geq2000$)
+%unless the user specifies an explicit \cs{x\-space\-skip}.
+%\end{enumerate}
+Text fonts need to have at least seven \csidx{fontdimen} parameters
+to describe \indextermsub{font}{dimensions}
+(but \TeX\ will take zero for unspecified parameters);
+math symbol and math extension fonts have more
+(see page~\pageref{fam23:fontdims}).
+For text fonts the minimal set of seven comprises the following:
+\begin{enumerate} \item the slant per point; this dimension is used
+    for the proper horizontal positioning of accents;
+\item the interword space: this is used unless the user
+    specifies an explicit \cs{spaceskip};
+    see Chapter~\ref{space};
+\item interword stretch: the stretch component of the interword
+    space;
+\item interword shrink: the shrink component of
+    the interword space;
+\item the x-height: the value of
+    the \gr{internal unit} \n{ex}, which is usually about the
+    height of the lowercase letter~`x'; 
+\item the quad width:
+    the value of the \gr{internal unit} \n{em}, which is
+    approximately the width of the capital letter~`M'; and
+\item the extra space: the space added to the interword space
+at the end of sentences (that is, when \cs{spacefactor}${}\geq2000$)
+unless the user specifies an explicit \cs{x\-space\-skip}.
+\end{enumerate}
+
+%Parameters 1 and~5 are purely information about the font
+%and there is no point in varying them.
+%The values of other parameters can be changed in order to
+%adjust spacing; see Chapter~\ref{space} for examples
+%of changing parameters 2, 3, 4, and~7.
+Parameters 1 and~5 are purely information about the font
+and there is no point in varying them.
+The values of other parameters can be changed in order to
+adjust spacing; see Chapter~\ref{space} for examples
+of changing parameters 2, 3, 4, and~7.
+
+%Font dimensions can be altered in a \gr{font
+%  assignment}\index{assignment!font}, which is a \gr{global
+%  assignment}\index{assignment!global} (see
+%page~\pageref{global:assign}):
+%\begin{Disp}\cs{fontdimen}\gr{number}\gr{font}\gr{equals}\gr{dimen}
+%\end{Disp} See above for the definition of \gr{font}.
+Font dimensions can be altered in a \gr{font
+  assignment}\index{assignment!font}, which is a \gr{global
+  assignment}\index{assignment!global} (see
+page~\pageref{global:assign}):
+\begin{Disp}\cs{fontdimen}\gr{number}\gr{font}\gr{equals}\gr{dimen}
+\end{Disp} See above for the definition of \gr{font}.
+
+%%\spoint Kerning
+%\subsection{Kerning}
+%\spoint Kerning
+\subsection{Kerning}
+
+%Some combinations of characters should be moved closer
+%together than would be the case if their bounding boxes
+%were to be just abutted. This fine spacing is called \indexterm{kerning},
+%and a proper kerning is as essential to a font as the
+%design of the letter shapes.
+Some combinations of characters should be moved closer
+together than would be the case if their bounding boxes
+were to be just abutted. This fine spacing is called \indexterm{kerning},
+and a proper kerning is as essential to a font as the
+design of the letter shapes.
+
+%Consider as an example\message{Kerning!}
+%\begin{Disp} `Vo' versus the unkerned variant `V\hbox{}o'\end{Disp}
+Consider as an example\message{Kerning!}
+\begin{Disp} `Vo' versus the unkerned variant `V\hbox{}o'\end{Disp}
+
+%Kerning in \TeX\ is controlled by information in the
+%\n{tfm} file, and is therefore outside the influence of the
+%user. The \n{tfm} file can be edited, however (see Chapter~\ref{TeXcomm}).
+Kerning in \TeX\ is controlled by information in the
+\n{tfm} file, and is therefore outside the influence of the
+user. The \n{tfm} file can be edited, however (see Chapter~\ref{TeXcomm}).
+
+%The \cs{kern} command has (almost) nothing to do with the
+%phenomenon of kerning; it is explained in Chapter~\ref{glue}.
+The \cs{kern} command has (almost) nothing to do with the
+phenomenon of kerning; it is explained in Chapter~\ref{glue}.
+
+%%\spoint Italic correction
+%\subsection{Italic correction}
+%\spoint Italic correction
+\subsection{Italic correction}
+
+%The primitive control symbol \verb-\/- inserts the 
+%\indexterm{italic correction}\cstoidx /\par
+%of the previous character or ligature.
+%Such a correction may be necessary owing to the definition
+%of the \indextermbus{bounding}{box} of a character. This box always
+%has vertical sides, and the width of the character as \TeX\
+%perceives it is the distance between these sides.
+%However, in order to achieve proper spacing  for slanted or
+%italic typefaces, characters may very well project outside their
+%bounding boxes. The italic correction is then needed if
+%such an overhanging character is followed by a 
+%character from a non-slanting typeface.
+The primitive control symbol \verb-\/- inserts the 
+\indexterm{italic correction}\cstoidx /\par
+of the previous character or ligature.
+Such a correction may be necessary owing to the definition
+of the \indextermbus{bounding}{box} of a character. This box always
+has vertical sides, and the width of the character as \TeX\
+perceives it is the distance between these sides.
+However, in order to achieve proper spacing  for slanted or
+italic typefaces, characters may very well project outside their
+bounding boxes. The italic correction is then needed if
+such an overhanging character is followed by a 
+character from a non-slanting typeface.
+
+%Compare for instance\message{Visible italic correction!}
+%\begin{Disp} `{\italic\TeX} has'
+%to `{\italic\TeX\/} has',
+%\end{Disp} where the second version was typed as
+%\begin{verbatim}
+%{\italic\TeX\/} has
+%\end{verbatim}
+Compare for instance\message{Visible italic correction!}
+\begin{Disp} `{\italic\TeX} has'
+to `{\italic\TeX\/} has',
+\end{Disp} where the second version was typed as
+\begin{verbatim}
+{\italic\TeX\/} has
+\end{verbatim}
+
+%The size of the italic correction of each character
+%is determined by font information
+%in the font metrics file; for the Computer Modern fonts it is
+%approximately half the `overhang' of the characters;
+%see~\cite{K:partE}.
+%Italic correction is not the same as \cs{fontdimen1}, slant
+%per point. That font dimension is used only for positioning
+%accents on top of characters.
+The size of the italic correction of each character
+is determined by font information
+in the font metrics file; for the Computer Modern fonts it is
+approximately half the `overhang' of the characters;
+see~\cite{K:partE}.
+Italic correction is not the same as \cs{fontdimen1}, slant
+per point. That font dimension is used only for positioning
+accents on top of characters.
+
+%An italic correction can only be inserted if the previous item
+%processed 
+%by \TeX\ was a character or ligature. Thus the
+%following solution for roman text inside an italic passage
+%does not work:
+%\begin{verbatim}
+%{\italic Some text {\/\roman not} emphasized}
+%\end{verbatim}
+%The italic correction has no effect here,
+%because the previous item is glue.
+An italic correction can only be inserted if the previous item
+processed 
+by \TeX\ was a character or ligature. Thus the
+following solution for roman text inside an italic passage
+does not work:
+\begin{verbatim}
+{\italic Some text {\/\roman not} emphasized}
+\end{verbatim}
+The italic correction has no effect here,
+because the previous item is glue.
+
+%%\spoint Ligatures
+%\subsection{Ligatures}
+%\spoint Ligatures
+\subsection{Ligatures}
+
+%Replacement of character sequences by \indexterm{ligatures} is controlled
+%by information in the \n{tfm} file of a font.
+%Ligatures are formed from \gr{character} commands:
+%sequences such as \n{fi} are replaced by `fi' in some fonts.
+Replacement of character sequences by \indexterm{ligatures} is controlled
+by information in the \n{tfm} file of a font.
+Ligatures are formed from \gr{character} commands:
+sequences such as \n{fi} are replaced by `fi' in some fonts.
+
+%Other ligatures traditionally in use are
+%between \n{ff}, \n{ffi}, \n{fl}, and \n{ffl};
+%in some older works \n{ft} and \n{st} can be found,
+%and similarly to the \n{fl} ligature \n{fk} and \n{fb}
+%can also occur.
+Other ligatures traditionally in use are
+between \n{ff}, \n{ffi}, \n{fl}, and \n{ffl};
+in some older works \n{ft} and \n{st} can be found,
+and similarly to the \n{fl} ligature \n{fk} and \n{fb}
+can also occur.
+
+%Ligatures in \TeX\ can be formed between explicit character
+%tokens, \cs{char} commands, and \gr{chardef token}s.
+%For example,
+%the sequence \verb-\char`f\char`i- is replaced by the
+%`fi' ligature, if such a ligature is part of the font.
+Ligatures in \TeX\ can be formed between explicit character
+tokens, \cs{char} commands, and \gr{chardef token}s.
+For example,
+the sequence \verb-\char`f\char`i- is replaced by the
+`fi' ligature, if such a ligature is part of the font.
+
+%Unwanted ligatures can be suppressed in a number of ways:
+%the unwanted ligature `\hbox{halflife}' can 
+%for instance be prevented by
+%\begin{disp} \verb>half{}life>, \verb>half{l}ife>, \verb>half\/life>,
+%      or \verb>half\hbox{}life>\end{disp}
+%but the solution using italic correction is not equivalent
+%to the others.
+Unwanted ligatures can be suppressed in a number of ways:
+the unwanted ligature `\hbox{halflife}' can 
+for instance be prevented by
+\begin{disp} \verb>half{}life>, \verb>half{l}ife>, \verb>half\/life>,
+      or \verb>half\hbox{}life>\end{disp}
+but the solution using italic correction is not equivalent
+to the others.
+
+%%\spoint Boundary ligatures
+%\subsection{Boundary ligatures}
+%\spoint Boundary ligatures
+\subsection{Boundary ligatures}
+
+%Each word is surrounded by a left and a right
+%boundary character (\TeX3 only).
+%This makes phenomena possible
+%such as the two different sigmas in Greek:
+%one at the end of a word, and one for every other position.
+%This can be realized through a ligature with the
+%boundary character. A~\csidx{noboundary} command immediately
+%before or after a word suppresses the boundary character
+%at that place.
+Each word is surrounded by a left and a right
+boundary character (\TeX3 only).
+This makes phenomena possible
+such as the two different sigmas in Greek:
+one at the end of a word, and one for every other position.
+This can be realized through a ligature with the
+boundary character. A~\csidx{noboundary} command immediately
+before or after a word suppresses the boundary character
+at that place.
+
+%In general, the ligature mechanism has become more complicated
+%with the transition to \TeX\ version~3; see~\cite{K:TeX23}.
+In general, the ligature mechanism has become more complicated
+with the transition to \TeX\ version~3; see~\cite{K:TeX23}.
+
+%\endofchapter
+%%%%% end of input file [fontfam]
+\endofchapter
+%%%% end of input file [fontfam]
+
+\end{document}

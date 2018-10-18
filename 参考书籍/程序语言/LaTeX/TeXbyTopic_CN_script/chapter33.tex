@@ -1,0 +1,1262 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{32}
+
+\begin{document}
+
+%\chapter{\TeX\ and the Outside World}\label{TeXcomm}
+\chapter{\TeX\ and the Outside World}\label{TeXcomm}
+
+%This
+%chapter treats those commands that bear relevance to
+%\n{dvi} files and formats. It gives some global information
+%about \IniTeX, font and format files,
+%Computer Modern typefaces, and \web.
+This
+chapter treats those commands that bear relevance to
+\n{dvi} files and formats. It gives some global information
+about \IniTeX, font and format files,
+Computer Modern typefaces, and \web.
+
+%\label{cschap:dump}\label{cschap:special}\label{cschap:mag}\label{cschap:year}\label{cschap:month}\label{cschap:day}\label{cschap:time}\label{cschap:fmtname}\label{cschap:fmtversion}
+%\begin{inventory}
+%\item [\cs{dump}] 
+%      Dump a format file; possible only in \IniTeX, 
+%      not allowed inside a group.
+\label{cschap:dump}\label{cschap:special}\label{cschap:mag}\label{cschap:year}\label{cschap:month}\label{cschap:day}\label{cschap:time}\label{cschap:fmtname}\label{cschap:fmtversion}
+\begin{inventory}
+\item [\cs{dump}] 
+      Dump a format file; possible only in \IniTeX, 
+      not allowed inside a group.
+
+%\item [\cs{special}] 
+%      Write a \gr{balanced text} to the \n{dvi} file.
+\item [\cs{special}] 
+      Write a \gr{balanced text} to the \n{dvi} file.
+
+%\item [\cs{mag}] 
+%      1000 times the magnification of the document.
+\item [\cs{mag}] 
+      1000 times the magnification of the document.
+
+%\item [\cs{year}] 
+%      The year of the current job.
+\item [\cs{year}] 
+      The year of the current job.
+
+%\item [\cs{month}] 
+%      The month of the current job.
+\item [\cs{month}] 
+      The month of the current job.
+
+%\item [\cs{day}] 
+%      The day of the current job.
+\item [\cs{day}] 
+      The day of the current job.
+
+%\item [\cs{time}]
+%      Number of minutes after midnight that the current job started.
+\item [\cs{time}]
+      Number of minutes after midnight that the current job started.
+
+%\item [\cs{fmtname}] 
+%      Macro containing the name of the format dumped.
+\item [\cs{fmtname}] 
+      Macro containing the name of the format dumped.
+
+%\item [\cs{fmtversion}] 
+%      Macro containing the version of the format dumped.
+\item [\cs{fmtversion}] 
+      Macro containing the version of the format dumped.
+
+%\end{inventory}
+\end{inventory}
+
+
+%%\point \TeX, \IniTeX, \VirTeX
+%\section{\TeX, \IniTeX, \VirTeX}
+%\point \TeX, \IniTeX, \VirTeX
+\section{\TeX, \IniTeX, \VirTeX}
+
+%In the terminology established in {\italic \TeX: the Program},
+%\cite{Knuth:TeXprogram},
+%\thecstoidx TeX\par\thecstoidx IniTeX\par\thecstoidx VirTeX\par
+%\TeX\ programs come in three flavours.
+%\IniTeX\ is a version of \TeX\ that can generate formats;
+%\VirTeX\ is a production version without preloaded format,
+%and \TeX\ is a production version with 
+%preloaded (plain) format. Unfortunately, this terminology is
+%not adhered to in general. A~lot of systems do not use preloaded
+%formats (the procedure for making them may be impossible on
+%some operating systems),
+%and call the `virgin \TeX' simply \TeX.
+%This manual also follows that convention.
+In the terminology established in {\italic \TeX: the Program},
+\cite{Knuth:TeXprogram},
+\thecstoidx TeX\par\thecstoidx IniTeX\par\thecstoidx VirTeX\par
+\TeX\ programs come in three flavours.
+\IniTeX\ is a version of \TeX\ that can generate formats;
+\VirTeX\ is a production version without preloaded format,
+and \TeX\ is a production version with 
+preloaded (plain) format. Unfortunately, this terminology is
+not adhered to in general. A~lot of systems do not use preloaded
+formats (the procedure for making them may be impossible on
+some operating systems),
+and call the `virgin \TeX' simply \TeX.
+This manual also follows that convention.
+
+%%\spoint Formats: loading
+%\subsection{Formats: loading}
+%\spoint Formats: loading
+\subsection{Formats: loading}
+
+%A \indexterm{format file}
+%(usually with extension~\n{.fmt})
+%is a compact dump of \TeX's internal structures.
+%Loading a format file takes a considerably shorter time than
+%would be needed for
+%loading the font information and the macros that
+%constitute the format.
+A \indexterm{format file}
+(usually with extension~\n{.fmt})
+is a compact dump of \TeX's internal structures.
+Loading a format file takes a considerably shorter time than
+would be needed for
+loading the font information and the macros that
+constitute the format.
+
+%Both \TeX\ and \IniTeX\ can load a format; the user specifies
+%this by putting the name on the command line 
+%\begin{verbatim}
+%% tex &plain 
+%\end{verbatim}
+%or at the \n{**} prompt
+%\begin{verbatim}
+%% tex
+%This is TeX. Version ....
+%** &plain 
+%\end{verbatim}
+%preceded by an ampersand (for UNIX, this should be \verb>\&> on
+%the command line). An input file name can follow the
+%format name in both places.
+Both \TeX\ and \IniTeX\ can load a format; the user specifies
+this by putting the name on the command line 
+\begin{verbatim}
+% tex &plain 
+\end{verbatim}
+or at the \n{**} prompt
+\begin{verbatim}
+% tex
+This is TeX. Version ....
+** &plain 
+\end{verbatim}
+preceded by an ampersand (for UNIX, this should be \verb>\&> on
+the command line). An input file name can follow the
+format name in both places.
+
+%\IniTeX\ does not need a format,
+%but if no format is specified for (Vir)\TeX, it will try to
+%load the plain format, and halt if that cannot be found.
+\IniTeX\ does not need a format,
+but if no format is specified for (Vir)\TeX, it will try to
+load the plain format, and halt if that cannot be found.
+
+%%\spoint Formats: dumping
+%\subsection{Formats: dumping}
+%\spoint Formats: dumping
+\subsection{Formats: dumping}
+
+%\IniTeX\ is the only version of \TeX\ 
+%that can dump a format, since it is
+%the only version of \TeX\ that has
+%the command~\csidx{dump},
+%which causes the internal structures
+%to be dumped as a format.
+%It is also the only version of \TeX\ that has the command
+%\cs{patterns}, which
+%is needed to specify a list of hyphenation
+%patterns.
+\IniTeX\ is the only version of \TeX\ 
+that can dump a format, since it is
+the only version of \TeX\ that has
+the command~\csidx{dump},
+which causes the internal structures
+to be dumped as a format.
+It is also the only version of \TeX\ that has the command
+\cs{patterns}, which
+is needed to specify a list of hyphenation
+patterns.
+
+%Dumping is not allowed inside a group, that is
+%\begin{verbatim}
+%{ ... \dump }
+%\end{verbatim}
+%is not allowed. This restriction
+%prevents difficulties with \TeX's save stack.
+%After the \cs{dump} command \TeX\ gives an elaborate listing of
+%its internal state, and of the font names associated with
+%fonts that have been loaded and ends the job.
+Dumping is not allowed inside a group, that is
+\begin{verbatim}
+{ ... \dump }
+\end{verbatim}
+is not allowed. This restriction
+prevents difficulties with \TeX's save stack.
+After the \cs{dump} command \TeX\ gives an elaborate listing of
+its internal state, and of the font names associated with
+fonts that have been loaded and ends the job.
+
+%An interesting possibility arises from the fact that
+%\IniTeX\ can both load and dump a format.
+%Suppose you have written a set of macros that build
+%on top of plain \TeX, \n{superplain.tex}.
+%You could then call
+%\begin{verbatim}
+%% initex &plain superplain
+%*\dump
+%\end{verbatim}
+%and get a format file \n{superplain.fmt} that
+%has all of plain, and all of your macros.
+An interesting possibility arises from the fact that
+\IniTeX\ can both load and dump a format.
+Suppose you have written a set of macros that build
+on top of plain \TeX, \n{superplain.tex}.
+You could then call
+\begin{verbatim}
+% initex &plain superplain
+*\dump
+\end{verbatim}
+and get a format file \n{superplain.fmt} that
+has all of plain, and all of your macros.
+
+%%\spoint Formats: preloading
+%\subsection{Formats: preloading}
+%\spoint Formats: preloading
+\subsection{Formats: preloading}
+
+%On some systems it is possible to interrupt a running program,
+%and save its `core image' such that this can be started as
+%an independent program. 
+%The executable made from the
+%core image of a \TeX\ program interrupted after it has loaded 
+%a format is called a \TeX\ program with preloaded format.
+%The idea behind preloaded formats is
+%that interrupting \TeX\ after it has loaded a format, and making
+%this program available to the user, 
+%saves in each run the time for loading the format.
+%In the good old days when computers were quite a bit slower
+%this procedure made sense.
+%Nowadays, it does not seem so necessary.
+%Besides, dumping a core image may not always be possible.
+On some systems it is possible to interrupt a running program,
+and save its `core image' such that this can be started as
+an independent program. 
+The executable made from the
+core image of a \TeX\ program interrupted after it has loaded 
+a format is called a \TeX\ program with preloaded format.
+The idea behind preloaded formats is
+that interrupting \TeX\ after it has loaded a format, and making
+this program available to the user, 
+saves in each run the time for loading the format.
+In the good old days when computers were quite a bit slower
+this procedure made sense.
+Nowadays, it does not seem so necessary.
+Besides, dumping a core image may not always be possible.
+
+%%\spoint The knowledge of \IniTeX
+%\subsection{The knowledge of \IniTeX}
+%\spoint The knowledge of \IniTeX
+\subsection{The knowledge of \IniTeX}
+
+%If no format has been loaded, \IniTeX\ knows very little.
+%For instance, it has no open/close group characters.
+%However, it can not be completely devoid of knowledge
+%lest there be no way to define anything.
+If no format has been loaded, \IniTeX\ knows very little.
+For instance, it has no open/close group characters.
+However, it can not be completely devoid of knowledge
+lest there be no way to define anything.
+
+%Here is the extent of its knowledge.
+%\begin{itemize} \mathsurround=1.5pt
+%%\flushright:no
+%\item \verb>\catcode`\\=0>, \verb>\escapechar=`\\>
+%      (see page~\pageref{ini:esc}).
+%\item \verb>\catcode`\^^M=5>, \verb>\endlinechar=`\^^M>
+%      (see page~\pageref{ini:eol}).
+%\item \verb>\catcode`\ =10>
+%      (see page~\pageref{ini:sp}).
+%\item \verb>\catcode`\%=14>
+%      (see page~\pageref{ini:comm}).
+%\item \verb>\catcode`\^^?=15>
+%      (see page~\pageref{ini:invalid}).
+%\item \cs{catcode}$x$\n{=11} for $x={}$\n{`a..`z,`A..`Z}
+%      (see page~\pageref{ini:let}).
+%\item \cs{catcode}$x$\n{=12} for all other character codes\nl
+%      (see page~\pageref{ini:other}).
+%\item \cs{sfcode}$x$=\n{999} for $x={}$\n{`A..`Z},
+%      \cs{sfcode}$x$\n{=1000} for all other characters
+%      (see page~\pageref{ini:sf}).
+%\item \verb>\lccode`a..`z,`A..`Z=`a..`z>, \verb>\uccode`a..`z,`A..`Z=`A..`Z>,
+%      \cs{lccode}$x$\n{=0}, \cs{uccode}$x$\n{=0} for all other characters
+%      (see page~\pageref{ini:uclc}).
+%\item \verb>\delcode`.=0>, \cs{delcode}$x$\n{=-1} for all other characters
+%      (see page~\pageref{ini:del}).
+%\item \cs{mathcode}$x$\n{="!7100}${}+x$ for all lowercase and uppercase
+%      letters, \cs{mathcode}$x$\n{="!7000}${}+x$ for all digits,
+%      \cs{mathcode}$x$\n=$x$ for all other characters
+%      (see page~\pageref{ini:fam}).
+%\item \cs{tolerance=10000}, \cs{mag=1000},
+%      \cs{maxdeadcycles=25}.
+%\end{itemize}
+Here is the extent of its knowledge.
+\begin{itemize} \mathsurround=1.5pt
+%\flushright:no
+\item \verb>\catcode`\\=0>, \verb>\escapechar=`\\>
+      (see page~\pageref{ini:esc}).
+\item \verb>\catcode`\^^M=5>, \verb>\endlinechar=`\^^M>
+      (see page~\pageref{ini:eol}).
+\item \verb>\catcode`\ =10>
+      (see page~\pageref{ini:sp}).
+\item \verb>\catcode`\%=14>
+      (see page~\pageref{ini:comm}).
+\item \verb>\catcode`\^^?=15>
+      (see page~\pageref{ini:invalid}).
+\item \cs{catcode}$x$\n{=11} for $x={}$\n{`a..`z,`A..`Z}
+      (see page~\pageref{ini:let}).
+\item \cs{catcode}$x$\n{=12} for all other character codes\nl
+      (see page~\pageref{ini:other}).
+\item \cs{sfcode}$x$=\n{999} for $x={}$\n{`A..`Z},
+      \cs{sfcode}$x$\n{=1000} for all other characters
+      (see page~\pageref{ini:sf}).
+\item \verb>\lccode`a..`z,`A..`Z=`a..`z>, \verb>\uccode`a..`z,`A..`Z=`A..`Z>,
+      \cs{lccode}$x$\n{=0}, \cs{uccode}$x$\n{=0} for all other characters
+      (see page~\pageref{ini:uclc}).
+\item \verb>\delcode`.=0>, \cs{delcode}$x$\n{=-1} for all other characters
+      (see page~\pageref{ini:del}).
+\item \cs{mathcode}$x$\n{="!7100}${}+x$ for all lowercase and uppercase
+      letters, \cs{mathcode}$x$\n{="!7000}${}+x$ for all digits,
+      \cs{mathcode}$x$\n=$x$ for all other characters
+      (see page~\pageref{ini:fam}).
+\item \cs{tolerance=10000}, \cs{mag=1000},
+      \cs{maxdeadcycles=25}.
+\end{itemize}
+
+%%\spoint Memory sizes of \TeX\ and \IniTeX
+%\subsection{Memory sizes of \TeX\ and \IniTeX}
+%\spoint Memory sizes of \TeX\ and \IniTeX
+\subsection{Memory sizes of \TeX\ and \IniTeX}
+
+%The main memory size of \TeX\ and \IniTeX\ is controlled by
+%four constants in the source code:
+%\n{mem\_bot}, \n{mem\_top}, \n{mem\_min}, and~\n{mem\_max}.
+%For Ini\TeX's memory \n{mem\_bot${}={}$mem\_min} 
+%and \n{mem\_top${}={}$mem\_max};
+%for \TeX\ \n{mem\_bot} and \n{mem\_top} record the main memory
+%size of the Ini\TeX\ used to dump the format.
+%Thus versions of \TeX\ and \IniTeX\ have to be adapted
+%to each other in this    respect.
+The main memory size of \TeX\ and \IniTeX\ is controlled by
+four constants in the source code:
+\n{mem\_bot}, \n{mem\_top}, \n{mem\_min}, and~\n{mem\_max}.
+For Ini\TeX's memory \n{mem\_bot${}={}$mem\_min} 
+and \n{mem\_top${}={}$mem\_max};
+for \TeX\ \n{mem\_bot} and \n{mem\_top} record the main memory
+size of the Ini\TeX\ used to dump the format.
+Thus versions of \TeX\ and \IniTeX\ have to be adapted
+to each other in this    respect.
+
+%\TeX's own main memory can be bigger than that of the
+%corresponding \IniTeX: in general
+%\n{mem\_min${}\leq{}$mem\_bot} and \n{mem\_top${}\leq{}$mem\_max}.
+\TeX's own main memory can be bigger than that of the
+corresponding \IniTeX: in general
+\n{mem\_min${}\leq{}$mem\_bot} and \n{mem\_top${}\leq{}$mem\_max}.
+
+%For \IniTeX\ a smaller main memory can suffice, 
+%as this program is typically
+%not meant to do real typesetting. 
+%There may even be a real need for the main memory
+%to be smaller, because \IniTeX\ needs a lot of auxiliary
+%storage for initialization and for building the
+%hyphenation table.
+For \IniTeX\ a smaller main memory can suffice, 
+as this program is typically
+not meant to do real typesetting. 
+There may even be a real need for the main memory
+to be smaller, because \IniTeX\ needs a lot of auxiliary
+storage for initialization and for building the
+hyphenation table.
+
+
+%%\point More about formats
+%\section{More about formats}
+%\point More about formats
+\section{More about formats}
+
+%%\spoint Compatibility
+%\subsection{Compatibility}
+%\spoint Compatibility
+\subsection{Compatibility}
+
+%\TeX\ has a curious error message: `Fatal format error: I'm stymied',
+%which is given if \TeX\ tries to load a format that was made
+%with an incompatible version of \IniTeX. See the point
+%above about memory sizes, and Chapter~\ref{error} for
+%the hash size (parameters \n{hash\_size} and \n{hash\_prime})
+%and the hyphenation exception dictionary (parameter \n{hyph\_size}).
+\TeX\ has a curious error message: `Fatal format error: I'm stymied',
+which is given if \TeX\ tries to load a format that was made
+with an incompatible version of \IniTeX. See the point
+above about memory sizes, and Chapter~\ref{error} for
+the hash size (parameters \n{hash\_size} and \n{hash\_prime})
+and the hyphenation exception dictionary (parameter \n{hyph\_size}).
+
+%%\spoint Preloaded fonts
+%\subsection{Preloaded fonts}
+%\spoint Preloaded fonts
+\subsection{Preloaded fonts}
+
+%During a run of \TeX\ the only information needed about fonts
+%is the data that is found in the \n{tfm} files (see below).
+%Since a run of \TeX, especially if the input contains math material,
+%can easily access 30--40 fonts, the disk access for
+%all the \n{tfm} files can become significant.
+%Therefore the plain format and \LaTeX\ load these 
+%metrics files in \IniTeX. A~\TeX\ version using such a format
+%does not need to load any \n{tfm} files.
+During a run of \TeX\ the only information needed about fonts
+is the data that is found in the \n{tfm} files (see below).
+Since a run of \TeX, especially if the input contains math material,
+can easily access 30--40 fonts, the disk access for
+all the \n{tfm} files can become significant.
+Therefore the plain format and \LaTeX\ load these 
+metrics files in \IniTeX. A~\TeX\ version using such a format
+does not need to load any \n{tfm} files.
+
+%On the other hand, if a format has the possibility of accessing
+%a range of typefaces, it may be advantageous to have metrics
+%files loaded on demand during the actual run of \TeX.
+On the other hand, if a format has the possibility of accessing
+a range of typefaces, it may be advantageous to have metrics
+files loaded on demand during the actual run of \TeX.
+
+%%\spoint The plain format
+%\subsection{The plain format}
+%\spoint The plain format
+\subsection{The plain format}
+
+%The first format written for \TeX, and the basis for all
+%later ones,
+%is the plain format, described in \TeXbook.
+%It is a mixture of 
+%\begin{itemize}
+%\item definitions and macros one simply cannot live without
+%such as the initial \cs{catcode} assignments, 
+%all of the math delimiter definitions,
+%and the \cs{new...} macros;
+%\item constructs that are useful, but for which \LaTeX\ 
+%and other packages use
+%a different implementation, such as the tabbing environment; and
+%\item some macros that are insufficient for any but the
+%simplest applications: \cs{item} and \cs{beginsection}
+%are in this category.
+%\end{itemize}
+The first format written for \TeX, and the basis for all
+later ones,
+is the plain format, described in \TeXbook.
+It is a mixture of 
+\begin{itemize}
+\item definitions and macros one simply cannot live without
+such as the initial \cs{catcode} assignments, 
+all of the math delimiter definitions,
+and the \cs{new...} macros;
+\item constructs that are useful, but for which \LaTeX\ 
+and other packages use
+a different implementation, such as the tabbing environment; and
+\item some macros that are insufficient for any but the
+simplest applications: \cs{item} and \cs{beginsection}
+are in this category.
+\end{itemize}
+
+%It is the first category which Knuth meant to serve as a
+%foundation for future macro packages, so that they
+%can live peacefully together (see  Chapter~\ref{alloc}).
+%This idea is reflected in the fact that the name `plain'
+%is not capitalized: it is the basic set of macros.
+It is the first category which Knuth meant to serve as a
+foundation for future macro packages, so that they
+can live peacefully together (see  Chapter~\ref{alloc}).
+This idea is reflected in the fact that the name `plain'
+is not capitalized: it is the basic set of macros.
+
+%%\spoint The \LaTeX\ format
+%\subsection{The \LaTeX\ format}
+%\spoint The \LaTeX\ format
+\subsection{The \LaTeX\ format}
+
+%The \LaTeX\ format\thecstoidx LaTeX\par,
+%written by  Leslie Lamport of Digital Equipment Corporation
+%and described in~\cite{Lamport:LaTeX},
+%was released around 1985.
+%The \LaTeX\ format, using its own version
+%of \n{plain.tex} (called \n{lplain.tex}),
+%is not compatible with plain \TeX;
+%a~number of plain macros are not available. Still, it contains
+%large parts of the plain format (even when they overlap with
+%its own constructs).
+The \LaTeX\ format\thecstoidx LaTeX\par,
+written by  Leslie Lamport of Digital Equipment Corporation
+and described in~\cite{Lamport:LaTeX},
+was released around 1985.
+The \LaTeX\ format, using its own version
+of \n{plain.tex} (called \n{lplain.tex}),
+is not compatible with plain \TeX;
+a~number of plain macros are not available. Still, it contains
+large parts of the plain format (even when they overlap with
+its own constructs).
+
+%\LaTeX\ is a powerful format with facilities such as
+%marginal notes, floating objects, cross referencing,
+%and automatic table of contents generation.
+%Its main drawback is that the `style files' which
+%define the actual layout are quite hard to write
+%(although \LaTeX\ is in the process of a major revision,
+%in which this problem will be tackled;
+%see \cite{Frank} and~\cite{Frank2}).
+%As a result,
+%people have had at their disposal mostly the styles
+%written by Leslie Lamport, the layout of which is
+%rather idiosyncratic. See~\cite{BEP} for a successful
+%attempt to replace these styles.
+\LaTeX\ is a powerful format with facilities such as
+marginal notes, floating objects, cross referencing,
+and automatic table of contents generation.
+Its main drawback is that the `style files' which
+define the actual layout are quite hard to write
+(although \LaTeX\ is in the process of a major revision,
+in which this problem will be tackled;
+see \cite{Frank} and~\cite{Frank2}).
+As a result,
+people have had at their disposal mostly the styles
+written by Leslie Lamport, the layout of which is
+rather idiosyncratic. See~\cite{BEP} for a successful
+attempt to replace these styles.
+
+%%\spoint Mathematical formats
+%\subsection{Mathematical formats}
+%\spoint Mathematical formats
+\subsection{Mathematical formats}
+
+%There are two formats with extensive facilities for
+%mathematics typesetting:
+%\AmsTeX~\cite{Ams}
+%(which originated at the American Mathematical Society)
+%and \LamsTeX~\cite{Lams}.
+%The first of these includes more facilities than plain \TeX\
+%or \LaTeX\ for typesetting mathematics, but it lacks
+%features such as automatic numbering and cross-referencing,
+%available in \LaTeX, for instance. \LamsTeX, then, is the
+%synthesis of \AmsTeX\ and \LaTeX. Also it includes
+%still more features for mathematics, such as complicated
+%tables and commutative diagrams.
+There are two formats with extensive facilities for
+mathematics typesetting:
+\AmsTeX~\cite{Ams}
+(which originated at the American Mathematical Society)
+and \LamsTeX~\cite{Lams}.
+The first of these includes more facilities than plain \TeX\
+or \LaTeX\ for typesetting mathematics, but it lacks
+features such as automatic numbering and cross-referencing,
+available in \LaTeX, for instance. \LamsTeX, then, is the
+synthesis of \AmsTeX\ and \LaTeX. Also it includes
+still more features for mathematics, such as complicated
+tables and commutative diagrams.
+
+%%\spoint Other formats
+%\subsection{Other formats}
+%\spoint Other formats
+\subsection{Other formats}
+
+%Other formats than the above exist:
+%for instance, \n{Phyzzx}~\cite{Phyzzx}, \n{TeXsis}~\cite{TeXsis}, 
+%Macro \TeX~\cite{Amy}, \n{eplain}~\cite{Berry},
+%and \n{\TeX T1}~\cite{TeXT1}.
+%Typically, such formats provide the facilities of \LaTeX, but
+%try to be more easily adaptable by the user.
+%Also, in general they
+%have been written with the intention of being an
+%add-on product to the plain format.
+Other formats than the above exist:
+for instance, \n{Phyzzx}~\cite{Phyzzx}, \n{TeXsis}~\cite{TeXsis}, 
+Macro \TeX~\cite{Amy}, \n{eplain}~\cite{Berry},
+and \n{\TeX T1}~\cite{TeXT1}.
+Typically, such formats provide the facilities of \LaTeX, but
+try to be more easily adaptable by the user.
+Also, in general they
+have been written with the intention of being an
+add-on product to the plain format.
+
+%This book was, in its incarnation published by Addison-Wesley,
+%also written in an `other format':
+%the \indexterm{Lollipop}  format.
+%This format does not contain user macros, but the
+%tools with which a style designer can program them; see~\cite{EL}.
+%The current version of this book is written in \LaTeX.
+This book was, in its incarnation published by Addison-Wesley,
+also written in an `other format':
+the \indexterm{Lollipop}  format.
+This format does not contain user macros, but the
+tools with which a style designer can program them; see~\cite{EL}.
+The current version of this book is written in \LaTeX.
+
+%%\point The \n{dvi} file
+%\section{The \n{dvi} file}
+%\point The \n{dvi} file
+\section{The \n{dvi} file}
+
+%The \n{dvi} file (this term stands for `device independent')
+%\term \n{dvi} file\par
+%contains the output of a \TeX\ run: it
+%contains compactly dumped representations of boxes that
+%\mdqon
+%have been sent there by \cs{shipout}""\gr{box}. The act
+%\mdqoff
+%of shipping out usually occurs inside the output routine,
+%but this is not necessarily so.
+The \n{dvi} file (this term stands for `device independent')
+\term \n{dvi} file\par
+contains the output of a \TeX\ run: it
+contains compactly dumped representations of boxes that
+\mdqon
+have been sent there by \cs{shipout}""\gr{box}. The act
+\mdqoff
+of shipping out usually occurs inside the output routine,
+but this is not necessarily so.
+
+%%\spoint The \n{dvi} file format
+%\subsection{The \n{dvi} file format}
+%\spoint The \n{dvi} file format
+\subsection{The \n{dvi} file format}
+
+%A \n{dvi} file is a byte-oriented file,
+%consisting of a preamble, a postamble,
+%and a list of pages.
+A \n{dvi} file is a byte-oriented file,
+consisting of a preamble, a postamble,
+and a list of pages.
+
+%Access for subsequent software to a completed \n{dvi} file
+%is strictly sequential in nature:
+%the pages are stored as a backwards linked list. This
+%means that only two ways of accessing are possible:
+%\begin{itemize} \item given the start of a page, the next can be
+%found by reading until an end-of-page code is encountered, and
+%\item starting at the end of the file pages can be read
+%backwards at higher speed, as each beginning-of-page code
+%contains the byte position of the previous one.\end{itemize}
+Access for subsequent software to a completed \n{dvi} file
+is strictly sequential in nature:
+the pages are stored as a backwards linked list. This
+means that only two ways of accessing are possible:
+\begin{itemize} \item given the start of a page, the next can be
+found by reading until an end-of-page code is encountered, and
+\item starting at the end of the file pages can be read
+backwards at higher speed, as each beginning-of-page code
+contains the byte position of the previous one.\end{itemize}
+
+%The preamble and postamble contain
+%\begin{itemize}\item the magnification of the document (see below),
+%\item the unit of measurement used for the document, and
+%\item possibly a comment string.\end{itemize}
+%The postamble contains in addition a list of the font definitions
+%that appear on the pages of the file.
+The preamble and postamble contain
+\begin{itemize}\item the magnification of the document (see below),
+\item the unit of measurement used for the document, and
+\item possibly a comment string.\end{itemize}
+The postamble contains in addition a list of the font definitions
+that appear on the pages of the file.
+
+%Neither the preamble nor the postamble 
+%of the file contains a
+%table of byte positions of pages.
+%The full definition of the \n{dvi} file format can be found
+%in~\cite{Knuth:TeXprogram}.
+Neither the preamble nor the postamble 
+of the file contains a
+table of byte positions of pages.
+The full definition of the \n{dvi} file format can be found
+in~\cite{Knuth:TeXprogram}.
+
+%%\spoint Page identification
+%\subsection{Page identification}
+%\spoint Page identification
+\subsection{Page identification}
+
+%Whenever a \cs{shipout} occurs, \TeX\ also writes the
+%values of counters  0--9 to the \n{dvi} file and the terminal.
+%Ordinarily, only counter~0, the page number, is used, and the
+%other counters are zero. Those zeros are not output to the
+%terminal. The other counters can be used to indicate further
+%structure in the document. Log output shows the non-zero
+%counters and the zero counters in between.
+Whenever a \cs{shipout} occurs, \TeX\ also writes the
+values of counters  0--9 to the \n{dvi} file and the terminal.
+Ordinarily, only counter~0, the page number, is used, and the
+other counters are zero. Those zeros are not output to the
+terminal. The other counters can be used to indicate further
+structure in the document. Log output shows the non-zero
+counters and the zero counters in between.
+
+
+%%\spoint Magnification 
+%\subsection{Magnification }
+%\spoint Magnification 
+\subsection{Magnification }
+
+%The \indexterm{magnification}
+%of a document can be indicated by the \gr{integer
+%parameter} 
+%\cstoidx mag\par
+%\cs{mag}, which specifies 1000 times the magnification
+%ratio.
+The \indexterm{magnification}
+of a document can be indicated by the \gr{integer
+parameter} 
+\cstoidx mag\par
+\cs{mag}, which specifies 1000 times the magnification
+ratio.
+
+%The \n{dvi} file contains the value of \cs{mag} for the
+%document in its preamble and postamble. 
+%If no {\tt true} dimensions are used
+%the \n{dvi} file will look the same as when no magnification
+%would have been used, except for the \cs{mag} value in the
+%preamble and the postamble.
+The \n{dvi} file contains the value of \cs{mag} for the
+document in its preamble and postamble. 
+If no {\tt true} dimensions are used
+the \n{dvi} file will look the same as when no magnification
+would have been used, except for the \cs{mag} value in the
+preamble and the postamble.
+
+%Whenever a {\tt true} dimension is used it is divided
+%by the value of \cs{mag}, so that the final output will have
+%the dimension as prescribed by the user.
+%The \cs{mag} parameter cannot be changed after a
+%\n{true} dimension has been used, or after the first
+%page has been shipped to the \n{dvi} file.
+Whenever a {\tt true} dimension is used it is divided
+by the value of \cs{mag}, so that the final output will have
+the dimension as prescribed by the user.
+The \cs{mag} parameter cannot be changed after a
+\n{true} dimension has been used, or after the first
+page has been shipped to the \n{dvi} file.
+
+%Plain \TeX\ has the \csidx{magnification} macro for
+%globally sizing the document, without changing
+% the physical size of the page:
+%\begin{verbatim}
+%\def\magnification{\afterassignment\m@g\count@}
+%\def\m@g{\mag\count@
+%  \hsize6.5truein\vsize8.9truein\dimen\footins8truein}
+%\end{verbatim}
+%The explanation for this is
+%as follows: the command \cs{m@g} is saved with an \cs{afterassignment}
+%command, and the magnification value (which is 1000 times the
+%actual magnification factor) is assigned to \cs{count@}.
+%After this assignment, the macro \cs{m@g} assigns
+%the magnification value to \cs{mag}, and the horizontal
+%and vertical size are reset to 
+%their original values {\tt 6.5truein} and {\tt 8.9truein}.
+%The \cs{footins} is also reset.
+Plain \TeX\ has the \csidx{magnification} macro for
+globally sizing the document, without changing
+ the physical size of the page:
+\begin{verbatim}
+\def\magnification{\afterassignment\m@g\count@}
+\def\m@g{\mag\count@
+  \hsize6.5truein\vsize8.9truein\dimen\footins8truein}
+\end{verbatim}
+The explanation for this is
+as follows: the command \cs{m@g} is saved with an \cs{afterassignment}
+command, and the magnification value (which is 1000 times the
+actual magnification factor) is assigned to \cs{count@}.
+After this assignment, the macro \cs{m@g} assigns
+the magnification value to \cs{mag}, and the horizontal
+and vertical size are reset to 
+their original values {\tt 6.5truein} and {\tt 8.9truein}.
+The \cs{footins} is also reset.
+
+%%\point[special] Specials
+%\section{Specials}
+%\label{special}
+%\point[special] Specials
+\section{Specials}
+\label{special}
+
+%\mdqon
+%\TeX\ is to a large degree machine"-independent, but it still needs
+%\mdqoff
+%a hook for machine-dependent extensions. This is 
+%done through \indexterm{specials}. The
+%\csidx{special} command writes a \gr{balanced text}
+%to the \n{dvi} file which \TeX\ does not interpret like other token lists:
+%it assumes that the printer driver knows what to do with it.
+%The \cs{special} command is not supposed to change the
+%$x$ and $y$ position on the page, so that the implementation
+%of \TeX\ remains independent of the actual 
+%\indexterm{device driver}
+%that handles the \cs{special}.
+\mdqon
+\TeX\ is to a large degree machine"-independent, but it still needs
+\mdqoff
+a hook for machine-dependent extensions. This is 
+done through \indexterm{specials}. The
+\csidx{special} command writes a \gr{balanced text}
+to the \n{dvi} file which \TeX\ does not interpret like other token lists:
+it assumes that the printer driver knows what to do with it.
+The \cs{special} command is not supposed to change the
+$x$ and $y$ position on the page, so that the implementation
+of \TeX\ remains independent of the actual 
+\indexterm{device driver}
+that handles the \cs{special}.
+
+%The most popular application of specials is probably the
+%inclusion of graphic material, written in some
+%page description language, such as \indexterm{PostScript}.
+%The size of the graphics can usually be determined from
+%the file containing it (in the case of encapsulated
+%PostScript through
+%the `bounding box' data), so \TeX\ can leave space for
+%such material.
+The most popular application of specials is probably the
+inclusion of graphic material, written in some
+page description language, such as \indexterm{PostScript}.
+The size of the graphics can usually be determined from
+the file containing it (in the case of encapsulated
+PostScript through
+the `bounding box' data), so \TeX\ can leave space for
+such material.
+
+%%\point Time
+%\section{Time}
+%\point Time
+\section{Time}
+
+%\TeX\ has four parameters, \csidx{year}, \csidx{month}, \csidx{day}, and
+%\csidx{time}, that tell
+%the \indexterm{time} and \indexterm{date}
+%when the current job started.
+%After this, the parameters are not updated.
+%The user can change them without this having any effect.
+\TeX\ has four parameters, \csidx{year}, \csidx{month}, \csidx{day}, and
+\csidx{time}, that tell
+the \indexterm{time} and \indexterm{date}
+when the current job started.
+After this, the parameters are not updated.
+The user can change them without this having any effect.
+
+%All four parameters are integers; the \cs{time} parameter
+%gives the number of minutes since midnight that the current
+%job started.
+All four parameters are integers; the \cs{time} parameter
+gives the number of minutes since midnight that the current
+job started.
+
+%%\point Fonts
+%\section{Fonts}
+%\point Fonts
+\section{Fonts}
+
+%Font information is split in the \TeX\ system into
+%the metric information (how high, wide, and deep is a character),
+%and the actual description of the characters in a font.
+%\TeX, the formatter, needs only the metric information;
+%printer drivers and screen previewers need the character
+%descriptions. With this approach it is for instance possible
+%for \TeX\ to use with relative ease the resident fonts of
+%a printer.
+Font information is split in the \TeX\ system into
+the metric information (how high, wide, and deep is a character),
+and the actual description of the characters in a font.
+\TeX, the formatter, needs only the metric information;
+printer drivers and screen previewers need the character
+descriptions. With this approach it is for instance possible
+for \TeX\ to use with relative ease the resident fonts of
+a printer.
+
+%%\spoint Font metrics
+%\subsection{Font metrics}
+%\spoint Font metrics
+\subsection{Font metrics}
+
+%The metric information of \TeX's fonts is stored in \n{tfm}
+%files, which stands for `\TeX\ \indexterm{font metrics}' files.
+%Metrics files contain the following information
+%(see \cite{Knuth:TeXprogram} for the full definition):
+%\begin{itemize}\item the design size of a font;
+%\item the values for the \cs{fontdimen} parameters
+%(see Chapter~\ref{font});
+%\item the height, depth, width, and italic correction
+%     of individual characters;
+%\item kerning tables;
+%\item ligature tables;
+%\item information regarding successors and extensions
+%of math characters (see Chapter~\ref{mathchar}).
+%\end{itemize}
+%Metrics files use a packed format, but they can be converted
+%to and from a readable format by the auxiliary programs
+%\n{tftopl} and \n{pltotf} (see~\cite{K:Fuchs}). 
+%Here \n{pl} stands for `property list',
+%a term deriving from the programming language Lisp.
+%Files in \n{pl} format are just text, so they can easily be edited;
+%after conversion
+%they can then again be used as \n{tfm} files.
+The metric information of \TeX's fonts is stored in \n{tfm}
+files, which stands for `\TeX\ \indexterm{font metrics}' files.
+Metrics files contain the following information
+(see \cite{Knuth:TeXprogram} for the full definition):
+\begin{itemize}\item the design size of a font;
+\item the values for the \cs{fontdimen} parameters
+(see Chapter~\ref{font});
+\item the height, depth, width, and italic correction
+     of individual characters;
+\item kerning tables;
+\item ligature tables;
+\item information regarding successors and extensions
+of math characters (see Chapter~\ref{mathchar}).
+\end{itemize}
+Metrics files use a packed format, but they can be converted
+to and from a readable format by the auxiliary programs
+\n{tftopl} and \n{pltotf} (see~\cite{K:Fuchs}). 
+Here \n{pl} stands for `property list',
+a term deriving from the programming language Lisp.
+Files in \n{pl} format are just text, so they can easily be edited;
+after conversion
+they can then again be used as \n{tfm} files.
+
+%%\spoint[virtual:fonts] Virtual fonts
+%\subsection{Virtual fonts}
+%\label{virtual:fonts}
+%\spoint[virtual:fonts] Virtual fonts
+\subsection{Virtual fonts}
+\label{virtual:fonts}
+
+%With 
+%\indexterm{virtual fonts}
+%(see~\cite{K:virt}) it is possible that
+%what looks like one font to \TeX\ resides in more than
+%one physical font file. Also, virtual fonts can be used
+%to change in effect the internal organization of font files.
+With 
+\indexterm{virtual fonts}
+(see~\cite{K:virt}) it is possible that
+what looks like one font to \TeX\ resides in more than
+one physical font file. Also, virtual fonts can be used
+to change in effect the internal organization of font files.
+
+%For  \TeX\ itself, the
+%presence of virtual fonts makes no difference: everything
+%is still based on \n{tfm} files containing metric
+%information. However, the screen or printer driver that displays
+%the resulting \n{dvi} file on the screen or on a printer
+%will search for files with extension \n{.vf} to determine
+%how characters are to be interpreted.
+%The \n{vf} file can, for instance, instruct the driver
+%to interpret a character as a certain position
+%in a certain font file, to interpret a character as more
+%than one position (a~way of forming accented characters),
+%or to include \cs{special} information (for
+%instance to set gray levels).
+For  \TeX\ itself, the
+presence of virtual fonts makes no difference: everything
+is still based on \n{tfm} files containing metric
+information. However, the screen or printer driver that displays
+the resulting \n{dvi} file on the screen or on a printer
+will search for files with extension \n{.vf} to determine
+how characters are to be interpreted.
+The \n{vf} file can, for instance, instruct the driver
+to interpret a character as a certain position
+in a certain font file, to interpret a character as more
+than one position (a~way of forming accented characters),
+or to include \cs{special} information (for
+instance to set gray levels).
+
+%Readable variants of \n{vf} files have extension \n{vpl},
+%analogous to the \n{pl} files for the \n{tfm} files; see above.
+%Conversion between \n{vf} and \n{vpl} files can be
+%performed with the \n{vftovp} and \n{vptovf} programs.
+Readable variants of \n{vf} files have extension \n{vpl},
+analogous to the \n{pl} files for the \n{tfm} files; see above.
+Conversion between \n{vf} and \n{vpl} files can be
+performed with the \n{vftovp} and \n{vptovf} programs.
+
+%However, because virtual fonts are a matter for
+%\indexterm{device drivers}, no more details will be given in this book.
+However, because virtual fonts are a matter for
+\indexterm{device drivers}, no more details will be given in this book.
+
+%%\spoint Font files
+%\subsection{Font files}
+%\index{font files|(}
+%\spoint Font files
+\subsection{Font files}
+\index{font files|(}
+
+%Character descriptions are stored in three types of files.
+%\begin{description} \item [gf]
+%    Generic Font files.
+%This is the file type that the Metafont program generates.
+%There are not many previewers or printer drivers that use
+%this type of file directly.
+%\item [pxl]
+%    Pixel files. The \n{pxl} format is a pure bitmap format.
+%Thus it is easy to generate \n{pxl} files from, for instance,
+%scanner images.
+Character descriptions are stored in three types of files.
+\begin{description} \item [gf]
+    Generic Font files.
+This is the file type that the Metafont program generates.
+There are not many previewers or printer drivers that use
+this type of file directly.
+\item [pxl]
+    Pixel files. The \n{pxl} format is a pure bitmap format.
+Thus it is easy to generate \n{pxl} files from, for instance,
+scanner images.
+
+%This format should be superseded by the \n{pk} format.
+%Pixel files can become rather big,
+%as their size grows quadratically in the size of the characters.
+This format should be superseded by the \n{pk} format.
+Pixel files can become rather big,
+as their size grows quadratically in the size of the characters.
+
+%\item [pk]
+%    Packed files. Pixel files can be packed by a form of run-length
+%encoding: instead of storing the complete bitmap only the
+%starting positions and lengths of `runs' of black and white
+%pixels are stored. This makes the size of \n{pk} files
+%approximately linear in the size of the characters.
+%However, a previewer or printer driver using a packed font file
+%has to unpack it before it is   able to use it.
+%\end{description}
+\item [pk]
+    Packed files. Pixel files can be packed by a form of run-length
+encoding: instead of storing the complete bitmap only the
+starting positions and lengths of `runs' of black and white
+pixels are stored. This makes the size of \n{pk} files
+approximately linear in the size of the characters.
+However, a previewer or printer driver using a packed font file
+has to unpack it before it is   able to use it.
+\end{description}
+
+%The following conversion programs exist:
+%\n{gftopxl}, \n{gftopk}, \n{pktopxl}, \n{pxltopk}.
+The following conversion programs exist:
+\n{gftopxl}, \n{gftopk}, \n{pktopxl}, \n{pxltopk}.
+
+%\index{font files|)}
+\index{font files|)}
+
+%\subsection{Computer Modern}
+\subsection{Computer Modern}
+
+%The only family of typefaces that comes with \TeX\ 
+%in the standard distribution is the 
+%\indexterm{Computer Modern}
+%family of typefaces. This is an adaptation (using the terminology
+%of~\cite{S}) by Donald Knuth of the Monotype Modern~8A typeface
+%that was used for the first volume of his {\italic Art of Computer
+%Programming\/} series. The `modern faces' all derive from the
+%types that were cut between 1780 and 1800 by Firmin Didot in
+%France, Giambattista Bodoni in Italy, and Justus Erich Walbaum
+%in Germany. After the first two, these types are also called
+%`Didone' types. This name was coined in the Vox classification
+%of types \cite{Vox}. Ultimately, the inspiration for the Didone
+%types is the `Romain du Roi', the type that was designed by
+%Nicolas Jaugeon around 1692 for the French Imprimerie Royale.
+The only family of typefaces that comes with \TeX\ 
+in the standard distribution is the 
+\indexterm{Computer Modern}
+family of typefaces. This is an adaptation (using the terminology
+of~\cite{S}) by Donald Knuth of the Monotype Modern~8A typeface
+that was used for the first volume of his {\italic Art of Computer
+Programming\/} series. The `modern faces' all derive from the
+types that were cut between 1780 and 1800 by Firmin Didot in
+France, Giambattista Bodoni in Italy, and Justus Erich Walbaum
+in Germany. After the first two, these types are also called
+`Didone' types. This name was coined in the Vox classification
+of types \cite{Vox}. Ultimately, the inspiration for the Didone
+types is the `Romain du Roi', the type that was designed by
+Nicolas Jaugeon around 1692 for the French Imprimerie Royale.
+
+%Didone types are characterized by a strong vertical orientation,
+%and thin hairlines. The vertical accent is strengthened by the
+%fact that the insides of curves are flattened.
+%The result is a clear and brilliant page, provided that the
+%printing is done carefully and on good quality paper.
+%\message{Reference format}
+%However, they are quite vulnerable; \cite{Up}
+%compares them to the distinguished but fragile furniture
+%from the same period, saying one is afraid to use either,
+%`for both seem in danger of breaking in pieces'.
+%With the current proliferation of low resolution (around
+%300 dot per inch) printers, the Computer Modern is
+%a somewhat unfortunate choice.
+Didone types are characterized by a strong vertical orientation,
+and thin hairlines. The vertical accent is strengthened by the
+fact that the insides of curves are flattened.
+The result is a clear and brilliant page, provided that the
+printing is done carefully and on good quality paper.
+\message{Reference format}
+However, they are quite vulnerable; \cite{Up}
+compares them to the distinguished but fragile furniture
+from the same period, saying one is afraid to use either,
+`for both seem in danger of breaking in pieces'.
+With the current proliferation of low resolution (around
+300 dot per inch) printers, the Computer Modern is
+a somewhat unfortunate choice.
+
+%Recently, Donald Knuth has developed 
+%a new typeface (or rather, a subfamily of typefaces)
+%by changing parameters
+%in the Computer Modern family. The result is a so-called
+%`Egyptian' typeface: Computer Concrete \cite{K:cc}.
+%The name derives from the
+%fact that it was intended primarily for the book {\italic Concrete
+%Mathematics}. Egyptian typefaces (they fall under the `M\'ecanes'
+%in the Vox classification, meaning constructed,
+%not derived from written letters) have a very uniform line width
+%and square serifs. They do not have anything to do with Egypt;
+%such types happened to be popular in the first half of the nineteenth
+%century when Egyptology was developing and popular.
+Recently, Donald Knuth has developed 
+a new typeface (or rather, a subfamily of typefaces)
+by changing parameters
+in the Computer Modern family. The result is a so-called
+`Egyptian' typeface: Computer Concrete \cite{K:cc}.
+The name derives from the
+fact that it was intended primarily for the book {\italic Concrete
+Mathematics}. Egyptian typefaces (they fall under the `M\'ecanes'
+in the Vox classification, meaning constructed,
+not derived from written letters) have a very uniform line width
+and square serifs. They do not have anything to do with Egypt;
+such types happened to be popular in the first half of the nineteenth
+century when Egyptology was developing and popular.
+
+%%\point \TeX\ and web
+%\section{\TeX\ and web}
+%\point \TeX\ and web
+\section{\TeX\ and web}
+
+%The \TeX\ program is written in \web, a programming language
+%\thecstoidx web\par
+%that can be considered as a subset of \indexterm{Pascal}, augmented with
+%a preprocessor.
+The \TeX\ program is written in \web, a programming language
+\thecstoidx web\par
+that can be considered as a subset of \indexterm{Pascal}, augmented with
+a preprocessor.
+
+%\TeX\ makes no use of some features of Pascal, in order to
+%facilitate porting to Pascal systems other than the one
+%it was originally designed for, and even to enable automatic
+%translation to other programming languages such as~C.
+%For instance, it does not use the Pascal \n{With} construct.
+%Also, procedures do not have output parameters; apart from
+%writing to global variables, the only way
+%values are returned is through
+%\n{Function} values.
+\TeX\ makes no use of some features of Pascal, in order to
+facilitate porting to Pascal systems other than the one
+it was originally designed for, and even to enable automatic
+translation to other programming languages such as~C.
+For instance, it does not use the Pascal \n{With} construct.
+Also, procedures do not have output parameters; apart from
+writing to global variables, the only way
+values are returned is through
+\n{Function} values.
+
+%Actually, \web\ is more than a superset of a subset of Pascal
+%(and to be more precise, it can also be used with other
+%programming languages);
+%it is a `system of structured documentation'. This means that
+%the \web\ programmer writes pieces of program code,
+%interspersed with their documentation, in one file. 
+%This idea of `literate programming' was
+%introduced  in~\cite{K:literate};
+%for more information, see~\cite{Sewell}.
+Actually, \web\ is more than a superset of a subset of Pascal
+(and to be more precise, it can also be used with other
+programming languages);
+it is a `system of structured documentation'. This means that
+the \web\ programmer writes pieces of program code,
+interspersed with their documentation, in one file. 
+This idea of `literate programming' was
+introduced  in~\cite{K:literate};
+for more information, see~\cite{Sewell}.
+
+%Two auxiliary programs,
+%Tangle and Weave, can then be used to strip the documentation
+%and convert \web\ into regular Pascal, or to convert the
+%\web\ file into a \TeX\ file that will typeset the program 
+%and documentation.
+Two auxiliary programs,
+Tangle and Weave, can then be used to strip the documentation
+and convert \web\ into regular Pascal, or to convert the
+\web\ file into a \TeX\ file that will typeset the program 
+and documentation.
+
+%Portability of \web\ programs is achieved by the `change file'
+%mechanism. A~change file is a list of changes to be made to
+%the \web\ file; a~bit like a stream editor script.
+%These changes can comprise both adaptations of the \web\ file
+%to the particular Pascal compiler that will be used, and
+%bug fixes to \TeX. Thus the \n{TeX.web} file need never be edited.
+Portability of \web\ programs is achieved by the `change file'
+mechanism. A~change file is a list of changes to be made to
+the \web\ file; a~bit like a stream editor script.
+These changes can comprise both adaptations of the \web\ file
+to the particular Pascal compiler that will be used, and
+bug fixes to \TeX. Thus the \n{TeX.web} file need never be edited.
+
+
+%%\point The \TeX\ Users Group
+%\section{The \TeX\ Users Group}
+%\point The \TeX\ Users Group
+\section{The \TeX\ Users Group}
+
+%\TeX\ users have joined into several users groups
+%over the last decade. Many national or language
+%users groups exist, and a lot of them publish newsletters.
+%The oldest of all \TeX\ users groups is simply called
+%that: the \TeX\ Users Group, or \indexterm{TUG},
+%and its journal is called \indexterm{TUGboat}.
+%You can reach them at
+%\begin{disp} \TeX\ Users Group\nl P.O. Box 2311\nl
+%     Portland, OR 97208-2311, USA
+%\end{disp}
+% or electronically at \n{office@tug.org} on the Internet.
+\TeX\ users have joined into several users groups
+over the last decade. Many national or language
+users groups exist, and a lot of them publish newsletters.
+The oldest of all \TeX\ users groups is simply called
+that: the \TeX\ Users Group, or \indexterm{TUG},
+and its journal is called \indexterm{TUGboat}.
+You can reach them at
+\begin{disp} \TeX\ Users Group\nl P.O. Box 2311\nl
+     Portland, OR 97208-2311, USA
+\end{disp}
+ or electronically at \n{office@tug.org} on the Internet.
+
+
+%\endofchapter
+%%%%% end of input file [run]
+\endofchapter
+%%%% end of input file [run]
+
+\end{document}

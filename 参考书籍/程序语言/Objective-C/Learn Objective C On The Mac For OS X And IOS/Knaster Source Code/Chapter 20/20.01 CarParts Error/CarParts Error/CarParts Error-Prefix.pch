@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'CarParts Error' target in the 'CarParts Error' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

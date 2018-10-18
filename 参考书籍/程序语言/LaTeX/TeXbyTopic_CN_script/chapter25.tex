@@ -1,0 +1,1150 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{24}
+
+\begin{document}
+
+%\chapter{Alignment}\label{align}
+%\index{alignments|(}
+\chapter{Alignment}\label{align}
+\index{alignments|(}
+
+%\TeX\ provides a general alignment mechanism for making \indexterm{tables}.
+\TeX\ provides a general alignment mechanism for making \indexterm{tables}.
+
+%\label{cschap:halign}\label{cschap:valign}\label{cschap:omit}\label{cschap:span}\label{cschap:multispan}\label{cschap:tabskip}\label{cschap:noalign}\label{cschap:cr}\label{cschap:crcr}\label{cschap:everycr}\label{cschap:centering}\label{cschap:hideskip}\label{cschap:hidewidth}
+%\begin{inventory}
+%\item [\cs{halign}] 
+%      Horizontal alignment.
+\label{cschap:halign}\label{cschap:valign}\label{cschap:omit}\label{cschap:span}\label{cschap:multispan}\label{cschap:tabskip}\label{cschap:noalign}\label{cschap:cr}\label{cschap:crcr}\label{cschap:everycr}\label{cschap:centering}\label{cschap:hideskip}\label{cschap:hidewidth}
+\begin{inventory}
+\item [\cs{halign}] 
+      Horizontal alignment.
+
+%\item [\cs{valign}] 
+%      Vertical alignment.   
+\item [\cs{valign}] 
+      Vertical alignment.   
+
+%\item [\cs{omit}] 
+%      Omit the template for one alignment entry.
+\item [\cs{omit}] 
+      Omit the template for one alignment entry.
+
+%\item [\cs{span}] 
+%      Join two adjacent alignment entries.
+\item [\cs{span}] 
+      Join two adjacent alignment entries.
+
+%\item [\cs{multispan}] 
+%      Macro to join a number of adjacent alignment entries.
+\item [\cs{multispan}] 
+      Macro to join a number of adjacent alignment entries.
+
+%\item [\cs{tabskip}] 
+%      Amount of glue in between columns (rows)
+%      of an \cs{halign} (\cs{valign}). 
+\item [\cs{tabskip}] 
+      Amount of glue in between columns (rows)
+      of an \cs{halign} (\cs{valign}). 
+
+%\item [\cs{noalign}] 
+%      Specify  vertical (horizontal)
+%      material   to be placed in between rows (columns) of
+%      an \cs{halign} (\cs{valign}).
+\item [\cs{noalign}] 
+      Specify  vertical (horizontal)
+      material   to be placed in between rows (columns) of
+      an \cs{halign} (\cs{valign}).
+
+%\item [\cs{cr}]
+%      Terminate an alignment line.
+\item [\cs{cr}]
+      Terminate an alignment line.
+
+%\item [\cs{crcr}] 
+%      Terminate an alignment line if it has 
+%      not already been terminated by~\cs{cr}.
+\item [\cs{crcr}] 
+      Terminate an alignment line if it has 
+      not already been terminated by~\cs{cr}.
+
+%\item [\cs{everycr}] 
+%      Token list inserted after every \cs{cr} or non-redundant 
+%      \cs{crcr}.
+\item [\cs{everycr}] 
+      Token list inserted after every \cs{cr} or non-redundant 
+      \cs{crcr}.
+
+%\item [\cs{centering}] 
+%      Glue register in plain \TeX\ for centring
+%      \cs{eqalign} and \cs{eqalignno}.
+%      Value: \n{0pt plus 1000pt minus 1000pt}
+\item [\cs{centering}] 
+      Glue register in plain \TeX\ for centring
+      \cs{eqalign} and \cs{eqalignno}.
+      Value: \n{0pt plus 1000pt minus 1000pt}
+
+%\item [\cs{hideskip}]
+%      Glue register in plain \TeX\ to make alignment entries invisible.
+%      Value: \n{-1000pt plus 1fill}
+\item [\cs{hideskip}]
+      Glue register in plain \TeX\ to make alignment entries invisible.
+      Value: \n{-1000pt plus 1fill}
+
+%\item [\cs{hidewidth}]
+%      Macro to make preceding or following entry invisible.
+\item [\cs{hidewidth}]
+      Macro to make preceding or following entry invisible.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point Introduction
+%\section{Introduction}
+%\point Introduction
+\section{Introduction}
+
+%\TeX\ has a sophisticated alignment mechanism, based on 
+%templates, with one template entry per column or row.
+%The templates may contain any common elements
+%of the table entries, and in general they contain
+%instructions for typesetting the entries.
+%\TeX\ first calculates widths (for \cs{halign}) or heights
+%(for \cs{valign}) of all entries;
+%then it typesets the whole alignment using in each column (row)
+%the maximum width (height) of entries in that column (row).
+\TeX\ has a sophisticated alignment mechanism, based on 
+templates, with one template entry per column or row.
+The templates may contain any common elements
+of the table entries, and in general they contain
+instructions for typesetting the entries.
+\TeX\ first calculates widths (for \cs{halign}) or heights
+(for \cs{valign}) of all entries;
+then it typesets the whole alignment using in each column (row)
+the maximum width (height) of entries in that column (row).
+
+%%\point Horizontal and vertical alignment
+%\section{Horizontal and vertical alignment}
+%\point Horizontal and vertical alignment
+\section{Horizontal and vertical alignment}
+
+%The two alignment commands in \TeX\ are
+%\cstoidx halign\par\cstoidx valign\par
+%\begin{disp}\cs{halign}\gr{box specification}\lb\gr{alignment material}\rb
+%\end{disp} for horizontal alignment of columns, and
+%\begin{disp}\cs{valign}\gr{box specification}\lb\gr{alignment material}\rb
+%\end{disp} for vertical alignment of rows.
+%\cs{halign} is a \gr{vertical command}, and
+%\cs{valign} is a \gr{horizontal command}.
+The two alignment commands in \TeX\ are
+\cstoidx halign\par\cstoidx valign\par
+\begin{disp}\cs{halign}\gr{box specification}\lb\gr{alignment material}\rb
+\end{disp} for horizontal alignment of columns, and
+\begin{disp}\cs{valign}\gr{box specification}\lb\gr{alignment material}\rb
+\end{disp} for vertical alignment of rows.
+\cs{halign} is a \gr{vertical command}, and
+\cs{valign} is a \gr{horizontal command}.
+
+%The braces induce a new level of grouping; they can be
+%implicit.
+The braces induce a new level of grouping; they can be
+implicit.
+
+%The discussion below will mostly focus on horizontal
+%alignments, but, replacing `column' by `row' and vice versa,
+%it applies to vertical alignments too.
+The discussion below will mostly focus on horizontal
+alignments, but, replacing `column' by `row' and vice versa,
+it applies to vertical alignments too.
+
+%%\spoint Horizontal alignments: \cs{halign}
+%\subsection{Horizontal alignments: \cs{halign}}
+%\spoint Horizontal alignments: \cs{halign}
+\subsection{Horizontal alignments: \cs{halign}}
+
+%A \indexterm{horizontal alignment}
+%yields a list of horizontal boxes, the rows,
+%which are placed on the surrounding vertical list.
+%The page builder is exercised after the alignment rows have been
+%added to  the vertical list.
+%The value of \cs{prevdepth} that holds before the alignment
+%is used for the baselineskip of the first row,
+%and after the alignment \cs{prevdepth} is set to a value based
+%on the last row.
+A \indexterm{horizontal alignment}
+yields a list of horizontal boxes, the rows,
+which are placed on the surrounding vertical list.
+The page builder is exercised after the alignment rows have been
+added to  the vertical list.
+The value of \cs{prevdepth} that holds before the alignment
+is used for the baselineskip of the first row,
+and after the alignment \cs{prevdepth} is set to a value based
+on the last row.
+
+%Each entry is processed in a group of its own,
+%in restricted horizontal mode.
+Each entry is processed in a group of its own,
+in restricted horizontal mode.
+
+%A special type of horizontal alignment exists: the
+%\indexterm{display alignment},
+%specified as
+%\begin{disp}\n{\$\$}\gr{assignments}\cs{halign}\gr{box specification}\lb\n{...}\rb
+%     \gr{assignments}\n{\$\$}\end{disp}
+%Such an alignment is shifted by \cs{displayindent} (see
+%Chapter~\ref{displaymath}) and surrounded by\handbreak
+%\cs{abovedisplayskip} and \cs{belowdisplayskip} glue.
+A special type of horizontal alignment exists: the
+\indexterm{display alignment},
+specified as
+\begin{disp}\n{\$\$}\gr{assignments}\cs{halign}\gr{box specification}\lb\n{...}\rb
+     \gr{assignments}\n{\$\$}\end{disp}
+Such an alignment is shifted by \cs{displayindent} (see
+Chapter~\ref{displaymath}) and surrounded by\handbreak
+\cs{abovedisplayskip} and \cs{belowdisplayskip} glue.
+
+%%\spoint Vertical alignments: \cs{valign}
+%\subsection{Vertical alignments: \cs{valign}}
+%\spoint Vertical alignments: \cs{valign}
+\subsection{Vertical alignments: \cs{valign}}
+
+%A \indexterm{vertical alignment}
+%can be considered as a  `rotated' horizontal alignments:
+%they are placed on the surrounding horizontal lists,
+%and yield a row of columns. The \cs{spacefactor} value
+%is treated the same way as the \cs{prevdepth} for horizontal
+%alignments: the value current before the alignment is used
+%for the first column, and the value reached after the last column
+%is used after the alignment. In between columns the \cs{spacefactor}
+%value is~1000.
+A \indexterm{vertical alignment}
+can be considered as a  `rotated' horizontal alignments:
+they are placed on the surrounding horizontal lists,
+and yield a row of columns. The \cs{spacefactor} value
+is treated the same way as the \cs{prevdepth} for horizontal
+alignments: the value current before the alignment is used
+for the first column, and the value reached after the last column
+is used after the alignment. In between columns the \cs{spacefactor}
+value is~1000.
+
+%Each entry is in a group of its own, and it is processed
+%in internal vertical mode.
+Each entry is in a group of its own, and it is processed
+in internal vertical mode.
+
+%%\spoint Material between the lines: \cs{noalign}
+%\subsection{Material between the lines: \cs{noalign}}
+%\spoint Material between the lines: \cs{noalign}
+\subsection{Material between the lines: \cs{noalign}}
+
+%Material that has to be contained in the alignment, but 
+%should not be treated as an entry or series of entries,
+%\cstoidx noalign\par
+%can be given by 
+%\begin{disp}\cs{noalign}\gr{filler}\lb\gr{vertical mode material}\rb
+%\end{disp} for horizontal alignments, and
+%\begin{disp}\cs{noalign}\gr{filler}\lb\gr{horizontal mode material}\rb
+%\end{disp} for vertical alignments.
+Material that has to be contained in the alignment, but 
+should not be treated as an entry or series of entries,
+\cstoidx noalign\par
+can be given by 
+\begin{disp}\cs{noalign}\gr{filler}\lb\gr{vertical mode material}\rb
+\end{disp} for horizontal alignments, and
+\begin{disp}\cs{noalign}\gr{filler}\lb\gr{horizontal mode material}\rb
+\end{disp} for vertical alignments.
+
+%Examples are
+%\begin{verbatim}
+%\noalign{\hrule}
+%\end{verbatim}
+%for drawing a horizontal rule
+%between two lines of an \cs{halign},
+%and
+%\begin{verbatim}
+%\noalign{\penalty100}
+%\end{verbatim}
+%for discouraging a page break (or line break) in
+%between two rows (columns) of an \cs{halign} (\cs{valign}).
+Examples are
+\begin{verbatim}
+\noalign{\hrule}
+\end{verbatim}
+for drawing a horizontal rule
+between two lines of an \cs{halign},
+and
+\begin{verbatim}
+\noalign{\penalty100}
+\end{verbatim}
+for discouraging a page break (or line break) in
+between two rows (columns) of an \cs{halign} (\cs{valign}).
+
+%%\spoint Size of the alignment
+%\subsection{Size of the alignment}
+%\spoint Size of the alignment
+\subsection{Size of the alignment}
+
+%The \gr{box specification} can be used to give the alignment
+%a predetermined size: for instance
+%\begin{verbatim}
+%\halign to \hsize{ ... }
+%\end{verbatim}
+%Glue contained in the entries of the alignment has no role in this;
+%any stretch or
+%shrink required is taken from the \cs{tabskip} glue.
+%This is explained below.
+The \gr{box specification} can be used to give the alignment
+a predetermined size: for instance
+\begin{verbatim}
+\halign to \hsize{ ... }
+\end{verbatim}
+Glue contained in the entries of the alignment has no role in this;
+any stretch or
+shrink required is taken from the \cs{tabskip} glue.
+This is explained below.
+
+%%\point The preamble
+%\section{The preamble}
+%\point The preamble
+\section{The preamble}
+
+%Each line in an alignment is terminated by \cs{cr};
+%the first line is called the {\it template line}.
+%It is of the form
+%\begin{disp}\n{$u_1$\#$v_1$\&...\&$u_n$\#$v_n$}\cs{cr}\end{disp}
+%where each $u_i$, $v_i$ is a (possibly empty) arbitrary sequence
+%of tokens, and the template entries are separated by
+%the 
+%\indexterm{alignment tab}
+%character (\n\&~in plain \TeX),
+%that is, any character of category~4\index{category!4}.
+Each line in an alignment is terminated by \cs{cr};
+the first line is called the {\it template line}.
+It is of the form
+\begin{disp}\n{$u_1$\#$v_1$\&...\&$u_n$\#$v_n$}\cs{cr}\end{disp}
+where each $u_i$, $v_i$ is a (possibly empty) arbitrary sequence
+of tokens, and the template entries are separated by
+the 
+\indexterm{alignment tab}
+character (\n\&~in plain \TeX),
+that is, any character of category~4\index{category!4}.
+
+%A $u_i$\n\#$v_i$ sequence is the template that will be
+%used for the $i\,$th column: whatever sequence $\alpha_i$
+%the user specifies
+%as the entry for that column will be inserted at the
+%parameter character. The sequence $u_i\alpha_iv_i$ is
+%then processed to obtain the actual entry for the $i\,$th
+%column on the current line. See below for more details.
+A $u_i$\n\#$v_i$ sequence is the template that will be
+used for the $i\,$th column: whatever sequence $\alpha_i$
+the user specifies
+as the entry for that column will be inserted at the
+parameter character. The sequence $u_i\alpha_iv_i$ is
+then processed to obtain the actual entry for the $i\,$th
+column on the current line. See below for more details.
+
+%The length $n$ of the template line need
+%not be equal to the actual number of columns in the alignment:
+%the template is used only for as many items as are specified
+%on a line. Consider as an example
+%\begin{verbatim}
+%\halign{a#&b#&c#\cr 1&2\cr 1\cr}
+%\end{verbatim}
+%which has a three-item template, but the rows have only
+%one or two items. The output of this is
+%\begin{disp}\leavevmode\vbox{\halign{a#&b#&c#\cr 1&2\cr 1\cr}}\end{disp}
+The length $n$ of the template line need
+not be equal to the actual number of columns in the alignment:
+the template is used only for as many items as are specified
+on a line. Consider as an example
+\begin{verbatim}
+\halign{a#&b#&c#\cr 1&2\cr 1\cr}
+\end{verbatim}
+which has a three-item template, but the rows have only
+one or two items. The output of this is
+\begin{disp}\leavevmode\vbox{\halign{a#&b#&c#\cr 1&2\cr 1\cr}}\end{disp}
+
+%%\spoint Infinite preambles
+%\subsection{Infinite preambles}
+%\spoint Infinite preambles
+\subsection{Infinite preambles}
+
+%For the case where the number of columns is not known in advance,
+%for instance if the alignment is to be used in a macro where
+%the user will specify the columns, it is possible to
+%specify that a trailing piece of the
+%preamble can be repeated arbitrarily many times.
+%By preceding it with \n\&, an entry can be marked as the
+%start of this repeatable part of the preamble.
+%See the example of \cs{matrix} below.
+For the case where the number of columns is not known in advance,
+for instance if the alignment is to be used in a macro where
+the user will specify the columns, it is possible to
+specify that a trailing piece of the
+preamble can be repeated arbitrarily many times.
+By preceding it with \n\&, an entry can be marked as the
+start of this repeatable part of the preamble.
+See the example of \cs{matrix} below.
+
+%When the whole preamble is to be repeated, there will be
+%an alignment tab character at the start of the first entry:
+%\begin{verbatim}
+%\halign{& ... & ... \cr ... }
+%\end{verbatim}
+%If a starting portion of the preamble is to be exempted from
+%repetition, a double alignment tab will occur:
+%\begin{verbatim}
+%\halign{ ... & ... & ... && ... & ... \cr ... }
+%\end{verbatim}
+When the whole preamble is to be repeated, there will be
+an alignment tab character at the start of the first entry:
+\begin{verbatim}
+\halign{& ... & ... \cr ... }
+\end{verbatim}
+If a starting portion of the preamble is to be exempted from
+repetition, a double alignment tab will occur:
+\begin{verbatim}
+\halign{ ... & ... & ... && ... & ... \cr ... }
+\end{verbatim}
+
+%The  repeatable part need not be used an integral
+%number of times. The alignment rows can end at any time;
+%the rest of the preamble is then not used.
+The  repeatable part need not be used an integral
+number of times. The alignment rows can end at any time;
+the rest of the preamble is then not used.
+
+%%\spoint Brace counting in preambles
+%\subsection{Brace counting in preambles}
+%\spoint Brace counting in preambles
+\subsection{Brace counting in preambles}
+
+%Alignments may appear inside alignments, so \TeX\ uses the
+%following rule to determine to which alignment
+%an \n\&  or \cs{cr} control sequence belongs:
+%\begin{disp} All tab characters and \cs{cr} tokens of an alignment
+%      should be on the same level of grouping.\end{disp}
+%From this it follows that tab characters and \cs{cr} tokens
+%can appear inside an entry if they are nested in braces.
+%This makes it possible to have nested alignments.
+Alignments may appear inside alignments, so \TeX\ uses the
+following rule to determine to which alignment
+an \n\&  or \cs{cr} control sequence belongs:
+\begin{disp} All tab characters and \cs{cr} tokens of an alignment
+      should be on the same level of grouping.\end{disp}
+From this it follows that tab characters and \cs{cr} tokens
+can appear inside an entry if they are nested in braces.
+This makes it possible to have nested alignments.
+
+%%\spoint Expansion in the preamble
+%\subsection{Expansion in the preamble}
+%\spoint Expansion in the preamble
+\subsection{Expansion in the preamble}
+
+%All tokens in the preamble \ldash apart from the tab characters \rdash
+%are stored for insertion in the entries of the alignment,
+%but a token preceded by \csidx{span} is expanded while
+%the preamble is scanned. See below for the function of
+%\cs{span} in the rest of the alignment.
+All tokens in the preamble \ldash apart from the tab characters \rdash
+are stored for insertion in the entries of the alignment,
+but a token preceded by \csidx{span} is expanded while
+the preamble is scanned. See below for the function of
+\cs{span} in the rest of the alignment.
+
+%%\spoint \cs{tabskip}
+%\subsection{\cs{tabskip}}
+%\spoint \cs{tabskip}
+\subsection{\cs{tabskip}}
+
+%Entries in an alignment are set to take the width of the
+%largest element in their column.
+%Glue for separating columns can be specified by assigning
+%to \csidx{tabskip}.
+%\altt
+%\TeX\ inserts this glue in
+%between each pair of columns, and before the first and after the
+%last column.
+Entries in an alignment are set to take the width of the
+largest element in their column.
+Glue for separating columns can be specified by assigning
+to \csidx{tabskip}.
+\altt
+\TeX\ inserts this glue in
+between each pair of columns, and before the first and after the
+last column.
+
+%The value of \cs{tabskip} that holds outside the alignment is
+%used before the first column, and after all subsequent columns,
+%unless the preamble contains assignments to \cs{tabskip}.
+%Any assignment to \cs{tabskip} is executed while \TeX\ is scanning
+%the preamble; the value that holds when a tab character is
+%reached will be used at that place in each row, and after all subsequent
+%columns, unless further assignments occur.
+%The value of \cs{tabskip} that holds when \cs{cr} is reached
+%is used after the last column.
+The value of \cs{tabskip} that holds outside the alignment is
+used before the first column, and after all subsequent columns,
+unless the preamble contains assignments to \cs{tabskip}.
+Any assignment to \cs{tabskip} is executed while \TeX\ is scanning
+the preamble; the value that holds when a tab character is
+reached will be used at that place in each row, and after all subsequent
+columns, unless further assignments occur.
+The value of \cs{tabskip} that holds when \cs{cr} is reached
+is used after the last column.
+
+%Assignments to \cs{tabskip} in the preamble are local to the
+%alignment, but not to the entry where they are given.
+%These assignments are ordinary glue assignments:
+%they remove any optional trailing space.
+Assignments to \cs{tabskip} in the preamble are local to the
+alignment, but not to the entry where they are given.
+These assignments are ordinary glue assignments:
+they remove any optional trailing space.
+
+%As an example, in the following table there is no tabskip
+%glue before the first and after the last column; 
+%in between all columns there is stretchable tabskip.
+%\begin{verbatim}
+%\tabskip=0pt \halign to \hsize{
+%    \vrule#\tabskip=0pt plus 1fil\strut& 
+%    \hfil#\hfil& \vrule#& \hfil#\hfil& \vrule#& \hfil#\hfil& 
+%    \tabskip=0pt\vrule#\cr
+%  \noalign{\hrule}
+%    &\multispan5\hfil Just a table\hfil&\cr
+%  \noalign{\hrule}
+%    &one&&two&&three&\cr &a&&b&&c&\cr
+%  \noalign{\hrule}
+%    }
+%\end{verbatim}
+%The result of this is
+%\begin{disp}\PopListLevel
+%\leavevmode\message{single indent and sufficient vertical}%
+%\hbox{\leftskip0pt \rightskip0pt
+% \vbox{\offinterlineskip
+%\tabskip=0pt \halign to \hsize{\strut
+%    \vrule#\tabskip=0pt plus 1fil\strut&
+%    \hfil#\hfil& \vrule#& \hfil#\hfil& 
+%                 \vrule#& \hfil#\hfil&
+%    \tabskip=0pt\vrule#\cr
+%    \noalign{\hrule}
+%    &\multispan5\hfil Just a table\hfil&\cr
+%    \noalign{\hrule}
+%    &one&&two&&three&\cr
+%    &a&&b&&c&\cr
+%    \noalign{\hrule}
+%    }}}\end{disp}
+%All of the vertical rules
+%of the table are in a separate column. This is the only way
+%to get the space around the items to stretch.
+As an example, in the following table there is no tabskip
+glue before the first and after the last column; 
+in between all columns there is stretchable tabskip.
+\begin{verbatim}
+\tabskip=0pt \halign to \hsize{
+    \vrule#\tabskip=0pt plus 1fil\strut& 
+    \hfil#\hfil& \vrule#& \hfil#\hfil& \vrule#& \hfil#\hfil& 
+    \tabskip=0pt\vrule#\cr
+  \noalign{\hrule}
+    &\multispan5\hfil Just a table\hfil&\cr
+  \noalign{\hrule}
+    &one&&two&&three&\cr &a&&b&&c&\cr
+  \noalign{\hrule}
+    }
+\end{verbatim}
+The result of this is
+\begin{disp}\PopListLevel
+\leavevmode\message{single indent and sufficient vertical}%
+\hbox{\leftskip0pt \rightskip0pt
+ \vbox{\offinterlineskip
+\tabskip=0pt \halign to \hsize{\strut
+    \vrule#\tabskip=0pt plus 1fil\strut&
+    \hfil#\hfil& \vrule#& \hfil#\hfil& 
+                 \vrule#& \hfil#\hfil&
+    \tabskip=0pt\vrule#\cr
+    \noalign{\hrule}
+    &\multispan5\hfil Just a table\hfil&\cr
+    \noalign{\hrule}
+    &one&&two&&three&\cr
+    &a&&b&&c&\cr
+    \noalign{\hrule}
+    }}}\end{disp}
+All of the vertical rules
+of the table are in a separate column. This is the only way
+to get the space around the items to stretch.
+
+%%\point The alignment
+%\section{The alignment}
+%\point The alignment
+\section{The alignment}
+
+%After the template line any number of lines terminated by \cs{cr}
+%can follow. \TeX\ reads all of these lines, processing the
+%entries in order to find the maximal width (height) in 
+%each column (row).
+%Because all entries are kept in memory,
+%long tables can overflow \TeX's main memory.
+%For such tables it is better to write a special-purpose macro.
+After the template line any number of lines terminated by \cs{cr}
+can follow. \TeX\ reads all of these lines, processing the
+entries in order to find the maximal width (height) in 
+each column (row).
+Because all entries are kept in memory,
+long tables can overflow \TeX's main memory.
+For such tables it is better to write a special-purpose macro.
+
+%%\spoint Reading an entry
+%\subsection{Reading an entry}
+%\spoint Reading an entry
+\subsection{Reading an entry}
+
+%Entries in an alignment are composed of the 
+%constant $u$ and $v$ parts
+%of the template, and the variable $\alpha$ part.
+%Basically \TeX\ forms the sequence of tokens $u\alpha v$
+%and processes this. However, there are two special cases
+%where \TeX\ has to expand before it forms this sequence.
+Entries in an alignment are composed of the 
+constant $u$ and $v$ parts
+of the template, and the variable $\alpha$ part.
+Basically \TeX\ forms the sequence of tokens $u\alpha v$
+and processes this. However, there are two special cases
+where \TeX\ has to expand before it forms this sequence.
+
+%Above, the \cs{noalign} command was described. 
+%Since this requires a different treatment from other
+%alignment entries, 
+%\TeX\ expands, after it has read a \cs{cr},
+%the first token of the first $\alpha$ string
+%of the next line to
+%see whether that is or expands to \cs{noalign}.
+%Similarly, for all entries
+%in a line the first token is expanded to see
+%whether it is or expands to \cs{omit}. This control sequence
+%will be described below.
+Above, the \cs{noalign} command was described. 
+Since this requires a different treatment from other
+alignment entries, 
+\TeX\ expands, after it has read a \cs{cr},
+the first token of the first $\alpha$ string
+of the next line to
+see whether that is or expands to \cs{noalign}.
+Similarly, for all entries
+in a line the first token is expanded to see
+whether it is or expands to \cs{omit}. This control sequence
+will be described below.
+
+%Entries starting with an \cs{if...} conditional, or a macro
+%expanding to one, may be misinterpreted owing to this
+%premature expansion. For example,
+%\begin{verbatim}
+%\halign{$#$\cr \ifmmode a\else b\fi\cr}
+%\end{verbatim}
+%will give
+%\begin{disp}\leavevmode
+%     \vbox{\halign{$#$\cr \ifmmode a\else b\fi\cr}}\end{disp}
+%because the conditional is evaluated before math mode has been set up.
+%The solution is, as in many other cases, to insert a 
+%\cs{relax} control sequence to stop the expansion.
+%Here the \cs{relax} has to be inserted at the start of the 
+%alignment entry.
+Entries starting with an \cs{if...} conditional, or a macro
+expanding to one, may be misinterpreted owing to this
+premature expansion. For example,
+\begin{verbatim}
+\halign{$#$\cr \ifmmode a\else b\fi\cr}
+\end{verbatim}
+will give
+\begin{disp}\leavevmode
+     \vbox{\halign{$#$\cr \ifmmode a\else b\fi\cr}}\end{disp}
+because the conditional is evaluated before math mode has been set up.
+The solution is, as in many other cases, to insert a 
+\cs{relax} control sequence to stop the expansion.
+Here the \cs{relax} has to be inserted at the start of the 
+alignment entry.
+
+%If neither \cs{noalign} nor \cs{omit} (see below) is found,
+%\TeX\ will process an input stream composed
+%of  the $u$ part, the $\alpha$ tokens
+%(which are delimited by either \n\& or \cs{span}, see below),
+%and the $v$ part.
+If neither \cs{noalign} nor \cs{omit} (see below) is found,
+\TeX\ will process an input stream composed
+of  the $u$ part, the $\alpha$ tokens
+(which are delimited by either \n\& or \cs{span}, see below),
+and the $v$ part.
+
+%Entries are delimited by \n\&, \cs{span}, or \cs{cr}, but
+%only if such a token occurs on the same level of grouping.
+%This makes it possible to have an alignment as an entry of
+%another alignment.
+Entries are delimited by \n\&, \cs{span}, or \cs{cr}, but
+only if such a token occurs on the same level of grouping.
+This makes it possible to have an alignment as an entry of
+another alignment.
+
+%%\spoint Alternate specifications: \cs{omit}
+%\subsection{Alternate specifications: \cs{omit}}
+%\spoint Alternate specifications: \cs{omit}
+\subsection{Alternate specifications: \cs{omit}}
+
+%The template line will rarely be sufficient to describe
+%all lines of the alignment. For lines where items should be
+%set differently the command \csidx{omit} exists:
+%if the first token in an entry is (or expands to) \cs{omit}
+%the trivial template \n\# is used instead of
+%what the template line specifies.
+The template line will rarely be sufficient to describe
+all lines of the alignment. For lines where items should be
+set differently the command \csidx{omit} exists:
+if the first token in an entry is (or expands to) \cs{omit}
+the trivial template \n\# is used instead of
+what the template line specifies.
+
+%\begin{example} The following alignment uses the same template for
+%all columns, but in the second column an \cs{omit} command
+%is given.
+%\begin{verbatim}
+%\tabskip=1em
+%\halign{&$<#>$\cr a&\omit (b)&c \cr}
+%\end{verbatim}
+%The output of this is
+%\begin{disp}\leavevmode\vbox{\tabskip=1em
+%\halign{&$<#>$\cr a&\omit (b)&c \cr}}
+%\end{disp}
+%\end{example}
+\begin{example} The following alignment uses the same template for
+all columns, but in the second column an \cs{omit} command
+is given.
+\begin{verbatim}
+\tabskip=1em
+\halign{&$<#>$\cr a&\omit (b)&c \cr}
+\end{verbatim}
+The output of this is
+\begin{disp}\leavevmode\vbox{\tabskip=1em
+\halign{&$<#>$\cr a&\omit (b)&c \cr}}
+\end{disp}
+\end{example}
+
+%%\spoint Spanning across multiple columns: \cs{span}
+%\subsection{Spanning across multiple columns: \cs{span}}
+%\spoint Spanning across multiple columns: \cs{span}
+\subsection{Spanning across multiple columns: \cs{span}}
+
+%Sometimes it is desirable to have material spanning several
+%columns. The most obvious example is that of a heading above
+%a table. For this \TeX\ provides the \cs{span} command.
+Sometimes it is desirable to have material spanning several
+columns. The most obvious example is that of a heading above
+a table. For this \TeX\ provides the \cs{span} command.
+
+%Entries are delimited either by \n\&, by \cs{cr}, or by \csidx{span}.
+%In the last case \TeX\ will omit the tabskip glue that
+%would normally follow the entry thus delimited, and
+%it will typeset the material just read plus the following
+%entry in the joint space available.
+Entries are delimited either by \n\&, by \cs{cr}, or by \csidx{span}.
+In the last case \TeX\ will omit the tabskip glue that
+would normally follow the entry thus delimited, and
+it will typeset the material just read plus the following
+entry in the joint space available.
+
+%As an example,
+%\begin{verbatim}
+%\tabskip=1em
+%\halign{&#\cr a&b&c&d\cr a&\hrulefill\span\hrulefill&d\cr}
+%\end{verbatim}
+%gives
+%\begin{disp}\leavevmode\vbox{\tabskip=1em
+%\halign{&#\cr a&b&c&d\cr a&\hrulefill\span\hrulefill&d\cr}}
+%\end{disp} Note that there is no tabskip glue in between the
+%two spanned columns, but there is tabskip glue before the
+%\alt
+%first column and after the last.
+As an example,
+\begin{verbatim}
+\tabskip=1em
+\halign{&#\cr a&b&c&d\cr a&\hrulefill\span\hrulefill&d\cr}
+\end{verbatim}
+gives
+\begin{disp}\leavevmode\vbox{\tabskip=1em
+\halign{&#\cr a&b&c&d\cr a&\hrulefill\span\hrulefill&d\cr}}
+\end{disp} Note that there is no tabskip glue in between the
+two spanned columns, but there is tabskip glue before the
+\alt
+first column and after the last.
+
+%Using the \cs{omit} command this same alignment could
+%have been generated as
+%\begin{verbatim}
+%\halign{&#\cr a&b&c&d\cr a&\hrulefill\span\omit&d\cr}
+%\end{verbatim}
+Using the \cs{omit} command this same alignment could
+have been generated as
+\begin{verbatim}
+\halign{&#\cr a&b&c&d\cr a&\hrulefill\span\omit&d\cr}
+\end{verbatim}
+
+%The \cs{span}\cs{omit} combination is used in the
+%plain \TeX\ macro
+%\cs{multispan}: for instance
+%\begin{disp}\cs{multispan4}\quad gives\quad \verb>\omit\span\omit\span\omit\span\omit>
+%\end{disp} which spans across three tabs, and removes the templates
+%of four entries. 
+%Repeating the above example once again:
+%\begin{verbatim}
+%\halign{&#\cr a&b&c&d\cr a&\multispan2\hrulefill&d\cr}
+%\end{verbatim}
+%The argument of \cs{multispan} is a single token,
+%not a number,
+%so in order to span more than 9 columns the argument
+%should be enclosed in braces, for instance \verb>\multispan{12}>.
+%\alt
+%Furthermore, a space after a single-digit argument
+%will wind up in the output.
+The \cs{span}\cs{omit} combination is used in the
+plain \TeX\ macro
+\cs{multispan}: for instance
+\begin{disp}\cs{multispan4}\quad gives\quad \verb>\omit\span\omit\span\omit\span\omit>
+\end{disp} which spans across three tabs, and removes the templates
+of four entries. 
+Repeating the above example once again:
+\begin{verbatim}
+\halign{&#\cr a&b&c&d\cr a&\multispan2\hrulefill&d\cr}
+\end{verbatim}
+The argument of \cs{multispan} is a single token,
+not a number,
+so in order to span more than 9 columns the argument
+should be enclosed in braces, for instance \verb>\multispan{12}>.
+\alt
+Furthermore, a space after a single-digit argument
+will wind up in the output.
+
+%For a `low budget' solution to spanning columns plain \TeX\ has the
+%macro \csidx{hidewidth}, defined by 
+%\begin{verbatim}
+%\newskip\hideskip \hideskip=-1000pt plus 1fill 
+%\def\hidewidth{\hskip\hideskip}
+%\end{verbatim}
+%Putting \cs{hidewidth} at the beginning or end of an alignment entry
+%will make its width zero, with the material in the entry
+%sticking out to the left or right respectively.
+For a `low budget' solution to spanning columns plain \TeX\ has the
+macro \csidx{hidewidth}, defined by 
+\begin{verbatim}
+\newskip\hideskip \hideskip=-1000pt plus 1fill 
+\def\hidewidth{\hskip\hideskip}
+\end{verbatim}
+Putting \cs{hidewidth} at the beginning or end of an alignment entry
+will make its width zero, with the material in the entry
+sticking out to the left or right respectively.
+
+
+%%\spoint Rules in alignments
+%\subsection{Rules in alignments}
+%\index{alignments!rules in|(}
+%\spoint Rules in alignments
+\subsection{Rules in alignments}
+\index{alignments!rules in|(}
+
+%Horizontal rules inside a horizontal alignment will mostly
+%\howto Draw rules in an alignment\par
+%be across the width of the alignment. The easiest way
+%to attain this is to use
+%\begin{verbatim}
+%\noalign{\hrule}
+%\end{verbatim}
+%lines inside the alignment. If the alignment is contained
+%in a vertical box, lines above and below the alignment
+%can be specified with
+%\begin{verbatim}
+%\vbox{\hrule \halign{...} \hrule}
+%\end{verbatim}
+%The most general way to get horizontal lines in an alignment
+%is to use
+%\cstoidx multispan\par
+%\begin{disp}\cs{multispan}$\,n$\cs{hrulefill}\end{disp}
+%which can be used to underline arbitrary adjacent columns.
+Horizontal rules inside a horizontal alignment will mostly
+\howto Draw rules in an alignment\par
+be across the width of the alignment. The easiest way
+to attain this is to use
+\begin{verbatim}
+\noalign{\hrule}
+\end{verbatim}
+lines inside the alignment. If the alignment is contained
+in a vertical box, lines above and below the alignment
+can be specified with
+\begin{verbatim}
+\vbox{\hrule \halign{...} \hrule}
+\end{verbatim}
+The most general way to get horizontal lines in an alignment
+is to use
+\cstoidx multispan\par
+\begin{disp}\cs{multispan}$\,n$\cs{hrulefill}\end{disp}
+which can be used to underline arbitrary adjacent columns.
+
+%Vertical rules in alignments take some more care.
+%Since a horizontal alignment breaks up into
+%horizontal boxes that will be placed on a vertical list,
+%\TeX\ will insert baselineskip glue in between the rows
+%of the alignment. If vertical rules in adjacent rows
+%are to abut, it is necessary to prevent baselineskip glue,
+%for instance by the \cs{offinterlineskip} macro.
+Vertical rules in alignments take some more care.
+Since a horizontal alignment breaks up into
+horizontal boxes that will be placed on a vertical list,
+\TeX\ will insert baselineskip glue in between the rows
+of the alignment. If vertical rules in adjacent rows
+are to abut, it is necessary to prevent baselineskip glue,
+for instance by the \cs{offinterlineskip} macro.
+
+%In order to ensure that rows will still be properly spaced
+%it is then necessary to place a {\italic strut\/}
+%somewhere in the preamble.
+%A~strut is an invisible object with a certain height
+%and depth. Putting that in the preamble guarantees that
+%every line will have at least that height and depth.
+%In the plain format \csidx{strut} is
+%defined statically as
+%\begin{verbatim}
+%\vrule height8.5pt depth3.5pt width0pt
+%\end{verbatim}
+%so this must be changed when other fonts or sizes are used.
+In order to ensure that rows will still be properly spaced
+it is then necessary to place a {\italic strut\/}
+somewhere in the preamble.
+A~strut is an invisible object with a certain height
+and depth. Putting that in the preamble guarantees that
+every line will have at least that height and depth.
+In the plain format \csidx{strut} is
+defined statically as
+\begin{verbatim}
+\vrule height8.5pt depth3.5pt width0pt
+\end{verbatim}
+so this must be changed when other fonts or sizes are used.
+
+%It is a good idea to use a whole column for a~vertical
+%rule, that is, to write
+%\begin{verbatim}
+%\vrule#&
+%\end{verbatim}
+%in the preamble and
+%to leave the corresponding entry in the alignment empty.
+%Omitting the vertical rule can then be done by specifying \cs{omit},
+%and the size of the rule can be specified explicitly by
+%putting, for instance,
+%\hbox{\n{height 15pt}} in the entry instead of leaving
+%it empty. Of course, tabskip glue will now be specified to the
+%left and right of the rule, so some extra tabskip assignments
+%may be needed in the preamble.
+It is a good idea to use a whole column for a~vertical
+rule, that is, to write
+\begin{verbatim}
+\vrule#&
+\end{verbatim}
+in the preamble and
+to leave the corresponding entry in the alignment empty.
+Omitting the vertical rule can then be done by specifying \cs{omit},
+and the size of the rule can be specified explicitly by
+putting, for instance,
+\hbox{\n{height 15pt}} in the entry instead of leaving
+it empty. Of course, tabskip glue will now be specified to the
+left and right of the rule, so some extra tabskip assignments
+may be needed in the preamble.
+
+%\index{alignments!rules in|)}
+\index{alignments!rules in|)}
+
+%\subsection{End of a line: \cs{cr} and \cs{crcr}}
+\subsection{End of a line: \cs{cr} and \cs{crcr}}
+
+%All lines in an alignment are terminated by the \csidx{cr} control 
+%sequence, including the last line. 
+%\TeX\ is not  able to infer from
+%a closing brace in the $\alpha$~part that the
+%alignment has ended, because an unmatched
+%closing brace is perfectly valid in
+%an alignment entry;  it may match an opening brace in
+%the $u$~part of the corresponding preamble entry.
+All lines in an alignment are terminated by the \csidx{cr} control 
+sequence, including the last line. 
+\TeX\ is not  able to infer from
+a closing brace in the $\alpha$~part that the
+alignment has ended, because an unmatched
+closing brace is perfectly valid in
+an alignment entry;  it may match an opening brace in
+the $u$~part of the corresponding preamble entry.
+
+%\TeX\ has a primitive command \csidx{crcr} that is equivalent
+%to \cs{cr}, but it has no effect if it immediately follows
+%a~\cs{cr}.
+%Consider as an example the definition in plain \TeX\
+%of \csidx{cases}:
+%\begin{verbatim}
+%\def\cases#1{%
+%    \left\{\,\vcenter{\normalbaselines\m@th
+%              \ialign{ $##\hfil$& \quad##\hfil \crcr #1\crcr}}%
+%    \right.}
+%\end{verbatim}
+%Because of the \cs{crcr} after the user argument \verb.#1.,
+%the following two applications of this macro
+%\begin{disp}\verb>\cases{1&2\cr 3&4}>\quad and\quad \verb>\cases{1&2\cr 3&4\cr}>\end{disp}
+%both work. In the first case the \cs{crcr} in the macro
+%definition ends the last line;
+%in the second case the user's \cs{cr} ends the line,
+%and the \cs{crcr} is redundant.
+\TeX\ has a primitive command \csidx{crcr} that is equivalent
+to \cs{cr}, but it has no effect if it immediately follows
+a~\cs{cr}.
+Consider as an example the definition in plain \TeX\
+of \csidx{cases}:
+\begin{verbatim}
+\def\cases#1{%
+    \left\{\,\vcenter{\normalbaselines\m@th
+              \ialign{ $##\hfil$& \quad##\hfil \crcr #1\crcr}}%
+    \right.}
+\end{verbatim}
+Because of the \cs{crcr} after the user argument \verb.#1.,
+the following two applications of this macro
+\begin{disp}\verb>\cases{1&2\cr 3&4}>\quad and\quad \verb>\cases{1&2\cr 3&4\cr}>\end{disp}
+both work. In the first case the \cs{crcr} in the macro
+definition ends the last line;
+in the second case the user's \cs{cr} ends the line,
+and the \cs{crcr} is redundant.
+
+%After \cs{cr} and after a non-redundant \cs{crcr} the
+%\gr{token parameter} \csidx{everycr} is inserted.
+%This includes the \cs{cr} terminating the template line.
+After \cs{cr} and after a non-redundant \cs{crcr} the
+\gr{token parameter} \csidx{everycr} is inserted.
+This includes the \cs{cr} terminating the template line.
+
+%%\point Example: math alignments
+%\section{Example: math alignments}
+%\point Example: math alignments
+\section{Example: math alignments}
+
+%The plain format has several alignment macros that function
+%in math mode. One example is \csidx{matrix}, defined by
+%\begin{verbatim}
+%\def\matrix#1{\null\,\vcenter{\normalbaselines\m@th
+%    \ialign{\hfil$##$\hfil && \quad\hfil$##$\hfil\crcr
+%            \mathstrut\crcr
+%         \noalign{\kern-\baselineskip}
+%            #1\crcr
+%            \mathstrut\crcr
+%         \noalign{\kern-\baselineskip}}}\,}
+%\end{verbatim}
+%This uses a repeating (starting with~\verb>&&>) second preamble entry;
+%each entry is centred by an \cs{hfil} before and after it,
+%and there is a \cs{quad} of space in between columns.
+%Tabskip glue was not used for this, because there should not
+%be any glue preceding or following the matrix.
+The plain format has several alignment macros that function
+in math mode. One example is \csidx{matrix}, defined by
+\begin{verbatim}
+\def\matrix#1{\null\,\vcenter{\normalbaselines\m@th
+    \ialign{\hfil$##$\hfil && \quad\hfil$##$\hfil\crcr
+            \mathstrut\crcr
+         \noalign{\kern-\baselineskip}
+            #1\crcr
+            \mathstrut\crcr
+         \noalign{\kern-\baselineskip}}}\,}
+\end{verbatim}
+This uses a repeating (starting with~\verb>&&>) second preamble entry;
+each entry is centred by an \cs{hfil} before and after it,
+and there is a \cs{quad} of space in between columns.
+Tabskip glue was not used for this, because there should not
+be any glue preceding or following the matrix.
+
+%The combination of a \cs{mathstrut} and \verb>\kern-\baselineskip>
+%above and below the matrix increases the vertical size
+%such that two matrices with the same number of rows will have
+%the same height and depth, which would not otherwise be the case
+%if one of them had subscripts in the last row, but the other
+%not. The \cs{mathstrut} causes interline glue to be inserted 
+%and, because it has a size equal to \cs{baselineskip},
+%the negative kern will effectively leave only the interline glue,
+%thereby buffering any differences in the first and last line.
+%Only to a certain point, of course: objects bigger than the
+%opening brace will still result in a different height or depth of the 
+%matrix.
+The combination of a \cs{mathstrut} and \verb>\kern-\baselineskip>
+above and below the matrix increases the vertical size
+such that two matrices with the same number of rows will have
+the same height and depth, which would not otherwise be the case
+if one of them had subscripts in the last row, but the other
+not. The \cs{mathstrut} causes interline glue to be inserted 
+and, because it has a size equal to \cs{baselineskip},
+the negative kern will effectively leave only the interline glue,
+thereby buffering any differences in the first and last line.
+Only to a certain point, of course: objects bigger than the
+opening brace will still result in a different height or depth of the 
+matrix.
+
+%Another, more
+%complicated, example of an alignment for math mode is \cs{eq\-alignno}.
+%\cstoidx eqalignno\par\cstoidx centering\par
+%\begin{verbatim}
+%\def\eqalignno#1{\begin{disp}l@y \tabskip\centering
+%  \halign to\displaywidth{
+%    \hfil$\@lign\displaystyle{##}$%    -- first column
+%        \tabskip\z@skip
+%    &$\@lign\displaystyle{{}##}$\hfil% -- second column
+%        \tabskip\centering
+%    &\llap{$\@lign##$}%                -- third column
+%        \tabskip\z@skip\crcr   %   end of the preamble
+%       #1\crcr}}
+%\end{verbatim}
+%Firstly, the tabskip is set to zero after the equation
+%number, so this number is set flush with the right margin.
+%Since it is placed by \cs{llap}, its effective width
+%is zero. Secondly, the tabskip between the
+%first and second columns is also zero, and the tabskip
+%before the first column and after the second  is
+%\alt
+%\cs{centering}, which is \n{0pt plus 1000pt minus 1000pt},
+%so the first column and second  are jointly centred
+%in the \cs{hsize}. Note that, because of the
+%\n{minus 1000pt}, these two columns will happily go
+%outside the left and right margins, overwriting any
+%equation numbers.
+Another, more
+complicated, example of an alignment for math mode is \cs{eq\-alignno}.
+\cstoidx eqalignno\par\cstoidx centering\par
+\begin{verbatim}
+\def\eqalignno#1{\begin{disp}l@y \tabskip\centering
+  \halign to\displaywidth{
+    \hfil$\@lign\displaystyle{##}$%    -- first column
+        \tabskip\z@skip
+    &$\@lign\displaystyle{{}##}$\hfil% -- second column
+        \tabskip\centering
+    &\llap{$\@lign##$}%                -- third column
+        \tabskip\z@skip\crcr   %   end of the preamble
+       #1\crcr}}
+\end{verbatim}
+Firstly, the tabskip is set to zero after the equation
+number, so this number is set flush with the right margin.
+Since it is placed by \cs{llap}, its effective width
+is zero. Secondly, the tabskip between the
+first and second columns is also zero, and the tabskip
+before the first column and after the second  is
+\alt
+\cs{centering}, which is \n{0pt plus 1000pt minus 1000pt},
+so the first column and second  are jointly centred
+in the \cs{hsize}. Note that, because of the
+\n{minus 1000pt}, these two columns will happily go
+outside the left and right margins, overwriting any
+equation numbers.
+
+%\index{alignments|)}
+%\endofchapter
+\index{alignments|)}
+\endofchapter
+
+\end{document}

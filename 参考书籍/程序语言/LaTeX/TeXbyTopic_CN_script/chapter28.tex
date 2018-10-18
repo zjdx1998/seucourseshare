@@ -1,0 +1,768 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{27}
+
+\begin{document}
+
+%\chapter{Output Routines}\label{output}
+%\index{output routine|(}
+\chapter{Output Routines}\label{output}
+\index{output routine|(}
+
+%The final stages of page processing are performed by the
+%output routine. The page builder cuts off a certain portion
+%of the main vertical list and hands it to the output routine
+%in \cs{box255}. This chapter treats the commands and parameters
+%that pertain to the output routine, and it explains how
+%output routines can receive information through marks.
+The final stages of page processing are performed by the
+output routine. The page builder cuts off a certain portion
+of the main vertical list and hands it to the output routine
+in \cs{box255}. This chapter treats the commands and parameters
+that pertain to the output routine, and it explains how
+output routines can receive information through marks.
+
+%\label{cschap:output}\label{cschap:shipout}\label{cschap:mark}\label{cschap:topmark}\label{cschap:botmark}\label{cschap:firstmark}\label{cschap:splitbotmark}\label{cschap:splitfirstmark}\label{cschap:deadcycles}\label{cschap:maxdeadcycles}\label{cschap:outputpenalty2}
+%\begin{inventory}
+%\item [\cs{output}] 
+%      Token list with instructions for shipping out pages.
+\label{cschap:output}\label{cschap:shipout}\label{cschap:mark}\label{cschap:topmark}\label{cschap:botmark}\label{cschap:firstmark}\label{cschap:splitbotmark}\label{cschap:splitfirstmark}\label{cschap:deadcycles}\label{cschap:maxdeadcycles}\label{cschap:outputpenalty2}
+\begin{inventory}
+\item [\cs{output}] 
+      Token list with instructions for shipping out pages.
+
+%\item [\cs{shipout}] 
+%      Ship a box to the \n{dvi} file.
+\item [\cs{shipout}] 
+      Ship a box to the \n{dvi} file.
+
+
+%\item [\cs{mark}] 
+%      Specify a mark text.
+\item [\cs{mark}] 
+      Specify a mark text.
+
+%\item [\cs{topmark}] 
+%      The last mark on the previous page.
+\item [\cs{topmark}] 
+      The last mark on the previous page.
+
+%\item [\cs{botmark}] 
+%      The last mark on the current page.
+\item [\cs{botmark}] 
+      The last mark on the current page.
+
+%\item [\cs{firstmark}] 
+%      The first mark on the current page.
+\item [\cs{firstmark}] 
+      The first mark on the current page.
+
+%\item [\cs{splitbotmark}] 
+%      The last mark on a split-off page.
+\item [\cs{splitbotmark}] 
+      The last mark on a split-off page.
+
+%\item [\cs{splitfirstmark}] 
+%      The first mark on a split-off page.
+\item [\cs{splitfirstmark}] 
+      The first mark on a split-off page.
+
+%\item [\cs{deadcycles}] 
+%      Counter that keeps track of how many times 
+%      the output routine has been called without a \cs{shipout} 
+%      taking place. 
+\item [\cs{deadcycles}] 
+      Counter that keeps track of how many times 
+      the output routine has been called without a \cs{shipout} 
+      taking place. 
+
+%\item [\cs{maxdeadcycles}] 
+%      The maximum number of times that the output routine is allowed to
+%      be called without a \cs{shipout} occurring.
+\item [\cs{maxdeadcycles}] 
+      The maximum number of times that the output routine is allowed to
+      be called without a \cs{shipout} occurring.
+
+%\item [\cs{outputpenalty}] 
+%      Value of the penalty at the current page break,
+% \alt
+%      or $10\,000$ if the break was not at a penalty.
+\item [\cs{outputpenalty}] 
+      Value of the penalty at the current page break,
+ \alt
+      or $10\,000$ if the break was not at a penalty.
+
+%\end{inventory}
+\end{inventory}
+
+
+%%\point The \cs{output} token list
+%\section{The \protect\cs{output} token list}
+%\point The \cs{output} token list
+\section{The \protect\cs{output} token list}
+
+%Common parlance has it that
+%`the output routine is called' when \TeX\ has found a place
+%to break the main vertical list.
+%Actually, \cs{output} is not a macro but a token list that
+%is inserted into \TeX's command stream.
+Common parlance has it that
+`the output routine is called' when \TeX\ has found a place
+to break the main vertical list.
+Actually, \cs{output} is not a macro but a token list that
+is inserted into \TeX's command stream.
+
+%Insertion of the \cs{output} token list happens
+%\cstoidx output\par
+%inside a group that is implicitly opened.
+%Also, \TeX\ enters internal vertical mode.
+%Because of the group, non-local assignments 
+%(to the page number, for instance)
+%have to be prefixed with \cs{global}.
+%The vertical mode implies that during the workings of the 
+%output routine 
+%spaces are mostly harmless.
+Insertion of the \cs{output} token list happens
+\cstoidx output\par
+inside a group that is implicitly opened.
+Also, \TeX\ enters internal vertical mode.
+Because of the group, non-local assignments 
+(to the page number, for instance)
+have to be prefixed with \cs{global}.
+The vertical mode implies that during the workings of the 
+output routine 
+spaces are mostly harmless.
+
+%The \cs{output} token list belongs
+%to the class of the
+%\gr{token parameter}s. These behave the same as
+%\cs{toks}$nnn$ token lists; see Chapter~\ref{token}.
+%Assigning an output routine can therefore take the following
+%forms:
+%\begin{disp}\cs{output}\gr{equals}\gr{general text}\quad
+%or\quad 
+%\cs{output}\gr{equals}\gr{filler}\gr{token variable}
+%\end{disp}
+The \cs{output} token list belongs
+to the class of the
+\gr{token parameter}s. These behave the same as
+\cs{toks}$nnn$ token lists; see Chapter~\ref{token}.
+Assigning an output routine can therefore take the following
+forms:
+\begin{disp}\cs{output}\gr{equals}\gr{general text}\quad
+or\quad 
+\cs{output}\gr{equals}\gr{filler}\gr{token variable}
+\end{disp}
+
+
+%%\point[output255] Output and \cs{box255}
+%\section{Output and \protect\cs{box255}}
+%\label{output255}
+%\point[output255] Output and \cs{box255}
+\section{Output and \protect\cs{box255}}
+\label{output255}
+
+%\TeX's page builder breaks the current page at the optimal point,
+%and stores everything above that in \cs{box255};
+%then, the \cs{output} tokens are inserted into the input stream.
+%Any remaining material on the main vertical list
+%is pushed back to the recent 
+%contributions. 
+%If the page is broken at a penalty,
+%\alt
+%that value is recorded in \cs{outputpenalty}, and 
+%a penalty of size $10\,000$ is placed on top of the
+%recent contributions; otherwise, \cs{outputpenalty}
+%is set to~$10\,000$.
+%When the output routine is finished, \cs{box255} is
+%supposed to be empty.
+%If it is not, \TeX\ gives an error message.
+\TeX's page builder breaks the current page at the optimal point,
+and stores everything above that in \cs{box255};
+then, the \cs{output} tokens are inserted into the input stream.
+Any remaining material on the main vertical list
+is pushed back to the recent 
+contributions. 
+If the page is broken at a penalty,
+\alt
+that value is recorded in \cs{outputpenalty}, and 
+a penalty of size $10\,000$ is placed on top of the
+recent contributions; otherwise, \cs{outputpenalty}
+is set to~$10\,000$.
+When the output routine is finished, \cs{box255} is
+supposed to be empty.
+If it is not, \TeX\ gives an error message.
+
+%Usually, the output routine will take the pagebox,
+%\cstoidx shipout\par
+%\mdqon
+%append a headline and/""or footline,
+%\mdqoff
+%maybe merge in some insertions such as footnotes,
+%and ship the page to the \n{dvi} file:
+%\begin{verbatim}
+%\output={\setbox255=\vbox
+%           {\someheadline 
+%            \vbox to \vsize{\unvbox255 \unvbox\footins}
+%            \somefootline}
+%         \shipout\box255}
+%\end{verbatim}
+%When box 255 reaches the output routine, its height has
+%been set to \cs{vsize}.
+%However, the material in it can have considerably
+%smaller height.
+%Thus, the above output routine may lead to underfull boxes.
+%This can be remedied with a \cs{vfil}.
+Usually, the output routine will take the pagebox,
+\cstoidx shipout\par
+\mdqon
+append a headline and/""or footline,
+\mdqoff
+maybe merge in some insertions such as footnotes,
+and ship the page to the \n{dvi} file:
+\begin{verbatim}
+\output={\setbox255=\vbox
+           {\someheadline 
+            \vbox to \vsize{\unvbox255 \unvbox\footins}
+            \somefootline}
+         \shipout\box255}
+\end{verbatim}
+When box 255 reaches the output routine, its height has
+been set to \cs{vsize}.
+However, the material in it can have considerably
+smaller height.
+Thus, the above output routine may lead to underfull boxes.
+This can be remedied with a \cs{vfil}.
+
+%The output routine is under no obligation to
+%\cstoidx deadcycles\par
+%do anything useful with \cs{box255}; it can empty it, or
+%unbox it to let \TeX\ have another go at finding a page
+%break. The number of times
+%that the output routing  postpones the \cs{shipout}
+%is recorded in \cs{deadcycles}: this parameter is set to~0
+%by \cs{shipout}, and increased by~1 just before 
+%every \cs{output}.
+The output routine is under no obligation to
+\cstoidx deadcycles\par
+do anything useful with \cs{box255}; it can empty it, or
+unbox it to let \TeX\ have another go at finding a page
+break. The number of times
+that the output routing  postpones the \cs{shipout}
+is recorded in \cs{deadcycles}: this parameter is set to~0
+by \cs{shipout}, and increased by~1 just before 
+every \cs{output}.
+
+%When  the number of dead cycles reaches
+%\csidx{maxdeadcycles}, \TeX\ gives an error message,
+%and performs the default output routine
+%\begin{verbatim}
+%\shipout\box255
+%\end{verbatim}
+%instead of the routine it was about
+%to start.
+%The \LaTeX\ format has a much higher value for \cs{maxdeadcycles}
+%than plain \TeX, because the output routine in \LaTeX\
+%is often called for
+%intermediate handling of floats and marginal notes.
+When  the number of dead cycles reaches
+\csidx{maxdeadcycles}, \TeX\ gives an error message,
+and performs the default output routine
+\begin{verbatim}
+\shipout\box255
+\end{verbatim}
+instead of the routine it was about
+to start.
+The \LaTeX\ format has a much higher value for \cs{maxdeadcycles}
+than plain \TeX, because the output routine in \LaTeX\
+is often called for
+intermediate handling of floats and marginal notes.
+
+%The \cs{shipout} command can send any \gr{box} to the \n{dvi} file;
+%this need not be box 255, or even a box
+%containing the current page.
+%It does not have to be called inside the output routine, either.
+The \cs{shipout} command can send any \gr{box} to the \n{dvi} file;
+this need not be box 255, or even a box
+containing the current page.
+It does not have to be called inside the output routine, either.
+
+%If the output routine produces any material, for instance
+%by calling
+%\begin{verbatim}
+%\unvbox255
+%\end{verbatim}
+%this is put on top
+%of the recent contributions.
+If the output routine produces any material, for instance
+by calling
+\begin{verbatim}
+\unvbox255
+\end{verbatim}
+this is put on top
+of the recent contributions.
+
+%After the output routine finishes, the page builder is
+%activated. In particular, because the current page
+%has been emptied, the \cs{vsize} is read again.
+%Changes made to this parameter inside the output
+%routine (using \cs{global}) will therefore take effect.
+After the output routine finishes, the page builder is
+activated. In particular, because the current page
+has been emptied, the \cs{vsize} is read again.
+Changes made to this parameter inside the output
+routine (using \cs{global}) will therefore take effect.
+
+%%\point Marks
+%\section{Marks}
+%\point Marks
+\section{Marks}
+
+%Information can be passed to the output routine through the
+%\cstoidx mark\par
+%mechanism of \indexterm{marks}. The user can specify a token list
+%with 
+%\begin{disp}\cs{mark}\lb\gr{mark text}\rb\end{disp}
+%which is put in a mark item on the current vertical list.
+%The mark text is subject to expansion as in \cs{edef}.
+Information can be passed to the output routine through the
+\cstoidx mark\par
+mechanism of \indexterm{marks}. The user can specify a token list
+with 
+\begin{disp}\cs{mark}\lb\gr{mark text}\rb\end{disp}
+which is put in a mark item on the current vertical list.
+The mark text is subject to expansion as in \cs{edef}.
+
+%If the mark is given in horizontal mode it migrates to
+%the surrounding vertical lists like an insertion item
+%(see page~\pageref{migrate});
+%however, if this is not the external vertical list, the
+%output routine will not find the mark.
+If the mark is given in horizontal mode it migrates to
+the surrounding vertical lists like an insertion item
+(see page~\pageref{migrate});
+however, if this is not the external vertical list, the
+output routine will not find the mark.
+
+%Marks are the main mechanism through which the output routine
+%can obtain information about the contents of the currently
+%broken-off page, in particular its top and bottom.
+%\TeX\ sets three variables:
+%\begin{description} 
+%\item [\csidx{botmark}]
+%   the last mark occurring on the current page;
+%\item [\csidx{firstmark}]
+%   the first mark occurring on the current page;
+%\item [\csidx{topmark}]
+%   the last mark of the previous page,
+%   that is, the value of \cs{botmark}
+%   on the previous page.
+%\end{description}
+%If no marks have occurred yet, all three are empty;
+%if no marks occurred on the current page, 
+%all three mark variables are equal
+%to the \cs{botmark} of the previous page.
+Marks are the main mechanism through which the output routine
+can obtain information about the contents of the currently
+broken-off page, in particular its top and bottom.
+\TeX\ sets three variables:
+\begin{description} 
+\item [\csidx{botmark}]
+   the last mark occurring on the current page;
+\item [\csidx{firstmark}]
+   the first mark occurring on the current page;
+\item [\csidx{topmark}]
+   the last mark of the previous page,
+   that is, the value of \cs{botmark}
+   on the previous page.
+\end{description}
+If no marks have occurred yet, all three are empty;
+if no marks occurred on the current page, 
+all three mark variables are equal
+to the \cs{botmark} of the previous page.
+
+%For boxes generated by a \cs{vsplit} command (see previous chapter),
+%the \cs{splitbotmark} and \cs{splitfirstmark}
+%\cstoidx splitbotmark\par\cstoidx splitfirstmark\par
+%contain the marks of the split-off part; \cs{firstmark}
+%and \cs{botmark} reflect the state of what remains in the register.
+For boxes generated by a \cs{vsplit} command (see previous chapter),
+the \cs{splitbotmark} and \cs{splitfirstmark}
+\cstoidx splitbotmark\par\cstoidx splitfirstmark\par
+contain the marks of the split-off part; \cs{firstmark}
+and \cs{botmark} reflect the state of what remains in the register.
+
+%\begin{example} Marks can be used to get a section heading into
+%\howto Do tricks with headlines\par
+%the headline or footline of the page.
+%\begin{verbatim}
+%\def\section#1{ ... \mark{#1} ... }
+%\def\rightheadline{\hbox to \hsize
+%   {\headlinefont \botmark\hfil\pagenumber}}
+%\def\leftheadline{\hbox to \hsize
+%   {\headlinefont \pagenumber\hfil\firstmark}}
+%\end{verbatim}
+%This places the title of the first section that starts on a 
+%left page in the left headline, and the title of the last section
+%that starts on the right page in the right headline.
+%Placing the headlines on the page is the job of the output routine;
+%see below.
+\begin{example} Marks can be used to get a section heading into
+\howto Do tricks with headlines\par
+the headline or footline of the page.
+\begin{verbatim}
+\def\section#1{ ... \mark{#1} ... }
+\def\rightheadline{\hbox to \hsize
+   {\headlinefont \botmark\hfil\pagenumber}}
+\def\leftheadline{\hbox to \hsize
+   {\headlinefont \pagenumber\hfil\firstmark}}
+\end{verbatim}
+This places the title of the first section that starts on a 
+left page in the left headline, and the title of the last section
+that starts on the right page in the right headline.
+Placing the headlines on the page is the job of the output routine;
+see below.
+
+%It is important that no page breaks can occur in between the
+%mark and the box that places the title:
+%\begin{verbatim}
+%\def\section#1{ ...
+%    \penalty\beforesectionpenalty
+%    \mark{#1}
+%    \hbox{ ... #1 ...}
+%    \nobreak
+%    \vskip\aftersectionskip
+%    \noindent}
+%\end{verbatim}
+%\end{example}
+It is important that no page breaks can occur in between the
+mark and the box that places the title:
+\begin{verbatim}
+\def\section#1{ ...
+    \penalty\beforesectionpenalty
+    \mark{#1}
+    \hbox{ ... #1 ...}
+    \nobreak
+    \vskip\aftersectionskip
+    \noindent}
+\end{verbatim}
+\end{example}
+
+%Let us consider
+%another example with headlines: often a page looks better if
+%the headline is omitted on pages where a chapter starts.
+%This can be implemented as follows:
+%\begin{verbatim}
+%\def\endofchapter
+%\chapter#1{ ... \def\chtitle{#1}\mark{1}\mark{0} ... }
+%\def\theheadline{\expandafter\ifx\firstmark1 
+%    \else \chapheadline \fi}
+%\end{verbatim}
+%Only on the page where a chapter starts will the mark be~1,
+%and on all other pages a headline is placed.
+Let us consider
+another example with headlines: often a page looks better if
+the headline is omitted on pages where a chapter starts.
+This can be implemented as follows:
+\begin{verbatim}
+\def\endofchapter
+\chapter#1{ ... \def\chtitle{#1}\mark{1}\mark{0} ... }
+\def\theheadline{\expandafter\ifx\firstmark1 
+    \else \chapheadline \fi}
+\end{verbatim}
+Only on the page where a chapter starts will the mark be~1,
+and on all other pages a headline is placed.
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{Assorted remarks}
+
+%%\spoint Hazards in non-trivial output routines
+%\subsection{Hazards in non-trivial output routines}
+%\spoint Hazards in non-trivial output routines
+\subsection{Hazards in non-trivial output routines}
+
+%If the final call to the output routine does not
+%perform a \cs{shipout}, \TeX\ will call the output
+%routine endlessly, since a run will only stop if both
+%the vertical list is empty, and \cs{deadcycles}
+%is zero. The output routine can set \cs{deadcycles}
+%to zero to prevent this.
+If the final call to the output routine does not
+perform a \cs{shipout}, \TeX\ will call the output
+routine endlessly, since a run will only stop if both
+the vertical list is empty, and \cs{deadcycles}
+is zero. The output routine can set \cs{deadcycles}
+to zero to prevent this.
+
+%%\spoint Page numbering
+%\subsection{Page numbering}
+%\index{page!numbering|(}
+%\spoint Page numbering
+\subsection{Page numbering}
+\index{page!numbering|(}
+
+%The page number is not an intrinsic property of the output
+%routine; in plain \TeX\ it is  the value of \cs{count0}.
+%The output routine is responsible for increasing the
+%page number when a shipout of a  page occurs.
+The page number is not an intrinsic property of the output
+routine; in plain \TeX\ it is  the value of \cs{count0}.
+The output routine is responsible for increasing the
+page number when a shipout of a  page occurs.
+
+%Apart from   \cs{count0}, counter registers~1--9 are also used
+%for page identification: at shipout \TeX\ writes the values
+%of these ten counters to the \n{dvi} file (see Chapter~\ref{TeXcomm}).
+%Terminal and log file output display only the non-zero counters,
+%and the zero counters for which a non-zero counter with
+%a higher number exists, that is, if \cs{count0}${}=1$ and
+%\cs{count3}${}=5$ are the only non-zero counters, the
+%displayed list of counters is~\n{[1.0.0.5]}.
+Apart from   \cs{count0}, counter registers~1--9 are also used
+for page identification: at shipout \TeX\ writes the values
+of these ten counters to the \n{dvi} file (see Chapter~\ref{TeXcomm}).
+Terminal and log file output display only the non-zero counters,
+and the zero counters for which a non-zero counter with
+a higher number exists, that is, if \cs{count0}${}=1$ and
+\cs{count3}${}=5$ are the only non-zero counters, the
+displayed list of counters is~\n{[1.0.0.5]}.
+
+%\index{page!numbering|)}
+\index{page!numbering|)}
+
+%\subsection{Headlines and footlines in plain \TeX}
+\subsection{Headlines and footlines in plain \TeX}
+
+%Plain \TeX\ has token lists \cs{headline} and
+%\cs{footline}; these are used in the macros
+%\handbreak \cs{makeheadline} and \cs{makefootline}.
+%The page is shipped out as (more or less)
+%\begin{verbatim}
+%\vbox{\makeheadline\pagebody\makefootline}
+%\end{verbatim}
+Plain \TeX\ has token lists \cs{headline} and
+\cs{footline}; these are used in the macros
+\handbreak \cs{makeheadline} and \cs{makefootline}.
+The page is shipped out as (more or less)
+\begin{verbatim}
+\vbox{\makeheadline\pagebody\makefootline}
+\end{verbatim}
+
+%Both headline and footline are inserted inside a \cs{line}.
+%For non-standard headers and footers it is easier to
+%redefine the macros \cs{makeheadline} and \cs{makefootline}
+%than to tinker with the token lists.
+Both headline and footline are inserted inside a \cs{line}.
+For non-standard headers and footers it is easier to
+redefine the macros \cs{makeheadline} and \cs{makefootline}
+than to tinker with the token lists.
+
+%%\spoint Example: no widow lines
+%\subsection{Example: no widow lines}
+%\spoint Example: no widow lines
+\subsection{Example: no widow lines}
+
+%Suppose that one does not want to allow widow lines,
+%but pages have in general no stretch or shrink,
+%for instance because they only contain plain text.
+%A~solution would be to increase the page length
+%by one line if a page turns out to be broken
+%at a widow line.
+Suppose that one does not want to allow widow lines,
+but pages have in general no stretch or shrink,
+for instance because they only contain plain text.
+A~solution would be to increase the page length
+by one line if a page turns out to be broken
+at a widow line.
+
+%\TeX's output routine can perform this sort of
+%trick: if the \cs{widowpenalty} is set to
+%some recognizable value, the output routine
+%can see by the \cs{outputpenalty} if a widow
+%line occurred. In that case, the output routine
+%can temporarily increase the \cs{vsize}, and
+%let the page builder have another go at
+%finding a break point.
+\TeX's output routine can perform this sort of
+trick: if the \cs{widowpenalty} is set to
+some recognizable value, the output routine
+can see by the \cs{outputpenalty} if a widow
+line occurred. In that case, the output routine
+can temporarily increase the \cs{vsize}, and
+let the page builder have another go at
+finding a break point.
+
+%Here is the skeleton of such an output routine.
+%No headers or footers are provided for.
+%\begin{verbatim}
+%\newif\ifLargePage \widowpenalty=147
+%\newdimen\oldvsize \oldvsize=\vsize
+%\output={
+%    \ifLargePage \shipout\box255 
+%          \global\LargePagefalse
+%          \global\vsize=\oldvsize
+%    \else \ifnum \outputpenalty=\widowpenalty
+%             \global\LargePagetrue
+%             \global\advance\vsize\baselineskip
+%             \unvbox255 \penalty\outputpenalty
+%          \else  \shipout\box255
+%    \fi   \fi}
+%\end{verbatim}
+%The test \cs{ifLargePage} is set to true by the
+%output routine if the \cs{outputpenalty}
+%equals the \cs{widowpenalty}. The page box
+%is then \cs{unvbox}$\,$ed, so that the page builder
+%will tackle the same material once more.
+Here is the skeleton of such an output routine.
+No headers or footers are provided for.
+\begin{verbatim}
+\newif\ifLargePage \widowpenalty=147
+\newdimen\oldvsize \oldvsize=\vsize
+\output={
+    \ifLargePage \shipout\box255 
+          \global\LargePagefalse
+          \global\vsize=\oldvsize
+    \else \ifnum \outputpenalty=\widowpenalty
+             \global\LargePagetrue
+             \global\advance\vsize\baselineskip
+             \unvbox255 \penalty\outputpenalty
+          \else  \shipout\box255
+    \fi   \fi}
+\end{verbatim}
+The test \cs{ifLargePage} is set to true by the
+output routine if the \cs{outputpenalty}
+equals the \cs{widowpenalty}. The page box
+is then \cs{unvbox}$\,$ed, so that the page builder
+will tackle the same material once more.
+
+%%\spoint Example: no indentation top of page
+%\subsection{Example: no indentation top of page}
+%\spoint Example: no indentation top of page
+\subsection{Example: no indentation top of page}
+
+%Some  output routines can be classified
+%\howto Prevent indentation on top of page\par
+%as abuse of the output routine mechanism.
+%The output routine in this section is a good example of this.
+Some  output routines can be classified
+\howto Prevent indentation on top of page\par
+as abuse of the output routine mechanism.
+The output routine in this section is a good example of this.
+
+%It is imaginable that one wishes paragraphs not to indent
+%if they start at the top of a page. (There are plenty of objections
+%to this layout, but occasionally it is used.)
+%This problem can be solved using the output routine to
+%investigate whether the page is still empty and, if so,
+%to give a signal that a paragraph should not indent.
+It is imaginable that one wishes paragraphs not to indent
+if they start at the top of a page. (There are plenty of objections
+to this layout, but occasionally it is used.)
+This problem can be solved using the output routine to
+investigate whether the page is still empty and, if so,
+to give a signal that a paragraph should not indent.
+
+%Note that we cannot use the fact here
+%that the page builder comes into play after
+%the insertion of \cs{everypar}: even if we could
+%force the output routine to be activated here,
+%there is no way for it to remove the indentation box.
+Note that we cannot use the fact here
+that the page builder comes into play after
+the insertion of \cs{everypar}: even if we could
+force the output routine to be activated here,
+there is no way for it to remove the indentation box.
+
+%The solution given here lets the \cs{everypar}
+%terminate the paragraph immediately
+%with
+%\begin{verbatim}
+%\par\penalty-\specialpenalty
+%\end{verbatim}
+%which activates the output routine.
+%Seeing whether the pagebox is empty (after removing
+%the empty line and any \cs{parskip} glue),
+%the output routine then can set a switch
+%signalling whether the retry of the paragraph
+%should indent.
+The solution given here lets the \cs{everypar}
+terminate the paragraph immediately
+with
+\begin{verbatim}
+\par\penalty-\specialpenalty
+\end{verbatim}
+which activates the output routine.
+Seeing whether the pagebox is empty (after removing
+the empty line and any \cs{parskip} glue),
+the output routine then can set a switch
+signalling whether the retry of the paragraph
+should indent.
+
+%There are some minor matters in the following
+%routines, the sense of which is left
+%for the reader to ponder.
+%\begin{verbatim}
+%\mathchardef\specialpenalty=10001
+%\newif\ifPreventSwitch 
+%\newbox\testbox 
+%\topskip=10pt
+
+%\everypar{\begingroup \par
+%    \penalty-\specialpenalty
+%    \everypar{\endgroup}\parskip0pt 
+%    \ifPreventSwitch \noindent \else \indent \fi
+%    \global\PreventSwitchfalse
+%    }
+%\output{
+%    \ifnum\outputpenalty=-\specialpenalty 
+%        \setbox\testbox\vbox{\unvbox255 
+%                  {\setbox0=\lastbox}\unskip}
+%        \ifdim\ht\testbox=0pt \global\PreventSwitchtrue
+%        \else \topskip=0pt \unvbox\testbox \fi
+%    \else \shipout\box255 \global\advance\pageno1 \fi}
+%\end{verbatim}
+There are some minor matters in the following
+routines, the sense of which is left
+for the reader to ponder.
+\begin{verbatim}
+\mathchardef\specialpenalty=10001
+\newif\ifPreventSwitch 
+\newbox\testbox 
+\topskip=10pt
+
+\everypar{\begingroup \par
+    \penalty-\specialpenalty
+    \everypar{\endgroup}\parskip0pt 
+    \ifPreventSwitch \noindent \else \indent \fi
+    \global\PreventSwitchfalse
+    }
+\output{
+    \ifnum\outputpenalty=-\specialpenalty 
+        \setbox\testbox\vbox{\unvbox255 
+                  {\setbox0=\lastbox}\unskip}
+        \ifdim\ht\testbox=0pt \global\PreventSwitchtrue
+        \else \topskip=0pt \unvbox\testbox \fi
+    \else \shipout\box255 \global\advance\pageno1 \fi}
+\end{verbatim}
+
+%%\spoint More examples of output routines
+%\subsection{More examples of output routines}
+%\spoint More examples of output routines
+\subsection{More examples of output routines}
+
+%A large number of examples of output routines
+%can be found in~\cite{Sal1} and~\cite{Sal2}.
+A large number of examples of output routines
+can be found in~\cite{Sal1} and~\cite{Sal2}.
+
+%\index{output routine|)}
+\index{output routine|)}
+
+%\endofchapter
+\endofchapter
+
+\end{document}

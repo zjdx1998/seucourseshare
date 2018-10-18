@@ -1,0 +1,23 @@
+% -*- coding: utf-8 -*-
+\documentclass[openany]{book}
+
+\input{preamble}
+\patchcmd{\bibliography}{\jobname}{TeXByTopic}{}{}
+
+\begin{document}
+
+%\addcontentsline{toc}{section}{Bibliography}
+%\mdqon
+%\bibliography{tex}
+%\bibliographystyle{plain}
+%\mdqoff
+%\endofchapter
+\renewcommand{\bibname}{参考文献}
+\phantomsection
+\addcontentsline{toc}{chapter}{参考文献}
+\mdqon
+\bibliography{tex}
+\bibliographystyle{plain}
+\mdqoff
+
+\end{document}

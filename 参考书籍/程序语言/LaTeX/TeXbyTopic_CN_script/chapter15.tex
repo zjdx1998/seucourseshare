@@ -1,0 +1,451 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{14}
+
+\begin{document}
+
+%\chapter{Baseline Distances}\label{baseline}
+\chapter{基线距离}\label{baseline}
+
+%%\hbox{}\vfil\vfil\hbox{}
+%Lines of text are in most cases not of equal height or depth.
+%Therefore \TeX\ adds interline glue to keep baselines at a uniform
+%distance from one another. 
+%This chapter treats the computation of such
+%interline glue.
+%\hbox{}\vfil\vfil\hbox{}
+文本行的高度和深度多半不会是相等的。
+因此 \TeX\ 添加行间粘连，以保证各行基线有一致的距离。
+这一章处理行间粘连的计算。
+
+%\label{cschap:baselineskip}\label{cschap:lineskiplimit}\label{cschap:lineskip}\label{cschap:prevdepth}\label{cschap:nointerlineskip}\label{cschap:offinterlineskip}\label{cschap:openup}
+%\begin{inventory}
+\label{cschap:baselineskip}\label{cschap:lineskiplimit}\label{cschap:lineskip}\label{cschap:prevdepth}\label{cschap:nointerlineskip}\label{cschap:offinterlineskip}\label{cschap:openup}
+\begin{inventory}
+
+%\item [\cs{baselineskip}] 
+%      The `ideal' baseline distance between neighbouring 
+%      boxes on a vertical list. Plain \TeX\ default:~\n{12pt}.
+\item [\cs{baselineskip}] 
+      竖直列中相邻盒子基线距离的`理想值'。Plain \TeX\ 默认为 \n{12pt}。
+
+%\item [\cs{lineskiplimit}] 
+%      Distance to be maintained between the bottom and top of 
+%      neighbouring boxes on a vertical list.
+%      Plain \TeX\ default:~\n{0pt}.
+\item [\cs{lineskiplimit}] 
+      竖直列中相邻盒子的底部和顶部需要保持的距离。
+      Plain \TeX\ 默认为 \n{0pt}。
+
+%\item [\cs{lineskip}]  
+%      Glue added if the distance between bottom
+%      and top of neighbouring boxes 
+%      is less than \cs{lineskiplimit}.
+%      Plain \TeX\ default:~\n{1pt}.
+\item [\cs{lineskip}]  
+      在相邻盒子的底部和顶部的距离小于 \cs{lineskiplimit} 时添加的粘连。
+      Plain \TeX\ 默认为 \n{1pt}。
+
+%\item [\cs{prevdepth}]  
+%      Depth of the last box added to a vertical list as it is 
+%      perceived by \TeX.
+\item [\cs{prevdepth}]  
+      上一个被 \TeX\ 添加到竖直列的盒子的深度。
+
+%\item [\cs{nointerlineskip}]
+%      Macro to prevent interline glue insertion once.
+\item [\cs{nointerlineskip}]
+      用于阻止一次行间粘连插入的宏。
+
+%\item [\cs{offinterlineskip}]
+%      Macro to prevent interline glue globally
+%      henceforth.
+\item [\cs{offinterlineskip}]
+      用于全局地阻止此后所有行间粘连的宏。
+
+%\item [\cs{openup}]
+%      Increase \cs{baselineskip}, \cs{lineskip}, 
+%      and \cs{lineskiplimit} by specified amount.
+\item [\cs{openup}]
+      给 \cs{baselineskip}、\cs{lineskip} 和 
+      \cs{lineskiplimit} 增加指定的量。
+
+%\end{inventory}
+\end{inventory}
+
+
+%\section{Interline glue}
+\section{行间粘连}
+
+%\input figs17
+%%\message{fig17 missing}
+\input figs17
+%\message{fig17 missing}
+
+%\TeX\ tries to keep a certain distance between the reference
+%points of boxes that are added to a vertical list
+%by inserting \indextermbus{interline}{glue}.
+%In particular it tries to keep a constant \indextermsub{baseline}{distance}
+%between lines of ordinary text: the \csidx{baselineskip}. Actually,
+%the \cs{baselineskip} is  a \gr{glue}, so line distances can
+%stretch or shrink. However, the natural sizes,
+%as well as the stretch and the shrink, are the same
+%between all lines.
+通过插入\indextermbus{行间}{粘连}，
+\TeX\ 试图让竖直列的盒子的基准点保持一定的距离。
+特别地，它试图让普通文本的各行保持恒定的\indextermsub{基线}{距离}。
+实际上，\cs{baselineskip} 是一个\gr{glue}，因此行距是可以伸缩的。
+然而，它的自然尺寸以及伸长量和收缩量，在各行之间是一致的。
+
+%When boxes, whether they are lines of a paragraph or explicit boxes,
+%are appended to a vertical list, glue 
+%is added usually so that the depth of the preceding box
+%and the height of the current one add up to the \cs{baselineskip}.
+%This has the effect of keeping the reference points 
+%of subsequent lines at regular intervals.
+当添加盒子——不管是段落文本行还是显式盒子——到竖直列时，
+\TeX\ 通常会添加粘连，使得它与前面盒子深度和当前盒子高度之和等于
+\cs{baselineskip}。这样能让各行的基准点保持相同的距离。
+
+%%\eject
+%\eject
+
+%\begin{quotation}
+%  \figone
+%\end{quotation}
+%%\begin{disp}\leavevmode\hbox{}\nl\figone\end{disp}
+\begin{quotation}
+  \figone
+\end{quotation}
+%\begin{disp}\leavevmode\hbox{}\nl\figone\end{disp}
+
+%However, this process can bring the bottom and top of two
+%subsequent boxes to be less than \cs{lineskiplimit} apart:
+%\begin{quotation}
+%  \figtwo
+%\end{quotation}
+%%\begin{disp}\leavevmode\figtwo\end{disp}
+然而，这样做可能导致相邻盒子的底部和顶部的距离小于 \cs{lineskiplimit}：
+\begin{quotation}
+  \figtwo
+\end{quotation}
+%\begin{disp}\leavevmode\figtwo\end{disp}
+
+%In that case, \cs{lineskip} glue is added:
+%\begin{quotation}
+%  \figthree
+%\end{quotation}
+%%\begin{disp}\leavevmode\figthree\end{disp}
+%Note that this will usually increase the distance
+%between the baselines of the boxes to more than the
+%\cs{baselineskip}.
+碰到这种情形时，\TeX\ 改为添加 \cs{lineskip} 粘连：
+\begin{quotation}
+  \figthree
+\end{quotation}
+%\begin{disp}\leavevmode\figthree\end{disp}
+注意这通常会导致盒子的基线距离超过 \cs{baselineskip}。
+
+%The exact process is this:
+%\begin{itemize}
+%\item if \cs{prevdepth} is \n{-1000pt} or less,
+%no glue is added, otherwise
+%\item \TeX\ calculates the distance between the bottom of the previous box
+%and the top of the current one as the natural width of the
+%\cs{baselineskip} minus \cs{prev\-depth} (the
+%depth of the last box) and minus the height of the current box;
+%\item if this distance is at least \csidx{lineskiplimit}, 
+%glue is added with the calculated distance as natural size,
+%and with the stretch and shrink of the \cs{baselineskip},
+%\item otherwise \csidx{lineskip} glue is added.
+%\item \csidx{prevdepth} is set to the depth of the
+%current item.
+%\end{itemize}
+确切的处理过程如下：
+\begin{itemize}
+\item 如果 \cs{prevdepth} 小于或等于 \n{-1000pt}，不会添加任何粘连，否则
+\item \TeX\ 计算出上一个盒子底部和当前盒子顶部的距离：
+它用 \cs{baselineskip} 减去 \cs{prev\-depth}（上一个盒子的深度）再减去当前盒子的高度；
+\item 如果这个距离小于 \csidx{lineskiplimit}，\TeX\ 添加一个粘连，
+这个粘连的自然尺寸等于该距离，伸长量和收缩量等于 \cs{baselineskip} 的伸长量和收缩量。
+\item 否则，\TeX\ 改为添加 \csidx{lineskip} 粘连。
+\item \TeX\ 将 \csidx{prevdepth} 设为当前项目的深度。
+\end{itemize}
+
+%There are two exceptional  situations:
+%no interline glue is added before and after a rule,
+%and the \cs{prevdepth} is not updated by an \cs{unvbox}
+%or \cs{unvcopy} command. After a rule interline glue
+%is prevented by a value of \n{-1000pt} of the \cs{prevdepth}.
+这里有两个例外情形：在标尺前后不添加行间粘连，
+而 \cs{unvbox} 或 \cs{unvcopy} 命令不改变 \cs{prevdepth} 值。
+在标线之后行间粘连是由于 \cs{prevdepth} 等于 \n{-1000pt} 而被阻止。
+
+%The above process is carried out, irrespective of what extra
+%glue may have been inserted in between the boxes.
+%Thus a skip in between boxes in vertical mode will not
+%affect the distance calculated from the baseline distances,
+%and therefore also not the amount of baselineskip glue.
+%The same holds for glue added with \cs{vadjust} inside
+%a paragraph.
+上面的处理过程不考虑盒子间另外插入的粘连。
+因此竖直模式中添加的盒子间距不会影响从基线距离算出的结果，
+从而不影响行间粘连的大小。
+这个规则也适用于在段落中用 \cs{vadjust} 添加的粘连。
+
+%\begin{example}
+%\begin{verbatim}
+%\baselineskip=10pt \lineskiplimit=2pt \lineskip=2pt
+%\setbox0=\vbox{\hbox{\vrule depth4pt}
+%               \hbox{\vrule height 3pt}}
+%\showbox0
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\box0=
+%\vbox(10.0+0.0)x0.4
+%.\hbox(0.0+4.0)x0.4
+%..\rule(*+4.0)x0.4
+%.\glue(\baselineskip) 3.0
+%.\hbox(3.0+0.0)x0.4
+%..\rule(3.0+*)x0
+%\end{verbatim}
+%Bringing the boxes to within  \cs{lineskiplimit}
+%of each other, that is
+%\begin{verbatim}
+%\setbox0\vbox{\hbox{\vrule depth4pt}
+%              \hbox{\vrule height 5pt}}
+%\showbox0
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\box0=
+%\vbox(11.0+0.0)x0.4
+%.\hbox(0.0+4.0)x0.4
+%..\rule(*+4.0)x0.4
+%.\glue(\lineskip) 2.0
+%.\hbox(5.0+0.0)x0.4
+%..\rule(5.0+*)x0.4
+%\end{verbatim}
+%where \cs{lineskip} glue has been inserted
+%instead of the usual \cs{baselineskip} glue.
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\baselineskip=10pt \lineskiplimit=2pt \lineskip=2pt
+\setbox0=\vbox{\hbox{\vrule depth4pt}
+               \hbox{\vrule height 3pt}}
+\showbox0
+\end{verbatim}
+将给出
+\begin{verbatim}
+\box0=
+\vbox(10.0+0.0)x0.4
+.\hbox(0.0+4.0)x0.4
+..\rule(*+4.0)x0.4
+.\glue(\baselineskip) 3.0
+.\hbox(3.0+0.0)x0.4
+..\rule(3.0+*)x0
+\end{verbatim}
+将盒子的距离减少到 \cs{lineskiplimit} 以内，即
+\begin{verbatim}
+\setbox0\vbox{\hbox{\vrule depth4pt}
+              \hbox{\vrule height 5pt}}
+\showbox0
+\end{verbatim}
+将给出
+\begin{verbatim}
+\box0=
+\vbox(11.0+0.0)x0.4
+.\hbox(0.0+4.0)x0.4
+..\rule(*+4.0)x0.4
+.\glue(\lineskip) 2.0
+.\hbox(5.0+0.0)x0.4
+..\rule(5.0+*)x0.4
+\end{verbatim}
+其中插入的是 \cs{lineskip} 粘连，而不是通常的 \cs{baselineskip} 粘连。
+\end{example}
+
+%The plain \TeX\ default values are
+%\begin{verbatim}
+%\lineskiplimit=0pt lineskip=1pt
+%\end{verbatim}
+%so, when boxes start to touch each other, they are
+%moved one point apart.
+Plain \TeX\ 中的默认值为
+\begin{verbatim}
+\lineskiplimit=0pt lineskip=1pt
+\end{verbatim}
+因此，当两个盒子开始碰到时，它们被拉开一个点的距离。
+
+%\section{The perceived depth of boxes}
+\section{盒子深度}
+
+%The decision process for interline glue uses \csidx{prevdepth}
+%as the perceived depth of the preceding box on the vertical
+%list. The \cs{prevdepth} parameter can be used only in
+%vertical mode.
+在确定行间粘连时，\csidx{prevdepth} 代表竖直列中前一个盒子的深度。
+\cs{prevdepth} 参数只能在竖直模式中使用。
+
+%The \cs{prevdepth} is set to the depth of boxes added to the
+%vertical list, but it is not affected by \cs{unvbox}
+%or \cs{unvcopy}. After an \cs{hrule} it is set to
+%\n{-1000pt} to prevent interline glue before the next box.
+\cs{prevdepth} 被设定为添加到竖直列的盒子的深度，
+但它不受 \cs{unvbox} 或 \cs{unvcopy} 影响。
+在 \cs{hrule} 之后它被设为 \n{-1000pt} 以阻止在下个盒子前生成行间粘连。
+
+%At the beginning of a vertical list \cs{prevdepth}
+%is set to \n{-1000pt}, except in an \cs{halign}
+%and \cs{noalign} code contained therein, where it
+%is carried over from the surrounding list.
+%At the end of the alignment the value of \cs{prevdepth}
+%set by the last alignment row is carried to the outer list.
+在竖直列的开头，\cs{prevdepth} 被设为 \n{-1000pt}，
+除非在 \cs{halign} 和 \cs{noalign} 中，
+此时使用的是外层列表的 \cs{prevdepth} 值。
+在阵列的结尾，阵列末尾行设定的 \cs{prevdepth} 的值被送到外层列表中。
+
+%In order to prevent interline glue just once, all that
+%is needed is to alter the \cs{prevdepth}.
+%\cstoidx nointerlineskip\par
+%\begin{verbatim}
+%\def\nointerlineskip{\prevdepth=-1000pt}
+%\end{verbatim}
+为阻止一次行间粘连，只需要修改 \cs{prevdepth}。
+\cstoidx nointerlineskip\par
+\begin{verbatim}
+\def\nointerlineskip{\prevdepth=-1000pt}
+\end{verbatim}
+
+%The \csidx{offinterlineskip} macro is much more drastic:
+%it prevents {\sl all\/} interline glue from the moment
+%of its call onwards, or, if it is used inside a paragraph,
+%from the start of that paragraph.
+%Its definition is
+%\begin{verbatim}
+%\baselineskip=-1000pt \lineskip=0pt 
+%\lineskiplimit\maxdimen
+%\end{verbatim}
+%where the second line is the essential one: it
+%causes \TeX\ to add \cs{lineskip} glue (which is zero)
+%always. 
+%Settings for \cs{baselineskip} do not matter any more then.
+\csidx{offinterlineskip} 宏要彻底得多：
+它使得{\sl 所有\/}行间粘连都为零，从调用它的时刻算起，
+或者，倘若在段落中间使用它，从段落开头处算起。
+它的定义为
+\begin{verbatim}
+\baselineskip=-1000pt \lineskip=0pt 
+\lineskiplimit\maxdimen
+\end{verbatim}
+其中第二行是关键之处：它使得 \TeX\ 添加的 \cs{lineskip} 粘连始终等于零。
+这样 \cs{baselineskip} 的设置将不再重要。
+
+%The \cs{offinterlineskip} macro has an important application
+%in alignments (see Chapter~\ref{align}).
+\cs{offinterlineskip} 宏在阵列中能派上用场（见第~\ref{align}~章）。
+
+%By setting
+%\begin{verbatim}
+%\lineskiplimit=-\maxdimen
+%\end{verbatim}
+%you can force \TeX\  to apply the \cs{baselineskip}
+%always, regardless of whether this would bring boxes too close
+%together or, indeed, if this would make them overlap.
+通过设置
+\begin{verbatim}
+\lineskiplimit=-\maxdimen
+\end{verbatim}
+你可以强制 \TeX\ 始终使用 \cs{baselineskip}，
+而不管是否将导致盒子靠得太近，或者导致它们重叠。
+
+
+%%\point Terminology
+%\section{Terminology}
+%\point Terminology
+\section{术语}
+
+%In hot metal typesetting, all letters of a particular font
+%were on a `body' of the same
+%size. Thus every line of type had the same height and depth, and
+%the resulting distance between the baselines would be some suitable
+%value for that type. If for some reason this distance should
+%be larger (see~\cite{White:line} for a discussion of this),
+%strips of lead would be inserted. The extra distance was
+%called the `leading' (pronounced `ledding').
+在铅字排版时代，一个字体的所有字母都印在相同大小的`字身'上。
+因此排版的每行都有相同的高度和深度，从而基线的距离将有合适的大小。
+若由于某原因需要增加此距离（见~\cite{White:line}~对此问题的讨论），
+则需要插入一个铅条（strips of lead）。
+这个额外的距离就称为`leading'（发音同`ledding'）。
+
+%With phototypesetting, when the baseline distance was sometimes
+%called the `film transport', this terminology blurred, and the
+%term `leading' was also used for the baseline distance. Some of this
+%confusion is also present in \TeX: the parameter \cs{baselineskip}
+%specifies the baseline distance, but in the trace output
+%(see the examples above) the glue inserted to make the 
+%baseline distance equal to \cs{baselineskip} is called
+%\cs{baselineskip}.
+在照相排版时代，基线距离有时候被称为`film transport'，
+而`leading'这个术语变得模糊，有时也被用于表示基线距离。这种混乱同样出现在 \TeX\ 中：
+参数 \cs{baselineskip} 指定基线距离，但是在追踪输出中（见上面的例子），
+为保证基线距离等于\cs{baselineskip}而插入的粘连也被称为 \cs{baselineskip}。
+
+%%\point Additional remarks
+%\section{Additional remarks}
+%\point Additional remarks
+\section{补充说明}
+
+%In general, for documents longer than one page it is desirable
+%to have the same baseline distance throughout. However,
+%for one-page documents you may add stretchability to the
+%baselineskip, for instance if the text has to be flush bottom.
+一般地，对于超过一页的文档，自始至终保持相同的基线距离比较合适。
+然而，对于单页文档，你可以添加伸长度到 \cs{baselineskip}，
+这样可以让文本在底部对齐。
+
+%Increasing the distance between just one pair of lines
+%can be done with \cs{vadjust}. The argument of this
+%command is vertical material that\vadjust{\kern2pt}
+%will be inserted in the
+%vertical list right after the line where this command was given.
+%The second line of this paragraph, for instance, 
+%contains the command \verb-\vadjust{\kern2pt}-.
+若仅仅想增加某两行的距离，你可以使用 \cs{vadjust} 命令。
+这个命令的参量是竖直素材，\vadjust{\kern2pt}%
+它们将被插入到竖直列并放在这个命令所在的行之后。
+比如这个段落的第二行就包含命令 \verb-\vadjust{\kern2pt}-。
+
+%The amount of leading cannot be changed in the middle of
+%a paragraph, because the value for \cs{baselineskip}
+%that is used is the one that
+%is current when the paragraph is finally broken and
+%added to the main vertical list. The same holds
+%for the \cs{lineskip} and \cs{lineskiplimit}.
+行间距的大小可以在段落中间修改，
+这是因为在分段为行并添加到主竖直列时才会用到 \cs{baselineskip} 的当前值。
+\cs{lineskip} 和 \cs{lineskiplimit} 类似。
+
+%The plain \TeX\ macro \csidx{openup}
+%increases the \cs{baselineskip}, \cs{lineskip}, and
+%\cs{lineskiplimit} by the amount of the argument
+%to the macro. In effect, this increases line distances
+%by this amount regardless of whether they are governed
+%by \cs{baselineskip} or \cs{lineskip}.
+Plain \TeX\ 宏 \csidx{openup} 给 \cs{baselineskip}、\cs{lineskip}
+和 \cs{lineskiplimit} 增加宏参量所指定的大小。
+其效果是给行间距增加所指定的大小，无论它是由 \cs{baselineskip}
+还是由 \cs{lineskip} 给出。
+
+
+%\endofchapter
+%%%%% end of input file [baseline]
+\endofchapter
+%%%% end of input file [baseline]
+
+\end{document}

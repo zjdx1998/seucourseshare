@@ -1,0 +1,749 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{20}
+
+\begin{document}
+
+%\chapter{Characters in Math Mode}\label{mathchar}
+\chapter{Characters in Math Mode}\label{mathchar}
+
+%In math mode every character specifies by its
+%\cs{mathcode} what position of
+%a font to access, among other things.
+%For delimiters this story is a bit
+%more complicated. This chapter explains the concept
+%of math codes, and shows how \TeX\ implements variable
+%size delimiters.
+% 
+%\label{cschap:mathcode}\label{cschap:mathchar}\label{cschap:mathchardef}\label{cschap:delcode}\label{cschap:delimiter}\label{cschap:delimiterfactor}\label{cschap:delimitershortfall}\label{cschap:nulldelimiterspace}\label{cschap:left}\label{cschap:right}\label{cschap:big}\label{cschap:Big}\label{cschap:bigg}\label{cschap:Bigg}\label{cschap:bigl}\label{cschap:bigm}\label{cschap:bigr}\label{cschap:radical}\label{cschap:mathaccent}\label{cschap:skewchar}\label{cschap:defaultskewchar}\label{cschap:skew}\label{cschap:widehat}\label{cschap:widetilde}
+%\begin{inventory}
+%\item [\cs{mathcode}] 
+%      Code of a character determining its treatment in math mode.
+In math mode every character specifies by its
+\cs{mathcode} what position of
+a font to access, among other things.
+For delimiters this story is a bit
+more complicated. This chapter explains the concept
+of math codes, and shows how \TeX\ implements variable
+size delimiters.
+ 
+\label{cschap:mathcode}\label{cschap:mathchar}\label{cschap:mathchardef}\label{cschap:delcode}\label{cschap:delimiter}\label{cschap:delimiterfactor}\label{cschap:delimitershortfall}\label{cschap:nulldelimiterspace}\label{cschap:left}\label{cschap:right}\label{cschap:big}\label{cschap:Big}\label{cschap:bigg}\label{cschap:Bigg}\label{cschap:bigl}\label{cschap:bigm}\label{cschap:bigr}\label{cschap:radical}\label{cschap:mathaccent}\label{cschap:skewchar}\label{cschap:defaultskewchar}\label{cschap:skew}\label{cschap:widehat}\label{cschap:widetilde}
+\begin{inventory}
+\item [\cs{mathcode}] 
+      Code of a character determining its treatment in math mode.
+
+%\item [\cs{mathchar}] 
+%      Explicit denotation of a mathematical character.
+\item [\cs{mathchar}] 
+      Explicit denotation of a mathematical character.
+
+%\item [\cs{mathchardef}] 
+%      Define a control sequence to be a synonym for
+%      a~math character code.
+\item [\cs{mathchardef}] 
+      Define a control sequence to be a synonym for
+      a~math character code.
+
+%\item [\cs{delcode}] 
+%      Code specifying how a character should be used as delimiter.
+\item [\cs{delcode}] 
+      Code specifying how a character should be used as delimiter.
+
+%\item [\cs{delimiter}] 
+%      Explicit denotation of a delimiter.
+\item [\cs{delimiter}] 
+      Explicit denotation of a delimiter.
+
+%\item [\cs{delimiterfactor}] 
+%      1000 times the fraction of a delimited formula that should be
+%      covered by a delimiter.
+%      Plain \TeX\ default:~\n{901}
+\item [\cs{delimiterfactor}] 
+      1000 times the fraction of a delimited formula that should be
+      covered by a delimiter.
+      Plain \TeX\ default:~\n{901}
+
+%\item [\cs{delimitershortfall}] 
+%      Size of the part of a delimited formula that is allowed 
+%      to go uncovered by a delimiter.
+%      Plain \TeX\ default:~\n{5pt}
+\item [\cs{delimitershortfall}] 
+      Size of the part of a delimited formula that is allowed 
+      to go uncovered by a delimiter.
+      Plain \TeX\ default:~\n{5pt}
+
+%\item [\cs{nulldelimiterspace}] 
+%      Width taken for empty delimiters. 
+%      Plain \TeX\ default:~\n{1.2pt}
+\item [\cs{nulldelimiterspace}] 
+      Width taken for empty delimiters. 
+      Plain \TeX\ default:~\n{1.2pt}
+
+%\item [\cs{left}] 
+%      Use the following character as an open delimiter.
+\item [\cs{left}] 
+      Use the following character as an open delimiter.
+
+%\item [\cs{right}] 
+%      Use the following character as a closing delimiter.
+\item [\cs{right}] 
+      Use the following character as a closing delimiter.
+
+%\item [\cs{big}] 
+%      One line high delimiter.
+\item [\cs{big}] 
+      One line high delimiter.
+
+%\item [\cs{Big}] 
+%      One and a half line high delimiter.
+\item [\cs{Big}] 
+      One and a half line high delimiter.
+
+%\item [\cs{bigg}] 
+%      Two lines high delimiter.
+\item [\cs{bigg}] 
+      Two lines high delimiter.
+
+%\item [\cs{Bigg}] 
+%      Two and a half lines high delimiter.
+\item [\cs{Bigg}] 
+      Two and a half lines high delimiter.
+
+%\item [\cs{bigl {\MainFont etc.}}]
+%      Left delimiters.
+\item [\cs{bigl {\MainFont etc.}}]
+      Left delimiters.
+
+%\item [\cs{bigm {\MainFont etc.}}]
+%      Delimiters used as binary relations.
+\item [\cs{bigm {\MainFont etc.}}]
+      Delimiters used as binary relations.
+
+%\item [\cs{bigr {\MainFont etc.}}]
+%      Right delimiters.
+\item [\cs{bigr {\MainFont etc.}}]
+      Right delimiters.
+
+%\item [\cs{radical}] 
+%      Command for setting things such as root signs.
+\item [\cs{radical}] 
+      Command for setting things such as root signs.
+
+%\item [\cs{mathaccent}] 
+%      Place an accent in math mode.
+\item [\cs{mathaccent}] 
+      Place an accent in math mode.
+
+%\item [\cs{skewchar}] 
+%      Font position of an after-placed accent.
+\item [\cs{skewchar}] 
+      Font position of an after-placed accent.
+
+%\item [\cs{defaultskewchar}] 
+%      Value of \cs{skewchar} when a font is loaded.
+\item [\cs{defaultskewchar}] 
+      Value of \cs{skewchar} when a font is loaded.
+
+%\item [\cs{skew}] 
+%      Macro to shift accents on top of characters explicitly.
+\item [\cs{skew}] 
+      Macro to shift accents on top of characters explicitly.
+
+%\item [\cs{widehat}]
+%      Hat accent that can
+%      accommodate wide expressions.
+\item [\cs{widehat}]
+      Hat accent that can
+      accommodate wide expressions.
+
+%\item [\cs{widetilde}]
+%      Tilde accent that can
+%      accommodate wide expressions.
+\item [\cs{widetilde}]
+      Tilde accent that can
+      accommodate wide expressions.
+
+%\end{inventory}
+\end{inventory}
+
+%\section{Mathematical characters}
+%\index{math characters|(}
+\section{Mathematical characters}
+\index{math characters|(}
+
+%Each of the 256 permissible character codes has
+%an associated \csidx{mathcode}, which can be assigned by
+%\begin{disp}\cs{mathcode}\gr{8-bit number}\gr{equals}\gr{15-bit number}\end{disp}
+%When processing in math mode, \TeX\ replaces all characters of
+%categories 11 and~12, and \cs{char} and \cs{chardef} characters,
+%by their associated mathcode.
+Each of the 256 permissible character codes has
+an associated \csidx{mathcode}, which can be assigned by
+\begin{disp}\cs{mathcode}\gr{8-bit number}\gr{equals}\gr{15-bit number}\end{disp}
+When processing in math mode, \TeX\ replaces all characters of
+categories 11 and~12, and \cs{char} and \cs{chardef} characters,
+by their associated mathcode.
+
+%The  15-bit math code is most conveniently denoted hexadecimally
+%as \verb-"xyzz-, where
+%\begin{disp}
+%\n x${}\leq7$ is the class (see page~\pageref{math:class}),\nl
+%\n y is the font family number \alt
+%(see Chapter~\ref{mathfont}), and \nl
+%\n{zz} is the position of the character in the font.\end{disp}
+The  15-bit math code is most conveniently denoted hexadecimally
+as \verb-"xyzz-, where
+\begin{disp}
+\n x${}\leq7$ is the class (see page~\pageref{math:class}),\nl
+\n y is the font family number \alt
+(see Chapter~\ref{mathfont}), and \nl
+\n{zz} is the position of the character in the font.\end{disp}
+
+%Math codes can also be specified directly by 
+%\cstoidx mathchar\par\cstoidx mathchardef\par
+%a \gr{math character}, which can be\label{math:character}
+%\begin{itemize}\item\cs{mathchar}\gr{15-bit number}; 
+%\item \gr{mathchardef token}, a control sequence that was defined by
+%\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+%\end{disp}
+% or
+%\item a delimiter command\alt
+%\begin{disp}\cs{delimiter}\gr{27-bit number}\end{disp}
+% where the last 12 bits
+%are discarded.\end{itemize}
+%The commands \cs{mathchar} and \cs{mathchardef}
+%are analogous to \cs{char} and \cs{char\-def} in text mode.
+%Delimiters are treated below.
+%A~\gr{mathchardef token} 
+%can be used as a \gr{number}, even outside math mode.
+Math codes can also be specified directly by 
+\cstoidx mathchar\par\cstoidx mathchardef\par
+a \gr{math character}, which can be\label{math:character}
+\begin{itemize}\item\cs{mathchar}\gr{15-bit number}; 
+\item \gr{mathchardef token}, a control sequence that was defined by
+\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+\end{disp}
+ or
+\item a delimiter command\alt
+\begin{disp}\cs{delimiter}\gr{27-bit number}\end{disp}
+ where the last 12 bits
+are discarded.\end{itemize}
+The commands \cs{mathchar} and \cs{mathchardef}
+are analogous to \cs{char} and \cs{char\-def} in text mode.
+Delimiters are treated below.
+A~\gr{mathchardef token} 
+can be used as a \gr{number}, even outside math mode.
+
+%In \IniTeX\ all letters receive \cs{mathcode} \verb-"71zz- and
+%all digits receive \verb-"70zz-, where \verb-"zz- is the 
+%hexadecimal position of the character in the font.
+%Thus, letters are initially from family~1
+%(math italic in plain \TeX), and digits are from family~0
+%(roman).
+%For all other characters, \IniTeX\ assigns
+%\begin{disp}\cs{mathcode}$\,x=x$,\end{disp}
+%thereby placing them also in family~0.
+In \IniTeX\ all letters receive \cs{mathcode} \verb-"71zz- and
+all digits receive \verb-"70zz-, where \verb-"zz- is the 
+hexadecimal position of the character in the font.
+Thus, letters are initially from family~1
+(math italic in plain \TeX), and digits are from family~0
+(roman).
+For all other characters, \IniTeX\ assigns
+\begin{disp}\cs{mathcode}$\,x=x$,\end{disp}
+thereby placing them also in family~0.
+
+%If the mathcode is \verb-"8000-,
+%\label{mcode:8000}the smallest integer that is
+%not a \gr{15-bit number}, the character is treated as an active
+%character with the original character code. Plain \TeX\
+%assigns a \cs{mathcode} of \verb-"8000- to the space, underscore and prime.
+If the mathcode is \verb-"8000-,
+\label{mcode:8000}the smallest integer that is
+not a \gr{15-bit number}, the character is treated as an active
+character with the original character code. Plain \TeX\
+assigns a \cs{mathcode} of \verb-"8000- to the space, underscore and prime.
+
+%\index{math characters|)}
+\index{math characters|)}
+
+%\section{Delimiters}
+%\index{delimiters|(}
+\section{Delimiters}
+\index{delimiters|(}
+
+%After \csidx{left} and \csidx{right}
+%commands \TeX\ looks for a delimiter. A~delimiter
+%is either an explicit \cs{delimiter} command (or a
+%macro abbreviation for it), or a character with a non-zero
+%delimiter code.
+After \csidx{left} and \csidx{right}
+commands \TeX\ looks for a delimiter. A~delimiter
+is either an explicit \cs{delimiter} command (or a
+macro abbreviation for it), or a character with a non-zero
+delimiter code.
+
+%The \cs{left} and \cs{right} commands
+%implicitly delimit a group, which is considered as a subformula.
+%Since the enclosed formula can
+%be arbitrarily large, the quest for the proper delimiter is
+%a complicated story of looking at variants in two different
+%fonts, linked chains of variants in a font, and building
+%extendable delimiters from repeatable pieces.
+The \cs{left} and \cs{right} commands
+implicitly delimit a group, which is considered as a subformula.
+Since the enclosed formula can
+be arbitrarily large, the quest for the proper delimiter is
+a complicated story of looking at variants in two different
+fonts, linked chains of variants in a font, and building
+extendable delimiters from repeatable pieces.
+
+%The fact that a group enclosed in \verb>\left...\right> is
+%treated as an independent subformula implies that a
+%sub- or superscript at the start of this formula is
+%not considered to belong to the delimiter. 
+%For example, \TeX\ acts as if 
+%\verb>\left(_2> is equivalent to \verb>\left({}_2>.
+%(A~subscript after a \cs{right} delimiter is positioned
+%with respect to that delimiter.)
+The fact that a group enclosed in \verb>\left...\right> is
+treated as an independent subformula implies that a
+sub- or superscript at the start of this formula is
+not considered to belong to the delimiter. 
+For example, \TeX\ acts as if 
+\verb>\left(_2> is equivalent to \verb>\left({}_2>.
+(A~subscript after a \cs{right} delimiter is positioned
+with respect to that delimiter.)
+
+%%\spoint[delcodes] Delimiter codes 
+%\subsection{Delimiter codes }
+%\label{delcodes}
+%\spoint[delcodes] Delimiter codes 
+\subsection{Delimiter codes }
+\label{delcodes}
+
+%To each character code there corresponds a 
+%\cstoidx delcode\par\indexterm{delimiter code},
+%assigned by
+%\begin{disp}\cs{delcode}\gr{8-bit number}\gr{equals}%
+%          \gr{24-bit number}\end{disp}
+%A delimiter code thus consists of six hexadecimal digits
+%\verb-"uvvxyy-, where
+%\begin{disp}
+%\n{uvv} is the small variant of the delimiter, and\nl
+%\n{xyy} is the large variant;\nl
+%\n u, \n x are the font families of the variants, and\nl
+%\n{vv}, \n{yy} are the locations in those fonts.\end{disp}
+%Delimiter codes are used after \cs{left} and \cs{right}
+%commands.
+%\IniTeX\ sets all delimiter codes to~$-1$,
+%except\label{ini:del}
+%\verb-\delcode`.=0-, which makes the period an empty delimiter.
+%In plain \TeX\ delimiters have typically \n{u}${}=2$ and~\n{x}${}=3$,
+%that is, first family~2 is tried, and if no big
+%enough delimiter turns up family~3 is tried.
+To each character code there corresponds a 
+\cstoidx delcode\par\indexterm{delimiter code},
+assigned by
+\begin{disp}\cs{delcode}\gr{8-bit number}\gr{equals}%
+          \gr{24-bit number}\end{disp}
+A delimiter code thus consists of six hexadecimal digits
+\verb-"uvvxyy-, where
+\begin{disp}
+\n{uvv} is the small variant of the delimiter, and\nl
+\n{xyy} is the large variant;\nl
+\n u, \n x are the font families of the variants, and\nl
+\n{vv}, \n{yy} are the locations in those fonts.\end{disp}
+Delimiter codes are used after \cs{left} and \cs{right}
+commands.
+\IniTeX\ sets all delimiter codes to~$-1$,
+except\label{ini:del}
+\verb-\delcode`.=0-, which makes the period an empty delimiter.
+In plain \TeX\ delimiters have typically \n{u}${}=2$ and~\n{x}${}=3$,
+that is, first family~2 is tried, and if no big
+enough delimiter turns up family~3 is tried.
+
+
+%%\spoint Explicit \cs{delimiter} commands
+%\subsection{Explicit \cs{delimiter} commands}
+%\spoint Explicit \cs{delimiter} commands
+\subsection{Explicit \cs{delimiter} commands}
+
+%Delimiters can also be denoted 
+%\cstoidx delimiter\par
+%explicitly by a \gr{27-bit number},
+%\begin{verbatim}
+%\delimiter"tuvvxyy
+%\end{verbatim}
+%where \n{uvvxyy} are the small and large variant of the
+%delimiter as above;
+%the extra digit \n{t} (which is~$<8$) denotes the class
+%(see page~\pageref{math:class}).
+%For instance, the \cs{langle} macro is defined as
+%\begin{verbatim}
+%\def\langle{\delimiter "426830A }
+%\end{verbatim}
+%which means it belongs to class~4, opening. Similarly,
+%\cs{rangle} is of class~5, closing; and \cs{uparrow} is of class~3,
+%relation.
+Delimiters can also be denoted 
+\cstoidx delimiter\par
+explicitly by a \gr{27-bit number},
+\begin{verbatim}
+\delimiter"tuvvxyy
+\end{verbatim}
+where \n{uvvxyy} are the small and large variant of the
+delimiter as above;
+the extra digit \n{t} (which is~$<8$) denotes the class
+(see page~\pageref{math:class}).
+For instance, the \cs{langle} macro is defined as
+\begin{verbatim}
+\def\langle{\delimiter "426830A }
+\end{verbatim}
+which means it belongs to class~4, opening. Similarly,
+\cs{rangle} is of class~5, closing; and \cs{uparrow} is of class~3,
+relation.
+
+%After \cs{left} and \cs{right} \ldash that is, when \TeX\
+%is looking for a delimiter \rdash  the class digit is ignored;
+%otherwise \ldash when \TeX\ is not looking for a delimiter \rdash 
+%the rightmost three digits are ignored, and the
+%four remaining digits are treated as a~\cs{mathchar}; see above.
+After \cs{left} and \cs{right} \ldash that is, when \TeX\
+is looking for a delimiter \rdash  the class digit is ignored;
+otherwise \ldash when \TeX\ is not looking for a delimiter \rdash 
+the rightmost three digits are ignored, and the
+four remaining digits are treated as a~\cs{mathchar}; see above.
+
+%%\spoint[successor] Finding a delimiter; successors
+%\subsection{Finding a delimiter; successors}
+%\label{successor}
+%\index{delimiter!size|(}
+%\spoint[successor] Finding a delimiter; successors
+\subsection{Finding a delimiter; successors}
+\label{successor}
+\index{delimiter!size|(}
+
+%Typesetting a delimiter is a somewhat involved affair.
+%First \TeX\ determines the size $y$ of the formula to be covered,
+%which is twice the maximum of the height and depth of the
+%formula. Thus the formula may not look optimal if
+%it is not centred itself.
+Typesetting a delimiter is a somewhat involved affair.
+First \TeX\ determines the size $y$ of the formula to be covered,
+which is twice the maximum of the height and depth of the
+formula. Thus the formula may not look optimal if
+it is not centred itself.
+
+%The size of the delimiter should be at least 
+%\csidx{delimiterfactor}${}\times y/1000$ and at least 
+%$y-{}$\csidx{delimitershortfall}.
+%\TeX\ then tries first the small variant, and if that one
+%is not satisfactory (or if the \n{uvv} part of the delimiter
+%is~\n{000}) it tries the large variant. If trying the large variant
+%does not meet with success, \TeX\ takes the largest delimiter
+%encountered in this search; if no delimiter at all was found
+%(which can happen if  the \n{xyy} part is
+%\altt
+%also~\n{000}),
+%an empty box of width~\csidx{nulldelimiterspace} is taken.
+The size of the delimiter should be at least 
+\csidx{delimiterfactor}${}\times y/1000$ and at least 
+$y-{}$\csidx{delimitershortfall}.
+\TeX\ then tries first the small variant, and if that one
+is not satisfactory (or if the \n{uvv} part of the delimiter
+is~\n{000}) it tries the large variant. If trying the large variant
+does not meet with success, \TeX\ takes the largest delimiter
+encountered in this search; if no delimiter at all was found
+(which can happen if  the \n{xyy} part is
+\altt
+also~\n{000}),
+an empty box of width~\csidx{nulldelimiterspace} is taken.
+
+%Investigating a variant means, in sequence,
+%\begin{itemize}
+%\item if the current style (see page~\pageref{math:styles}) is
+%  scriptscriptstyle, the \cs{scriptscriptfont} of the family is tried;
+%\item if the current style is scriptstyle or smaller, the
+%  \cs{scriptfont} of the family is tried;
+%\item otherwise the \cs{textfont} of the family is tried.
+%\end{itemize}
+%The plain format puts the \verb-cmex10- font  in all three
+%styles of family~3.
+Investigating a variant means, in sequence,
+\begin{itemize}
+\item if the current style (see page~\pageref{math:styles}) is
+  scriptscriptstyle, the \cs{scriptscriptfont} of the family is tried;
+\item if the current style is scriptstyle or smaller, the
+  \cs{scriptfont} of the family is tried;
+\item otherwise the \cs{textfont} of the family is tried.
+\end{itemize}
+The plain format puts the \verb-cmex10- font  in all three
+styles of family~3.
+
+%Looking for a delimiter at a certain position in a certain font
+%means
+%\begin{itemize}
+%\item if the character is large enough, accept it;
+%\item if the character is
+%  \emph{extendable}\index{character!extendable}, accept it;
+%\item otherwise, if the character has a \indexterm{successor}, that
+%  is, it is part of a chain of increasingly bigger delimiters in the
+%  same font, try the successor.
+%\end{itemize}
+%Information about
+%successors and extensibility of a delimiter is coded in the font
+%metric file of the font.  An extendable character has a top, a bottom,
+%possibly a mid piece, and a piece which is repeated directly below the
+%top piece, and directly above the bottom piece if there is a mid
+%piece.
+Looking for a delimiter at a certain position in a certain font
+means
+\begin{itemize}
+\item if the character is large enough, accept it;
+\item if the character is
+  \emph{extendable}\index{character!extendable}, accept it;
+\item otherwise, if the character has a \indexterm{successor}, that
+  is, it is part of a chain of increasingly bigger delimiters in the
+  same font, try the successor.
+\end{itemize}
+Information about
+successors and extensibility of a delimiter is coded in the font
+metric file of the font.  An extendable character has a top, a bottom,
+possibly a mid piece, and a piece which is repeated directly below the
+top piece, and directly above the bottom piece if there is a mid
+piece.
+
+%\index{delimiter!size|)}
+\index{delimiter!size|)}
+
+%\subsection{\cs{big}, \cs{Big}, \cs{bigg}, and \cs{Bigg}
+%delimiter macros}
+\subsection{\cs{big}, \cs{Big}, \cs{bigg}, and \cs{Bigg}
+delimiter macros}
+
+%In order to be able to use a delimiter outside the 
+%\verb-\left...\right- context, or to specify a delimiter of
+%a different size than \TeX\ would have chosen,
+%four macros for `big' delimiters exist: \cs{big},
+%\cs{Big}, \cs{bigg}, and \cs{Bigg}. These can be used with
+%anything that can follow \cs{left} or \cs{right}.
+In order to be able to use a delimiter outside the 
+\verb-\left...\right- context, or to specify a delimiter of
+a different size than \TeX\ would have chosen,
+four macros for `big' delimiters exist: \cs{big},
+\cs{Big}, \cs{bigg}, and \cs{Bigg}. These can be used with
+anything that can follow \cs{left} or \cs{right}.
+
+%Twelve further macros (for instance \cs{bigl}, \cs{bigm},
+%\cstoidx big \rm etc.\par
+%%\csterm big \Style:roman etc.\par
+%and~\cs{bigr}) force such delimiters in the context of
+%an opening symbol, a binary relation, and a closing symbol
+%respectively:
+%\begin{verbatim}
+%\def\bigl{\mathopen\big}
+%\def\bigm{\mathrel\big} \def\bigr{\mathclose\big}
+%\end{verbatim}
+Twelve further macros (for instance \cs{bigl}, \cs{bigm},
+\cstoidx big \rm etc.\par
+%\csterm big \Style:roman etc.\par
+and~\cs{bigr}) force such delimiters in the context of
+an opening symbol, a binary relation, and a closing symbol
+respectively:
+\begin{verbatim}
+\def\bigl{\mathopen\big}
+\def\bigm{\mathrel\big} \def\bigr{\mathclose\big}
+\end{verbatim}
+
+%The `big' macros themselves put the requested delimiter and
+%a null delimiter around an empty vertical box:
+%\begin{verbatim}
+%\def\big#1{{\nulldelimiterspace=0pt \mathsurround=0pt
+%            \hbox{$\left#1\vbox to 8.5pt{}\right.$}}}
+%\end{verbatim}
+%As an approximate measure,
+%the \n{Big} delimiters are one and a half times as large (11.5pt) as
+%\n{big} delimiters; \n{bigg} ones are twice (14.5pt), and \n{Bigg}
+%ones are two and a half times as large (17.5pt).
+The `big' macros themselves put the requested delimiter and
+a null delimiter around an empty vertical box:
+\begin{verbatim}
+\def\big#1{{\nulldelimiterspace=0pt \mathsurround=0pt
+            \hbox{$\left#1\vbox to 8.5pt{}\right.$}}}
+\end{verbatim}
+As an approximate measure,
+the \n{Big} delimiters are one and a half times as large (11.5pt) as
+\n{big} delimiters; \n{bigg} ones are twice (14.5pt), and \n{Bigg}
+ones are two and a half times as large (17.5pt).
+
+%\index{delimiters|)}
+\index{delimiters|)}
+
+%\section{Radicals}
+\section{Radicals}
+
+%A \indexterm{radical} is a compound of a left delimiter and an overlined
+%math expression.
+%\cstoidx radical\par
+%The overlined expression is set in the
+%cramped version of the surrounding style
+%\alt
+%(see page~\pageref{math:styles}).
+A \indexterm{radical} is a compound of a left delimiter and an overlined
+math expression.
+\cstoidx radical\par
+The overlined expression is set in the
+cramped version of the surrounding style
+\alt
+(see page~\pageref{math:styles}).
+
+%In the plain format and the Computer Modern
+%math fonts there is only one radical: the square root
+%construct
+%\begin{verbatim}
+%\def\sqrt{\radical"270370 }
+%\end{verbatim}
+%The control sequence \cs{radical} is followed by a \gr{24-bit number}
+%which specifies a small and a large variant of the left delimiter
+%as was explained above. Joining the delimiter and the rule
+%is done by letting the delimiter have a large depth, and a height
+%which is equal to the desired rule thickness. The rule can then
+%be placed on the current baseline. After the delimiter and the
+%ruled expression have been joined the whole is shifted 
+%vertically to achieve the usual vertical centring 
+%(see Chapter~\ref{math}).
+In the plain format and the Computer Modern
+math fonts there is only one radical: the square root
+construct
+\begin{verbatim}
+\def\sqrt{\radical"270370 }
+\end{verbatim}
+The control sequence \cs{radical} is followed by a \gr{24-bit number}
+which specifies a small and a large variant of the left delimiter
+as was explained above. Joining the delimiter and the rule
+is done by letting the delimiter have a large depth, and a height
+which is equal to the desired rule thickness. The rule can then
+be placed on the current baseline. After the delimiter and the
+ruled expression have been joined the whole is shifted 
+vertically to achieve the usual vertical centring 
+(see Chapter~\ref{math}).
+
+%%\point Math accents
+%\section{Math accents}
+%\index{accents in math mode|(}
+%\point Math accents
+\section{Math accents}
+\index{accents in math mode|(}
+
+%Accents in math mode are specified by
+%\cstoidx mathaccent\par
+%\begin{disp}\cs{mathaccent}\gr{15-bit number}\gr{math field}\end{disp}
+%Representing the 15-bit number as \verb>"xyzz>,
+%only the family~\n{y} and the character position~\n{zz}
+%are used: an accented expression acts as \cs{mathord} expression
+%(see Chapter~\ref{math}).
+Accents in math mode are specified by
+\cstoidx mathaccent\par
+\begin{disp}\cs{mathaccent}\gr{15-bit number}\gr{math field}\end{disp}
+Representing the 15-bit number as \verb>"xyzz>,
+only the family~\n{y} and the character position~\n{zz}
+are used: an accented expression acts as \cs{mathord} expression
+(see Chapter~\ref{math}).
+
+%In math mode whole expressions can be accented,
+%\alt
+%whereas in text mode only characters can be accented.
+%Thus in math mode accents can be stacked. However, the top
+%accent may (or, more likely, will) not be properly positioned
+%horizontally. Therefore the plain format has a macro \csidx{skew}
+%that effectively shifts the top accent. Its definition is
+%\begin{verbatim}
+%\def\skew#1#2#3{{#2{#3\mkern#1mu}\mkern-#1mu}{}}
+%\end{verbatim}
+%and it is used for instance like
+%\begin{verbatim}
+%$\skew4\hat{\hat x}$
+%\end{verbatim}
+%\message{skew thing.}
+%%which gives~{\font\tmp=cmmi10 $\textfont\VMIfam=\tmp\skew4\hat{\hat x}$}.
+%which gives~{$\skew4\hat{\hat x}$}.
+In math mode whole expressions can be accented,
+\alt
+whereas in text mode only characters can be accented.
+Thus in math mode accents can be stacked. However, the top
+accent may (or, more likely, will) not be properly positioned
+horizontally. Therefore the plain format has a macro \csidx{skew}
+that effectively shifts the top accent. Its definition is
+\begin{verbatim}
+\def\skew#1#2#3{{#2{#3\mkern#1mu}\mkern-#1mu}{}}
+\end{verbatim}
+and it is used for instance like
+\begin{verbatim}
+$\skew4\hat{\hat x}$
+\end{verbatim}
+\message{skew thing.}
+%which gives~{\font\tmp=cmmi10 $\textfont\VMIfam=\tmp\skew4\hat{\hat x}$}.
+which gives~{$\skew4\hat{\hat x}$}.
+
+%For the correct positioning of accents over single characters
+%the symbol and extension font have a \csidx{skewchar}:
+%this is the largest accent that adds to the width of an
+%accented character. Positioning of any accent
+%is based on the width of the character to be accented,
+%followed by the skew character. 
+For the correct positioning of accents over single characters
+the symbol and extension font have a \csidx{skewchar}:
+this is the largest accent that adds to the width of an
+accented character. Positioning of any accent
+is based on the width of the character to be accented,
+followed by the skew character. 
+
+%The skew characters of the Computer Modern
+%math italic and symbol fonts are character \n{\hex7F},
+%\alt
+%`$\mathchar"7F$',\message{skew characters}
+%and \n{\hex30}, `$\mathchar"30$', respectively. The \csidx{defaultskewchar}
+%value is assigned to the \cs{skewchar} when a font is loaded.
+%In plain \TeX\ this is~\n{-1}, so fonts ordinarily have no
+%\cs{skewchar}.
+The skew characters of the Computer Modern
+math italic and symbol fonts are character \n{\hex7F},
+\alt
+`$\mathchar"7F$',\message{skew characters}
+and \n{\hex30}, `$\mathchar"30$', respectively. The \csidx{defaultskewchar}
+value is assigned to the \cs{skewchar} when a font is loaded.
+In plain \TeX\ this is~\n{-1}, so fonts ordinarily have no
+\cs{skewchar}.
+
+%Math accents can adapt themselves to the size of the accented
+%expression: \TeX\ will look for a successor of an accent
+%in the same way that it looks for a successor of a delimiter.
+%In the Computer Modern math fonts this mechanism is used in
+%\cstoidx widehat\par\cstoidx widetilde\par
+%the \cs{widehat} and \cs{widetilde} macros.
+%For example,
+%\begin{disp}\verb>\widehat x>, \verb>\widehat{xy}>, \verb>\widehat{xyz}>
+%\end{disp} give
+%\begin{disp}$\widehat x$, $\widehat{xy}$, $\widehat{xyz}$
+%\end{disp} respectively.
+Math accents can adapt themselves to the size of the accented
+expression: \TeX\ will look for a successor of an accent
+in the same way that it looks for a successor of a delimiter.
+In the Computer Modern math fonts this mechanism is used in
+\cstoidx widehat\par\cstoidx widetilde\par
+the \cs{widehat} and \cs{widetilde} macros.
+For example,
+\begin{disp}\verb>\widehat x>, \verb>\widehat{xy}>, \verb>\widehat{xyz}>
+\end{disp} give
+\begin{disp}$\widehat x$, $\widehat{xy}$, $\widehat{xyz}$
+\end{disp} respectively.
+
+%\index{accents in math mode|)}
+%\endofchapter
+\index{accents in math mode|)}
+\endofchapter
+
+\end{document}

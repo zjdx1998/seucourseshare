@@ -1,0 +1,145 @@
+% -*- coding: utf-8 -*-
+% Translated by Liam0205@bbs.ctex.org
+\documentclass[letterpaper]{book}
+
+\input{preamble}
+
+\begin{document}
+
+%\pagebreak
+%\mark{}
+%\addcontentsline{toc}{section}{Preface}
+%\paragraph*{\bf Preface}
+%To the casual observer, \TeX\
+%is not a state-of-the-art typesetting system.
+%No flashy multilevel menus and interactive manipulation
+%of text and graphics dazzle the onlooker.
+%On a less superficial level, however, \TeX\ is a very sophisticated
+%program, first of all because of the ingeniousness of its
+%built-in algorithms for such things as paragraph breaking
+%and make-up of mathematical formulas, and
+%second because of its almost complete programmability.
+%The combination of these factors makes it possible for \TeX\
+%to realize almost every imaginable layout in a highly automated
+%fashion.
+\chapter*{前言}
+\chaptermark{前言}
+\addcontentsline{toc}{chapter}{前言}
+
+对于偶然了解到 \TeX\ 的人来说，它并不是时下最先进的排版系统。
+它没有时髦的多级菜单，也没有对文本图片交互式的操作方式。
+然而，在更深层次，\TeX\ 是一个精致的程序：
+首先是因为，\TeX\ 内置的断行算法和数学公式排版算法十分精巧；
+其次是因为，它几乎是完备程序性的。
+这些因素使得 \TeX\ 可以高度自动化地实现几乎所有能想到的排版布局。
+
+%Unfortunately, it also means that \TeX\ has an
+%unusually large number of commands and parameters,
+%and that programming \TeX\ can be far from easy.
+%Anyone wanting to program in \TeX, and maybe
+%even the ordinary user, would seem to need two books:
+%a~tutorial that gives a first glimpse of the many
+%nuts and bolts of \TeX, and after that
+%a~systematic, complete reference manual.
+%This book tries to fulfil the latter function.
+%A~\TeX er who has already made a start
+%(using any of a number of introductory books
+%on the market)
+%should be able to use this book indefinitely thereafter.
+不幸的是，这也意味着 \TeX\ 有非常多的命令和参数；
+因此进行 \TeX\ 编程远谈不上简单。
+每一个想要进行 \TeX\ 编程的人，大概都得看两本书：
+一本新手引导，介绍 \TeX\ 的基本内容；
+以及一本系统而完全的手册。
+本书属于后者。
+入门后的 \TeX\ 用户（无论阅读了市面上多少本入门书）即可阅读本书。
+
+%In this volume the universe of \TeX\ is presented as
+%about forty different subjects, each in a separate
+%chapter.
+%Each chapter starts out with a list of control sequences
+%relevant to the topic of that chapter
+%and proceeds to treat the
+%theory of the topic.
+%Most chapters conclude with remarks and examples.
+本书将 \TeX\ 划分为大约 40 个主题，每个主题一章。
+在每章开头，本书会列出和当前章节有关的控制序列。
+大多数章节都有内容介绍和示例参考。
+
+%Globally, the chapters are ordered as follows.
+%The chapters on basic mechanisms are first,
+%the chapters on text treatment and mathematics are next,
+%and finally there are some
+%chapters on output and aspects of \TeX's connections to
+%the outside world.
+%%
+%The book also contains a glossary of \TeX\
+%commands, tables,
+%and indexes by example, by control sequence, and by subject.
+%The subject index refers for most concepts to
+%only one page, where most of the information
+%on that topic can be found, as well as references
+%to the locations of related information.
+大体上说，本书的结构如下。
+首先讲解基本机制，
+而后介绍有关文本和数学处理的内容，
+最后会有几章介绍 \TeX\ 与外界的联系。
+%
+借助示例、控制序列和主题，本书也包含了有关 \TeX\ 命令、表格、索引的术语表。
+根据主题，大多数概念可以索引至具体一页；
+在这一页上，读者能找到有关该主题的大部分内容，也能了解去何处查阅相关信息。
+
+%This book does not treat any specific \TeX\ macro package.
+%Any parts of the plain format that are treated are those
+%parts that belong to the `core' of plain \TeX: they
+%are also present in, for instance, \LaTeX.
+%Therefore, most remarks about the plain format
+%are true for \LaTeX, as well as most other formats.
+%Putting it differently,
+%if the text refers to the plain format, this should be taken
+%as a contrast to pure \IniTeX, not to \LaTeX.
+%By way of illustration, occasionally macros from plain \TeX\
+%are explained that do not belong to the core.
+本书没有涵盖任何具体的 \TeX\ 宏包。
+有关 plain\TeX\ 格式的内容，本书也只介绍其中最核心的部分：
+它们 \LaTeX\ 等格式的一部分。
+因此，大多数关于 plain\TeX\ 格式的内容对于 \LaTeX\ 和其他格式也仍然适用。
+特别地，如果文中明确指出相关段落是对 plain\TeX\ 的介绍，
+那么这些内容是有关纯 \IniTeX\ 的，而与 \LaTeX\ 无关。
+为方便讲述，本书偶尔也会介绍一些 plain\TeX\ 的非核心宏。
+
+%\medskip\noindent
+%{\bf Acknowledgment}\nl
+%I am indebted to Barbara Beeton, Karl Berry, and Nico Poppelier,
+%who read previous versions of this book. Their comments
+%helped to improve the presentation.
+%Also I~would like to thank the participants of
+%the discussion lists \TeX hax, \TeX-nl, and {\tt comp.text.tex}.
+%Their questions and answers gave me much food for thought.
+%Finally, any acknowledgement in a book about \TeX\ ought to
+%include Donald Knuth for inventing \TeX\ in the
+%first place. This book is no exception.
+\medskip\noindent
+{\bfseries 致谢}\nl
+承蒙 Barbara Beeton、Karl Berry 以及 Nico Poppelier 阅读本书初稿。
+在他们的帮助下，本书的陈述有所提高。
+同时感谢以下讨论列表中的参与者：\TeX hax、\TeX-nl 以及{\ttfamily comp.text.tex}。
+他们提出的问题和给出的回答给予我思考之食粮。
+最后，任何一本有关 \TeX\ 的书，都应向 \TeX\ 的发明者 Donald Knuth 致敬。本书也不例外。
+
+%\begin{flushright}
+% Victor Eijkhout\\
+% Urbana, Illinois, August 1991\\
+% Knoxville, Tennessee, May 2001\\
+% Austin, Texas, December 2013
+%\end{flushright}
+%\pagebreak
+%\normalheads
+\begin{flushright}
+ Victor Eijkhout\\
+ 厄巴纳, 伊利诺伊州, 1991 年 8 月\\
+ 诺克斯维尔, 田纳西州, 2001 年 5 月\\
+ 奥斯汀, 德克萨斯州, 2013 年 12 月
+\end{flushright}
+
+\end{document}

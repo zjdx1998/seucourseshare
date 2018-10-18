@@ -1,0 +1,2019 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{10}
+
+\begin{document}
+
+%\chapter{Macros}\label{macro}
+\chapter{宏定义}\label{macro}
+
+%Macros are \TeX's abbreviation mechanism for sequences of commands
+%that are needed more than once,
+%somewhat like procedures in ordinary programming languages.
+%\TeX's parameter mechanism, however, is quite unusual.
+%This chapter explains how \TeX\ macros work. It also
+%treats the commands \cs{let} and~\cs{futurelet}.
+在 \TeX\ 中，宏是对一串需要多次用到的命令的缩写机制，
+它有点像普通编程语言的过程。然而 \TeX\ 的参数机制是与众不同的。
+这一章解释 \TeX\ 的宏如何运作，并介绍命令\cs{let} 和 \cs{futurelet}。
+
+%\label{cschap:def}\label{cschap:gdef}\label{cschap:edef}\label{cschap:xdef}
+%\label{cschap:csname}\label{cschap:endcsname}\label{cschap:global2}
+%\label{cschap:outer}\label{cschap:long}\label{cschap:let}\label{cschap:futurelet}
+%\begin{inventory}
+%\item [\cs{def}] 
+%      Start a macro definition.
+\label{cschap:def}\label{cschap:gdef}\label{cschap:edef}\label{cschap:xdef}
+\label{cschap:csname}\label{cschap:endcsname}\label{cschap:global2}
+\label{cschap:outer}\label{cschap:long}\label{cschap:let}\label{cschap:futurelet}
+\begin{inventory}
+\item [\cs{def}] 
+      开始一个宏定义。
+
+%\item [\cs{gdef}] 
+%      Synonym for \verb-\global\def-.
+\item [\cs{gdef}] 
+      等同于 \verb-\global\def-。
+
+%\item [\cs{edef}] 
+%      Start a macro definition; 
+%      the replacement text is expanded at definition time.
+%      This command is treated also in the next chapter.
+\item [\cs{edef}] 
+      开始一个宏定义；在定义时替换文本被展开。此命令在下一章也会介绍。 
+
+%\item [\cs{xdef}] 
+%      Synonym for \verb-\global\edef-.
+\item [\cs{xdef}] 
+      等同于 \verb-\global\edef-。
+
+%\item [\cs{csname}] 
+%      Start forming the name of a control sequence.
+\item [\cs{csname}] 
+      开始生成一个控制序列的名称。
+
+%\item [\cs{endcsname}] 
+%      Stop forming the name of a control sequence.
+\item [\cs{endcsname}] 
+      结束生成一个控制序列的名称。
+
+%\item [\cs{global}] 
+%      Make the next definition, arithmetic statement,
+%      or assignment global.
+\item [\cs{global}] 
+      使得后面的定义、算术语句或赋值是全局的。
+
+%\item [\cs{outer}] 
+%      Prefix indicating that the macro being defined 
+%      can be used on the `outer' level only.
+\item [\cs{outer}] 
+      此前缀表示正在定义的宏只能用在`外部'层级中。
+
+%\item [\cs{long}] 
+%      Prefix indicating that the arguments of the macro being defined
+%      may contain \cs{par} tokens.
+\item [\cs{long}] 
+      此前缀表示正在定义的宏的参量可以包含 \cs{par} 记号。
+
+%\item [\cs{let}] 
+%      Define a control sequence to be equivalent to the next token.
+\item [\cs{let}] 
+      将一个控制序列定义为等价于下一个记号。
+
+%\item [\cs{futurelet}] 
+%      Define a control sequence to be equivalent to
+%      the token after the next token.
+\item [\cs{futurelet}] 
+      将一个控制序列定义为等价于下一个记号之后的记号。
+
+%\end{inventory}
+\end{inventory}
+
+%\section{Introduction}
+\section{介绍}
+
+%A \indexterm{macro}
+%is basically a sequence of tokens that has
+%been abbreviated into a control sequence.
+%Statements starting with (among others) \cs{def}
+%are called {\italic macro definitions}\alt, and
+%writing
+%\begin{verbatim}
+%\def\abc{\de f\g}
+%\end{verbatim}
+%defines the macro \cs{abc},
+%with the {\italic replacement text\/} \verb>\de f\g>.
+%Macros can be used in this way to abbreviate
+%pieces of text or sequences of commands
+%that have to be given more than once.
+%Any time that \TeX's expansion processor
+%encounters the control sequence \cs{abc},
+%it replaces it by the replacement text.
+基本上\indexterm{宏}是缩写为一个控制序列的一串记号。
+以 \cs{def} 等开始的语句称为{\italic 宏定义}，而语句
+\begin{verbatim}
+\def\abc{\de f\g}
+\end{verbatim}
+就定义了以 \verb>\de f\g> 为{\italic 替换文本\/}的宏 \cs{abc}。
+以这种方式，宏可以用于缩写需要多次用到的一段文本或一串命令。
+在任何时候，只要 \TeX\ 的展开处理器遇到控制序列 \cs{abc}，
+它就将这个宏用其替换文本代替。
+
+%If a macro should be sensitive to the context
+%where it is used, it can be defined with parameters.
+%A~macro \verb+\PickTwo+ defined as
+%\begin{verbatim}
+%\def\PickTwo#1#2{(#1,#2)}
+%\end{verbatim}
+%has two \emph{parameters}. When it is used, it will scoop up two pieces of
+%text, the corresponding \emph{arguments},
+%and reproduces them in parentheses.
+%For example:
+如果想让宏依赖它被用到时的上下文，就可以将它定义为带参数的宏。
+像下面这样定义的 \verb+\PickTwo+
+\begin{verbatim}
+\def\PickTwo#1#2{(#1,#2)}
+\end{verbatim}
+有两个\emph{参数}。这个宏被用到时将取出两段文本，即对应的\emph{参量}，
+并将它们排印在圆括号中。例如：
+
+%\begin{tabular}{|l|llllll|}
+%\hline
+%          &macro              &argument1& argument2& 
+%    &expansion&\\ \hline
+%definition&\verb+\def\PickTwo+&\verb+#1+& \verb+#2+& \verb+{+& 
+%    \verb+(#1,#2)+& \verb+}+\\
+%use&       \verb+\PickTwo+&1&2&&(1,2)&\\
+%use&       \verb+\PickTwo+&\verb+{ab}+&\verb+{cd}+&&(ab,cd)&\\
+%\hline
+%\end{tabular}
+\begin{tabular}{|l|llllll|}
+\hline
+          &macro              &argument1& argument2& 
+    &expansion&\\ \hline
+definition&\verb+\def\PickTwo+&\verb+#1+& \verb+#2+& \verb+{+& 
+    \verb+(#1,#2)+& \verb+}+\\
+use&       \verb+\PickTwo+&1&2&&(1,2)&\\
+use&       \verb+\PickTwo+&\verb+{ab}+&\verb+{cd}+&&(ab,cd)&\\
+\hline
+\end{tabular}
+
+%The activity of substituting the replacement text
+%for a macro and its arguments is called {\italic macro expansion}.
+将宏及其参量用替换文本代替的活动称为{\italic 宏展开}。
+
+%%\point Layout of a macro definition
+%\section{Layout of a macro definition}
+%\point Layout of a macro definition
+\section{宏定义的结构}
+
+%A \indextermsub{macro}{definition} consists of, in sequence,
+%\begin{enumerate} \item any number of \cs{global},
+%\cs{long}, and \cs{outer} prefixes,
+%\item a \gr{def} control sequence, or anything
+%that has been \cs{let} to one,
+%\item a control sequence or active character to be defined, 
+%\item possibly a \gr{parameter text} specifying among other things
+%how many parameters the macro has, and
+%\item a replacement text enclosed in explicit character tokens
+%with category codes 1\index{category!1} and~2\index{category!2},
+%by default \verb-{- and~\verb-}-
+%in plain \TeX.
+%\end{enumerate}
+%These elements will all be explained in subsequent sections.
+一个\indextermsub{宏}{定义}按照顺序包含下列各部分：
+\begin{enumerate}
+\item 任意多个 \cs{global}、\cs{long} 和 \cs{outer} 前缀，
+\item 一个 \gr{def} 控制序列，或者任何用 \cs{let} 等价到此种控制序列的东西，
+\item 一个将要定义的控制序列或活动字符，
+\item 一个可能存在的 \gr{parameter text} 用于指定宏参数的个数及其他东西，以及
+\item 一个用类别码为 1\index{category!1} 和\index{category!2} 2
+的显式字符记号包围的替换文本，在 plain \TeX\ 中这两类字符默认为
+\verb-{- 和 \verb-}-。
+\end{enumerate}
+这些元素将在接下来各节中解释。
+
+%After a macro definition is completed, any saved \cs{afterassignment}
+%token (see section~\ref{sec:afterassignment}) is inserted.
+在宏定义完成之后，任何已保存的 \cs{afterassignment} 记号（见
+第~\ref{sec:afterassignment}~节）将被插入进来。
+
+%The `expanding' definitions \cs{edef} and \cs{xdef}
+%are treated in Chapter~\ref{expand}.
+`展开的'定义 \cs{edef} 和 \cs{xdef} 将在第~\ref{expand}~章讨论。
+
+%%\point Prefixes
+%\section{Prefixes}
+%\point Prefixes
+\section{前缀}
+
+%There are three \emph{prefixes}\index{prefixes !macro}
+%that alter the status of the
+%macro definition:
+%\begin{description}
+%\item [\csidx{global}]
+%If the definition occurs inside a  group, this prefix
+%makes the definition global.
+%This prefix can also be used for assignments other than
+%macro definitions; in fact,
+%for macro definitions abbreviations exist obviating the
+%use of \cs{global}:
+%\begin{disp}\verb>\gdef\foo...>\quad is equivalent to\quad \verb>\global\def\foo...>
+%\end{disp} and
+%\begin{disp}\verb>\xdef\foo...>\quad is equivalent to\quad \verb>\global\edef\foo...>
+%\end{disp}
+有三种\emph{前缀}\index{prefixes !macro}用于改变宏定义的状态：
+\begin{description}
+\item [\csidx{global}]
+如果定义出现在编组内，此前缀将使得该定义成为全局的。
+除了宏定义之外，此前缀还能用于赋值；实际上，对于宏定义，
+可以用缩写形式而不用 \cs{global}：
+\begin{disp}\verb>\gdef\foo...>\quad 等价于\quad \verb>\global\def\foo...>
+\end{disp} 而
+\begin{disp}\verb>\xdef\foo...>\quad 等价于\quad \verb>\global\edef\foo...>
+\end{disp}
+
+%If the parameter \cs{globaldefs}
+%is positive, all assignments are
+%implicitly global;
+%if\handbreak \cs{globaldefs} is negative any \cs{global} prefixes are
+%ignored,
+%and \cs{gdef} and \cs{xdef} make local definitions
+%(see Chapter~\ref{group}).
+如果参数 \cs{globaldefs} 为正数，所有赋值都被视为全局的；
+而如果 \cs{globaldefs} 为负数，所有 \cs{global} 前缀都被忽略，
+而且 \cs{gdef} 和 \cs{xdef} 也生成局部的定义（见第~\ref{group}~章）。
+
+%\item [\cs{outer}]
+%The mechanism of defining an \indextermbus{outer}{macro} is supposed to facilitate
+%\cstoidx outer\par
+%locating (among other errors) unbalanced braces: an \cs{outer}
+%macro is supposed
+%to  appear only in non-embedded contexts.
+%To be precise, it is not allowed to occur 
+%\begin{itemize}
+%\item in macro replacement texts (but it can appear in
+%    for instance \cs{edef} after 
+%    \cs{noexpand}, and after \cs{meaning}),
+%\item in parameter texts,
+%\item in skipped conditional text,
+%\item in alignment preambles, and
+%\item in the \gram{balanced text} of a \cs{message}, \cs{write},
+%et cetera. \end{itemize}
+%For certain applications, however, it is inconvenient
+%that some of the plain macros  are outer, 
+%in particular macros such as \cs{newskip}. One remedy is to
+%redefine them, without the `outer' option, which
+%is done for instance in \LaTeX, but  cleverer tricks are possible.
+\item [\cs{outer}]
+\emph{外部宏}\index{宏!外部的}的定义机制用于帮助%
+\cstoidx outer\par
+定位未配对花括号（及其他错误）：\cs{outer} 宏只能出现在非嵌入语境中。
+更准确地说，它不可以出现
+\begin{itemize}
+\item 在宏的替换文本中（但如果将它放在 \cs{noexpand} 或 \cs{meaning} 之后，
+就可以出现在 \cs{edef} 的替换文本中），
+\item 在参数文本中，
+\item 在跳过的条件文本中，
+\item 在阵列的导言中，以及
+\item 在 \cs{message}、\cs{write} 等的 \gram{balanced text} 中。
+\end{itemize}
+然而，在特定应用中某些 plain 宏是外部的很不方便，
+特别是像 \cs{newskip} 这样的宏。有个补救方法是将它们重新定义为非外部的宏，
+这正是 \LaTeX\ 所做的，但还有更巧妙的做法。
+
+%\item [\cs{long}]
+%Ordinarily, macro parameters are not supposed to contain
+%\cstoidx long\par
+%\cs{par} tokens. This restriction is useful (much more so
+%than the \cs{outer} definitions) in locating
+%forgotten closing braces. 
+%For example, \TeX\ will complain about a `runaway argument'
+%\message{Example on}
+%in the following sequence:
+%\begin{verbatim}
+%\def\a#1{ ... #1 ... }
+%\a {This sentence should be in braces.
+
+%And this is not supposed to be part of the argument
+%\end{verbatim}
+%\message{one page}
+%The empty line generates a \cs{par}, which most of the times
+%means that a closing brace has been forgotten.
+\item [\cs{long}]
+宏的参量通常不允许包含 \cstoidx long\par\cs{par} 记号。
+这个限制在定位遗漏的右括号时很有用（比 \cs{outer} 定义有用得多）。
+例如，对于下面的输入 \TeX\ 将抱怨`runaway argument'：
+\message{Example on}
+\begin{verbatim}
+\def\a#1{ ... #1 ... }
+\a {This sentence should be in braces.
+
+And this is not supposed to be part of the argument
+\end{verbatim}
+\message{one page}
+其中的空行生成一个 \cs{par}，这在多数时候意味着有个右花括号漏掉了。
+
+%If arguments to a particular macro should be allowed
+%to contain \cs{par} tokens,  then the macro must be declared
+%to be \cs{long}. \end{description}
+如果某个宏允许其参量包含 \cs{par} 记号，则这个宏应当定义为 \cs{long} 宏。
+\end{description}
+
+%The \cs{ifx} test for equality of tokens 
+%(see Chapter~\ref{if}) takes prefixes into
+%account when testing whether two tokens have the same definition.
+在测试两个记号是否相等时（见第~\ref{if}~章），\cs{ifx} 也会将前缀考虑在内。
+
+%\begin{comment}
+%With a little ingenuity it is possible 
+%for \cs{par} tokens to sneak into macro arguments anyway.
+%Consider the example
+%\begin{verbatim}
+%\def\a#1\par!{ ... }
+%\a bc\par ef\par!
+%\end{verbatim}
+%Here the macro \cs{a} is not \cs{long}, but the argument
+%is \verb>bc\par ef>, which contains a \cs{par} token.
+%However,
+%this is of no importance in general.
+%\end{comment}
+\begin{comment}
+With a little ingenuity it is possible 
+for \cs{par} tokens to sneak into macro arguments anyway.
+Consider the example
+\begin{verbatim}
+\def\a#1\par!{ ... }
+\a bc\par ef\par!
+\end{verbatim}
+Here the macro \cs{a} is not \cs{long}, but the argument
+is \verb>bc\par ef>, which contains a \cs{par} token.
+However,
+this is of no importance in general.
+\end{comment}
+
+%%\point The definition type
+%\section{The definition type}
+%\point The definition type
+\section{定义的类型}
+
+%There are four \gr{def} control sequences in \TeX:
+%\csidx{def}, \csidx{gdef}, \csidx{edef}, and \csidx{xdef}.
+%The control sequence 
+%\alt
+%\cs{gdef} is a synonym for \verb>\global\def> and
+%\cs{xdef} is a synonym for \verb>\global\edef>.
+%The `expanding definition' \cs{edef} is treated in 
+%Chapter~\ref{expand}.
+在 \TeX\ 中有四种 \gr{def} 控制序列：
+\csidx{def}、\csidx{gdef}、\csidx{edef} 和 \csidx{xdef}。
+其中
+\cs{gdef} 是 \verb>\global\def> 的同义词，而
+\cs{xdef} 是 \verb>\global\edef> 的同义词。
+而`展开的定义' \cs{edef} 在第~\ref{expand}~章中介绍。
+
+%The difference between the various types of macro definitions
+%is only relevant at the time of the definition.
+%When a macro is called there is no way of telling how
+%it was defined.
+各种宏定义仅在定义时有区别。在宏被调用时是无法知道它们是如何定义的。
+
+%%\point[param:text] The parameter text
+%\section{The parameter text}
+%\label{param:text}
+%\point[param:text] The parameter text
+\section{参数文本}
+\label{param:text}
+
+%Between the control sequence or active character to be defined
+%and the opening brace of the replacement text, a \gr{parameter
+%text} can occur, somewhat corresponding to \indexterm{arguments}
+%in regular programming languages. This specifies whether the macro has 
+%parameters\index{parameter},
+%how many, and how they are delimited. 
+%The \gr{parameter text} cannot contain
+%explicit braces.
+在所定义的控制序列或活动字符以及替换文本的左花括号之间，
+可以有\gr{parameter text}，参数文本有点像普通编程语言的\indexterm{参量}。
+它指定这个宏是否有\indexterm{参数}，有多少个参数，以及各参数之间如何定界。
+\gr{parameter text} 不能包含显式花括号。
+
+%A macro can have at most nine parameters. 
+%A~parameter is indicated by a parameter token,
+%consisting of a macro parameter character
+%(that is, a character of category code~6\index{category!6},
+%in plain \TeX~\verb=#=) 
+%followed by a digit~\n1--\n9. 
+%For instance, \verb>#6>~denotes the sixth parameter of a macro.
+%Parameter tokens cannot appear outside the context
+%of a macro definition.
+一个宏最多可以有九个参数。参数用参数记号表示，参数记号由宏参数字符%
+（即类别码为~6\index{category!6} 的字符，在 plain \TeX\ 中为 \verb=#=）% 
+后跟一个 \n1--\n9 的数字组成。举个例子，\verb>#6> 表示宏的第六个参数。
+参数记号不能出现在宏定义之外的其他地方。
+
+%In the parameter text,
+%parameters must be numbered consecutively, starting at~1.
+%A~space after a parameter token is significant,
+%both in the parameter text and the replacement text.
+在参数文本中，参数必须从~1~开始顺序编号。
+参数记号后的空格是有意义的，不管是在参数文本还是在替换文本中。
+
+%Parameters can be delimited or undelimited; this determines what the
+%extent of the macro arguments will be. A~parameter
+%is called undelimited if it is followed immediately
+%by another parameter in the \gr{parameter text}, so in
+%\verb+\def\foo#1#2+ the first parameter is undelimited.
+%A~parameter is also undelimited if it is immediately followed
+%by the opening brace of the replacement text, as in \verb+\def\foo#1{...}+.
+%A~parameter is called delimited if it is followed by any other token; 
+%in \verb+\def\foo#1!#2{...}+ the first parameter is delimited by the
+%exclamation sign.
+参数分为定界参数和非定界参数；它决定宏参量的范围。
+如果在 \gr{parameter text} 中一个参数后面紧跟着另一个参数，就像
+\verb+\def\foo#1#2+ 这样，则前面的参数就是非定界的。
+如果一个参数后面紧跟着替换文本的左花括号，就像
+\verb+\def\foo#1{...}+ 这样，则它也是非定界的。
+一个参数称为定界的，如果它后面紧跟着其他记号；
+比如 \verb+\def\foo#1!#2{...}+ 的第一个参数就是被感叹号定界的参数。
+
+%The tokens (zero or more) that are substituted for
+%a parameter when a macro is expanded (or `called')
+%are called
+%the `argument' corresponding to that parameter.
+在宏展开（或`调用'）时，
+用于替换参数的（零个或多个）记号称为该参数对应的`参量'。
+
+%%\spoint Undelimited parameters
+%\subsection{Undelimited parameters}
+%\spoint Undelimited parameters
+\subsection{非定界参数}
+
+%When a macro with an \indextermbus{undelimited}{parameter}, for instance
+%a macro \cs{foo} with one parameter
+%\begin{verbatim}
+%\def\foo#1{ ... #1 ...}
+%\end{verbatim}
+%is expanded, \TeX\ scans ahead (without expanding)
+%until a non-blank token is found.
+%If this token is not an explicit \gr{left brace}, 
+%it is taken to be the argument
+%corresponding to the parameter. Otherwise a \gr{balanced text}
+%is absorbed by scanning until the matching explicit
+%\gr{right brace} has been found.
+%This balanced text then
+%constitutes the argument.
+在带有\indextermbus{非定界}{参数}的宏，比如单参数宏 \cs{foo}
+\begin{verbatim}
+\def\foo#1{ ... #1 ...}
+\end{verbatim}
+被展开时，\TeX\ 往前扫描（但不展开）直到遇到一个非空格记号。
+如果这个记号不是显式 \gr{left brace}，它就被取为对应于该参数的参量。
+否则，通过扫描直到找到匹配的显式 \gr{right brace}，
+\TeX\ 得到一个 \gr{balanced text}。这个平衡文本就要找的参量。
+
+%An example with three undelimited parameters follows: with
+%\begin{verbatim}
+%\def\foo#1#2#3{#1(#2)#3}
+%\end{verbatim}
+%the macro call \cs{foo123} gives `\hbox{1(2)3}';
+%but \hbox{\verb-\foo 1 2 3-} also gives the same result.
+%In the call
+%\begin{disp}\cs{foo}\n{\char32 1\char32 2\char 32 3}\end{disp}
+%the first space is skipped in the input processor of \TeX.
+%The argument corresponding to the first parameter is then
+%the~\n1. In order to find the second parameter \TeX\ then
+%skips all blanks, in this case exactly one. As second
+%parameter \TeX\ finds then the~\n2. Similarly the third
+%parameter is~\n3.
+这里是个带有三个非定界参数的宏的例子：对于
+\begin{verbatim}
+\def\foo#1#2#3{#1(#2)#3}
+\end{verbatim}
+宏调用 \cs{foo123} 给出 `\hbox{1(2)3}'；
+而 \hbox{\verb-\foo 1 2 3-} 给出同样的结果。在调用
+\begin{disp}\cs{foo}\n{\char32 1\char32 2\char 32 3}\end{disp}
+中，第一个空格被 \TeX\ 的输入处理器跳过。
+从而对应于第一个参数的参量是~\n1。为找到第二个参量，
+\TeX\ 跳过所有空格（在此例子中跳过一个空格），
+最后找到的第二个参量是~\n2。类似的第三个参量是~\n3。
+
+
+%In order to pass several tokens as one undelimited argument
+%one can use braces. With the above definition of \cs{foo}
+%the call \verb>\foo a{bc}d> gives `\hbox{a(bc)d}'.
+%When the argument of a macro is a balanced text instead of
+%a single token, the delimiting braces are not inserted when 
+%the argument is
+%inserted in the replacement text.
+%For example:
+%\begin{verbatim}
+%\def\foo#1{\count0=1#1\relax}
+%\foo{23}
+%\end{verbatim}
+%will expand to \verb>\count0=123\relax>,
+%which assigns the value of 123 to the counter.
+%On the other hand,  the statement
+%\begin{verbatim}
+%\count0=1{23}
+%\end{verbatim}
+%would
+%assign~1 and print~23.
+为了将多个记号作为一个非定界参量，你可以使用花括号。
+对于上述的 \cs{foo} 定义，调用 \verb>\foo a{bc}d> 将给出 `\hbox{a(bc)d}'。
+当宏的参量是平衡文本而非单个记号时，
+在将参量插入替换文本时定界花括号会被去掉。例如：
+\begin{verbatim}
+\def\foo#1{\count0=1#1\relax}
+\foo{23}
+\end{verbatim}
+将展开为 \verb>\count0=123\relax>，这将对计数器赋值 123。
+另一方面，下面语句
+\begin{verbatim}
+\count0=1{23}
+\end{verbatim}
+将赋值 1 并排印~23。
+
+%%\spoint Delimited parameters
+%\subsection{Delimited parameters}
+%\spoint Delimited parameters
+\subsection{定界参数}
+
+%Apart from enclosing it in braces there is another way
+%to pass a sequence of tokens as a single argument to a macro,
+%namely by using a \indextermbus{delimited}{parameter}.
+除了将它们括在花括号里面，还有另一种方式可将一串记号作为宏的一个参量，
+即使用\indextermbus{定界的}{参数}。
+
+%Any non-parameter tokens in the \gr{parameter text} occurring
+%after a macro parameter (that is, after the parameter number
+%following the parameter character)
+%act as a delimiter for that parameter. This includes space tokens:
+%a space after a parameter number is significant.
+%Delimiting tokens can also occur between the control
+%sequence being defined and the first parameter token~\verb>#1>.
+在 \gr{parameter text} 中，出现在宏参数之后%
+（即在紧跟参数字符的参数编号之后）的非参数记号被当作该参数的定界子。
+定界子可以包含空格记号：参数编号之后的空格是有意义的。
+定界记号同样出现在所定义的控制序列和它的第一个参数记号 \verb>#1> 之间。
+
+%Character tokens acting as delimiters in the parameter text
+%have both their character code and
+%category code stored; the delimiting character tokens of the
+%actual arguments have to match both.
+%Category codes of such characters may include some that
+%can normally only appear in special contexts; for instance, after
+%the definition
+%\begin{verbatim}
+%\def\foo#1_#2^{...}
+%\end{verbatim}
+%the macro \cs{foo}
+%can be used outside math mode.
+对于在参数文本中充当定界子的字符记号，它们的字符码和类别码都被存储下来；
+实际参量的定界字符记号必须和两者都匹配。
+这些字符可以拥有一些通常只出现在特殊环境中的类别码；比如，在定义
+\begin{verbatim}
+\def\foo#1_#2^{...}
+\end{verbatim}
+之后，宏 \cs{foo} 可以在数学模式之外使用。
+
+%When looking for the argument corresponding to
+%a delimited parameter, \TeX\ absorbs all tokens without expansion (but
+%balancing braces) until the 
+%(exact sequence of) delimiting tokens is encountered.
+%The delimiting tokens are not part of the argument;
+%they are removed from the input stream during the macro call.
+在寻找对应于一个定界参数的参量时，
+\TeX\ 吸收所有记号而不展开它们（但保持花括号配对），
+直到遇到（完全一致的）定界记号串。
+定界记号串不是参量的一部分；在宏调用时它们被从输入流中移除。
+
+%%\spoint Examples with delimited arguments
+%\subsection{Examples with delimited arguments}
+%\spoint Examples with delimited arguments
+\subsection{定界参量举例}
+
+%As a simple example,
+%\begin{verbatim}
+%\def\DoASentence#1#2.{{#1#2.}}
+%\end{verbatim}
+%defines a macro with an undelimited first parameter,
+%and a second parameter delimited by a period.
+%In the call
+%\begin{verbatim}
+%\DoASentence \bf This sentence is the argument.
+%\end{verbatim}
+%the arguments are:
+%\begin{verbatim}
+%#1<-\bf
+%#2<-This sentence is the argument
+%\end{verbatim}
+%Note that the closing period is not in the argument, but it has
+%been absorbed; it is no longer in the input stream.
+作为一个简单例子，我们定义一个宏
+\begin{verbatim}
+\def\DoASentence#1#2.{{#1#2.}}
+\end{verbatim}
+它的第一个参数是非定界的，而第二个参数是用句号定界的。
+像下面这样调用时
+\begin{verbatim}
+\DoASentence \bf This sentence is the argument.
+\end{verbatim}
+它的两个参量分别是：
+\begin{verbatim}
+#1<-\bf
+#2<-This sentence is the argument
+\end{verbatim}
+注意结尾的句号不在参量中，但它已经被吸收了，不会再出现在输入流中。
+
+%A~commonly used delimiter is \cs{par}:
+%\begin{verbatim}
+%\def\section#1. #2\par{\medskip\noindent {\bf#1. #2\par}}
+%\end{verbatim}
+%This macro has a first parameter that is delimited by~`\n{.\char32}',
+%and a second parameter that is delimited by \cs{par}.
+%The call\message{example on one page}
+%\begin{verbatim}
+%\section 2.5. Some title
+
+%The text of the section...
+%\end{verbatim}
+常用的定界子是 \cs{par}，例如：
+\begin{verbatim}
+\def\section#1. #2\par{\medskip\noindent {\bf#1. #2\par}}
+\end{verbatim}
+这个宏第一个参数用 `\n{.\char32}' 定界，而第二个参数用 \cs{par} 定界。
+像下面调用此宏\message{example on one page}
+\begin{verbatim}
+\section 2.5. Some title
+
+The text of the section...
+\end{verbatim}
+%will give
+%\begin{disp}\verb>#1<-2.5>\nl
+%\verb>#2<-Some title>\n{\char32}\end{disp}
+%Note that there is a space at the end of the second argument
+%generated by the line end. If this space is unwanted one might
+%define
+%\begin{verbatim}
+%\def\section#1. #2 \par{...}
+%\end{verbatim}
+%with \n{\char32}\cs{par} delimiting the second
+%argument. This approach, however,
+%precludes  the user's writing the \cs{par} explicitly:
+%\begin{verbatim}
+%\section 2.5 Some title\par
+%\end{verbatim}
+%One way out of this dilemma is to write
+%\verb>#2\unskip> on all places in the definition text
+%where the trailing space would be unwanted.
+将给出
+\begin{disp}\verb>#1<-2.5>\nl
+\verb>#2<-Some title>\n{\char32}\end{disp}
+注意在第二个由行尾符生成的参量的末尾有个空格。
+如果这个空格是多余的，你可以定义
+\begin{verbatim}
+\def\section#1. #2 \par{...}
+\end{verbatim}
+从而用 \n{\char32}\cs{par} 定界第二个参量。
+然而这种方法导致用户不可以显式写上 \cs{par}：
+\begin{verbatim}
+\section 2.5 Some title\par
+\end{verbatim}
+解决这种两难选择的其中一种方法是，
+在需要去掉结尾空格时，在定义文本中写上 \verb>#2\unskip> 。
+
+%Control sequences acting as delimiters need not be defined,
+%as they are absorbed without expansion. Thus
+%\begin{verbatim}
+%\def\control#1\sequence{...}
+%\end{verbatim}
+%is a useful
+%definition, even if \cs{sequence} is undefined.
+充当定界子的控制序列不需要已经定义，因为它们只被吸收不会被展开。因此
+\begin{verbatim}
+\def\control#1\sequence{...}
+\end{verbatim}
+是有效的定义，即使在 \cs{sequence} 未定义时。
+
+%The importance of category codes in delimited arguments
+%is shown by the following example:
+%\begin{verbatim}
+%\def\a#1 #2.{ ... }
+%\catcode`\ =12
+%\a b c
+%d.
+%\end{verbatim}
+%which gives
+%\begin{verbatim}
+%\a #1 #2.-> ...
+%#1<- b c
+%#2<-d
+%\end{verbatim}
+%Explanation: the delimiter between parameters 1 and~2 is a space
+%of category~10\index{category!10}.
+%In between \n{a} and \n{b} there is a space
+%of category~12\index{category!12};
+%the first space of  category~10
+%is the space that is generated by the line end.
+下面的例子展示了定界参量的类别码是至关重要的：
+\begin{verbatim}
+\def\a#1 #2.{ ... }
+\catcode`\ =12
+\a b c
+d.
+\end{verbatim}
+将给出
+\begin{verbatim}
+\a #1 #2.-> ...
+#1<- b c
+#2<-d
+\end{verbatim}
+解释：参数~1 和参数~2 之间的定界子是一个第~10~类\index{category!10}的空格。
+在 \n{a} 和 \n{b} 之间有一个第~12~类\index{category!12}的空格；
+第一个第~10~类的空格是由行尾生成的空格。
+
+%For a `real-life' application of matching of category codes,
+%see the explanation of \cs{newif} in Chapter~\ref{if},
+%and the example on page~\pageref{ex:jobnumber}.
+在第~\ref{if}~章对 \cs{newif} 的解释，以及
+在第~\pageref{ex:jobnumber}~页的例子中，有类别码匹配的实际例子。
+
+
+%%\spoint Empty arguments
+%\subsection{Empty arguments}
+%\spoint Empty arguments
+\subsection{空参量}
+
+%If the user specifies a \gr{balanced text} in braces
+%when \TeX\ expects a macro
+%argument, that text is used as the argument.
+%Thus, specifying \verb-{}- will give an argument that is
+%an empty list of tokens; this is called an `empty argument'.
+在 \TeX\ 需要一个宏参量时，如果用户指定一个围在花括号中的
+\gr{balanced text}，则该文本就被用作参量。
+因此，指定 \verb-{}- 给出的参量是一个空记号列；它称为`空参量'。
+
+%Empty arguments can also arise from the use of delimited
+%parameters. For example, after the definition
+%\begin{verbatim}
+%\def\mac#1\ro{ ... }
+%\end{verbatim}
+%the call
+%\begin{verbatim}
+%\mac\ro
+%\end{verbatim}
+%will give an empty argument. 
+在使用定界参数时也可能得到空参量。例如，在下述定义
+\begin{verbatim}
+\def\mac#1\ro{ ... }
+\end{verbatim}
+之后，这样调用
+\begin{verbatim}
+\mac\ro
+\end{verbatim}
+将给出一个空参量。
+
+%\begin{comment}
+%However, only
+%one empty argument can be created this way: 
+%if the macro had been defined as
+%\begin{verbatim}
+%\def\mac#1#2\ro{ ... }
+%\end{verbatim}
+%the same call
+%\begin{verbatim}
+%\mac\ro \othermacro \stillothermacro
+%\end{verbatim}
+%will probably cause a `\n{Runaway argument?}' error message.
+%Explanation: the first parameter is undelimited, so the corresponding
+%argument is `\cs{ro}'; after that \TeX\ starts looking for a list
+%of tokens delimited by~\cs{ro}.
+%\end{comment}
+\begin{comment}
+However, only
+one empty argument can be created this way: 
+if the macro had been defined as
+\begin{verbatim}
+\def\mac#1#2\ro{ ... }
+\end{verbatim}
+the same call
+\begin{verbatim}
+\mac\ro \othermacro \stillothermacro
+\end{verbatim}
+will probably cause a `\n{Runaway argument?}' error message.
+Explanation: the first parameter is undelimited, so the corresponding
+argument is `\cs{ro}'; after that \TeX\ starts looking for a list
+of tokens delimited by~\cs{ro}.
+\end{comment}
+
+%\subsection{The macro parameter character}
+\subsection{宏参数字符}
+
+%When \TeX's input processor scans a macro definition text, it inserts
+%a parameter token for any occurrence of a macro
+%\indextermsub{parameter}{character}\index{character!parameter}
+%followed by a digit.  In effect, a
+%parameter token in the replacement text states `insert parameter
+%number such and such here'.  Two parameter characters in a row are
+%replaced by a single one.
+在 \TeX\ 的输入处理器扫描宏定义文本时，它对后面跟着数字的每个宏%
+\indextermsub{参数}{字符}\index{character!parameter}插入一个参数记号。
+实际上，在替换文本中，参数记号表示`在这里插入某某编号的参量'。
+连续两个参数字符被替换为一个。
+
+%The latter fact can be used for nested macro definitions.
+%\label{nest:def}\howto Nested macro definitions\par
+%Thus
+%\begin{verbatim}
+%\def\a{\def\b#1{...}}
+%\end{verbatim}
+%gives an error message
+%because \cs{a} was defined without parameters, and
+%yet there is a parameter token in its replacement text.
+后一个的事实可以用于嵌套的宏定义。
+\label{nest:def}\howto Nested macro definitions\par
+下面的定义
+\begin{verbatim}
+\def\a{\def\b#1{...}}
+\end{verbatim}
+给出一个错误信息，因为 \cs{a} 被定义为不带参数的宏，
+而在它的替换文本中有一个参数记号。
+
+%The following
+%\begin{verbatim}
+%\def\a#1{\def\b#1{...}}
+%\end{verbatim}
+%defines a macro \cs{a} that
+%defines a macro \cs{b}. However, \cs{b} still does not
+%have any parameters: the call
+%\begin{verbatim}
+%\a z
+%\end{verbatim}
+%defines a macro \cs{b} without parameters,
+%that has to be followed by a~\n z.
+%Note that this
+%does not attempt to define a macro \cs{bz}, because the
+%control sequence \cs{b} has already been formed in \TeX's
+%input processor when that input line was read.
+下面的语句
+\begin{verbatim}
+\def\a#1{\def\b#1{...}}
+\end{verbatim}
+定义了宏 \cs{a}，这个宏又定义了另一个宏 \cs{b}。然而，
+\cs{b} 任然不带任何参数：这样调用
+\begin{verbatim}
+\a z
+\end{verbatim}
+就定义了一个不带参数的宏 \cs{b}，其后必须跟着 \n z。
+注意这并不是在定义宏 \cs{bz}，
+因为 \TeX\ 的输入处理器读取输入行时就已经形成了控制序列 \cs{b}。
+
+%Finally,
+%\begin{verbatim}
+%\def\a{\def\b##1{...}}
+%\end{verbatim}
+%defines a macro \cs{b} 
+%with one parameter.
+最后，
+\begin{verbatim}
+\def\a{\def\b##1{...}}
+\end{verbatim}
+定义了带一个参数的宏 \cs{b}。
+
+%Let us examine the handling of the parameter character
+%in some detail.
+%Consider
+%\begin{verbatim}
+%\def\a#1{ .. #1 .. \def\b##1{ ... }}
+%\end{verbatim}
+%When this is read as input, the input processor
+%\begin{itemize}
+%\item replaces the characters \verb>#1> by \gr{parameter token$_1$}, and
+%\item replaces the characters \verb>##> by \verb>#>\end{itemize}
+%A macro call of \cs{a} will then let the input processor scan
+%\begin{verbatim}
+%\def\b#1{ ... }
+%\end{verbatim}
+%in which the two characters \verb>#1> are
+%\alt
+%replaced by a parameter token.
+我们来仔细检查一下参数字符的处理过程。考虑下面定义
+\begin{verbatim}
+\def\a#1{ .. #1 .. \def\b##1{ ... }}
+\end{verbatim}
+当这个语句作为输入被读取时，输入处理器
+\begin{itemize}
+\item 将字符串 \verb>#1> 替换为 \gr{parameter token$_1$}，并且
+\item 将字符串 \verb>##> 替换为 \verb>#>
+\end{itemize}
+在调用宏 \cs{a} 时，输入处理器将扫描
+\begin{verbatim}
+\def\b#1{ ... }
+\end{verbatim}
+并将其中两个字符的 \verb>#1> 替换为一个参数记号。
+
+%%\spoint Brace delimiting
+%\subsection{Brace delimiting}
+%\spoint Brace delimiting
+\subsection{花括号定界}
+
+%Ordinarily, it is not possible to have left or right
+%braces in the \gr{parameter text} of a definition.
+%There is a special mechanism, however, that can make
+%the last parameter of a macro act as if it is delimited
+%by an opening brace. 
+在定义的 \gr{parameter text} 中通常是不可能有左或右花括号的。
+然而，有一种特殊规定可以让宏的最后一个参数看似用左花括号定界的。
+
+%If the last parameter token
+%is followed by a parameter character (\verb>#>),
+%which in turn is followed by the opening brace of the
+%replacement text, \TeX\ makes the last parameter
+%be delimited by a beginning-of-group character.
+%Furthermore, unlike other delimiting tokens in
+%parameter texts, this opening brace is not
+%removed from the input stream.
+如果最后一个参数记号后面是一个参数字符（\verb>#>），
+接着是替换文本的左花括号，\TeX\ 将让最后一个参数以组开始符定界。
+此外，与参数文本的其他定界记号不同，这个左花括号不会被从输入流中移除。
+
+%Consider an example.
+%Suppose we want to have a macro
+%\cs{every} that can fill token lists as follows:
+%\begin{verbatim}
+%\every par{abc} \every display{def}
+%\end{verbatim}
+%This macro can be defined as
+%\begin{verbatim}
+%\def\every#1#{\csname every#1\endcsname}
+%\end{verbatim}
+%In the first call above, the argument corresponding to
+%the parameter is \n{abc}, so the call 
+%expands to
+%\begin{verbatim}
+%\csname everypar\endcsname{abc}
+%\end{verbatim}
+%which gives the desired result.
+考虑一个例子。假设你想有个宏 \cs{every} 宏用于像下面这样填充记号列：
+\begin{verbatim}
+\every par{abc} \every display{def}
+\end{verbatim}
+这个宏可以定义为
+\begin{verbatim}
+\def\every#1#{\csname every#1\endcsname}
+\end{verbatim}
+在上面的第一个调用中，对应于参数的参量是 \n{abc}，因此该调用展开为
+\begin{verbatim}
+\csname everypar\endcsname{abc}
+\end{verbatim}
+这就给出所要的结果。
+
+
+%\section{Construction of control sequences}
+%\label{cs:name}
+\section{构造控制序列}
+\label{cs:name}
+
+%The commands \csidx{csname} and \csidx{endcsname} can be used
+%to construct a control sequence. 
+%For instance
+%\begin{verbatim}
+%\csname hskip\endcsname 5pt
+%\end{verbatim}
+%is equivalent to \verb=\hskip5pt=.
+命令 \csidx{csname} 和 \csidx{endcsname} 可用于构造控制序列。例如
+\begin{verbatim}
+\csname hskip\endcsname 5pt
+\end{verbatim}
+等价于 \verb=\hskip5pt=。
+
+%During this construction process
+%all macros and other expandable control sequences
+%between \cs{csname} and \cs{endcsname}
+%are expanded as usual, until only unexpandable
+%character tokens remain. A~variation of the above example,
+%\begin{verbatim}
+%\csname \ifhmode h\else v\fi skip\endcsname 5pt
+%\end{verbatim}
+%performs an \cs{hskip} or \cs{vskip} depending on the mode.
+%The final result of the expansion should 
+%consist of only character tokens, but
+%their category codes do not matter.
+%An unexpandable control sequence gives an error here:
+%\TeX\ will insert an \cs{endcsname} right before it
+%as an attempt at error recovery.
+在构造的过程中，介于 \cs{csname} 和 \cs{endcsname}
+之间的所有宏和其他可展开控制序列都如常展开，
+直到仅留下不可展开的字符记号。若将上面例子改写为
+\begin{verbatim}
+\csname \ifhmode h\else v\fi skip\endcsname 5pt
+\end{verbatim}
+则它将依据当前模式执行 \cs{hskip} 或 \cs{vskip}。
+展开的最后结果必须只包含字符记号，但对它们的类别码却无限制。
+在碰到不可展开的控制序列时，\TeX\ 将抛出一个错误，
+并在错误恢复时在该处之前插入一个 \cs{endcsname}。
+
+%With \cs{csname} it is possible to construct
+%control sequences that cannot ordinarily be written,
+%because the constituent character tokens may have another category
+%\alt
+%than~11, letter. This principle can be used to hide
+%\howto Hide counters from the user\par
+%inner control sequences of a macro package from the user.
+%\begin{example}
+%\begin{verbatim}
+%\def\newcounter#1{\expandafter\newcount
+%    \csname #1:counter\endcsname}
+%\def\stepcounter#1{\expandafter\advance
+%    \csname #1:counter\endcsname 1\relax}
+%\end{verbatim}
+%In the second definition the \cs{expandafter} is superfluous,
+%but it does no harm, and it is conceptually clearer.
+%\end{example}
+利用 \cs{csname}，我们可以构造通常无法写出的，
+包含类别码不为~11（字母）的字符的控制序列。
+这个原理可用于对用户隐藏宏包内部的控制序列。
+\howto Hide counters from the user\par
+\begin{example}
+\begin{verbatim}
+\def\newcounter#1{\expandafter\newcount
+    \csname #1:counter\endcsname}
+\def\stepcounter#1{\expandafter\advance
+    \csname #1:counter\endcsname 1\relax}
+\end{verbatim}
+第二个定义中的 \cs{expandafter} 是多余的，但它没有坏处，
+且可以让代码更清楚。
+\end{example}
+
+%The name of the actual counter created by \cs{newcounter}
+%contains a colon, so that it takes some effort to write this
+%control sequence. In effect, the counter
+%is now hidden from the user, who can only
+%access it through control sequences such as \cs{stepcounter}.
+%By the way, the macro \cs{newcount} is defined \cs{outer} in
+%the plain format, so the above definition of \cs{newcounter}
+%can only be written after \cs{newcount} has been redefined.
+\cs{newcounter} 创建的计数器的名称中包含一个冒号，因此写起来有点麻烦。
+好处是现在这个计数器对用户是隐藏的，
+它只能通过类似 \cs{stepcounter} 的控制序列来访问。
+顺便说一下，在 plain 格式中 \cs{newcount} 被定义为 \cs{outer} 宏，
+因此在重新定义 \cs{newcount} 后才能写出上述定义。
+
+%If a control sequence formed with \verb>\csname...\endcsname>
+%has not been defined
+%before, its meaning is set to \cs{relax}.
+%Thus if \verb=\xx= is an undefined control sequence, the
+%command
+%\begin{verbatim}
+%\csname xx\endcsname
+%\end{verbatim}
+%will {\em not\/}
+%give an error message, as it is equivalent to \verb=\relax=.
+%Moreover, after this execution of the
+%\verb-\csname...\endcsname- statement, the control sequence
+%\verb=\xx= is itself equivalent to \cs{relax}, so it
+%will no longer give an `undefined control sequence' error
+%(see also page~\pageref{relax:cs}).
+如果用 \verb>\csname...\endcsname> 生成的控制序列之前尚未定义，
+它就被定义为 \cs{relax}。因此如果 \verb=\xx= 是一个未定义的控制序列，
+命令
+\begin{verbatim}
+\csname xx\endcsname
+\end{verbatim}
+将{\em 不会}导致错误信息，因为它等价于\verb=\relax=。
+此外，在执行 \verb-\csname...\endcsname- 语句后，控制序列
+\verb=\xx= 本身等价于 \cs{relax}，因此它也不再导致
+`undefined control sequence' 的错误（另见第~\pageref{relax:cs}~页）。
+
+
+%%\point Token assignments by \cs{let} and \cs{futurelet}
+%\section{Token assignments by \protect\cs{let} and \protect\cs{futurelet}}
+%\point Token assignments by \cs{let} and \cs{futurelet}
+\section{用 \protect\cs{let} 和 \protect\cs{futurelet} 给出记号赋值}
+
+%There are two \gr{let assignment}s in \TeX.
+%Their syntax is
+%\begin{disp}\cs{let}\gr{control sequence}\gr{equals}%
+%     \gr{one optional space}\gr{token}\nl
+%     \cs{futurelet}\gr{control sequence}\gr{token}\gr{token}
+%     \end{disp}
+%In the syntax of a \cs{futurelet} assignment
+%no optional equals sign appears.
+在 \TeX\ 中有两个 \gr{let assignment}。它们的语法为
+\begin{disp}\cs{let}\gr{control sequence}\gr{equals}%
+     \gr{one optional space}\gr{token}\nl
+     \cs{futurelet}\gr{control sequence}\gr{token}\gr{token}
+     \end{disp}
+在 \cs{futurelet} 赋值的语法中，不可以出现可选的等号。
+
+%%\spoint[let] \cs{let}
+%\subsection{\protect\cs{let}}
+%\label{let}
+%\spoint[let] \cs{let}
+\subsection{\protect\cs{let}}
+\label{let}
+
+%The primitive command \csidx{let} assigns the current meaning
+%of a~token to a control sequence or active character.
+原始命令 \csidx{let} 将某个记号的当前含义赋予一个控制序列或活动字符。
+
+%For instance, in the plain format \cs{endgraf} is defined
+%as
+%\begin{verbatim}
+%\let\endgraf=\par
+%\end{verbatim}
+%This enables macro writers to redefine \cs{par}, while
+%still having the functionality of the primitive \cs{par}
+%command available. For example,
+%\begin{verbatim}
+%\everypar={\bgroup\it\def\par{\endgraf\egroup}}
+%\end{verbatim}
+例如，在 plain 格式中，\cs{endgraf} 定义为
+\begin{verbatim}
+\let\endgraf=\par
+\end{verbatim}
+这使得宏的编写者可以重新定义 \cs{par}，
+而原始的 \cs{par} 命令的功能仍然可以使用。例如，
+\begin{verbatim}
+\everypar={\bgroup\it\def\par{\endgraf\egroup}}
+\end{verbatim}
+
+%The case where the \gr{token} to be assigned is not a control
+%sequence but a character token instead has been treated 
+%in Chapter~\ref{char}.
+在第~\ref{char}~章中已经讨论了 \gr{token} 不是控制序列而是字符记号的情形。
+
+%%\spoint \cs{futurelet}
+%\subsection{\protect\cs{futurelet}}
+%\spoint \cs{futurelet}
+\subsection{\protect\cs{futurelet}}
+
+%As was explained above, the sequence with \cs{let}
+%\begin{disp}\cs{let}\gr{control sequence}\gr{token$_1$}\gr{token$_2$}%
+%       \gr{token$_3$}\gr{token$\cdots$}\end{disp}
+%assigns (the meaning of) \gr{token$_1$} to the control sequence, 
+%and the remaining input stream looks like
+%\begin{disp}\gr{token$_2$}\gr{token$_3$}\gr{token$\cdots$}\end{disp}
+%That is, the \gr{token$_1$} has disappeared from the stream.
+如上所述，\cs{let} 系列
+\begin{disp}\cs{let}\gr{control sequence}\gr{token$_1$}\gr{token$_2$}%
+       \gr{token$_3$}\gr{token$\cdots$}\end{disp}
+将 \gr{token$_1$}（的含义）赋予该控制序列，而剩下的输入流如下 
+\begin{disp}\gr{token$_2$}\gr{token$_3$}\gr{token$\cdots$}\end{disp}
+即 \gr{token$_1$} 从输入流中消失了。
+
+%The command \csidx{futurelet} works slightly differently:
+%given the input stream
+%\begin{disp}\cs{futurelet}\gr{control sequence}\gr{token$_1$}\gr{token$_2$}%
+%       \gr{token$_3$}\gr{token$\cdots$}\end{disp}
+%it assigns (the meaning of) \gr{token$_2$} to the control sequence, 
+%and the remaining stream looks like
+%\begin{disp}\gr{token$_1$}\gr{token$_2$}\gr{token$_3$}\gr{token$\cdots$}\end{disp}
+%That is, neither \gr{token$_1$} nor \gr{token$_2$} has
+%been lifted from the stream.
+%However, now \gr{token$_1$}
+%`knows' what \gr{token$_2$} is, without having had to absorb it
+%as a macro parameter. See an example below.
+命令 \csidx{futurelet} 的运作稍有不同：对于下面的输入流
+\begin{disp}\cs{futurelet}\gr{control sequence}\gr{token$_1$}\gr{token$_2$}%
+       \gr{token$_3$}\gr{token$\cdots$}\end{disp}
+它将 \gr{token$_2$}（的含义）赋予该控制序列，而剩下的输入流如下
+\begin{disp}\gr{token$_1$}\gr{token$_2$}\gr{token$_3$}\gr{token$\cdots$}\end{disp}
+也就是说，\gr{token$_1$} 和 \gr{token$_2$} 都不会被从输入流中去掉。
+然而，现在 \gr{token$_1$} 无需将 \gr{token$_2$} 取为宏参数就`知道'它是什么。
+见后面给出的例子。
+
+%If a character token has been \cs{futurelet} to a control
+%sequence, its category code is fixed.
+%The subsequent \gr{token$_1$} cannot change
+%it anymore.
+在字符记号已经被 \cs{futurelet} 到一个控制序列时，它的类别码就已经确定了。
+随后的 \gr{token$_1$} 无法再改变它。
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{杂项注记}
+
+%%\spoint Active characters
+%\subsection{Active characters}
+%\spoint Active characters
+\subsection{活动字符}
+
+%A character token of category~13\index{category!13} is called an
+%\indexterm{active character}, and it
+%can be defined just like a control sequence.
+%If the definition of the character appears inside a macro,
+%the character has to be active at the time of the definition
+%of that macro.
+类别码~13\index{category!13}~的字符记号称为\indexterm{活动字符}，
+我们可以像控制序列那样定义它。如果这种字符的定义出现在宏里面，
+在宏定义时这个字符必须是活动的。
+
+%Consider for example the following definition
+%(taken from Chapter~\ref{mouth}):
+%\begin{verbatim}
+%{\catcode`\^^M=13 %
+% \gdef\obeylines{\catcode`\^^M=13 \def^^M{\par}}%
+%}
+%\end{verbatim}
+%The unusual category of the \verb>^^M> character
+%has to be set during the definition of \cs{obeylines},
+%otherwise \TeX\ would think that the line ended
+%after \cs{def}.
+以下面的定义为例（取自第~\ref{mouth}~章）：
+\begin{verbatim}
+{\catcode`\^^M=13 %
+ \gdef\obeylines{\catcode`\^^M=13 \def^^M{\par}}%
+}
+\end{verbatim}
+在定义 \cs{obeylines} 前必须先设定好 \verb>^^M> 字符的类别码，
+否则 \TeX\ 会认为该行在 \cs{def} 之后结束。
+
+%\subsection{Macros versus primitives}
+\subsection{宏与原始命令}
+
+%The distinction between \indexterm{primitive
+%  commands}\indexterm{command !primitive} and user macros is not
+%nearly as important in \TeX\ as it is in other programming
+%languages.
+%\begin{itemize}
+%\item The user can use primitive commands under different names:
+%     
+%\begin{verbatim}
+%\let\StopThisParagraph=\par
+%\end{verbatim}
+%\item Names of primitive commands can be used for
+%      user macros:
+%\begin{verbatim}
+%\def\par{\hfill$\bullet$\endgraf}
+%\end{verbatim}
+%\item Both user macros and a number of \TeX\ primitives
+%      are subject to expansion, for instance all conditionals,
+%      and commands such as \cs{number} and~\cs{jobname}.
+%\end{itemize}
+相比其他编程语言，在 \TeX\ 中\indexterm{原始命令}\index{命令!原始的}%
+与用户宏的区分并不大重要。 
+\begin{itemize}
+\item 用户可以用别的名称使用原始命令： 
+\begin{verbatim}
+\let\StopThisParagraph=\par
+\end{verbatim}
+\item 原始命令的名称可以给用户宏使用：
+\begin{verbatim}
+\def\par{\hfill$\bullet$\endgraf}
+\end{verbatim}
+\item 很多原始命令和用户宏一样都可以展开，比如所有条件句，
+以及类似 \cs{number} 和 \cs{jobname} 的命令。
+\end{itemize}
+
+%%\spoint Tail recursion
+%\subsection{Tail recursion}
+%\spoint Tail recursion
+\subsection{尾递归}
+
+%Macros in \TeX, like procedures in most modern programming
+%languages, are allowed to be \emph{recursive}\index{recursion}: that is, the 
+%definition of a macro can contain a call to this same macro,
+%or to another macro that will call this macro.
+%Recursive macros tend to clutter up \TeX's memory
+%if too many `incarnations' of such a macro are active
+%at the same time. However, \TeX\ is able to prevent this
+%in one frequently occurring case of recursion: tail recursion.
+\TeX 中的宏，与大多数现代编程语言一样，可以是\emph{递归的}\index{递归}：
+即在宏定义中可以调用这个宏本身，或者另一个将调用这个宏的宏。
+如果同一个递归宏的`化身'在同一时间出现太多次，它容易弄乱 \TeX\ 的内存。
+然而，对于尾递归这种常见的递归情形，\TeX\ 能够避免出现混乱。
+
+%In order to  appreciate what goes on here, some background
+%knowledge is needed. When \TeX\ starts executing a macro
+%it absorbs the parameters, and places an item pointing to
+%the replacement text on the \indextermsub{input}{stack},
+%so that the scanner will next be directed to
+%this replacement. Once it has been processed, the item on the 
+%input stack can be removed.
+%However, if the definition text
+%of a macro contains further macros, this process will be
+%repeated for them: new items may be placed on the input stack
+%directing the scanner to other macros
+%even before the first one has been completed.
+要理解这里发生的事情，需要一些背景知识。
+在开始执行一个宏时，\TeX\ 抓取宏的参量，
+然后在\indextermsub{输入}{栈}上放置一个指向替换文本的项目，
+这样扫描器接着将转到替换文本中。一旦它处理完毕，
+输入栈中的这个项目将被移除。然而，如果宏的定义文本中包含另外的宏，
+这个过程将对它们重复进行：新的项目将被放在输入栈上，
+引导扫描器到其他宏中，甚至在第一个宏还未完成时，
+
+%In general this `stack build-up' is a necessary evil, but
+%it can be prevented if the nested macro call is the
+%{\em last\/} token in the replacement text of the original
+%macro. After the last token no further tokens need to be
+%considered, so one might as well clear the top item
+%from the input stack
+%before a new one is put there.
+%This is what \TeX\ does.
+一般来说，这种`栈构建'不是很好但却是无可避免的；
+然而如果嵌套宏调用出现在宏的替换文本{\em 末尾的}记号处，
+这是可以避免的。在末尾的记号后没有其他记号需要处理，
+因此我们可以在新的宏放进来之前清除输入栈顶部的项目。
+这正是 \TeX\ 所做的事情。
+
+%The \csidx{loop} macro of plain \TeX\ provides a good illustration
+%\label{loop:ex}
+%of this principle. The definition is
+%\begin{verbatim}
+%\def\loop#1\repeat{\def\body{#1}\iterate}
+%\def\iterate{\body \let\next=\iterate
+%    \else \let\next=\relax\fi \next}
+%\end{verbatim}
+%and this macro can be called for example as follows:
+%\begin{verbatim}
+%\loop \message{\number\MyCount}
+%    \advance\MyCount by 1
+%    \ifnum\MyCount<100 \repeat
+%\end{verbatim}
+%The macro \cs{iterate} can call itself and, when it does so,
+%the recursive call is performed by the last token in the list.
+%It would have been possible to define \cs{iterate}
+%as
+%\begin{verbatim}
+%\def\iterate{\body \iterate\fi}
+%\end{verbatim}
+%but then \TeX\ would not have been able to resolve the recursion
+%as the call \cs{iterate} is not the last token in the replacement
+%text of \cs{iterate}. Assigning \verb>\let\next=\iterate>
+%is here a way to let
+%the recursive call be the last token in the list.
+Plain \TeX\ 的 \csidx{loop} 对这个原理给出很好的说明。
+\label{loop:ex}它的定义是
+\begin{verbatim}
+\def\loop#1\repeat{\def\body{#1}\iterate}
+\def\iterate{\body \let\next=\iterate
+    \else \let\next=\relax\fi \next}
+\end{verbatim}
+而这个宏可以用类似下面的例子来调用：
+\begin{verbatim}
+\loop \message{\number\MyCount}
+    \advance\MyCount by 1
+    \ifnum\MyCount<100 \repeat
+\end{verbatim}
+宏 \cs{iterate} 可以调用它自己，而且当它这样做时，递归调用出现在列表的末尾记号。
+也许可以将 \cs{iterate} 定义为
+\begin{verbatim}
+\def\iterate{\body \iterate\fi}
+\end{verbatim}
+但这样 \TeX\ 将无法消除这个递归，因为对 \cs{iterate} 的调用并不出现在
+\cs{iterate} 的替换文本的末尾记号. 这里的赋值 \verb>\let\next=\iterate>
+就是一种让递归调用出现在列表的末尾记号的方法。
+
+%Another way of resolving tail recursion is to use
+%\cs{expandafter} (see page~\pageref{after:cond}): in
+%\begin{verbatim}
+%\def\iterate{\body \expandafter\iterate\fi}
+%\end{verbatim}
+%it removes the \cs{fi} token.
+%Tail recursion would also be resolved if the last
+%tokens in the list were arguments for the
+%recursive macro.
+另一种消除尾递归的方法是使用 \cs{expandafter}（见第~\pageref{after:cond}~页）：
+在下面
+\begin{verbatim}
+\def\iterate{\body \expandafter\iterate\fi}
+\end{verbatim}
+这种写法中，它去掉了 \cs{fi} 记号。如果列表的末尾记号是递归宏的参量，尾递归也将被消除。
+
+%An aside: by defining \cs{iterate} as
+%\begin{verbatim}
+%\def\iterate{\let\next\relax 
+%    \body \let\next\iterate \fi \next}
+%\end{verbatim}
+%it becomes possible to write
+%\begin{verbatim}
+%\loop ... \if... ... \else ... \repeat
+%\end{verbatim}
+顺便说一句：如果将 \cs{iterate} 定义为
+\begin{verbatim}
+\def\iterate{\let\next\relax 
+    \body \let\next\iterate \fi \next}
+\end{verbatim}
+就可以这些写
+\begin{verbatim}
+\loop ... \if... ... \else ... \repeat
+\end{verbatim}
+
+%%\point Macro techniques
+%\section{Macro techniques}
+%\point Macro techniques
+\section{宏的技巧}
+
+%%\spoint Unknown number of arguments
+%\subsection{Unknown number of arguments}
+%\spoint Unknown number of arguments
+\subsection{不确定个数的参量}
+
+%In some applications,
+%\howto  Macros with an undetermined number
+%of arguments\par
+%a macro is needed that can have a
+%number of arguments that is not specified in advance.
+在某些应用中，我们希望宏的参量个数不用先规定好。
+\howto  Macros with an undetermined number
+of arguments\par
+
+%Consider the problem of translating a position on a chess board
+%(for full macros and fonts, see~\cite{chess} and~\cite{Tut}),
+%given like
+%\begin{verbatim}
+%\White(Ke1,Qd1,Na1,e2,f4)
+%\end{verbatim} 
+%to a sequence of typesetting instructions
+%\begin{verbatim}
+%\WhitePiece{K}{e1} \WhitePiece{Q}{d1} \WhitePiece{N}{a1} 
+%\WhitePiece{P}{e2} \WhitePiece{P}{f4}
+%\end{verbatim}
+%Note that for pawns the `P' is omitted in the list of positions.
+考虑在国际象棋棋盘上转换位置的问题%
+（全部宏和字体可以在 \cite{chess} 和 \cite{Tut} 中找到），
+比如要将棋谱记法
+\begin{verbatim}
+\White(Ke1,Qd1,Na1,e2,f4)
+\end{verbatim} 
+转换为一串排版好的走法
+\begin{verbatim}
+\WhitePiece{K}{e1} \WhitePiece{Q}{d1} \WhitePiece{N}{a1} 
+\WhitePiece{P}{e2} \WhitePiece{P}{f4}
+\end{verbatim}
+注意在位置列表中兵前面的 `P' 被省略掉了。
+
+%The first problem is that the list of pieces 
+%is of variable length, so we append a terminator piece:
+%\begin{verbatim}
+%\def\White(#1){\xWhite#1,xxx,}
+%\def\endpiece{xxx}
+%\end{verbatim}
+%for which we can test.
+%Next, the macro \cs{xWhite} takes one position from the list,
+%tests whether it is the terminator, and if not,
+%subjects it to a test to see whether it is a pawn.
+%\begin{verbatim}
+%\def\xWhite#1,{\def\temp{#1}%
+%    \ifx\temp\endpiece 
+%    \else \WhitePieceOrPawn#1XY%
+%          \expandafter\xWhite 
+%    \fi}
+%\end{verbatim}
+%An \cs{expandafter} command is necessary to remove the
+%\cs{fi} (see page~\pageref{after:cond}), so that 
+%\cs{xWhite} will get the next position as argument
+%instead of \cs{fi}.
+首要问题在于棋子列表是变长的，因此我们添加一个终止棋子：
+\begin{verbatim}
+\def\White(#1){\xWhite#1,xxx,}
+\def\endpiece{xxx}
+\end{verbatim}
+这样我们就可以检测到。接下来，\cs{xWhite} 从列表中读取一个位置，
+检测它是否为终止棋子；如果不是，依据它是否为一个兵分别处理。
+\begin{verbatim}
+\def\xWhite#1,{\def\temp{#1}%
+    \ifx\temp\endpiece 
+    \else \WhitePieceOrPawn#1XY%
+          \expandafter\xWhite 
+    \fi}
+\end{verbatim}
+其中必须用 \cs{expandafter} 命令去掉 \cs{fi}（见第~\pageref{after:cond}~页），
+使得 \cs{xWhite} 以下一个位置而不是 \cs{fi} 为参量。
+
+%Positions  are either two or three characters long.
+%The call to \cs{White\-Piece\-OrPawn}, a four-parameter macro,
+%appended a terminator string \n{XY}. 
+%In the case of a pawn, therefore, argument~3 is the character~\n X
+%and argument~4 is empty; for all other pieces argument~1
+%is the piece, 2~and~3 are the position, and argument~4 is~\n X.
+%\begin{verbatim}
+%\def\WhitePieceOrPawn#1#2#3#4Y{
+%    \if#3X \WhitePiece{P}{#1#2}%
+%    \else  \WhitePiece{#1}{#2#3}\fi}
+%\end{verbatim}
+位置的长度为两个或三个字符长。在调用四参数宏 \cs{White\-Piece\-OrPawn}
+时添加了一个终止字符串 \n{XY}。因此，对棋子为兵的情形，
+第~3~个参量为字符 \n X 而第~4~个参量为空；
+对其他棋子的情形，第~1~个参量是该棋子，
+而第~2~和~3~个参量为具体的位置，第~4~个参量为~\n X。
+\begin{verbatim}
+\def\WhitePieceOrPawn#1#2#3#4Y{
+    \if#3X \WhitePiece{P}{#1#2}%
+    \else  \WhitePiece{#1}{#2#3}\fi}
+\end{verbatim}
+
+%%\spoint Examining the argument
+%\subsection{Examining the argument}
+%\spoint Examining the argument
+\subsection{检查参量}
+
+%It may be necessary in some cases to test whether a macro
+%\howto Examine a macro argument for the presence of some element\par
+%\howto Apply \cs{uppercase} when the argument has a \cs{footnote}\par
+%argument contains some element. For a real-life example,
+%consider the following (see also the \cs{DisplayEquation}
+%\alt
+%example on page~\pageref{left:display}).
+在有些时候。我们需要检查宏参量中是否包含某个元素。
+\howto Examine a macro argument for the presence of some element\par
+\howto Apply \cs{uppercase} when the argument has a \cs{footnote}\par
+考虑下面的实际例子（另见第~\pageref{left:display}~页的
+\cs{DisplayEquation} 的例子）。
+
+%Suppose the title and author of an article are given as
+%\begin{verbatim}
+%\title{An angle trisector}
+%\author{A.B. Cee\footnote*{Research supported by the
+%Very Big Company of America}}
+%\end{verbatim}
+%with multiple authors
+%given as
+%\begin{verbatim}
+%\author{A.B. Cee\footnote*{Supported by NSF grant 1}
+%        \and
+%        X.Y. Zee\footnote{**}{Supported by NATO grant 2}}
+%\end{verbatim}
+%Suppose further that the \cs{title} and \cs{author} macros
+%are defined as
+%\begin{verbatim}
+%\def\title#1{\def\TheTitle{#1}}  \def\author#1{\def\TheAuthor{#1}}
+%\end{verbatim}
+%which will be used as
+%\begin{verbatim}
+%\def\ArticleHeading{ ... \TheTitle ... \TheAuthor ... }
+%\end{verbatim}
+假设文章的标题和作者为
+\begin{verbatim}
+\title{An angle trisector}
+\author{A.B. Cee\footnote*{Research supported by the
+Very Big Company of America}}
+\end{verbatim}
+而有多个作者时为
+\begin{verbatim}
+\author{A.B. Cee\footnote*{Supported by NSF grant 1}
+        \and
+        X.Y. Zee\footnote{**}{Supported by NATO grant 2}}
+\end{verbatim}
+另外假设 \cs{title} 和 \cs{author} 宏定义为
+\begin{verbatim}
+\def\title#1{\def\TheTitle{#1}}  \def\author#1{\def\TheAuthor{#1}}
+\end{verbatim}
+这将会被这样使用
+\begin{verbatim}
+\def\ArticleHeading{ ... \TheTitle ... \TheAuthor ... }
+\end{verbatim}
+
+%For some journals it is required to
+%have the authorship and the title of the article in all capitals.
+%The implementation of this could be
+%\begin{verbatim}
+%\def\ArticleCapitalHeading
+%   { ...
+%    \uppercase\expandafter{\TheTitle}
+%     ...
+%    \uppercase\expandafter{\TheAuthor}
+%     ...
+%   }
+%\end{verbatim}
+%Now the \cs{expandafter} commands will expand the title and
+%author into the actual texts, and the \cs{uppercase} commands
+%will capitalize them. However, for the authors this is wrong,
+%since the \cs{uppercase} command will also capitalize the
+%footnote texts.
+%The problem is then to uppercase only the parts
+%of the title in between the footnotes.
+有些期刊要求文章的作者和标题全部大写。这种要求的实现方式可能是
+\begin{verbatim}
+\def\ArticleCapitalHeading
+   { ...
+    \uppercase\expandafter{\TheTitle}
+     ...
+    \uppercase\expandafter{\TheAuthor}
+     ...
+   }
+\end{verbatim}
+现在 \cs{expandafter} 命令将展开标题和作者为实际文本，
+接着 \cs{uppercase} 命令将把它们变为大写。然而，
+对于这样写对作者名来说是错误的，因为 \cs{uppercase} 命令将脚注文本也大写了。
+现在的问题在于如何仅将在脚注之间的文本变为大写。
+
+%As a first attempt, let us take the case of one author, and
+%let the basic call be
+%\begin{verbatim}
+%\expandafter\UCnoFootnote\TheAuthor
+%\end{verbatim}
+%This expands into
+%\begin{verbatim}
+%\UCnoFootnote A.B. Cee\footnote*{Supported ... }
+%\end{verbatim}
+%The macro
+%\begin{verbatim}
+%\def\UCnoFootnote#1\footnote#2#3{\uppercase{#1}\footnote{#2}{#3}}
+%\end{verbatim}
+%will analyse this correctly:
+%\begin{verbatim}
+%#1<-A.B. Cee
+%#2<-*
+%#3<-Supported ...
+%\end{verbatim}
+%However, if there is no footnote, this macro is completely wrong.
+作为第一次尝试，让我们先考虑只有一个作者的情形，设基本调用为
+\begin{verbatim}
+\expandafter\UCnoFootnote\TheAuthor
+\end{verbatim}
+这将展开为
+\begin{verbatim}
+\UCnoFootnote A.B. Cee\footnote*{Supported ... }
+\end{verbatim}
+这个宏
+\begin{verbatim}
+\def\UCnoFootnote#1\footnote#2#3{\uppercase{#1}\footnote{#2}{#3}}
+\end{verbatim}
+将正确地分析它：
+\begin{verbatim}
+#1<-A.B. Cee
+#2<-*
+#3<-Supported ...
+\end{verbatim}
+然而，如果脚注不存在时，这个宏将是完全错误的。
+
+%As a first refinement we add a footnote ourselves, just to make
+%sure that one is present:
+%\begin{verbatim}
+%\expandafter\UCnoFootnote\TheAuthor\footnote 00
+%\end{verbatim}
+%Now we have to test what kind of footnote we find:
+%\begin{verbatim}
+%\def\stopper{0}
+%\def\UCnoFootnote#1\footnote#2#3{\uppercase{#1}\def\tester{#2}%
+%    \ifx\stopper\tester
+%    \else\footnote{#2}{#3}\fi}
+%\end{verbatim}
+%With \cs{ifx} we test the delimiter footnote sign against the
+%actual sign encountered. Note that a solution with
+%\begin{verbatim}
+%\ifx0#2
+%\end{verbatim}
+%would be wrong if the footnote sign consists
+%of more than one token, for instance~\verb>{**}>.
+作为首个改进，我们自己添加脚注，以让它始终存在： 
+\begin{verbatim}
+\expandafter\UCnoFootnote\TheAuthor\footnote 00
+\end{verbatim}
+现在我们得检测所找到的脚注的类型：
+\begin{verbatim}
+\def\stopper{0}
+\def\UCnoFootnote#1\footnote#2#3{\uppercase{#1}\def\tester{#2}%
+    \ifx\stopper\tester
+    \else\footnote{#2}{#3}\fi}
+\end{verbatim}
+我们用 \cs{ifx} 区分出定界脚注号和实际脚注号。注意如果改用
+\begin{verbatim}
+\ifx0#2
+\end{verbatim}
+将是错误的，因为脚注号可能包含多个记号，比如~\verb>{**}>。
+
+%The macro so far is correct if there was no footnote,
+%but if there was one it is wrong:
+%the terminating tokens remain to be disposed of.
+%They are taken care of in the following version:
+%\begin{verbatim}
+%\def\stopper{0}
+%\def\UCnoFootnote#1\footnote#2#3{\uppercase{#1}\def\tester{#2}%
+%    \ifx\stopper\tester
+%    \else\footnote{#2}{#3}\expandafter\UCnoFootnote
+%    \fi}
+%\end{verbatim}
+%A repeated call to \cs{UCnoFootnote} removes the delimiter tokens
+%(the \cs{expandafter} first removes the \cs{fi}),
+%and as an added bonus, this macro is also correct for multiple
+%authors.
+到目前为止，如果没有脚注这个宏是正确的，但如果有个脚注它是错误的：
+这几个终结记号还有待我们处理掉。在下面这个版本中它们会被小心处理好：
+\begin{verbatim}
+\def\stopper{0}
+\def\UCnoFootnote#1\footnote#2#3{\uppercase{#1}\def\tester{#2}%
+    \ifx\stopper\tester
+    \else\footnote{#2}{#3}\expandafter\UCnoFootnote
+    \fi}
+\end{verbatim}
+重复调用 \cs{UCnoFootnote} 将去掉定界记号（\cs{expandafter} 先去掉了 \cs{fi}），
+而且作为额外收获，这个宏对于多个作者的情形也是正确的。
+
+
+%%\spoint Optional macro parameters with \cs{futurelet}
+%\subsection{Optional macro parameters with \protect\cs{futurelet}}
+%\spoint Optional macro parameters with \cs{futurelet}
+\subsection{用 \protect\cs{futurelet} 实现可选的宏参数}
+
+%One standard application of \cs{futurelet} is implementing
+%\howto Macros with optional parameters\par
+%optional parameters of macros. The general course of action
+%is as follows:
+%\begin{verbatim}
+%\def\Com{\futurelet\testchar\MaybeOptArgCom}
+%\def\MaybeOptArgCom{\ifx[\testchar \let\next\OptArgCom 
+%                 \else \let\next\NoOptArgCom \fi \next}
+%\def\OptArgCom[#1]#2{ ... }\def\NoOptArgCom#1{ ... }
+%\end{verbatim}
+%Note that \cs{ifx} is used even though it tests
+%for a character. The reason is of course that,
+%if the optional argument is omitted, there might be an
+%expandable control sequence behind the~\cs{Com}.
+\cs{futurelet} 的其中一个标准用法就是实现宏的可选参数。
+\howto Macros with optional parameters\par
+一般做法如下：
+\begin{verbatim}
+\def\Com{\futurelet\testchar\MaybeOptArgCom}
+\def\MaybeOptArgCom{\ifx[\testchar \let\next\OptArgCom 
+                 \else \let\next\NoOptArgCom \fi \next}
+\def\OptArgCom[#1]#2{ ... }\def\NoOptArgCom#1{ ... }
+\end{verbatim}
+注意即便它测试的是个字符还是使用了 \cs{ifx}。原因当然是，
+如果可选参量不存在，在 \cs{Com} 之后可能会是一个可展开的控制序列。
+
+%The macro \cs{Com} now has one optional and one regular
+%argument; it can be called as 
+%\begin{verbatim}
+%\Com{argument}
+%\end{verbatim}
+%or as
+%\begin{verbatim}
+%\Com[optional]{argument}
+%\end{verbatim}
+%Often the call without the optional argument will insert some
+%default value:
+%\begin{disp}\verb>\def\NoOptArgCom#1{\OptArgCom[>%
+%{\italic default\/}\verb>]{#1}}>\end{disp}
+%This mechanism is widely used in formats such as \LaTeX\ and
+%\LamsTeX; see also~\cite{svb:future}.
+现在宏 \cs{Com} 有一个可选参量以及一个常规参量；我们可以这样
+\begin{verbatim}
+\Com{argument}
+\end{verbatim}
+或者这样
+\begin{verbatim}
+\Com[optional]{argument}
+\end{verbatim}
+调用它。通常不带可选参量的调用将插入默认值：
+\begin{disp}\verb>\def\NoOptArgCom#1{\OptArgCom[>%
+{\italic default\/}\verb>]{#1}}>\end{disp}
+这种机制在类似 \LaTeX\ 和 \LamsTeX\ 的格式中广泛用到；另外可以参考~\cite{svb:future}。
+
+
+
+%%\spoint Two-step macros
+%\subsection{Two-step macros}
+%\spoint Two-step macros
+\subsection{两步宏}
+
+%Often what looks to the user like one macro is in reality
+%a two-step process, where one macro will set up conditions,
+%and a second macro will do the work.
+用户经常会觉得某个宏事实上是一个两步的过程，其中第一个宏设定好条件，
+而第二个宏将执行操作。
+
+%As an example, here is
+%a macro \cs{PickToEol}\label{pick:eol}
+%\howto Take an input line as macro argument\par
+%with an argument that is delimited by the line end.
+%First we write a macro without arguments that 
+%changes the category code of the line end, and then
+%calls the second macro.
+%\begin{verbatim}
+%\def\PickToEol{\begingroup\catcode`\^^M=12 \xPickToEol}
+%\end{verbatim}
+%The second macro can then take as an argument everything
+%up to the end of the line:
+%\begin{verbatim}
+%\def\xPickToEol#1^^M{ ... #1 ... \endgroup}
+%\end{verbatim}
+%There is one problem with this definition: the \verb>^^M> character
+%should have category~12. We arrive at the following:
+%\begin{verbatim}
+%\def\PickToEol{\begingroup\catcode`\^^M=12 \xPickToEol}
+%{\catcode`\^^M=12 %
+% \gdef\xPickToEol#1^^M{ ... #1 ... \endgroup}%
+%}
+%\end{verbatim}
+%where the category code of \verb>^^M> is changed for the
+%sake of the definition of \cs{xPickToEol}. Note that
+%the \verb>^^M> in \cs{PickToEol} occurs in a control symbol,
+%so there the category code  is irrelevant. Therefore that
+%definition can be outside the group where the category code 
+%of \verb>^^M> is redefined.
+作为例子，这里有个 \cs{PickToEol}\label{pick:eol} 宏，
+\howto Take an input line as macro argument\par
+它的参量以行尾符定界。首先我们写出第一个不带参量的宏，
+它改变行尾符的类别码，然后调用第二个宏。
+\begin{verbatim}
+\def\PickToEol{\begingroup\catcode`\^^M=12 \xPickToEol}
+\end{verbatim}
+现在第二个宏将以直到行尾的所有内容作为它的参量：
+\begin{verbatim}
+\def\xPickToEol#1^^M{ ... #1 ... \endgroup}
+\end{verbatim}
+这个定义有个问题：\verb>^^M> 符的类别码必须为~12。我们改进一下：
+\begin{verbatim}
+\def\PickToEol{\begingroup\catcode`\^^M=12 \xPickToEol}
+{\catcode`\^^M=12 %
+ \gdef\xPickToEol#1^^M{ ... #1 ... \endgroup}%
+}
+\end{verbatim}
+其中为 \cs{xPickToEol} 的定义改变了 \verb>^^M> 的类别码。
+注意 \cs{PickToEol} 中的 \verb>^^M> 作为控制符号出现，
+此时它的类别码是无关紧要的。因此那个定义可以出现在
+重新定义 \verb>^^M> 的类别码的编组的外边。
+
+
+%\subsection{A comment environment}
+\subsection{注释环境}
+
+%As an application of the above idea of two-step macros,
+%\howto Comment environment\par
+%and in order to illustrate tail recursion, here are 
+%macros for a `comment' environment.
+作为上述两步宏的想法的应用，
+\howto Comment environment\par
+也为了演示尾递归，这里是一个`注释'环境的宏。
+
+%Often it is necessary to remove a part of \TeX\
+%input temporarily. For this one would like to
+%write
+%\begin{verbatim}
+%\comment
+%...
+%\endcomment
+%\end{verbatim}
+%The simplest implementation of this, 
+%\begin{verbatim}
+%\def\comment#1\endcomment{}
+%\end{verbatim} 
+%has a number of weaknesses. For instance,
+%it cannot cope with outer macros or input that 
+%does not have balanced braces. Its worst
+%shortcoming, however, is that it reads the complete
+%comment text as a macro argument. This limits the size
+%of the comment to that of \TeX's input buffer.
+我们经常需要临时删除部分 \TeX\ 输入。为此我们想这样写
+\begin{verbatim}
+\comment
+...
+\endcomment
+\end{verbatim}
+最简单的实现方式，
+\begin{verbatim}
+\def\comment#1\endcomment{}
+\end{verbatim} 
+有许多不足。比如，它无法妥善处理外部宏或者花括号不匹配的输入。
+然而，最大的不足是它将整个注释文本作为宏参量读取。
+这使得注释文本的长度不能超过 \TeX\ 的输入缓冲区的大小。
+
+%It would be a better idea to take on the out-commented
+%text one line at a time. For this we want to write
+%a recursive macro with a basic structure
+%\begin{verbatim}
+%\def\comment#1^^M{ ... \comment }
+%\end{verbatim}
+%In order to be able to write this definition at all,
+%the category code of the line end must be changed; as above
+%\altt
+%we will have
+%\begin{verbatim}
+%\def\comment{\begingroup \catcode`\^^M=12 \xcomment}
+%{\catcode`\^^M=12 \endlinechar=-1 %
+% \gdef\xcomment#1^^M{ ... \xcomment}
+%}
+%\end{verbatim}
+%Changing the \cs{endlinechar} is merely to 
+%prevent having to put comment characters at the end
+%of every line of the definition.
+将注释文本逐行取出会更好些。为此我们需要编写一个递归宏
+\begin{verbatim}
+\def\comment#1^^M{ ... \comment }
+\end{verbatim}
+为使这个定义能写出来，行尾符的类别码必须改变。和上面一样我们将有
+\begin{verbatim}
+\def\comment{\begingroup \catcode`\^^M=12 \xcomment}
+{\catcode`\^^M=12 \endlinechar=-1 %
+ \gdef\xcomment#1^^M{ ... \xcomment}
+}
+\end{verbatim}
+改变 \cs{endlinechar} 只不过是为了避免在这个定义的每行末尾加上注释符。
+
+%Of course, the process must stop at a certain time.
+%To this purpose we investigate the line that was
+%scooped up as macro argument:
+%\begin{verbatim}
+%{\catcode`\^^M=12 \endlinechar=-1 %
+% \gdef\xcomment#1^^M{\def\test{#1}
+%    \ifx\test\endcomment \let\next=\endgroup
+%    \else \let\next=\xcomment \fi
+%    \next}
+%}
+%\end{verbatim}
+%and we have to define \cs{endcomment}:
+%\begin{verbatim}
+%\def\endcomment{\endcomment}
+%\end{verbatim}
+%This command will never be executed: it is merely for purposes
+%of testing whether the end of the environment has been reached.
+当然，这个过程必须在某个地方停止。为此我们考察已被取为宏参量的文本行：
+\begin{verbatim}
+{\catcode`\^^M=12 \endlinechar=-1 %
+ \gdef\xcomment#1^^M{\def\test{#1}
+    \ifx\test\endcomment \let\next=\endgroup
+    \else \let\next=\xcomment \fi
+    \next}
+}
+\end{verbatim}
+而我们必须定义 \cs{endcomment} 如下：
+\begin{verbatim}
+\def\endcomment{\endcomment}
+\end{verbatim}
+这个命令将永远不会被执行；它只是用于测试是否已经到达环境的结尾处。
+
+%We may want to comment out text that is not syntactically
+%correct. Therefore we switch to a
+%\indexterm{verbatim mode}
+%when commenting. The following macro is given 
+%in plain \TeX:
+%\begin{verbatim}
+%\def\dospecials{\do\ \do\\\do\{\do\}\do\$\do\&%
+%  \do\#\do\^\do\^^K\do\_\do\^^A\do\%\do\~}
+%\end{verbatim}
+%We use it to define \cs{comment} as follows:
+%\begin{verbatim}
+%\def\makeinnocent#1{\catcode`#1=12 }
+%\def\comment{\begingroup
+%    \let\do=\makeinnocent \dospecials
+%    \endlinechar`\^^M \catcode`\^^M=12 \xcomment}
+%\end{verbatim}
+%Apart from the possibility mentioned above of commenting
+%out text that is not syntactically correct, for instance
+%because of unmatched braces, this solution can handle
+%outer macros. The former implementation of \cs{xcomment}
+%would cause a \TeX\ error if one occurred in the comment text.
+我们也许想注释掉语法不正确的文本。因此在注释时我们切换到\indexterm{抄录模式}。
+下面的宏是 plain \TeX\ 给出的：
+\begin{verbatim}
+\def\dospecials{\do\ \do\\\do\{\do\}\do\$\do\&%
+  \do\#\do\^\do\^^K\do\_\do\^^A\do\%\do\~}
+\end{verbatim}
+我们把它用到 \cs{comment} 的定义中：
+\begin{verbatim}
+\def\makeinnocent#1{\catcode`#1=12 }
+\def\comment{\begingroup
+    \let\do=\makeinnocent \dospecials
+    \endlinechar`\^^M \catcode`\^^M=12 \xcomment}
+\end{verbatim}
+这种方法除了能注释掉语法错误比如花括号不匹配的文本外，还能处理外部宏。
+之前的 \cs{xcomment} 实现在注释文本包含外部宏时将会产生 \TeX\ 错误。
+
+%However, using verbatim mode poses the problem of concluding the 
+%environment.
+%\altt
+%The final line of the comment is now not the control sequence
+%\cs{endcomment}, but the characters constituting it. We have
+%to test for these then:
+%\begin{verbatim}
+%{\escapechar=-1
+% \xdef\endcomment{\string\\endcomment}
+%}
+%\end{verbatim}
+%The sequence \verb>\string\\> gives a backslash.
+%We could not have used
+%\begin{verbatim}
+%\edef\endcomment{\string\endcomment}
+%\end{verbatim}
+%because
+%the letters of the word \n{endcomment} would then have
+%category code~12, instead of the 11 that the ones on the
+%last line of the comment will have.
+然而，使用抄录模式给结束环境造成了问题。注释的最后一行现在不是控制序列
+\cs{endcomment}，而是由一串字符组成。这样我们就必须测试这个字符串：
+\begin{verbatim}
+{\escapechar=-1
+ \xdef\endcomment{\string\\endcomment}
+}
+\end{verbatim}
+代码 \verb>\string\\> 给出一个反斜线。我们不能这样写
+\begin{verbatim}
+\edef\endcomment{\string\endcomment}
+\end{verbatim}
+因为这样写单词 \n{endcomment} 各字母的类别码将为~12，
+而与它们在注释最后一行中的类别码~11~不相等。
+
+%\endofchapter
+%%%%% end of input file [macro]
+\endofchapter
+%%%% end of input file [macro]
+
+\end{document}

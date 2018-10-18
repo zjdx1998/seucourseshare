@@ -1,0 +1,734 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{29}
+
+\begin{document}
+
+%\chapter{File Input and Output}\label{io}
+%\index{I/O!file|(}
+\chapter{File Input and Output}\label{io}
+\index{I/O!file|(}
+
+%This chapter discusses the various ways in which \TeX\ can read from
+%and write to external \indexterm{files}.
+This chapter discusses the various ways in which \TeX\ can read from
+and write to external \indexterm{files}.
+
+%\label{cschap:input}\label{cschap:endinput}\label{cschap:inputlineno}\label{cschap:message}\label{cschap:write}\label{cschap:read}\label{cschap:newread}\label{cschap:newwrite}\label{cschap:openin}\label{cschap:closein}\label{cschap:openout}\label{cschap:closeout}\label{cschap:ifeof}\label{cschap:immediate}\label{cschap:newlinechar}
+%\begin{inventory}
+%\item [\cs{input}] 
+%      Read a specified file as \TeX\ input. 
+\label{cschap:input}\label{cschap:endinput}\label{cschap:inputlineno}\label{cschap:message}\label{cschap:write}\label{cschap:read}\label{cschap:newread}\label{cschap:newwrite}\label{cschap:openin}\label{cschap:closein}\label{cschap:openout}\label{cschap:closeout}\label{cschap:ifeof}\label{cschap:immediate}\label{cschap:newlinechar}
+\begin{inventory}
+\item [\cs{input}] 
+      Read a specified file as \TeX\ input. 
+
+%\item [\cs{endinput}] 
+%      Terminate inputting the current file after the current line.
+\item [\cs{endinput}] 
+      Terminate inputting the current file after the current line.
+
+%\item [\cs{pausing}] 
+%      Specify that \TeX\ should pause after each line that is 
+%      read from a file.
+\item [\cs{pausing}] 
+      Specify that \TeX\ should pause after each line that is 
+      read from a file.
+
+%\item [\cs{inputlineno}] 
+%      Number of the current input line.
+\item [\cs{inputlineno}] 
+      Number of the current input line.
+
+%\item [\cs{message}]
+%      Write a message to the terminal.
+\item [\cs{message}]
+      Write a message to the terminal.
+
+%\item [\cs{write}]   
+%      Write a \gr{general text} to the terminal or to a file. 
+\item [\cs{write}]   
+      Write a \gr{general text} to the terminal or to a file. 
+
+%\item [\cs{read}]   
+%      Read a line from a stream into a control sequence.
+\item [\cs{read}]   
+      Read a line from a stream into a control sequence.
+
+%\item [\cs{newread \cs{newwrite}}]
+%\mdqon
+%      Macro for allocating a new input/""output stream.
+%\mdqoff
+\item [\cs{newread \cs{newwrite}}]
+\mdqon
+      Macro for allocating a new input/""output stream.
+\mdqoff
+
+%\item [\cs{openin \cs{closein}}]
+%      Open/close an input stream.
+\item [\cs{openin \cs{closein}}]
+      Open/close an input stream.
+
+%\item [\cs{openout \cs{closeout}}]
+%      Open/close an output stream.
+\item [\cs{openout \cs{closeout}}]
+      Open/close an output stream.
+
+%\item [\cs{ifeof}]  
+%      Test whether a file has been fully read, or does not exist.
+\item [\cs{ifeof}]  
+      Test whether a file has been fully read, or does not exist.
+
+%\item [\cs{immediate}]  
+%      Prefix to have output operations executed right away.
+\item [\cs{immediate}]  
+      Prefix to have output operations executed right away.
+
+%\item [\cs{escapechar}] 
+%      Number of the character that is  used 
+%      when control sequences are being converted
+%      into character tokens.
+%      \IniTeX\ default:~92.
+\item [\cs{escapechar}] 
+      Number of the character that is  used 
+      when control sequences are being converted
+      into character tokens.
+      \IniTeX\ default:~92.
+
+%\item [\cs{newlinechar}] 
+%      Number of the character that triggers a new line in
+%      \cs{write} and \cs{message} statements.
+\item [\cs{newlinechar}] 
+      Number of the character that triggers a new line in
+      \cs{write} and \cs{message} statements.
+
+%\end{inventory}
+\end{inventory}
+
+
+%%\point Including files: \cs{input} and \cs{endinput}
+%\section{Including files: \protect\cs{input} and \protect\cs{endinput}}
+%\point Including files: \cs{input} and \cs{endinput}
+\section{Including files: \protect\cs{input} and \protect\cs{endinput}}
+
+%Large documents can be segmented in \TeX\ by putting 
+%\cstoidx input\par
+%parts in separate \indexterm{input files}, and loading these with \cs{input}
+%into the master file. The exact syntax for
+%file names is implementation dependent; most of the
+%time a \n{.tex} file extension is assumed if no explicit
+%extension is given.
+%File names can be delimited with a space or with \cs{relax}.
+%The \cs{input} command is expandable.
+Large documents can be segmented in \TeX\ by putting 
+\cstoidx input\par
+parts in separate \indexterm{input files}, and loading these with \cs{input}
+into the master file. The exact syntax for
+file names is implementation dependent; most of the
+time a \n{.tex} file extension is assumed if no explicit
+extension is given.
+File names can be delimited with a space or with \cs{relax}.
+The \cs{input} command is expandable.
+
+%If \TeX\ encounters in an input file the
+%\csidx{endinput} statement, it acts as if the file
+%ends after the line on which the statement occurs.
+%Any statements on the same line as \cs{endinput} are
+%still executed.
+%The \cs{endinput} statement is expandable.
+If \TeX\ encounters in an input file the
+\csidx{endinput} statement, it acts as if the file
+ends after the line on which the statement occurs.
+Any statements on the same line as \cs{endinput} are
+still executed.
+The \cs{endinput} statement is expandable.
+
+%%\point File I{/}O
+%\section{File I{/}O}
+%\point File I{/}O
+\section{File I{/}O}
+
+%\TeX\ supports input and output streams for reading and writing
+%\altt
+%files one line at a time.
+\TeX\ supports input and output streams for reading and writing
+\altt
+files one line at a time.
+
+%%\spoint Opening and closing streams
+%\subsection{Opening and closing streams}
+%\spoint Opening and closing streams
+\subsection{Opening and closing streams}
+
+%\TeX\ supports up to 16 simultaneous input and 16 output 
+%\indexterm{streams}.
+%The plain \TeX\ macros
+%\csidx{newread} and \csidx{newwrite} give the number of an unused
+%stream. This number is assigned by a \cs{chardef} command. 
+%Input streams are completely independent of output
+%streams. 
+\TeX\ supports up to 16 simultaneous input and 16 output 
+\indexterm{streams}.
+The plain \TeX\ macros
+\csidx{newread} and \csidx{newwrite} give the number of an unused
+stream. This number is assigned by a \cs{chardef} command. 
+Input streams are completely independent of output
+streams. 
+
+%Input streams are opened by
+%\cstoidx openin\par
+%\begin{disp}\cs{openin}\gr{4-bit number}\gr{equals}\gr{filename}\end{disp}
+%and closed by 
+%\cstoidx closein\par
+%\begin{disp}\cs{closein}\gr{4-bit number}\end{disp}
+Input streams are opened by
+\cstoidx openin\par
+\begin{disp}\cs{openin}\gr{4-bit number}\gr{equals}\gr{filename}\end{disp}
+and closed by 
+\cstoidx closein\par
+\begin{disp}\cs{closein}\gr{4-bit number}\end{disp}
+
+%Output streams are opened by
+%\cstoidx openout\par
+%\begin{disp}\cs{openout}\gr{4-bit number}\gr{equals}\gr{filename}\end{disp}
+%and closed by
+%\cstoidx closeout\par
+%\begin{disp}\cs{closeout}\gr{4-bit number}\end{disp}
+Output streams are opened by
+\cstoidx openout\par
+\begin{disp}\cs{openout}\gr{4-bit number}\gr{equals}\gr{filename}\end{disp}
+and closed by
+\cstoidx closeout\par
+\begin{disp}\cs{closeout}\gr{4-bit number}\end{disp}
+
+%If an output file does not yet exist, it is created
+%by \cs{openout}; if it did exist, an \cs{openout} will
+%cause it to be overwritten.
+If an output file does not yet exist, it is created
+by \cs{openout}; if it did exist, an \cs{openout} will
+cause it to be overwritten.
+
+%The output operations \cs{openout}, \cs{closeout},
+%and \cs{write} can all three be prefixed by \cs{immediate};
+%see below.
+The output operations \cs{openout}, \cs{closeout},
+and \cs{write} can all three be prefixed by \cs{immediate};
+see below.
+
+%%\spoint Input with \cs{read}
+%\subsection{Input with \cs{read}}
+%\spoint Input with \cs{read}
+\subsection{Input with \cs{read}}
+
+%In addition to the \cs{input} command, which reads a whole
+%file, \TeX\ has the \csidx{read} operation, which
+%reads one line from a file (or from the user terminal).
+%The syntax of the read command is
+%  
+%\begin{disp}\cs{read}\gr{number}\n{to}\gr{control sequence}\end{disp}
+%The effect of this statement is that one input line
+%is read from the designated stream, and the control
+%sequence is defined as a macro without parameters, having
+%that line as replacement text.
+In addition to the \cs{input} command, which reads a whole
+file, \TeX\ has the \csidx{read} operation, which
+reads one line from a file (or from the user terminal).
+The syntax of the read command is
+  
+\begin{disp}\cs{read}\gr{number}\n{to}\gr{control sequence}\end{disp}
+The effect of this statement is that one input line
+is read from the designated stream, and the control
+sequence is defined as a macro without parameters, having
+that line as replacement text.
+
+%If the input line is not balanced with respect to braces,
+%\TeX\ will read more than one line, continuing for as long
+%as is necessary to get a balanced token list.
+%\TeX\ implicitly appends an empty line to each input stream,
+%\alt
+%so the last \cs{read} operation on a stream will always
+%yield a single \cs{par} token.
+If the input line is not balanced with respect to braces,
+\TeX\ will read more than one line, continuing for as long
+as is necessary to get a balanced token list.
+\TeX\ implicitly appends an empty line to each input stream,
+\alt
+so the last \cs{read} operation on a stream will always
+yield a single \cs{par} token.
+
+%Read operations from any stream outside the range 0--15 \ldash or 
+%streams not associated with an open file, or on which the file
+%end has been reached \rdash 
+%read from the terminal. If the stream number is positive
+%the user is prompted with the name of the control sequence
+%being defined by the \cs{read} statement.
+Read operations from any stream outside the range 0--15 \ldash or 
+streams not associated with an open file, or on which the file
+end has been reached \rdash 
+read from the terminal. If the stream number is positive
+the user is prompted with the name of the control sequence
+being defined by the \cs{read} statement.
+
+%\begin{example}
+%\begin{verbatim}
+%\read16 to \data
+%\end{verbatim}
+%displays a prompt
+%\begin{verbatim}
+%\data=
+%\end{verbatim}
+%and typing `my name'
+%in response makes the read statement equivalent
+%to
+%\begin{verbatim}
+%\def\data{my name }
+%\end{verbatim}
+%The space at the end of the input derives from the line end;
+%to prevent this one could write
+%\begin{verbatim}
+%{\endlinechar=-1 \global\read16 to \data}
+%\end{verbatim}
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\read16 to \data
+\end{verbatim}
+displays a prompt
+\begin{verbatim}
+\data=
+\end{verbatim}
+and typing `my name'
+in response makes the read statement equivalent
+to
+\begin{verbatim}
+\def\data{my name }
+\end{verbatim}
+The space at the end of the input derives from the line end;
+to prevent this one could write
+\begin{verbatim}
+{\endlinechar=-1 \global\read16 to \data}
+\end{verbatim}
+\end{example}
+
+%%\spoint Output with \cs{write}
+%\subsection{Output with \cs{write}}
+%\spoint Output with \cs{write}
+\subsection{Output with \cs{write}}
+
+%\TeX's \csidx{write} command
+%  
+%\begin{disp}\cs{write}\gr{number}\gr{general text}\end{disp}
+%writes a balanced token list to a file which has been opened
+%by \cs{openout}, to the log file, or to the terminal.
+\TeX's \csidx{write} command
+  
+\begin{disp}\cs{write}\gr{number}\gr{general text}\end{disp}
+writes a balanced token list to a file which has been opened
+by \cs{openout}, to the log file, or to the terminal.
+
+%Write operations to a stream outside 0--15 \ldash or to a
+%stream that is not associated with an open file \rdash  go to the log file;
+%if the stream number is positive they 
+%go to the terminal as well as to the log file.
+Write operations to a stream outside 0--15 \ldash or to a
+stream that is not associated with an open file \rdash  go to the log file;
+if the stream number is positive they 
+go to the terminal as well as to the log file.
+
+%The token list argument of \cs{write}, defined as
+%  
+%\begin{disp}\gr{general text} $\longrightarrow$ \gr{filler}%
+%       \lb\gr{balanced text}\gr{right brace}\end{disp}
+%can have an implicit opening brace.
+%This argument is expanded as if it were the replacement
+%text of an \cs{edef}, so, for instance, 
+%any macros and conditionals appearing are expanded.
+%No commands are executed, however. 
+%This expansion occurs
+%at the time of shipping out; see below.
+%Until that time the argument token list is stored
+%in a whatsit item on the current list.
+%See further Chapter~\ref{expand} for
+%a discussion of expansion during writing.
+The token list argument of \cs{write}, defined as
+  
+\begin{disp}\gr{general text} $\longrightarrow$ \gr{filler}%
+       \lb\gr{balanced text}\gr{right brace}\end{disp}
+can have an implicit opening brace.
+This argument is expanded as if it were the replacement
+text of an \cs{edef}, so, for instance, 
+any macros and conditionals appearing are expanded.
+No commands are executed, however. 
+This expansion occurs
+at the time of shipping out; see below.
+Until that time the argument token list is stored
+in a whatsit item on the current list.
+See further Chapter~\ref{expand} for
+a discussion of expansion during writing.
+
+%A control sequence output by \cs{write} (or \cs{message})
+%is represented with  a trailing space, and using
+%character number \cs{escapechar}
+%for the escape character.
+%The \IniTeX\ default for this is~92,
+%the code for the backslash.
+%The trailing space can be prevented by prefixing the control
+%sequence with \cs{string}.
+A control sequence output by \cs{write} (or \cs{message})
+is represented with  a trailing space, and using
+character number \cs{escapechar}
+for the escape character.
+The \IniTeX\ default for this is~92,
+the code for the backslash.
+The trailing space can be prevented by prefixing the control
+sequence with \cs{string}.
+
+%%\point Whatsits
+%\section{Whatsits}
+%\point Whatsits
+\section{Whatsits}
+
+%\index{whatsits|(}
+\index{whatsits|(}
+
+%There is an essential difference 
+%in execution between input and output:
+%operations concerning output 
+%(\cs{openout}, \cs{closeout}, \cs{write})
+%are  executed \emph{asynchronously}\index{I/O!asynchronous}.
+%That is, instead of being done immediately they are saved until
+%the box in which they appear is shipped out 
+%to the \n{dvi} file.
+There is an essential difference 
+in execution between input and output:
+operations concerning output 
+(\cs{openout}, \cs{closeout}, \cs{write})
+are  executed \emph{asynchronously}\index{I/O!asynchronous}.
+That is, instead of being done immediately they are saved until
+the box in which they appear is shipped out 
+to the \n{dvi} file.
+
+%Writes and the other two output operations are placed
+%in `whatsit' items on whichever list is currently being built.
+%The actual operation occurs when the part of the page
+%that has the item is shipped out to the \n{dvi} file.
+%This delayed output is made necessary by \TeX's
+%asynchronous output routine behaviour.
+%See a worked-out example on page~\pageref{expand:write}.
+Writes and the other two output operations are placed
+in `whatsit' items on whichever list is currently being built.
+The actual operation occurs when the part of the page
+that has the item is shipped out to the \n{dvi} file.
+This delayed output is made necessary by \TeX's
+asynchronous output routine behaviour.
+See a worked-out example on page~\pageref{expand:write}.
+
+%An \verb.\immediate\write. \ldash or any other \csidx{immediate} output
+%operation \rdash  is executed on the spot, and
+%does not place a whatsit item on the current list.
+An \verb.\immediate\write. \ldash or any other \csidx{immediate} output
+operation \rdash  is executed on the spot, and
+does not place a whatsit item on the current list.
+
+%The argument of a \cs{special} command
+%(see page~\pageref{special}) is also placed in a whatsit.
+The argument of a \cs{special} command
+(see page~\pageref{special}) is also placed in a whatsit.
+
+%Whatsit items in leader boxes are ignored.
+Whatsit items in leader boxes are ignored.
+
+%\index{whatsits|)}
+\index{whatsits|)}
+
+%\section{Assorted remarks}
+\section{Assorted remarks}
+
+%%\spoint Inspecting input
+%\subsection{Inspecting input}
+%\spoint Inspecting input
+\subsection{Inspecting input}
+
+%\TeX\ records the current line number in the current input file
+%in the \gr{internal integer} parameter \csidx{inputlineno}
+%(in \TeX3).
+\TeX\ records the current line number in the current input file
+in the \gr{internal integer} parameter \csidx{inputlineno}
+(in \TeX3).
+
+%If the parameter \csidx{pausing} is positive, \TeX\ shows
+%every line that is input on the terminal \emph{screen}\index{I/O!screen},
+%and gives the user the opportunity
+%to insert commands. These can for instance be \cs{show} commands.
+%Inserted commands are treated as if they were directly
+%in the source file: it is for instance not necessary
+%to prefix them with~`i', as would be necessary when 
+%\TeX\ pauses for an error.
+If the parameter \csidx{pausing} is positive, \TeX\ shows
+every line that is input on the terminal \emph{screen}\index{I/O!screen},
+and gives the user the opportunity
+to insert commands. These can for instance be \cs{show} commands.
+Inserted commands are treated as if they were directly
+in the source file: it is for instance not necessary
+to prefix them with~`i', as would be necessary when 
+\TeX\ pauses for an error.
+
+%%\spoint Testing for existence of files
+%\subsection{Testing for existence of files}
+%\spoint Testing for existence of files
+\subsection{Testing for existence of files}
+
+%\TeX\ is not the friendliest of systems when you
+%\howto Test whether a file exists\par
+%ask it to input a non-existing file. Therefore the following
+%sequence of commands can be used to prevent trouble\label{ex:eof}:
+%\begin{verbatim}
+%\newread\instream \openin\instream= fname.tex
+%\ifeof\instream \message{File 'fname' does not exist!}
+%\else \closein\instream \input fname.tex
+%\fi
+%\end{verbatim}
+%Here an input stream is opened with the given file name.
+%The end-of-file test is also true
+%if an input stream does not correspond to a physical file,
+%so if this conditional is not true,
+%the file exists and an \cs{input} command can safely be given.
+\TeX\ is not the friendliest of systems when you
+\howto Test whether a file exists\par
+ask it to input a non-existing file. Therefore the following
+sequence of commands can be used to prevent trouble\label{ex:eof}:
+\begin{verbatim}
+\newread\instream \openin\instream= fname.tex
+\ifeof\instream \message{File 'fname' does not exist!}
+\else \closein\instream \input fname.tex
+\fi
+\end{verbatim}
+Here an input stream is opened with the given file name.
+The end-of-file test is also true
+if an input stream does not correspond to a physical file,
+so if this conditional is not true,
+the file exists and an \cs{input} command can safely be given.
+
+%%\spoint Timing problems
+%\subsection{Timing problems}
+%\spoint Timing problems
+\subsection{Timing problems}
+
+%The synchronization between write operations on the
+%one hand, and opening/closing operations
+%of files on the other hand,
+%can be a crucial point. Auxiliary files, such as are
+%used by various formats to implement cross-references,
+%are a good illustration of this.
+The synchronization between write operations on the
+one hand, and opening/closing operations
+of files on the other hand,
+can be a crucial point. Auxiliary files, such as are
+used by various formats to implement cross-references,
+are a good illustration of this.
+
+%Suppose that during a run of \TeX\ the auxiliary file is written, and
+%\howto Input a file that was created in the same run of \TeX\par
+%at the end of the run it has to be input again for a variety
+%of purposes (such as seeing whether references have changed).
+%An \cs{input} command is executed right away, so
+%the file must have been closed with an \verb=\immediate\closeout=.
+%However, now it becomes possible that the file is closed 
+%before all writes to it have been performed.
+%The following sequence remedies this:
+%\begin{verbatim}
+%\par\vfil\penalty -10000 \immediate\closeout\auxfile
+%\end{verbatim}
+%The first three commands activate the output routine
+%in order to close off the last page,
+%so all writes will indeed have been performed before the
+%file is closed.
+Suppose that during a run of \TeX\ the auxiliary file is written, and
+\howto Input a file that was created in the same run of \TeX\par
+at the end of the run it has to be input again for a variety
+of purposes (such as seeing whether references have changed).
+An \cs{input} command is executed right away, so
+the file must have been closed with an \verb=\immediate\closeout=.
+However, now it becomes possible that the file is closed 
+before all writes to it have been performed.
+The following sequence remedies this:
+\begin{verbatim}
+\par\vfil\penalty -10000 \immediate\closeout\auxfile
+\end{verbatim}
+The first three commands activate the output routine
+in order to close off the last page,
+so all writes will indeed have been performed before the
+file is closed.
+
+%%\spoint \cs{message} versus \cs{immediate}\cs{write}16
+%\subsection{\cs{message} versus \cs{immediate}\cs{write}16}
+%\spoint \cs{message} versus \cs{immediate}\cs{write}16
+\subsection{\cs{message} versus \cs{immediate}\cs{write}16}
+
+%Messages to the user can be given using 
+%\csidx{message}\gr{general text}, which writes to the  terminal.
+%Messages are appended to one another; 
+%the line is wrapped when the line
+%length (a~\TeX\ compile-time constant) has been reached.
+%In \TeX\ version2,
+%a~maximum of 1000 characters is written per message;
+%this is not a compile-time constant, but is hard-wired 
+%into the \TeX\ program.
+Messages to the user can be given using 
+\csidx{message}\gr{general text}, which writes to the  terminal.
+Messages are appended to one another; 
+the line is wrapped when the line
+length (a~\TeX\ compile-time constant) has been reached.
+In \TeX\ version2,
+a~maximum of 1000 characters is written per message;
+this is not a compile-time constant, but is hard-wired 
+into the \TeX\ program.
+
+%Each message given with \verb=\immediate\write=
+%starts on a new line; the user can force a new line
+%in the message by including the character with
+%number~\csidx{newlinechar}. This parameter also works
+%in \cs{message}. The plain \TeX\ default for \cs{newlinechar} is~\n{-1}; 
+%the \LaTeX\ default of~\n{10} allows you to write 
+%\verb+\message{two^^Jlines}+.
+Each message given with \verb=\immediate\write=
+starts on a new line; the user can force a new line
+in the message by including the character with
+number~\csidx{newlinechar}. This parameter also works
+in \cs{message}. The plain \TeX\ default for \cs{newlinechar} is~\n{-1}; 
+the \LaTeX\ default of~\n{10} allows you to write 
+\verb+\message{two^^Jlines}+.
+
+%%\spoint Write inside a vertical box
+%\subsection{Write inside a vertical box}
+%\spoint Write inside a vertical box
+\subsection{Write inside a vertical box}
+
+%Since a write operation winds up on the vertical list in a whatsit,
+%issuing one at the start of a \cs{vtop} 
+%will probably influence the height of that box
+%(see  Chapter~\ref{boxes}). As an example,
+%\begin{verbatim}
+%have the \vtop{\write\terminal{Hello!}\hbox{more text}}
+%dangling from
+%\end{verbatim}
+%will have the~\vtop{\write-1{vtop gezien}\hbox{more text}}~dangling 
+%from the baseline (and when this book is \TeX ed the
+%message `Hello!' appears on the screen).
+Since a write operation winds up on the vertical list in a whatsit,
+issuing one at the start of a \cs{vtop} 
+will probably influence the height of that box
+(see  Chapter~\ref{boxes}). As an example,
+\begin{verbatim}
+have the \vtop{\write\terminal{Hello!}\hbox{more text}}
+dangling from
+\end{verbatim}
+will have the~\vtop{\write-1{vtop gezien}\hbox{more text}}~dangling 
+from the baseline (and when this book is \TeX ed the
+message `Hello!' appears on the screen).
+
+%%\spoint Expansion and spaces in \cs{write} and \cs{message}
+%\subsection{Expansion and spaces in \cs{write} and \cs{message}}
+%\spoint Expansion and spaces in \cs{write} and \cs{message}
+\subsection{Expansion and spaces in \cs{write} and \cs{message}}
+
+%Both \cs{write} and \cs{message} expand their argument
+%as if it were the replacement text of an \cs{edef}.
+%Therefore
+%\begin{verbatim}
+%\def\a{b}\message{\a}
+%\end{verbatim}
+%will
+%write out~`\n b'.
+Both \cs{write} and \cs{message} expand their argument
+as if it were the replacement text of an \cs{edef}.
+Therefore
+\begin{verbatim}
+\def\a{b}\message{\a}
+\end{verbatim}
+will
+write out~`\n b'.
+
+%Unexpandable control sequences are displayed with a trailing
+%space (and prefixed with the \cs{escapechar}):
+%\begin{verbatim}
+%\message{\hbox\vbox!}
+%\end{verbatim}
+%will write out
+%`\verb>\hbox \vbox !>'. Undefined control sequences give an error here.
+Unexpandable control sequences are displayed with a trailing
+space (and prefixed with the \cs{escapechar}):
+\begin{verbatim}
+\message{\hbox\vbox!}
+\end{verbatim}
+will write out
+`\verb>\hbox \vbox !>'. Undefined control sequences give an error here.
+
+%Expandable control sequences can be written out with some
+%care:
+%\begin{verbatim}
+%\message{\noexpand\ifx}
+%\message{\string\ifx}
+%{\let\ifx\relax \message{\ifx}}
+%\end{verbatim}
+%all write out `\verb>\ifx>'.
+Expandable control sequences can be written out with some
+care:
+\begin{verbatim}
+\message{\noexpand\ifx}
+\message{\string\ifx}
+{\let\ifx\relax \message{\ifx}}
+\end{verbatim}
+all write out `\verb>\ifx>'.
+
+%Note, however, that spaces after expandable control sequences
+%are removed in the input processor, which goes into state~$S$
+%after a control sequence. Therefore
+%\begin{verbatim}
+%\def\a{b}\def\c{d}
+%\message{\a \c}
+%\end{verbatim}
+%writes out `\n{bd}'.
+%Inserting a space can be done as follows:
+%\begin{verbatim}
+%\def\space{ } % in plain TeX
+%\message{\a\space\c}
+%\end{verbatim}
+%displays `\n{b d}'.
+%Note that
+%\begin{verbatim}
+% 
+%\message{\a{ }\c}
+%\end{verbatim}
+%does not work: it displays `\verb=b{ }d='
+%since braces are unexpandable character tokens.
+Note, however, that spaces after expandable control sequences
+are removed in the input processor, which goes into state~$S$
+after a control sequence. Therefore
+\begin{verbatim}
+\def\a{b}\def\c{d}
+\message{\a \c}
+\end{verbatim}
+writes out `\n{bd}'.
+Inserting a space can be done as follows:
+\begin{verbatim}
+\def\space{ } % in plain TeX
+\message{\a\space\c}
+\end{verbatim}
+displays `\n{b d}'.
+Note that
+\begin{verbatim}
+ 
+\message{\a{ }\c}
+\end{verbatim}
+does not work: it displays `\verb=b{ }d='
+since braces are unexpandable character tokens.
+
+%\index{I/O!file|)}
+%\endofchapter
+\index{I/O!file|)}
+\endofchapter
+
+\end{document}

@@ -1,0 +1,234 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8483EF74154907DE0066DE72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8483EF73154907DE0066DE72 /* Foundation.framework */; };
+		8483EF77154907DE0066DE72 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8483EF76154907DE0066DE72 /* main.m */; };
+		8483EF7B154907DE0066DE72 /* Shapes_Procedural.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8483EF7A154907DE0066DE72 /* Shapes_Procedural.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8483EF6D154907DE0066DE72 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8483EF7B154907DE0066DE72 /* Shapes_Procedural.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8483EF6F154907DE0066DE72 /* Shapes-Procedural */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Shapes-Procedural"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8483EF73154907DE0066DE72 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		8483EF76154907DE0066DE72 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8483EF79154907DE0066DE72 /* Shapes-Procedural-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shapes-Procedural-Prefix.pch"; sourceTree = "<group>"; };
+		8483EF7A154907DE0066DE72 /* Shapes_Procedural.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Shapes_Procedural.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8483EF6C154907DE0066DE72 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8483EF74154907DE0066DE72 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8483EF64154907DE0066DE72 = {
+			isa = PBXGroup;
+			children = (
+				8483EF75154907DE0066DE72 /* Shapes-Procedural */,
+				8483EF72154907DE0066DE72 /* Frameworks */,
+				8483EF70154907DE0066DE72 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8483EF70154907DE0066DE72 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8483EF6F154907DE0066DE72 /* Shapes-Procedural */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8483EF72154907DE0066DE72 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8483EF73154907DE0066DE72 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8483EF75154907DE0066DE72 /* Shapes-Procedural */ = {
+			isa = PBXGroup;
+			children = (
+				8483EF76154907DE0066DE72 /* main.m */,
+				8483EF7A154907DE0066DE72 /* Shapes_Procedural.1 */,
+				8483EF78154907DE0066DE72 /* Supporting Files */,
+			);
+			path = "Shapes-Procedural";
+			sourceTree = "<group>";
+		};
+		8483EF78154907DE0066DE72 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8483EF79154907DE0066DE72 /* Shapes-Procedural-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8483EF6E154907DE0066DE72 /* Shapes-Procedural */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8483EF7E154907DE0066DE72 /* Build configuration list for PBXNativeTarget "Shapes-Procedural" */;
+			buildPhases = (
+				8483EF6B154907DE0066DE72 /* Sources */,
+				8483EF6C154907DE0066DE72 /* Frameworks */,
+				8483EF6D154907DE0066DE72 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Shapes-Procedural";
+			productName = "Shapes-Procedural";
+			productReference = 8483EF6F154907DE0066DE72 /* Shapes-Procedural */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8483EF66154907DE0066DE72 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 8483EF69154907DE0066DE72 /* Build configuration list for PBXProject "Shapes-Procedural" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 8483EF64154907DE0066DE72;
+			productRefGroup = 8483EF70154907DE0066DE72 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8483EF6E154907DE0066DE72 /* Shapes-Procedural */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8483EF6B154907DE0066DE72 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8483EF77154907DE0066DE72 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8483EF7C154907DE0066DE72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		8483EF7D154907DE0066DE72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		8483EF7F154907DE0066DE72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Shapes-Procedural/Shapes-Procedural-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8483EF80154907DE0066DE72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Shapes-Procedural/Shapes-Procedural-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8483EF69154907DE0066DE72 /* Build configuration list for PBXProject "Shapes-Procedural" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8483EF7C154907DE0066DE72 /* Debug */,
+				8483EF7D154907DE0066DE72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8483EF7E154907DE0066DE72 /* Build configuration list for PBXNativeTarget "Shapes-Procedural" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8483EF7F154907DE0066DE72 /* Debug */,
+				8483EF80154907DE0066DE72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8483EF66154907DE0066DE72 /* Project object */;
+}

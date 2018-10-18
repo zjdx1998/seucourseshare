@@ -1,0 +1,243 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		842A25591522BF4300CC772A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842A25581522BF4300CC772A /* Foundation.framework */; };
+		842A255C1522BF4300CC772A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A255B1522BF4300CC772A /* main.m */; };
+		842A25601522BF4300CC772A /* iTunesFinder.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 842A255F1522BF4300CC772A /* iTunesFinder.1 */; };
+		842A256C1522BF8E00CC772A /* ITunesFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A256B1522BF8E00CC772A /* ITunesFinder.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		842A25521522BF4300CC772A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				842A25601522BF4300CC772A /* iTunesFinder.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		842A25541522BF4300CC772A /* iTunesFinder */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = iTunesFinder; sourceTree = BUILT_PRODUCTS_DIR; };
+		842A25581522BF4300CC772A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		842A255B1522BF4300CC772A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		842A255E1522BF4300CC772A /* iTunesFinder-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iTunesFinder-Prefix.pch"; sourceTree = "<group>"; };
+		842A255F1522BF4300CC772A /* iTunesFinder.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = iTunesFinder.1; sourceTree = "<group>"; };
+		842A256A1522BF8E00CC772A /* ITunesFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ITunesFinder.h; sourceTree = "<group>"; };
+		842A256B1522BF8E00CC772A /* ITunesFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ITunesFinder.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		842A25511522BF4300CC772A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				842A25591522BF4300CC772A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		842A25491522BF4300CC772A = {
+			isa = PBXGroup;
+			children = (
+				842A255A1522BF4300CC772A /* iTunesFinder */,
+				842A25571522BF4300CC772A /* Frameworks */,
+				842A25551522BF4300CC772A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		842A25551522BF4300CC772A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				842A25541522BF4300CC772A /* iTunesFinder */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		842A25571522BF4300CC772A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				842A25581522BF4300CC772A /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		842A255A1522BF4300CC772A /* iTunesFinder */ = {
+			isa = PBXGroup;
+			children = (
+				842A255B1522BF4300CC772A /* main.m */,
+				842A255F1522BF4300CC772A /* iTunesFinder.1 */,
+				842A256A1522BF8E00CC772A /* ITunesFinder.h */,
+				842A256B1522BF8E00CC772A /* ITunesFinder.m */,
+				842A255D1522BF4300CC772A /* Supporting Files */,
+			);
+			path = iTunesFinder;
+			sourceTree = "<group>";
+		};
+		842A255D1522BF4300CC772A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				842A255E1522BF4300CC772A /* iTunesFinder-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		842A25531522BF4300CC772A /* iTunesFinder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 842A25631522BF4300CC772A /* Build configuration list for PBXNativeTarget "iTunesFinder" */;
+			buildPhases = (
+				842A25501522BF4300CC772A /* Sources */,
+				842A25511522BF4300CC772A /* Frameworks */,
+				842A25521522BF4300CC772A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iTunesFinder;
+			productName = iTunesFinder;
+			productReference = 842A25541522BF4300CC772A /* iTunesFinder */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		842A254B1522BF4300CC772A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 842A254E1522BF4300CC772A /* Build configuration list for PBXProject "iTunesFinder" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 842A25491522BF4300CC772A;
+			productRefGroup = 842A25551522BF4300CC772A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				842A25531522BF4300CC772A /* iTunesFinder */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		842A25501522BF4300CC772A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				842A255C1522BF4300CC772A /* main.m in Sources */,
+				842A256C1522BF8E00CC772A /* ITunesFinder.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		842A25611522BF4300CC772A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		842A25621522BF4300CC772A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		842A25641522BF4300CC772A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iTunesFinder/iTunesFinder-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		842A25651522BF4300CC772A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iTunesFinder/iTunesFinder-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		842A254E1522BF4300CC772A /* Build configuration list for PBXProject "iTunesFinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				842A25611522BF4300CC772A /* Debug */,
+				842A25621522BF4300CC772A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		842A25631522BF4300CC772A /* Build configuration list for PBXNativeTarget "iTunesFinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				842A25641522BF4300CC772A /* Debug */,
+				842A25651522BF4300CC772A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 842A254B1522BF4300CC772A /* Project object */;
+}

@@ -1,0 +1,1728 @@
+% -*- coding: utf-8 -*-
+% This file is part of TeX by Topic
+% Copyright 2007 Victor
+\documentclass[openany]{book}
+
+\input{preamble}
+\setcounter{chapter}{37}
+
+\begin{document}
+
+%\chapter{Tables}
+%%\stepcounter{chapter}\addcontentsline{toc}{section}{Tables}\pagestyle{plain}\clearpage
+%\input tables
+\chapter{编码表格}
+%\stepcounter{chapter}\addcontentsline{toc}{section}{Tables}\pagestyle{plain}\clearpage
+
+%%\storecat\"
+%\catcode`\"=12
+%\storecat\"
+\catcode`\"=12
+
+%\leavevmode\hbox{}\vfill\hbox{}
+%\pagebreak
+\newpage
+
+%\section{Character tables}
+%\label{sec:asciitable}
+%\hbox{}\vskip-20pt \hbox{}
+\section{字符编码表}
+\label{sec:asciitable}
+\subsection{ASCII 字符编码}
+
+%%% fonts
+%\def\titlefont{\SansSerif \pointSize:10 \Style:roman }
+%\def\titlefont{\sffamily}
+%\def\bitfont{\SerifFont \pointSize:7 \Style:Roman }
+%\def\bitfont{\sffamily\small}
+%\def\codefont{\SansSerif \pointSize:5 \Style:roman }
+%\def\codefont{\sffamily\tiny}
+%\def\namefont{\SansSerif \pointSize:11 \Style:roman }
+%\let\namefont\relax
+%\let\commentfont\titlefont
+%\font\cmtenrm=cmr10 \font\cmtenit=cmti10
+%% fonts
+\def\titlefont{\SansSerif \pointSize:10 \Style:roman }
+\def\titlefont{\sffamily}
+\def\bitfont{\SerifFont \pointSize:7 \Style:Roman }
+\def\bitfont{\sffamily\small}
+\def\codefont{\SansSerif \pointSize:5 \Style:roman }
+\def\codefont{\sffamily\tiny}
+\def\namefont{\SansSerif \pointSize:11 \Style:roman }
+\let\namefont\relax
+\let\commentfont\titlefont
+\font\cmtenrm=cmr10 \font\cmtenit=cmti10
+
+%%% counts and dimens
+%\newdimen\thinlinewidth \thinlinewidth=.25mm
+%\newdimen\fatlinewidth \fatlinewidth=.5mm
+%\newdimen\rowheight \rowheight=.85cm %1cm
+%\newdimen\colwidth  \colwidth=1.2cm %1.6cm
+%\newdimen\Colwidth \Colwidth=2\colwidth
+%  \advance\Colwidth by \thinlinewidth
+%\newdimen\topwhite \topwhite=2pt
+%\newdimen\botwhite \botwhite=3pt
+%\newdimen\leftwhite \leftwhite=0pt %2pt
+%\newdimen\rightwhite \rightwhite=1pt %1pt
+%\newcount\rowcount 
+%\newcount\colcount 
+%\rowcount=-1 %% note!
+%\colcount=0
+%\newcount\thenumber
+%% counts and dimens
+\newdimen\thinlinewidth \thinlinewidth=.25mm
+\newdimen\fatlinewidth \fatlinewidth=.5mm
+\newdimen\rowheight \rowheight=.85cm %1cm
+\newdimen\colwidth  \colwidth=1.2cm %1.6cm
+\newdimen\Colwidth \Colwidth=2\colwidth
+  \advance\Colwidth by \thinlinewidth
+\newdimen\topwhite \topwhite=2pt
+\newdimen\botwhite \botwhite=3pt
+\newdimen\leftwhite \leftwhite=0pt %2pt
+\newdimen\rightwhite \rightwhite=1pt %1pt
+\newcount\rowcount 
+\newcount\colcount 
+\rowcount=-1 %% note!
+\colcount=0
+\newcount\thenumber
+
+%%% tidbits
+%\def\\{$\backslash$}\def\-{\_$\!$\_}\def\^{\char94}
+%\def\hh#1{\char'136\char'136 {#1}\ignorespaces}
+%\def\thinline{\vrule width \thinlinewidth}
+%\def\fatline{\vrule width \fatlinewidth}
+%\tolerance=10000
+%\vbadness=10000
+%% tidbits
+\def\\{$\backslash$}\def\-{\_$\!$\_}\def\^{\char94}
+\def\hh#1{\char'136\char'136 {#1}\ignorespaces}
+\def\thinline{\vrule width \thinlinewidth}
+\def\fatline{\vrule width \fatlinewidth}
+\tolerance=10000
+\vbadness=10000
+
+%%% code conversion
+%\def\calcnumber{{\multiply\colcount by 16
+%                 \advance\colcount by \rowcount
+%                 \global\thenumber=\colcount}}
+%\def\deccode{\number\thenumber}
+%\def\octcode{{\ifnum\thenumber>63
+%                            \advance\thenumber by -64
+%                            \count0=\thenumber \divide\count0 by 8
+%                            1\number\count0
+%              \else         \count0=\thenumber \divide\count0 by 8
+%                            \ifnum\count0>0 \number\count0 \fi\fi
+%              \multiply\count0 by 8
+%              \advance\thenumber by -\count0
+%              \number\thenumber}}
+%\def\hexdigit#1{\ifcase#1 0\or 1\or 2\or 3\or 4\or 5\or 6\or 7\or
+%                          8\or 9\or A\or B\or C\or D\or E\or F\or
+%                          \edef\tmp{\message{illegal hex digit 
+%                                        \number#1}}\tmp
+%                          \fi}
+%\def\hexcode{{\count0=\thenumber \divide\count0 by 16
+%              \ifnum\count0>0 \hexdigit{\count0}\fi
+%              \multiply\count0 by 16
+%              \advance\thenumber by -\count0 \count0=\thenumber
+%              \hexdigit{\count0}}}
+%% code conversion
+\def\calcnumber{{\multiply\colcount by 16
+                 \advance\colcount by \rowcount
+                 \global\thenumber=\colcount}}
+\def\deccode{\number\thenumber}
+\def\octcode{{\ifnum\thenumber>63
+                            \advance\thenumber by -64
+                            \count0=\thenumber \divide\count0 by 8
+                            1\number\count0
+              \else         \count0=\thenumber \divide\count0 by 8
+                            \ifnum\count0>0 \number\count0 \fi\fi
+              \multiply\count0 by 8
+              \advance\thenumber by -\count0
+              \number\thenumber}}
+\def\hexdigit#1{\ifcase#1 0\or 1\or 2\or 3\or 4\or 5\or 6\or 7\or
+                          8\or 9\or A\or B\or C\or D\or E\or F\or
+                          \edef\tmp{\message{illegal hex digit 
+                                        \number#1}}\tmp
+                          \fi}
+\def\hexcode{{\count0=\thenumber \divide\count0 by 16
+              \ifnum\count0>0 \hexdigit{\count0}\fi
+              \multiply\count0 by 16
+              \advance\thenumber by -\count0 \count0=\thenumber
+              \hexdigit{\count0}}}
+
+%%% the heading
+%\def\threebit#1#2#3{\vbox to 1.2\rowheight{\bitfont
+%                      \vskip\topwhite
+%                      \hbox to \colwidth{\hskip\leftwhite#1\hfil}
+%                      \vss %\vfill
+%                      \hbox to \colwidth{\hfil#2\hfil}
+%                      \vss %\vfill
+%                      \hbox to \colwidth{\hfil#3\hskip\rightwhite}
+%                      \vskip\botwhite}}
+%\def\comment#1{\vbox to \colwidth{
+%                      \vfil
+%                      \hbox to \Colwidth{\commentfont\hfil#1\hfil}
+%                      \vfil}}
+%\def\dcomment#1#2{\vbox to \colwidth{
+%                      \vfil
+%                      \hbox to \Colwidth{\commentfont\hfil#1\hfil}
+%                      \vskip \botwhite
+%                      \hbox to \Colwidth{\commentfont\hfil#2\hfil}
+%                      \vfil}}
+%\def\bithead{\vbox to \colwidth{\hsize=1.5\colwidth
+%                   \vskip\topwhite
+%                   \hbox to \hsize{\commentfont\hfil BITS\hfil}
+%                   \vfil
+%                   \hbox to \hsize{\bitfont\ b4 b3 b2 b1 }
+%                   \vskip\botwhite}}
+%% the heading
+\def\threebit#1#2#3{\vbox to 1.2\rowheight{\bitfont
+                      \vskip\topwhite
+                      \hbox to \colwidth{\hskip\leftwhite#1\hfil}
+                      \vss %\vfill
+                      \hbox to \colwidth{\hfil#2\hfil}
+                      \vss %\vfill
+                      \hbox to \colwidth{\hfil#3\hskip\rightwhite}
+                      \vskip\botwhite}}
+\def\comment#1{\vbox to \colwidth{
+                      \vfil
+                      \hbox to \Colwidth{\commentfont\hfil#1\hfil}
+                      \vfil}}
+\def\dcomment#1#2{\vbox to \colwidth{
+                      \vfil
+                      \hbox to \Colwidth{\commentfont\hfil#1\hfil}
+                      \vskip \botwhite
+                      \hbox to \Colwidth{\commentfont\hfil#2\hfil}
+                      \vfil}}
+\def\bithead{\vbox to \colwidth{\hsize=1.5\colwidth
+                   \vskip\topwhite
+                   \hbox to \hsize{\commentfont\hfil BITS\hfil}
+                   \vfil
+                   \hbox to \hsize{\bitfont\ b4 b3 b2 b1 }
+                   \vskip\botwhite}}
+
+%%% routines for single chars
+%\def\fourbit#1\fb{\vbox to \rowheight{
+%                     \vfil
+%                     \hbox to 1.5\colwidth{\bitfont
+%                         \spaceskip=3pt plus 30pt#1\ }%1.5\colwidth
+%                     \vfil}%
+%    \global\advance\rowcount by 1
+%    \global\colcount=0\relax
+%    }
+%\def\thechar#1{\namefont\hfil#1\unskip\hfil}
+%\def\asc#1\ii{\calcnumber
+%              \vbox to \rowheight{\offinterlineskip
+%                     \vskip\topwhite
+%                     \hbox to \colwidth{\codefont
+%                                        \hskip\leftwhite
+%                                        \deccode\hfil}
+%                     \vss %\vfil
+%                     \hbox to \colwidth{\vrule width 0cm 
+%                                              height 10pt depth 2pt
+%                                        \thechar{#1}}
+%                     \vss %\vfil
+%                     \hbox to \colwidth{\codefont
+%                                        \hskip\leftwhite
+%                                        \hexcode\hfil\octcode
+%                                        \hskip\rightwhite}
+%                     \vskip\botwhite}%
+%              \global\advance\colcount by 1}
+%% routines for single chars
+\def\fourbit#1\fb{\vbox to \rowheight{
+                     \vfil
+                     \hbox to 1.5\colwidth{\bitfont
+                         \spaceskip=3pt plus 30pt#1\ }%1.5\colwidth
+                     \vfil}%
+    \global\advance\rowcount by 1
+    \global\colcount=0\relax
+    }
+\def\thechar#1{\namefont\hfil#1\unskip\hfil}
+\def\asc#1\ii{\calcnumber
+              \vbox to \rowheight{\offinterlineskip
+                     \vskip\topwhite
+                     \hbox to \colwidth{\codefont
+                                        \hskip\leftwhite
+                                        \deccode\hfil}
+                     \vss %\vfil
+                     \hbox to \colwidth{\vrule width 0cm 
+                                              height 10pt depth 2pt
+                                        \thechar{#1}}
+                     \vss %\vfil
+                     \hbox to \colwidth{\codefont
+                                        \hskip\leftwhite
+                                        \hexcode\hfil\octcode
+                                        \hskip\rightwhite}
+                     \vskip\botwhite}%
+              \global\advance\colcount by 1}
+
+%\def\complexhead{
+%          \omit\hfil\threebit{b7}{b6}{b5}
+%             &\omit\span\omit\fatline\threebit000&\omit\span\omit\thinline\threebit001%
+%             &\omit\span\omit\fatline\threebit010&\omit\span\omit\thinline\threebit011%
+%             &\omit\span\omit\fatline\threebit100&\omit\span\omit\thinline\threebit101%
+%             &\omit\span\omit\fatline\threebit110&\omit\span\omit\thinline\threebit111&
+%              \cr
+%    \noalign{\nointerlineskip}
+%        \omit&
+%        \multispan{16}\leaders\hrule height\thinlinewidth\hfill\cr
+%    \noalign{\vskip-.5mm} %brute force
+%          \omit\bithead
+%        &\omit\span\omit\fatline\comment{CONTROL}\span\omit\span\omit
+%        &\omit\span\omit\fatline\dcomment{SYMBOLS}{NUMBERS}\span\omit\span\omit
+%        &\omit\span\omit\fatline\comment{UPPERCASE}\span\omit\span\omit
+%        &\omit\span\omit\fatline\comment{LOWERCASE}\span\omit\span\omit&
+%            \cr
+%}
+\def\complexhead{
+          \omit\hfil\threebit{b7}{b6}{b5}
+             &\omit\span\omit\fatline\threebit000&\omit\span\omit\thinline\threebit001%
+             &\omit\span\omit\fatline\threebit010&\omit\span\omit\thinline\threebit011%
+             &\omit\span\omit\fatline\threebit100&\omit\span\omit\thinline\threebit101%
+             &\omit\span\omit\fatline\threebit110&\omit\span\omit\thinline\threebit111&
+              \cr
+    \noalign{\nointerlineskip}
+        \omit&
+        \multispan{16}\leaders\hrule height\thinlinewidth\hfill\cr
+    \noalign{\vskip-.5mm} %brute force
+          \omit\bithead
+        &\omit\span\omit\fatline\comment{CONTROL}\span\omit\span\omit
+        &\omit\span\omit\fatline\dcomment{SYMBOLS}{NUMBERS}\span\omit\span\omit
+        &\omit\span\omit\fatline\comment{UPPERCASE}\span\omit\span\omit
+        &\omit\span\omit\fatline\comment{LOWERCASE}\span\omit\span\omit&
+            \cr
+}
+
+%%%%%%%%%%%%%%%%%% and now the tables %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% and now the tables %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\label{ascii:table}\term table, \ascii\par
+%\tabskip=0pt
+\label{ascii:table}\term table, \ascii\par
+\tabskip=0pt
+
+%\halign to 30pc{\fourbit#\fb\tabskip=0ptplus1fil&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \tabskip=0pt\fatline#\cr
+%          \omit\span\omit&\multispan{12}\hskip\thinlinewidth
+%                            \titlefont ASCII CONTROL CODES\hfil
+%          &\multispan2\hskip\fatlinewidth
+%            \hbox{\vrule
+%             \vbox to \rowheight{
+%                 \offinterlineskip
+%                 \hrule\vskip \topwhite
+%                 \hbox to \colwidth{\codefont\hskip\leftwhite
+%                                       dec\hfil}
+%                 \vfil
+%                 \hbox to \colwidth{\namefont\hfil CHAR\hfil}
+%                 \vfil
+%                 \hbox to \colwidth{\codefont\hskip\leftwhite
+%                                       hex\hfil oct
+%                                       \hskip\rightwhite}
+%                 \vskip\botwhite
+%                 \hrule}\vrule}\cr
+%    \noalign{\nointerlineskip\vskip3pt \hrule}
+%    \complexhead
+%	    \noalign{\hrule}
+%      {} 0 0 0 0&&NUL&&DLE&&SP     &&0  &&@  &&P       &&` &&p  &\cr   \noalign{\hrule}
+%      {} 0 0 0 1&&SOH&&DC1&&!      &&1  &&A  &&Q       &&a &&q  &\cr   \noalign{\hrule}
+%      {} 0 0 1 0&&STX&&DC2&&"      &&2  &&B  &&R       &&b &&r  &\cr   \noalign{\hrule}
+%      {} 0 0 1 1&&ETX&&DC3&&\#     &&3  &&C  &&S       &&c &&s  &\cr   \noalign{\hrule}
+%      {} 0 1 0 0&&EOT&&DC4&&\$     &&4  &&D  &&T       &&d &&t  &\cr   \noalign{\hrule}
+%      {} 0 1 0 1&&ENQ&&NAK&&\%     &&5  &&E  &&U       &&e &&u  &\cr   \noalign{\hrule}
+%      {} 0 1 1 0&&ACK&&SYN&&\&     &&6  &&F  &&V       &&f &&v  &\cr   \noalign{\hrule}
+%      {} 0 1 1 1&&BEL&&ETB&&'      &&7  &&G  &&W       &&g &&w  &\cr   \noalign{\hrule}
+%      {} 1 0 0 0&&BS &&CAN&&(      &&8  &&H  &&X       &&h &&x  &\cr   \noalign{\hrule}
+%      {} 1 0 0 1&&HT &&EM &&)      &&9  &&I  &&Y       &&i &&y  &\cr   \noalign{\hrule}
+%      {} 1 0 1 0&&LF &&SUB&&*      &&:  &&J  &&Z       &&j &&z  &\cr   \noalign{\hrule}
+%      {} 1 0 1 1&&VT &&ESC&&+      &&;  &&K  &&[       &&k &&$\{$&\cr  \noalign{\hrule}
+%      {} 1 1 0 0&&FF &&FS &&,      &&$<$&&L  &&\\      &&l &&$|$ &\cr  \noalign{\hrule}
+%      {} 1 1 0 1&&CR &&GS &&$-$    &&=  &&M  &&]       &&m &&$\}$&\cr  \noalign{\hrule}
+%      {} 1 1 1 0&&SO &&RS &&.      &&$>$&&N  &&\char94 &&n &&\char126&\cr  \noalign{\hrule}
+%      {} 1 1 1 1&&SI &&US &&/      &&?  &&O  &&\texttt{\char95}&&o &&DEL&\cr   \noalign{\hrule}
+%          }
+\halign to 30pc{\fourbit#\fb\tabskip=0ptplus1fil&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \tabskip=0pt\fatline#\cr
+          \omit\span\omit&\multispan{12}\hskip\thinlinewidth
+                            \titlefont ASCII CHARACTER CODES\hfil
+          &\multispan2\hskip\fatlinewidth
+            \hbox{\vrule
+             \vbox to \rowheight{
+                 \offinterlineskip
+                 \hrule\vskip \topwhite
+                 \hbox to \colwidth{\codefont\hskip\leftwhite
+                                       dec\hfil}
+                 \vfil
+                 \hbox to \colwidth{\namefont\hfil CHAR\hfil}
+                 \vfil
+                 \hbox to \colwidth{\codefont\hskip\leftwhite
+                                       hex\hfil oct
+                                       \hskip\rightwhite}
+                 \vskip\botwhite
+                 \hrule}\vrule}\cr
+    \noalign{\nointerlineskip\vskip3pt \hrule}
+    \complexhead
+	    \noalign{\hrule}
+      {} 0 0 0 0&&NUL&&DLE&&SP     &&0  &&@  &&P       &&` &&p  &\cr   \noalign{\hrule}
+      {} 0 0 0 1&&SOH&&DC1&&!      &&1  &&A  &&Q       &&a &&q  &\cr   \noalign{\hrule}
+      {} 0 0 1 0&&STX&&DC2&&"      &&2  &&B  &&R       &&b &&r  &\cr   \noalign{\hrule}
+      {} 0 0 1 1&&ETX&&DC3&&\#     &&3  &&C  &&S       &&c &&s  &\cr   \noalign{\hrule}
+      {} 0 1 0 0&&EOT&&DC4&&\$     &&4  &&D  &&T       &&d &&t  &\cr   \noalign{\hrule}
+      {} 0 1 0 1&&ENQ&&NAK&&\%     &&5  &&E  &&U       &&e &&u  &\cr   \noalign{\hrule}
+      {} 0 1 1 0&&ACK&&SYN&&\&     &&6  &&F  &&V       &&f &&v  &\cr   \noalign{\hrule}
+      {} 0 1 1 1&&BEL&&ETB&&'      &&7  &&G  &&W       &&g &&w  &\cr   \noalign{\hrule}
+      {} 1 0 0 0&&BS &&CAN&&(      &&8  &&H  &&X       &&h &&x  &\cr   \noalign{\hrule}
+      {} 1 0 0 1&&HT &&EM &&)      &&9  &&I  &&Y       &&i &&y  &\cr   \noalign{\hrule}
+      {} 1 0 1 0&&LF &&SUB&&*      &&:  &&J  &&Z       &&j &&z  &\cr   \noalign{\hrule}
+      {} 1 0 1 1&&VT &&ESC&&+      &&;  &&K  &&[       &&k &&$\{$&\cr  \noalign{\hrule}
+      {} 1 1 0 0&&FF &&FS &&,      &&$<$&&L  &&\\      &&l &&$|$ &\cr  \noalign{\hrule}
+      {} 1 1 0 1&&CR &&GS &&$-$    &&=  &&M  &&]       &&m &&$\}$&\cr  \noalign{\hrule}
+      {} 1 1 1 0&&SO &&RS &&.      &&$>$&&N  &&\char94 &&n &&\char126&\cr  \noalign{\hrule}
+      {} 1 1 1 1&&SI &&US &&/      &&?  &&O  &&\texttt{\char95}&&o &&DEL&\cr   \noalign{\hrule}
+          }
+
+%\pagebreak %\eject
+\newpage
+\subsection{\TeX\ 字符编码}
+
+%\rowcount=-1
+%\colcount=0
+%\label{char:table}\term table, character codes\par
+%\hbox{}\vskip0pt plus 20pt
+%\halign to 30pc{\fourbit#\fb\tabskip=0ptplus1fil&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \tabskip=0pt\fatline#\cr
+%          \omit\span\omit&\multispan{12}\hskip\thinlinewidth
+%                            \titlefont \TeX\ CHARACTER CODES\hfil
+%          &\multispan2\hskip\fatlinewidth
+%           \hbox{\vrule
+%             \vbox to \rowheight{
+%                 \offinterlineskip
+%                 \hrule\vskip \topwhite
+%                 \hbox to \colwidth{\codefont\hskip\leftwhite
+%                                       dec\hfil}
+%                 \vfil
+%                 \hbox to \colwidth{\namefont\hfil CHAR\hfil}
+%                 \vfil
+%                 \hbox to \colwidth{\codefont\hskip\leftwhite
+%                                       hex\hfil oct
+%                                       \hskip\rightwhite}
+%                 \vskip\botwhite
+%                 \hrule}\vrule}\cr
+%    \noalign{\nointerlineskip\vskip3pt \hrule}
+%    \complexhead
+%    \noalign{\hrule}
+%  {} 0 0 0 0&&\hh @&&\hh P  &&SP &&0  &&@  &&P &&` &&p  &\cr    \noalign{\hrule}
+%  {} 0 0 0 1&&\hh A&&\hh Q  &&!  &&1  &&A  &&Q &&a &&q  &\cr    \noalign{\hrule}
+%  {} 0 0 1 0&&\hh B&&\hh R  &&"  &&2  &&B  &&R &&b &&r  &\cr    \noalign{\hrule}
+%  {} 0 0 1 1&&\hh C&&\hh S  &&\# &&3  &&C  &&S &&c &&s  &\cr    \noalign{\hrule}
+%  {} 0 1 0 0&&\hh D&&\hh T  &&\$ &&4  &&D  &&T &&d &&t  &\cr    \noalign{\hrule}
+%  {} 0 1 0 1&&\hh E&&\hh U  &&\% &&5  &&E  &&U &&e &&u  &\cr    \noalign{\hrule}
+%  {} 0 1 1 0&&\hh F&&\hh V  &&\& &&6  &&F  &&V &&f &&v  &\cr    \noalign{\hrule}
+%  {} 0 1 1 1&&\hh G&&\hh W  &&'  &&7  &&G  &&W &&g &&w  &\cr    \noalign{\hrule}
+%  {} 1 0 0 0&&\hh H&&\hh X  &&(  &&8  &&H  &&X &&h &&x  &\cr    \noalign{\hrule}
+%  {} 1 0 0 1&&\hh I&&\hh Y  &&)  &&9  &&I  &&Y &&i &&y  &\cr    \noalign{\hrule}
+%  {} 1 0 1 0&&\hh J&&\hh Z  &&*  &&:  &&J  &&Z &&j &&z  &\cr    \noalign{\hrule}
+%  {} 1 0 1 1&&\hh K&&\hh [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+%  {} 1 1 0 0&&\hh L&&\hh{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+%  {} 1 1 0 1&&\hh M&&\hh ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+%  {} 1 1 1 0&&\hh N&&\hh{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+%  {} 1 1 1 1&&\hh O&&\hh{\-}&&/  &&?  &&O  &&\texttt{\char95}&&o &&\hh ?&\cr    \noalign{\hrule}
+%      }
+\rowcount=-1
+\colcount=0
+\label{char:table}\term table, character codes\par
+\hbox{}\vskip0pt plus 20pt
+\halign to 30pc{\fourbit#\fb\tabskip=0ptplus1fil&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \tabskip=0pt\fatline#\cr
+          \omit\span\omit&\multispan{12}\hskip\thinlinewidth
+                            \titlefont \TeX\ CHARACTER CODES\hfil
+          &\multispan2\hskip\fatlinewidth
+           \hbox{\vrule
+             \vbox to \rowheight{
+                 \offinterlineskip
+                 \hrule\vskip \topwhite
+                 \hbox to \colwidth{\codefont\hskip\leftwhite
+                                       dec\hfil}
+                 \vfil
+                 \hbox to \colwidth{\namefont\hfil CHAR\hfil}
+                 \vfil
+                 \hbox to \colwidth{\codefont\hskip\leftwhite
+                                       hex\hfil oct
+                                       \hskip\rightwhite}
+                 \vskip\botwhite
+                 \hrule}\vrule}\cr
+    \noalign{\nointerlineskip\vskip3pt \hrule}
+    \complexhead
+    \noalign{\hrule}
+  {} 0 0 0 0&&\hh @&&\hh P  &&SP &&0  &&@  &&P &&` &&p  &\cr    \noalign{\hrule}
+  {} 0 0 0 1&&\hh A&&\hh Q  &&!  &&1  &&A  &&Q &&a &&q  &\cr    \noalign{\hrule}
+  {} 0 0 1 0&&\hh B&&\hh R  &&"  &&2  &&B  &&R &&b &&r  &\cr    \noalign{\hrule}
+  {} 0 0 1 1&&\hh C&&\hh S  &&\# &&3  &&C  &&S &&c &&s  &\cr    \noalign{\hrule}
+  {} 0 1 0 0&&\hh D&&\hh T  &&\$ &&4  &&D  &&T &&d &&t  &\cr    \noalign{\hrule}
+  {} 0 1 0 1&&\hh E&&\hh U  &&\% &&5  &&E  &&U &&e &&u  &\cr    \noalign{\hrule}
+  {} 0 1 1 0&&\hh F&&\hh V  &&\& &&6  &&F  &&V &&f &&v  &\cr    \noalign{\hrule}
+  {} 0 1 1 1&&\hh G&&\hh W  &&'  &&7  &&G  &&W &&g &&w  &\cr    \noalign{\hrule}
+  {} 1 0 0 0&&\hh H&&\hh X  &&(  &&8  &&H  &&X &&h &&x  &\cr    \noalign{\hrule}
+  {} 1 0 0 1&&\hh I&&\hh Y  &&)  &&9  &&I  &&Y &&i &&y  &\cr    \noalign{\hrule}
+  {} 1 0 1 0&&\hh J&&\hh Z  &&*  &&:  &&J  &&Z &&j &&z  &\cr    \noalign{\hrule}
+  {} 1 0 1 1&&\hh K&&\hh [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+  {} 1 1 0 0&&\hh L&&\hh{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+  {} 1 1 0 1&&\hh M&&\hh ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+  {} 1 1 1 0&&\hh N&&\hh{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+  {} 1 1 1 1&&\hh O&&\hh{\-}&&/  &&?  &&O  &&\texttt{\char95}&&o &&\hh ?&\cr    \noalign{\hrule}
+      }
+
+%\pagebreak %\eject
+\newpage
+
+%\def\fonttitle#1{\noalign{\hbox{\titlefont \uppercase{#1}}
+%    \nointerlineskip\kern3pt\hrule}}
+%\def\drop{\hbox{}\vskip3.5pt\vskip12pt}
+%%\point Computer modern fonts
+%\section{ Computer modern fonts}
+\def\fonttitle#1{\noalign{\hbox{\titlefont \uppercase{#1}}
+    \nointerlineskip\kern3pt\hrule}}
+\def\drop{\hbox{}\vskip3.5pt\vskip12pt}
+%\point Computer modern fonts
+\section{计算机现代字体}
+
+\subsection{计算机现代罗马字体}
+
+%\term font tables\par
+%\rowcount=-1
+%\colcount=0
+%\def\fourbit#1\fb{%
+%    \global\advance\rowcount by 1
+%    \global\colcount=0\relax
+%    }
+\term font tables\par
+\rowcount=-1
+\colcount=0
+\def\fourbit#1\fb{%
+    \global\advance\rowcount by 1
+    \global\colcount=0\relax
+    }
+
+%\def\thechar#1{\hfil$\textfont0=\cmtenrm 
+%                     \mathchar\thenumber$\hfil}
+%\label{cmr:table}\term tables, font\par
+%\message{really cmr table?}
+%\halign to 30pc{\tabskip=0ptplus1fil\relax\fourbit\fb
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \tabskip=0pt\fatline#\cr
+%        \fonttitle{Computer Modern Roman Font Layout}
+%         &@&& P  &&SP &&0  &&@  &&P &&` &&p   &\cr    \noalign{\hrule}
+%         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q   &\cr    \noalign{\hrule}
+%         &B&& R  &&"  &&2  &&B  &&R &&b &&r   &\cr    \noalign{\hrule}
+%         &C&& S  &&\# &&3  &&C  &&S &&c &&s   &\cr    \noalign{\hrule}
+%         &D&& T  &&\$ &&4  &&D  &&T &&d &&t   &\cr    \noalign{\hrule}
+%         &E&& U  &&\% &&5  &&E  &&U &&e &&u   &\cr    \noalign{\hrule}
+%         &F&& V  &&\& &&6  &&F  &&V &&f &&v   &\cr    \noalign{\hrule}
+%         &G&& W  &&'  &&7  &&G  &&W &&g &&w   &\cr    \noalign{\hrule}
+%         &H&& X  &&(  &&8  &&H  &&X &&h &&x   &\cr    \noalign{\hrule}
+%         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y   &\cr    \noalign{\hrule}
+%         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z   &\cr    \noalign{\hrule}
+%         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+%         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+%         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+%         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+%         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+%      }
+\def\thechar#1{\hfil$\textfont0=\cmtenrm 
+                     \mathchar\thenumber$\hfil}
+\label{cmr:table}\term tables, font\par
+\message{really cmr table?}
+\halign to 30pc{\tabskip=0ptplus1fil\relax\fourbit\fb
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \tabskip=0pt\fatline#\cr
+        \fonttitle{Computer Modern Roman Font Layout}
+         &@&& P  &&SP &&0  &&@  &&P &&` &&p   &\cr    \noalign{\hrule}
+         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q   &\cr    \noalign{\hrule}
+         &B&& R  &&"  &&2  &&B  &&R &&b &&r   &\cr    \noalign{\hrule}
+         &C&& S  &&\# &&3  &&C  &&S &&c &&s   &\cr    \noalign{\hrule}
+         &D&& T  &&\$ &&4  &&D  &&T &&d &&t   &\cr    \noalign{\hrule}
+         &E&& U  &&\% &&5  &&E  &&U &&e &&u   &\cr    \noalign{\hrule}
+         &F&& V  &&\& &&6  &&F  &&V &&f &&v   &\cr    \noalign{\hrule}
+         &G&& W  &&'  &&7  &&G  &&W &&g &&w   &\cr    \noalign{\hrule}
+         &H&& X  &&(  &&8  &&H  &&X &&h &&x   &\cr    \noalign{\hrule}
+         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y   &\cr    \noalign{\hrule}
+         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z   &\cr    \noalign{\hrule}
+         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+      }
+
+%\pagebreak %\vfill\eject
+\newpage
+\subsection{计算机现代打字机字体}
+
+%%% typewriter
+%\rowcount=-1
+%\colcount=0
+%\def\thechar#1{\hfil\tt\char\thenumber\hfil}
+%\drop
+%\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \tabskip=0pt\fatline#\cr
+%        \fonttitle{Computer Modern Typewriter Font Layout}
+%         &@&& P  &&SP &&0  &&@  &&P &&` &&p   &\cr    \noalign{\hrule}
+%         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q   &\cr    \noalign{\hrule}
+%         &B&& R  &&"  &&2  &&B  &&R &&b &&r   &\cr    \noalign{\hrule}
+%         &C&& S  &&\# &&3  &&C  &&S &&c &&s   &\cr    \noalign{\hrule}
+%         &D&& T  &&\$ &&4  &&D  &&T &&d &&t   &\cr    \noalign{\hrule}
+%         &E&& U  &&\% &&5  &&E  &&U &&e &&u   &\cr    \noalign{\hrule}
+%         &F&& V  &&\& &&6  &&F  &&V &&f &&v   &\cr    \noalign{\hrule}
+%         &G&& W  &&'  &&7  &&G  &&W &&g &&w   &\cr    \noalign{\hrule}
+%         &H&& X  &&(  &&8  &&H  &&X &&h &&x   &\cr    \noalign{\hrule}
+%         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y   &\cr    \noalign{\hrule}
+%         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z   &\cr    \noalign{\hrule}
+%         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+%         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+%         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+%         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+%         &O&&{\-}&&/  &&?  &&O  &&\texttt{\char95}&&o && ?&\cr    \noalign{\hrule}
+%      }
+%% typewriter
+\rowcount=-1
+\colcount=0
+\def\thechar#1{\hfil\tt\char\thenumber\hfil}
+\drop
+\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \tabskip=0pt\fatline#\cr
+        \fonttitle{Computer Modern Typewriter Font Layout}
+         &@&& P  &&SP &&0  &&@  &&P &&` &&p   &\cr    \noalign{\hrule}
+         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q   &\cr    \noalign{\hrule}
+         &B&& R  &&"  &&2  &&B  &&R &&b &&r   &\cr    \noalign{\hrule}
+         &C&& S  &&\# &&3  &&C  &&S &&c &&s   &\cr    \noalign{\hrule}
+         &D&& T  &&\$ &&4  &&D  &&T &&d &&t   &\cr    \noalign{\hrule}
+         &E&& U  &&\% &&5  &&E  &&U &&e &&u   &\cr    \noalign{\hrule}
+         &F&& V  &&\& &&6  &&F  &&V &&f &&v   &\cr    \noalign{\hrule}
+         &G&& W  &&'  &&7  &&G  &&W &&g &&w   &\cr    \noalign{\hrule}
+         &H&& X  &&(  &&8  &&H  &&X &&h &&x   &\cr    \noalign{\hrule}
+         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y   &\cr    \noalign{\hrule}
+         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z   &\cr    \noalign{\hrule}
+         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+         &O&&{\-}&&/  &&?  &&O  &&\texttt{\char95}&&o && ?&\cr    \noalign{\hrule}
+      }
+
+%\pagebreak %\vfill\eject
+\newpage
+\subsection{计算机现代意大利字体}
+
+%\rowcount=-1
+%\colcount=0
+%\def\thechar#1{\hfil$\textfont1=\cmtenit
+%                     \advance\thenumber256\relax\mathchar\thenumber$%
+%               \hfil}
+%\drop
+%\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \tabskip=0pt\fatline#\cr
+%        \fonttitle{Computer Modern Italic  Font Layout}
+%         &@&& P  &&SP &&0  &&@  &&P &&` &&p   &\cr    \noalign{\hrule}
+%         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q   &\cr    \noalign{\hrule}
+%         &B&& R  &&"  &&2  &&B  &&R &&b &&r   &\cr    \noalign{\hrule}
+%         &C&& S  &&\# &&3  &&C  &&S &&c &&s   &\cr    \noalign{\hrule}
+%         &D&& T  &&\$ &&4  &&D  &&T &&d &&t   &\cr    \noalign{\hrule}
+%         &E&& U  &&\% &&5  &&E  &&U &&e &&u   &\cr    \noalign{\hrule}
+%         &F&& V  &&\& &&6  &&F  &&V &&f &&v   &\cr    \noalign{\hrule}
+%         &G&& W  &&'  &&7  &&G  &&W &&g &&w   &\cr    \noalign{\hrule}
+%         &H&& X  &&(  &&8  &&H  &&X &&h &&x   &\cr    \noalign{\hrule}
+%         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y   &\cr    \noalign{\hrule}
+%         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z   &\cr    \noalign{\hrule}
+%         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+%         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+%         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+%         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+%         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+%      }
+\rowcount=-1
+\colcount=0
+\def\thechar#1{\hfil$\textfont1=\cmtenit
+                     \advance\thenumber256\relax\mathchar\thenumber$%
+               \hfil}
+\drop
+\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \tabskip=0pt\fatline#\cr
+        \fonttitle{Computer Modern Italic  Font Layout}
+         &@&& P  &&SP &&0  &&@  &&P &&` &&p   &\cr    \noalign{\hrule}
+         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q   &\cr    \noalign{\hrule}
+         &B&& R  &&"  &&2  &&B  &&R &&b &&r   &\cr    \noalign{\hrule}
+         &C&& S  &&\# &&3  &&C  &&S &&c &&s   &\cr    \noalign{\hrule}
+         &D&& T  &&\$ &&4  &&D  &&T &&d &&t   &\cr    \noalign{\hrule}
+         &E&& U  &&\% &&5  &&E  &&U &&e &&u   &\cr    \noalign{\hrule}
+         &F&& V  &&\& &&6  &&F  &&V &&f &&v   &\cr    \noalign{\hrule}
+         &G&& W  &&'  &&7  &&G  &&W &&g &&w   &\cr    \noalign{\hrule}
+         &H&& X  &&(  &&8  &&H  &&X &&h &&x   &\cr    \noalign{\hrule}
+         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y   &\cr    \noalign{\hrule}
+         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z   &\cr    \noalign{\hrule}
+         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+      }
+
+%\pagebreak %\vfill\eject
+\newpage
+\subsection{计算机现代符号字体}
+
+%%% Symbol
+%% Symbol
+
+%\rowcount=-1
+%\colcount=0
+%\def\thechar#1{\hfil$\advance\thenumber512\relax\mathchar\thenumber$\hfil}
+%\drop
+%\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \tabskip=0pt\fatline#\cr
+%        \fonttitle{Computer Modern Symbol Font}
+%         &@&& P  &&SP &&0  &&@  &&P &&` &&p  &\cr    \noalign{\hrule}
+%         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q  &\cr    \noalign{\hrule}
+%         &B&& R  &&"  &&2  &&B  &&R &&b &&r  &\cr    \noalign{\hrule}
+%         &C&& S  &&\# &&3  &&C  &&S &&c &&s  &\cr    \noalign{\hrule}
+%         &D&& T  &&\$ &&4  &&D  &&T &&d &&t  &\cr    \noalign{\hrule}
+%         &E&& U  &&\% &&5  &&E  &&U &&e &&u  &\cr    \noalign{\hrule}
+%         &F&& V  &&\& &&6  &&F  &&V &&f &&v  &\cr    \noalign{\hrule}
+%         &G&& W  &&'  &&7  &&G  &&W &&g &&w  &\cr    \noalign{\hrule}
+%         &H&& X  &&(  &&8  &&H  &&X &&h &&x  &\cr    \noalign{\hrule}
+%         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y  &\cr    \noalign{\hrule}
+%         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z  &\cr    \noalign{\hrule}
+%         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+%         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+%         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+%         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+%         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+%      }
+\rowcount=-1
+\colcount=0
+\def\thechar#1{\hfil$\advance\thenumber512\relax\mathchar\thenumber$\hfil}
+\drop
+\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \tabskip=0pt\fatline#\cr
+        \fonttitle{Computer Modern Symbol Font}
+         &@&& P  &&SP &&0  &&@  &&P &&` &&p  &\cr    \noalign{\hrule}
+         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q  &\cr    \noalign{\hrule}
+         &B&& R  &&"  &&2  &&B  &&R &&b &&r  &\cr    \noalign{\hrule}
+         &C&& S  &&\# &&3  &&C  &&S &&c &&s  &\cr    \noalign{\hrule}
+         &D&& T  &&\$ &&4  &&D  &&T &&d &&t  &\cr    \noalign{\hrule}
+         &E&& U  &&\% &&5  &&E  &&U &&e &&u  &\cr    \noalign{\hrule}
+         &F&& V  &&\& &&6  &&F  &&V &&f &&v  &\cr    \noalign{\hrule}
+         &G&& W  &&'  &&7  &&G  &&W &&g &&w  &\cr    \noalign{\hrule}
+         &H&& X  &&(  &&8  &&H  &&X &&h &&x  &\cr    \noalign{\hrule}
+         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y  &\cr    \noalign{\hrule}
+         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z  &\cr    \noalign{\hrule}
+         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+      }
+
+%\pagebreak %\vfill\eject
+\newpage
+\subsection{计算机现代数学扩展字体}
+
+%\rowcount=-1
+%\colcount=0
+%\def\thechar#1{\hfil\ifodd\thenumber\else\hskip3pt\relax\fi
+%    $\advance\thenumber768\relax\mathchar\thenumber$\hfil}
+%\rowheight=1.2\rowheight \advance\rowheight 4pt
+% \message{Vertical spacing cmex table}
+%\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+%                     \tabskip=0pt\fatline#\cr
+%        \fonttitle{Computer Modern Math Extension Font}
+%         &@&& P  &&SP &&0  &&@  &&P &&` &&p  &\cr    \noalign{\hrule}
+%         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q  &\cr    \noalign{\hrule}
+%         &B&& R  &&"  &&2  &&B  &&R &&b &&r  &\cr    \noalign{\hrule}
+%         &C&& S  &&\# &&3  &&C  &&S &&c &&s  &\cr    \noalign{\hrule}
+%         &D&& T  &&\$ &&4  &&D  &&T &&d &&t  &\cr    \noalign{\hrule}
+%         &E&& U  &&\% &&5  &&E  &&U &&e &&u  &\cr    \noalign{\hrule}
+%         &F&& V  &&\& &&6  &&F  &&V &&f &&v  &\cr    \noalign{\hrule}
+%         &G&& W  &&'  &&7  &&G  &&W &&g &&w  &\cr    \noalign{\hrule}
+%         &H&& X  &&(  &&8  &&H  &&X &&h &&x  &\cr    \noalign{\hrule}
+%         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y  &\cr    \noalign{\hrule}
+%         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z  &\cr    \noalign{\hrule}
+%         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+%         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+%         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+%         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+%         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+%      }
+\rowcount=-1
+\colcount=0
+\def\thechar#1{\hfil\ifodd\thenumber\else\hskip3pt\relax\fi
+    $\advance\thenumber768\relax\mathchar\thenumber$\hfil}
+\rowheight=1.2\rowheight \advance\rowheight 4pt
+ \message{Vertical spacing cmex table}
+\halign to 30pc{\fourbit\fb\tabskip=0ptplus1fil
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+        \fatline#&\asc#\ii&\thinline#&\asc#\ii&
+                     \tabskip=0pt\fatline#\cr
+        \fonttitle{Computer Modern Math Extension Font}
+         &@&& P  &&SP &&0  &&@  &&P &&` &&p  &\cr    \noalign{\hrule}
+         &A&& Q  &&!  &&1  &&A  &&Q &&a &&q  &\cr    \noalign{\hrule}
+         &B&& R  &&"  &&2  &&B  &&R &&b &&r  &\cr    \noalign{\hrule}
+         &C&& S  &&\# &&3  &&C  &&S &&c &&s  &\cr    \noalign{\hrule}
+         &D&& T  &&\$ &&4  &&D  &&T &&d &&t  &\cr    \noalign{\hrule}
+         &E&& U  &&\% &&5  &&E  &&U &&e &&u  &\cr    \noalign{\hrule}
+         &F&& V  &&\& &&6  &&F  &&V &&f &&v  &\cr    \noalign{\hrule}
+         &G&& W  &&'  &&7  &&G  &&W &&g &&w  &\cr    \noalign{\hrule}
+         &H&& X  &&(  &&8  &&H  &&X &&h &&x  &\cr    \noalign{\hrule}
+         &I&& Y  &&)  &&9  &&I  &&Y &&i &&y  &\cr    \noalign{\hrule}
+         &J&& Z  &&*  &&:  &&J  &&Z &&j &&z  &\cr    \noalign{\hrule}
+         &K&& [  &&+  &&;  &&K  &&[ &&k &&$\{$&\cr   \noalign{\hrule}
+         &L&&{\\}&&,  &&$<$&&L  &&\\&&l &&$|$ &\cr   \noalign{\hrule}
+         &M&& ]  &&$-$&&=  &&M  &&] &&m &&$\}$&\cr   \noalign{\hrule}
+         &N&&{\^}&&.  &&$>$&&N  &&\char94 &&n &&\char126&\cr \noalign{\hrule}
+         &O&&{\-}&&/  &&?  &&O  &&\char95 &&o && ?&\cr    \noalign{\hrule}
+      }
+
+%\pagebreak %\vfill\eject
+\newpage
+
+%%\point[math:sym:tables] Plain \TeX\ math symbols
+%\section{Plain \TeX\ math symbols}
+%\label{math:sym:tables}
+%\point[math:sym:tables] Plain \TeX\ math symbols
+\section{Plain \TeX\ 数学符号}
+\label{math:sym:tables}
+
+%\term math symbols, lists of\par
+\term math symbols, lists of\par
+
+%\def\class#1{\ifcase#1ordinary\or large operator\or
+%    binary operation\or relation\or open symbol\or closing symbol\or
+%    punctuation\or variable family\fi}
+%\def\prevclass{}\def\prevfaml{}
+%\def\bodyfont{\SerifFont \pointSize:9 \Style:roman }
+%\let\bodyfont\relax
+%\def\colmfont{\SerifFont \pointSize:10 \Style:bold }
+%\let\colmfont\relax
+%%\def\headrule{\noalign{\kern6pt\hrule height.5pt\hbox{}\kern2pt}}
+\def\class#1{\ifcase#1ordinary\or large operator\or
+    binary operation\or relation\or open symbol\or closing symbol\or
+    punctuation\or variable family\fi}
+\def\prevclass{}\def\prevfaml{}
+\def\bodyfont{\SerifFont \pointSize:9 \Style:roman }
+\let\bodyfont\relax
+\def\colmfont{\SerifFont \pointSize:10 \Style:bold }
+\let\colmfont\relax
+%\def\headrule{\noalign{\kern6pt\hrule height.5pt\hbox{}\kern2pt}}
+
+%%\spoint Mathcharacter codes
+%\subsection{ Mathcharacter codes}
+%\spoint Mathcharacter codes
+\subsection{字符的数学码}
+
+%The following characters have been defined
+%in a
+%\begin{disp}\cs{mathcode}\gr{8-bit number}\gr{equals}\gr{15-bit number}
+%\end{disp}
+%assignment.
+%\par\leavevmode\par
+下面列出的字符是用这个赋值定义的：
+\begin{disp}\cs{mathcode}\gr{8-bit number}\gr{equals}\gr{15-bit number}
+\end{disp}
+\par\leavevmode\par
+
+%\tabskip=0cm
+%\begingroup\bodyfont
+%\halign to 30pc
+%        {\tabskip=1pc plus 3pc
+%         \hfil\tt\char#\hfil&\tt\hfil#\hfil&
+%         \xdef\testclass{\class#}\ifx\testclass\prevclass
+%              \else\testclass\gdef\prevfaml{}\fi
+%              \global\let\prevclass\testclass\hfil&
+%         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+%              \global\let\prevfaml\testfaml\hfil&
+%         \hfil#\hfil\tabskip=0cm\cr
+% \omit \colmfont Character\strut&
+% \omit \colmfont \cs{mathcode}&
+% \omit \colmfont \hfil Class\hfil&
+% \omit \colmfont Family&
+% \omit \colmfont Hex position\cr
+%%\headrule
+%`\.&"013A&0&1&3A\cr
+%`\/&"013D&0&1&3D\cr
+%`\\&"026E&0&2&6E\cr
+%`\|&"026A&0&2&6A\cr
+%`\+&"202B&2&0&2B\cr
+%`\-&"2200&2&2&00\cr
+%`\*&"2203&2&2&03\cr
+%`\:&"303A&3&0&3A\cr
+%`\=&"303D&3&0&3D\cr
+%`\<&"313C&3&1&3C\cr
+%`\>&"313E&3&1&3E\cr
+%`\(&"4028&4&0&28\cr
+%`\[&"405B&4&0&5B\cr
+%`\{&"4266&4&2&66\cr
+%`\!&"5021&5&0&21\cr
+%`\)&"5029&5&0&29\cr
+%`\?&"503F&5&0&3F\cr
+%`\]&"505D&5&0&5D\cr
+%`\}&"5267&5&2&67\cr
+%`\;&"603B&6&0&3B\cr
+%`\,&"613B&6&1&3B\cr
+%`\ &"8000\cr
+%`\'&"8000\cr
+%`\_&"8000\cr
+%}
+%\endgroup
+\tabskip=0cm
+\begingroup\bodyfont
+\halign to 30pc
+        {\tabskip=1pc plus 3pc
+         \hfil\tt\char#\hfil&\tt\hfil#\hfil&
+         \xdef\testclass{\class#}\ifx\testclass\prevclass
+              \else\testclass\gdef\prevfaml{}\fi
+              \global\let\prevclass\testclass\hfil&
+         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+              \global\let\prevfaml\testfaml\hfil&
+         \hfil#\hfil\tabskip=0cm\cr
+ \omit \colmfont Character\strut&
+ \omit \colmfont \cs{mathcode}&
+ \omit \colmfont \hfil Class\hfil&
+ \omit \colmfont Family&
+ \omit \colmfont Hex position\cr
+%\headrule
+`\.&"013A&0&1&3A\cr
+`\/&"013D&0&1&3D\cr
+`\\&"026E&0&2&6E\cr
+`\|&"026A&0&2&6A\cr
+`\+&"202B&2&0&2B\cr
+`\-&"2200&2&2&00\cr
+`\*&"2203&2&2&03\cr
+`\:&"303A&3&0&3A\cr
+`\=&"303D&3&0&3D\cr
+`\<&"313C&3&1&3C\cr
+`\>&"313E&3&1&3E\cr
+`\(&"4028&4&0&28\cr
+`\[&"405B&4&0&5B\cr
+`\{&"4266&4&2&66\cr
+`\!&"5021&5&0&21\cr
+`\)&"5029&5&0&29\cr
+`\?&"503F&5&0&3F\cr
+`\]&"505D&5&0&5D\cr
+`\}&"5267&5&2&67\cr
+`\;&"603B&6&0&3B\cr
+`\,&"613B&6&1&3B\cr
+`\ &"8000\cr
+`\'&"8000\cr
+`\_&"8000\cr
+}
+\endgroup
+
+%\clearpage
+%%\vfill
+%%\pagebreak
+%%\vfil\eject
+
+%%\spoint Delimiter codes
+%\subsection{ Delimiter codes}
+%\spoint Delimiter codes
+\subsection{字符的定界码}
+
+% The following characters have been defined
+%in a
+%\begin{disp}\cs{delcode}\gr{8-bit number}\gr{equals}\gr{24-bit number}\end{disp}
+%assignment. They can be used with \cs{left} and~\cs{right}.
+%\par\leavevmode\par
+下面列出的字符是用这个赋值定义的：
+\begin{disp}\cs{delcode}\gr{8-bit number}\gr{equals}\gr{24-bit number}\end{disp}
+它们可以与 \cs{left} 和 \cs{right} 一起使用。
+\par\leavevmode\par
+
+%\begingroup\bodyfont
+%\halign to 30pc
+%       {\tabskip=1pc plus 3pc
+%         \hfil\tt\char#\hfil&\tt\hfil#\hfil&
+%         \hfil#\hfil&\hfil#\hfil&\hfil#\hfil&\hfil#\hfil\tabskip=0cm\cr
+% \multispan2\hfil&
+%     \multispan2\colmfont \hfil small variant\hfil&
+%     \multispan2\colmfont \hfil large variant\hfil\strut\cr
+% \omit \colmfont Character\hfil\strut&
+% \omit \colmfont \cs{delcode}&
+% \omit \colmfont Family&
+% \omit \colmfont Hex position&
+% \omit \colmfont Family&
+% \omit \colmfont Hex position\cr
+%%\headrule
+%`\(&"028300&0&28&3&00\cr
+%`\)&"029301&0&29&3&01\cr
+%`\[&"05B302&0&5B&3&02\cr
+%`\]&"05D303&0&5D&3&03\cr
+%`\<&"26830A&2&68&3&0A\cr
+%`\>&"26930B&2&69&3&0B\cr
+%`\/&"02F30E&0&2F&3&0E\cr
+%`\|&"26A30C&2&6A&3&0C\cr
+%`\\&"26E30F&2&6E&3&0F\cr
+%}\endgroup
+\begingroup\bodyfont
+\halign to 30pc
+       {\tabskip=1pc plus 3pc
+         \hfil\tt\char#\hfil&\tt\hfil#\hfil&
+         \hfil#\hfil&\hfil#\hfil&\hfil#\hfil&\hfil#\hfil\tabskip=0cm\cr
+ \multispan2\hfil&
+     \multispan2\colmfont \hfil small variant\hfil&
+     \multispan2\colmfont \hfil large variant\hfil\strut\cr
+ \omit \colmfont Character\hfil\strut&
+ \omit \colmfont \cs{delcode}&
+ \omit \colmfont Family&
+ \omit \colmfont Hex position&
+ \omit \colmfont Family&
+ \omit \colmfont Hex position\cr
+%\headrule
+`\(&"028300&0&28&3&00\cr
+`\)&"029301&0&29&3&01\cr
+`\[&"05B302&0&5B&3&02\cr
+`\]&"05D303&0&5D&3&03\cr
+`\<&"26830A&2&68&3&0A\cr
+`\>&"26930B&2&69&3&0B\cr
+`\/&"02F30E&0&2F&3&0E\cr
+`\|&"26A30C&2&6A&3&0C\cr
+`\\&"26E30F&2&6E&3&0F\cr
+}\endgroup
+
+%\vfil\eject
+
+%\def\prevclass{}\def\prevfaml{}
+\def\prevclass{}\def\prevfaml{}
+
+%%\spoint \gr{mathchardef tokens}: ordinary symbols
+%\subsection{ \gr{mathchardef tokens}: ordinary symbols}
+%\spoint \gr{mathchardef tokens}: ordinary symbols
+\subsection{定义普通符号}
+
+% The following characters have been defined
+%in a
+%\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+%\end{disp}
+%assignment.
+%\par\leavevmode\par
+下面列出的字符是用这个赋值定义的：
+\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+\end{disp}
+\par\leavevmode\par
+
+%\begingroup\bodyfont
+%\setbox0\hbox{\cs{diamondsuit}}
+%\setbox2\hbox{\colmfont Control Sequence}
+%\tempdima=\wd2 \advance\tempdima-\wd0 \global\divide\tempdima2
+%\halign to 30pc
+%       {\tabskip=1pc plus 3pc
+%         \hfil#\hfil&\kern\tempdima\cs{#}\hfil&\tt\hfil#\hfil&
+%         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+%              \global\let\prevfaml\testfaml\hfil&
+%         \hfil#\hfil\tabskip=0cm\cr
+% \omit \colmfont Symbol\strut&
+% \omit \colmfont Control Sequence&
+% \omit \colmfont \cs{mathcode}&
+% \omit \colmfont Family&
+% \omit \colmfont Hex position\cr
+%%\headrule
+%$\partial$&partial&           "0140&1&40\cr
+%$\flat$&flat&              "015B&1&5B\cr
+%$\natural$&natural&           "015C&1&5C\cr
+%$\sharp$&sharp&             "015D&1&5D\cr
+%$\ell$&ell&               "0160&1&60\cr
+%$\imath$&imath&             "017B&1&7B\cr
+%$\jmath$&jmath&             "017C&1&7C\cr
+%$\wp$&wp&                "017D&1&7D\cr
+%$\prime$&prime&             "0230&2&30\cr
+%$\infty$&infty&             "0231&2&31\cr
+%$\triangle$&triangle&          "0234&2&34\cr
+%$\forall$&forall&            "0238&2&38\cr
+%$\exists$&exists&            "0239&2&39\cr
+%$\neg$&neg&               "023A&2&3A\cr
+%$\emptyset$&emptyset&          "023B&2&3B\cr
+%$\Re$&Re&                "023C&2&3C\cr
+%$\Im$&Im&                "023D&2&3D\cr
+%$\top$&top&               "023E&2&3E\cr
+%$\bot$&bot&               "023F&2&3F\cr
+%$\aleph$&aleph&             "0240&2&40\cr
+%$\nabla$&nabla&             "0272&2&72\cr
+%$\clubsuit$&clubsuit&          "027C&2&7C\cr
+%$\diamondsuit$&diamondsuit&       "027D&2&7D\cr
+%$\heartsuit$&heartsuit&         "027E&2&7E\cr
+%$\spadesuit$&spadesuit&         "027F&2&7F\cr
+%}\endgroup
+%\vfil\eject
+\begingroup\bodyfont
+\setbox0\hbox{\cs{diamondsuit}}
+\setbox2\hbox{\colmfont Control Sequence}
+\tempdima=\wd2 \advance\tempdima-\wd0 \global\divide\tempdima2
+\halign to 30pc
+       {\tabskip=1pc plus 3pc
+         \hfil#\hfil&\kern\tempdima\cs{#}\hfil&\tt\hfil#\hfil&
+         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+              \global\let\prevfaml\testfaml\hfil&
+         \hfil#\hfil\tabskip=0cm\cr
+ \omit \colmfont Symbol\strut&
+ \omit \colmfont Control Sequence&
+ \omit \colmfont \cs{mathcode}&
+ \omit \colmfont Family&
+ \omit \colmfont Hex position\cr
+%\headrule
+$\partial$&partial&           "0140&1&40\cr
+$\flat$&flat&              "015B&1&5B\cr
+$\natural$&natural&           "015C&1&5C\cr
+$\sharp$&sharp&             "015D&1&5D\cr
+$\ell$&ell&               "0160&1&60\cr
+$\imath$&imath&             "017B&1&7B\cr
+$\jmath$&jmath&             "017C&1&7C\cr
+$\wp$&wp&                "017D&1&7D\cr
+$\prime$&prime&             "0230&2&30\cr
+$\infty$&infty&             "0231&2&31\cr
+$\triangle$&triangle&          "0234&2&34\cr
+$\forall$&forall&            "0238&2&38\cr
+$\exists$&exists&            "0239&2&39\cr
+$\neg$&neg&               "023A&2&3A\cr
+$\emptyset$&emptyset&          "023B&2&3B\cr
+$\Re$&Re&                "023C&2&3C\cr
+$\Im$&Im&                "023D&2&3D\cr
+$\top$&top&               "023E&2&3E\cr
+$\bot$&bot&               "023F&2&3F\cr
+$\aleph$&aleph&             "0240&2&40\cr
+$\nabla$&nabla&             "0272&2&72\cr
+$\clubsuit$&clubsuit&          "027C&2&7C\cr
+$\diamondsuit$&diamondsuit&       "027D&2&7D\cr
+$\heartsuit$&heartsuit&         "027E&2&7E\cr
+$\spadesuit$&spadesuit&         "027F&2&7F\cr
+}\endgroup
+
+%\def\prevclass{}\def\prevfaml{}
+\def\prevclass{}\def\prevfaml{}
+
+%%\spoint \gr{mathchardef tokens}: large operators
+%\subsection{ \gr{mathchardef tokens}: large operators}
+%\spoint \gr{mathchardef tokens}: large operators
+\subsection{定义巨算符}
+
+%The following characters have been defined
+%in a
+%\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+%\end{disp}
+%assignment.
+%\par\leavevmode\par
+下面列出的字符是用这个赋值定义的：
+\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+\end{disp}
+\par\leavevmode\par
+
+%\begingroup\bodyfont
+%\halign to 30pc
+%       {\tabskip=1pc plus 3pc
+%         \hfil#\hfil&\cs{#}\hfil&\hfil\tt#\hfil&
+%         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+%              \global\let\prevfaml\testfaml\hfil&
+%         \hfil#\hfil\tabskip=0cm\cr
+% \omit \colmfont Symbol\strut&
+% \omit \colmfont \hfil Control Sequence\hfil&
+% \omit \colmfont \cs{mathcode}&
+% \omit \colmfont Family&
+% \omit \colmfont Hex position\cr
+%%\headrule
+%$\smallint \displaystyle\smallint$&
+%    smallint&          "1273&2&73\cr
+%$\bigsqcup \displaystyle\bigsqcup$&
+%    bigsqcup&          "1346&3&46\cr
+%$\ointop \displaystyle\ointop$&
+%    ointop&            "1348&3&48\cr
+%$\bigodot \displaystyle\bigodot$&
+%    bigodot&           "134A&3&4A\cr
+%$\bigoplus \displaystyle\bigoplus$&
+%    bigoplus&          "134C&3&4C\cr
+%$\bigotimes \displaystyle\bigotimes$&
+%    bigotimes&         "134E&3&4E\cr
+%$\sum \displaystyle\sum$&
+%    sum&               "1350&3&50\cr
+%$\prod \displaystyle\prod$&
+%    prod&              "1351&3&51\cr
+%$\intop \displaystyle\intop$&
+%    intop&             "1352&3&52\cr
+%$\bigcup \displaystyle\bigcup$&
+%    bigcup&            "1353&3&53\cr
+%$\bigcap \displaystyle\bigcap$&
+%    bigcap&            "1354&3&54\cr
+%$\biguplus \displaystyle\biguplus$&
+%    biguplus&          "1355&3&55\cr
+%$\bigwedge \displaystyle\bigwedge$&
+%    bigwedge&          "1356&3&56\cr
+%$\bigvee \displaystyle\bigvee$&
+%    bigvee&            "1357&3&57\cr
+%$\coprod \displaystyle\coprod$&
+%    coprod&            "1360&3&60\cr
+%}\endgroup
+%\vfil\eject
+\begingroup\bodyfont
+\halign to 30pc
+       {\tabskip=1pc plus 3pc
+         \hfil#\hfil&\cs{#}\hfil&\hfil\tt#\hfil&
+         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+              \global\let\prevfaml\testfaml\hfil&
+         \hfil#\hfil\tabskip=0cm\cr
+ \omit \colmfont Symbol\strut&
+ \omit \colmfont \hfil Control Sequence\hfil&
+ \omit \colmfont \cs{mathcode}&
+ \omit \colmfont Family&
+ \omit \colmfont Hex position\cr
+%\headrule
+$\smallint \displaystyle\smallint$&
+    smallint&          "1273&2&73\cr
+$\bigsqcup \displaystyle\bigsqcup$&
+    bigsqcup&          "1346&3&46\cr
+$\ointop \displaystyle\ointop$&
+    ointop&            "1348&3&48\cr
+$\bigodot \displaystyle\bigodot$&
+    bigodot&           "134A&3&4A\cr
+$\bigoplus \displaystyle\bigoplus$&
+    bigoplus&          "134C&3&4C\cr
+$\bigotimes \displaystyle\bigotimes$&
+    bigotimes&         "134E&3&4E\cr
+$\sum \displaystyle\sum$&
+    sum&               "1350&3&50\cr
+$\prod \displaystyle\prod$&
+    prod&              "1351&3&51\cr
+$\intop \displaystyle\intop$&
+    intop&             "1352&3&52\cr
+$\bigcup \displaystyle\bigcup$&
+    bigcup&            "1353&3&53\cr
+$\bigcap \displaystyle\bigcap$&
+    bigcap&            "1354&3&54\cr
+$\biguplus \displaystyle\biguplus$&
+    biguplus&          "1355&3&55\cr
+$\bigwedge \displaystyle\bigwedge$&
+    bigwedge&          "1356&3&56\cr
+$\bigvee \displaystyle\bigvee$&
+    bigvee&            "1357&3&57\cr
+$\coprod \displaystyle\coprod$&
+    coprod&            "1360&3&60\cr
+}\endgroup
+
+%\def\prevclass{}\def\prevfaml{}
+\def\prevclass{}\def\prevfaml{}
+
+%%\spoint \gr{mathchardef tokens}: binary operations
+%\subsection{ \gr{mathchardef tokens}: binary operations}
+%\spoint \gr{mathchardef tokens}: binary operations
+\subsection{定义二元运算符}
+
+%The following characters have been defined
+%in a
+%\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+%\end{disp}
+%assignment.
+%\par\leavevmode\par
+下面列出的字符是用这个赋值定义的：
+\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+\end{disp}
+\par\leavevmode\par
+
+%\begingroup\bodyfont
+%\halign to 30pc
+%       {\tabskip=1pc plus 3pc
+%         \hfil#\hfil&\cs{#}\hfil&\tt#\hfil&
+%         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+%              \global\let\prevfaml\testfaml\hfil&
+%         \hfil#\hfil\tabskip=0cm\cr
+% \omit \colmfont Symbol\strut&
+% \omit \colmfont \hfil Control Sequence\hfil&
+% \omit \colmfont \cs{mathcode}&
+% \omit \colmfont Family&
+% \omit \colmfont Hex position\cr
+%%\headrule
+%$\triangleright$&triangleright&     "212E&1&2E\cr
+%$\triangleleft$&triangleleft&      "212F&1&2F\cr
+%$\star$&star&              "213F&1&3F\cr
+%$\cdot$&cdot&              "2201&2&01\cr
+%$\times$&times&             "2202&2&02\cr
+%$\ast$&ast&               "2203&2&03\cr
+%$\div$&div&               "2204&2&04\cr
+%$\diamond$&diamond&           "2205&2&05\cr
+%$\pm$&pm&                "2206&2&06\cr
+%$\mp$&mp&                "2207&2&07\cr
+%$\oplus$&oplus&             "2208&2&08\cr
+%$\ominus$&ominus&            "2209&2&09\cr
+%$\otimes$&otimes&            "220A&2&0A\cr
+%$\oslash$&oslash&            "220B&2&0B\cr
+%$\odot$&odot&              "220C&2&0C\cr
+%$\bigcirc$&bigcirc&           "220D&2&0D\cr
+%$\circ$&circ&              "220E&2&0E\cr
+%$\bullet$&bullet&            "220F&2&0F\cr
+%$\bigtriangleup$&bigtriangleup&     "2234&2&34\cr
+%$\bigtriangledown$&bigtriangledown&   "2235&2&35\cr
+%$\cup$&cup&               "225B&2&5B\cr
+%$\cap$&cap&               "225C&2&5C\cr
+%$\uplus$&uplus&             "225D&2&5D\cr
+%$\wedge$&wedge&             "225E&2&5E\cr
+%$\vee$&vee&               "225F&2&5F\cr
+%$\setminus$&setminus&          "226E&2&6E\cr
+%$\wr$&wr&                "226F&2&6F\cr
+%$\amalg$&amalg&             "2271&2&71\cr
+%$\sqcup$&sqcup&             "2274&2&74\cr
+%$\sqcap$&sqcap&             "2275&2&75\cr
+%$\dagger$&dagger&            "2279&2&79\cr
+%$\ddagger$&ddagger&           "227A&2&7A\cr
+%}\endgroup
+%\vfil\eject
+\begingroup\bodyfont
+\halign to 30pc
+       {\tabskip=1pc plus 3pc
+         \hfil#\hfil&\cs{#}\hfil&\tt#\hfil&
+         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+              \global\let\prevfaml\testfaml\hfil&
+         \hfil#\hfil\tabskip=0cm\cr
+ \omit \colmfont Symbol\strut&
+ \omit \colmfont \hfil Control Sequence\hfil&
+ \omit \colmfont \cs{mathcode}&
+ \omit \colmfont Family&
+ \omit \colmfont Hex position\cr
+%\headrule
+$\triangleright$&triangleright&     "212E&1&2E\cr
+$\triangleleft$&triangleleft&      "212F&1&2F\cr
+$\star$&star&              "213F&1&3F\cr
+$\cdot$&cdot&              "2201&2&01\cr
+$\times$&times&             "2202&2&02\cr
+$\ast$&ast&               "2203&2&03\cr
+$\div$&div&               "2204&2&04\cr
+$\diamond$&diamond&           "2205&2&05\cr
+$\pm$&pm&                "2206&2&06\cr
+$\mp$&mp&                "2207&2&07\cr
+$\oplus$&oplus&             "2208&2&08\cr
+$\ominus$&ominus&            "2209&2&09\cr
+$\otimes$&otimes&            "220A&2&0A\cr
+$\oslash$&oslash&            "220B&2&0B\cr
+$\odot$&odot&              "220C&2&0C\cr
+$\bigcirc$&bigcirc&           "220D&2&0D\cr
+$\circ$&circ&              "220E&2&0E\cr
+$\bullet$&bullet&            "220F&2&0F\cr
+$\bigtriangleup$&bigtriangleup&     "2234&2&34\cr
+$\bigtriangledown$&bigtriangledown&   "2235&2&35\cr
+$\cup$&cup&               "225B&2&5B\cr
+$\cap$&cap&               "225C&2&5C\cr
+$\uplus$&uplus&             "225D&2&5D\cr
+$\wedge$&wedge&             "225E&2&5E\cr
+$\vee$&vee&               "225F&2&5F\cr
+$\setminus$&setminus&          "226E&2&6E\cr
+$\wr$&wr&                "226F&2&6F\cr
+$\amalg$&amalg&             "2271&2&71\cr
+$\sqcup$&sqcup&             "2274&2&74\cr
+$\sqcap$&sqcap&             "2275&2&75\cr
+$\dagger$&dagger&            "2279&2&79\cr
+$\ddagger$&ddagger&           "227A&2&7A\cr
+}\endgroup
+
+%\def\prevclass{}\def\prevfaml{}
+\def\prevclass{}\def\prevfaml{}
+
+%%\spoint \gr{mathchardef tokens}: relations
+%\subsection{ \gr{mathchardef tokens}: relations}
+%\spoint \gr{mathchardef tokens}: relations
+\subsection{定义二元关系符}
+
+%The following characters have been defined
+%in a
+%\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+%\end{disp}
+%assignment.
+%\par\leavevmode\par
+下面列出的字符是用这个赋值定义的：
+\begin{disp}\cs{mathchardef}\gr{control sequence}\gr{equals}\gr{15-bit number}
+\end{disp}
+\par\leavevmode\par
+
+%\begingroup\bodyfont
+%\halign to 30pc
+%       {\tabskip=1pc plus 3pc
+%         \hfil#\hfil&\cs{#}\hfil&\tt#\hfil&
+%         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+%              \global\let\prevfaml\testfaml\hfil&
+%         \hfil#\hfil\tabskip=0cm\cr
+% \omit \colmfont Symbol\strut&
+% \omit \colmfont \hfil Control Sequence\hfil&
+% \omit \colmfont \cs{mathcode}&
+% \omit \colmfont Family&
+% \omit \colmfont Hex position\cr
+%%\headrule
+%$\leftharpoonup$&leftharpoonup&     "3128&1&28\cr
+%$\leftharpoondown$&leftharpoondown&   "3129&1&29\cr
+%$\rightharpoonup$&rightharpoonup&    "312A&1&2A\cr
+%$\rightharpoondown$&rightharpoondown&  "312B&1&2B\cr
+%$\smile$&smile&             "315E&1&5E\cr
+%$\frown$&frown&             "315F&1&5F\cr
+%$\asymp$&asymp&             "3210&2&10\cr
+%$\equiv$&equiv&             "3211&2&11\cr
+%$\subseteq$&subseteq&          "3212&2&12\cr
+%$\supseteq$&supseteq&          "3213&2&13\cr
+%$\leq$&leq&               "3214&2&14\cr
+%$\geq$&geq&               "3215&2&15\cr
+%$\preceq$&preceq&            "3216&2&16\cr
+%$\succeq$&succeq&            "3217&2&17\cr
+%$\sim$&sim&               "3218&2&18\cr
+%$\approx$&approx&            "3219&2&19\cr
+%$\subset$&subset&            "321A&2&1A\cr
+%$\supset$&supset&            "321B&2&1B\cr
+%$\ll$&ll&                "321C&2&1C\cr
+%$\gg$&gg&                "321D&2&1D\cr
+%$\prec$&prec&              "321E&2&1E\cr
+%$\succ$&succ&              "321F&2&1F\cr
+%$\leftarrow$&leftarrow&         "3220&2&20\cr
+%$\rightarrow$&rightarrow&        "3221&2&21\cr
+%$\leftrightarrow$&leftrightarrow&    "3224&2&24\cr
+%$\nearrow$&nearrow&           "3225&2&25\cr
+%$\searrow$&searrow&           "3226&2&26\cr
+%$\simeq$&simeq&             "3227&2&27\cr
+%$\Leftarrow$&Leftarrow&         "3228&2&28\cr
+%$\Rightarrow$&Rightarrow&        "3229&2&29\cr
+%$\Leftrightarrow$&Leftrightarrow&    "322C&2&2C\cr
+%$\nwarrow$&nwarrow&           "322D&2&2D\cr
+%$\swarrow$&swarrow&           "322E&2&2E\cr
+%$\propto$&propto&            "322F&2&2F\cr
+%$\in$&in&                "3232&2&32\cr
+%$\ni$&ni&                "3233&2&33\cr
+%$\not$&not&               "3236&2&36\cr
+%$\mapstochar$&mapstochar&        "3237&2&37\cr
+%$\perp$&perp&              "323F&2&3F\cr
+%$\vdash$&vdash&             "3260&2&60\cr
+%$\dashv$&dashv&             "3261&2&61\cr
+%$\mid$&mid&               "326A&2&6A\cr
+%$\parallel$&parallel&          "326B&2&6B\cr
+%$\sqsubseteq$&sqsubseteq&        "3276&2&76\cr
+%$\sqsupseteq$&sqsupseteq&        "3277&2&77\cr
+%} \endgroup
+%\vfil
+\begingroup\bodyfont
+\halign to 30pc
+       {\tabskip=1pc plus 3pc
+         \hfil#\hfil&\cs{#}\hfil&\tt#\hfil&
+         \gdef\testfaml{#}\hfil\ifx\testfaml\prevfaml\else\testfaml\fi
+              \global\let\prevfaml\testfaml\hfil&
+         \hfil#\hfil\tabskip=0cm\cr
+ \omit \colmfont Symbol\strut&
+ \omit \colmfont \hfil Control Sequence\hfil&
+ \omit \colmfont \cs{mathcode}&
+ \omit \colmfont Family&
+ \omit \colmfont Hex position\cr
+%\headrule
+$\leftharpoonup$&leftharpoonup&     "3128&1&28\cr
+$\leftharpoondown$&leftharpoondown&   "3129&1&29\cr
+$\rightharpoonup$&rightharpoonup&    "312A&1&2A\cr
+$\rightharpoondown$&rightharpoondown&  "312B&1&2B\cr
+$\smile$&smile&             "315E&1&5E\cr
+$\frown$&frown&             "315F&1&5F\cr
+$\asymp$&asymp&             "3210&2&10\cr
+$\equiv$&equiv&             "3211&2&11\cr
+$\subseteq$&subseteq&          "3212&2&12\cr
+$\supseteq$&supseteq&          "3213&2&13\cr
+$\leq$&leq&               "3214&2&14\cr
+$\geq$&geq&               "3215&2&15\cr
+$\preceq$&preceq&            "3216&2&16\cr
+$\succeq$&succeq&            "3217&2&17\cr
+$\sim$&sim&               "3218&2&18\cr
+$\approx$&approx&            "3219&2&19\cr
+$\subset$&subset&            "321A&2&1A\cr
+$\supset$&supset&            "321B&2&1B\cr
+$\ll$&ll&                "321C&2&1C\cr
+$\gg$&gg&                "321D&2&1D\cr
+$\prec$&prec&              "321E&2&1E\cr
+$\succ$&succ&              "321F&2&1F\cr
+$\leftarrow$&leftarrow&         "3220&2&20\cr
+$\rightarrow$&rightarrow&        "3221&2&21\cr
+$\leftrightarrow$&leftrightarrow&    "3224&2&24\cr
+$\nearrow$&nearrow&           "3225&2&25\cr
+$\searrow$&searrow&           "3226&2&26\cr
+$\simeq$&simeq&             "3227&2&27\cr
+$\Leftarrow$&Leftarrow&         "3228&2&28\cr
+$\Rightarrow$&Rightarrow&        "3229&2&29\cr
+$\Leftrightarrow$&Leftrightarrow&    "322C&2&2C\cr
+$\nwarrow$&nwarrow&           "322D&2&2D\cr
+$\swarrow$&swarrow&           "322E&2&2E\cr
+$\propto$&propto&            "322F&2&2F\cr
+$\in$&in&                "3232&2&32\cr
+$\ni$&ni&                "3233&2&33\cr
+$\not$&not&               "3236&2&36\cr
+$\mapstochar$&mapstochar&        "3237&2&37\cr
+$\perp$&perp&              "323F&2&3F\cr
+$\vdash$&vdash&             "3260&2&60\cr
+$\dashv$&dashv&             "3261&2&61\cr
+$\mid$&mid&               "326A&2&6A\cr
+$\parallel$&parallel&          "326B&2&6B\cr
+$\sqsubseteq$&sqsubseteq&        "3276&2&76\cr
+$\sqsupseteq$&sqsupseteq&        "3277&2&77\cr
+} \endgroup
+\vfil
+
+%%\spoint \cs{delimiter} macros
+%\subsection{\protect\cs{delimiter} macros}
+%\spoint \cs{delimiter} macros
+\subsection{定义定界符}
+
+%The following characters have been defined
+%in a
+%\begin{disp}\cs{def}\gr{control sequence}\lb\cs{delimiter}\gr{27-bit number}\rb
+%\end{disp}
+%assignment.
+%\par\leavevmode\par
+下面列出的字符是用这个赋值定义的：
+\begin{disp}\cs{def}\gr{control sequence}\lb\cs{delimiter}\gr{27-bit number}\rb
+\end{disp}
+\par\leavevmode\par
+
+%\halign to 30pc
+%       {\tabskip=1pc plus 3pc
+%         \hfil$\left#\null\right.$\hfil&
+%         \cs{#}\hfil&\hfil\tt#&\class{#}\hfil\tabskip=0cm\cr
+% \omit \colmfont Delimiters\hidewidth\strut\cr
+% \omit \colmfont Symbol\hfil\strut&
+% \omit \colmfont Control Sequence\hfil&
+% \omit \colmfont \hfil Hex code\hfil&
+% \omit \colmfont \hfil Function\hfil\cr
+%%\headrule
+%\lmoustache&lmoustache&
+%    "4000340&4\cr
+%\rmoustache&rmoustache&
+%    "5000341&5\cr
+%\lgroup&lgroup&
+%    "400033A&4\cr
+%\rgroup&rgroup&
+%    "500033B&5\cr
+%\arrowvert&arrowvert&
+%    "33C&0\cr
+%\Arrowvert&Arrowvert&
+%    "33D&0\cr
+%\bracevert&bracevert&
+%    "33E&0\cr
+%\Vert&Vert&
+%    "26B30D&0\cr
+%\vert&vert&
+%    "26A30C&0\cr
+%\uparrow&uparrow&
+%    "3222378&3\cr
+%\downarrow&downarrow&
+%    "3223379&3\cr
+%\updownarrow&updownarrow&
+%    "326C33F&3\cr
+%\Uparrow&Uparrow&
+%    "322A37E&3\cr
+%\Downarrow&Downarrow&
+%    "322B37F&3\cr
+%\Updownarrow&Updownarrow&
+%    "326D377&3\cr
+%.\backslash&backslash&
+%    "26E30F&0\cr
+%\rangle&rangle&
+%    "526930B&5\cr
+%\langle&langle&
+%    "426830A&4\cr
+%\rbrace&rbrace&
+%    "5267309&5\cr
+%\lbrace&lbrace&
+%    "4266308&4\cr
+%\rceil&rceil&
+%    "5265307&5\cr
+%\lceil&lceil&
+%    "4264306&4\cr
+%\rfloor&rfloor&
+%    "5263305&5\cr
+%\lfloor&lfloor&
+%    "4262304&4\cr
+%}
+%\vfil\eject
+%    
+% 
+%%\restorecat\"
+\halign to 30pc
+       {\tabskip=1pc plus 3pc
+         \hfil$\left#\null\right.$\hfil&
+         \cs{#}\hfil&\hfil\tt#&\class{#}\hfil\tabskip=0cm\cr
+ \omit \colmfont Delimiters\hidewidth\strut\cr
+ \omit \colmfont Symbol\hfil\strut&
+ \omit \colmfont Control Sequence\hfil&
+ \omit \colmfont \hfil Hex code\hfil&
+ \omit \colmfont \hfil Function\hfil\cr
+%\headrule
+\lmoustache&lmoustache&
+    "4000340&4\cr
+\rmoustache&rmoustache&
+    "5000341&5\cr
+\lgroup&lgroup&
+    "400033A&4\cr
+\rgroup&rgroup&
+    "500033B&5\cr
+\arrowvert&arrowvert&
+    "33C&0\cr
+\Arrowvert&Arrowvert&
+    "33D&0\cr
+\bracevert&bracevert&
+    "33E&0\cr
+\Vert&Vert&
+    "26B30D&0\cr
+\vert&vert&
+    "26A30C&0\cr
+\uparrow&uparrow&
+    "3222378&3\cr
+\downarrow&downarrow&
+    "3223379&3\cr
+\updownarrow&updownarrow&
+    "326C33F&3\cr
+\Uparrow&Uparrow&
+    "322A37E&3\cr
+\Downarrow&Downarrow&
+    "322B37F&3\cr
+\Updownarrow&Updownarrow&
+    "326D377&3\cr
+.\backslash&backslash&
+    "26E30F&0\cr
+\rangle&rangle&
+    "526930B&5\cr
+\langle&langle&
+    "426830A&4\cr
+\rbrace&rbrace&
+    "5267309&5\cr
+\lbrace&lbrace&
+    "4266308&4\cr
+\rceil&rceil&
+    "5265307&5\cr
+\lceil&lceil&
+    "4264306&4\cr
+\rfloor&rfloor&
+    "5263305&5\cr
+\lfloor&lfloor&
+    "4262304&4\cr
+}
+\vfil\eject
+    
+%\restorecat\"
+
+% \begin{comment}
+
+% \let\cr
+
+% \def\sqrt{\radical"270370 }
+ 
+% \def\`#1{{\accent18 #1}}
+% \def\'#1{{\accent19 #1}}
+% \def\v#1{{\accent20 #1}}
+% \def\u#1{{\accent21 #1}}
+% \def\=#1{{\accent22 #1}}
+% \def\^#1{{\accent94 #1}}
+% \def\.#1{{\accent95 #1}}
+% \def\H#1{{\accent"7D #1}}
+% \def\~#1{{\accent"7E #1}}
+% \def\"#1{{\accent"7F #1}}
+% \def\t#1{{\edef\next{\the\font}\the\textfont1\accent"7F\next#1}}
+
+% \def\acute{\mathaccent"7013 }
+% \def\grave{\mathaccent"7012 }
+% \def\ddot{\mathaccent"707F }
+% \def\tilde{\mathaccent"707E }
+% \def\bar{\mathaccent"7016 }
+% \def\breve{\mathaccent"7015 }
+% \def\check{\mathaccent"7014 }
+% \def\hat{\mathaccent"705E }
+% \def\vec{\mathaccent"017E }
+% \def\dot{\mathaccent"705F }
+% \def\widetilde{\mathaccent"0365 }
+% \def\widehat{\mathaccent"0362 }
+
+% \mathchardef\alpha="010B
+% \mathchardef\beta="010C
+% \mathchardef\gamma="010D
+% \mathchardef\delta="010E
+% \mathchardef\epsilon="010F
+% \mathchardef\zeta="0110
+% \mathchardef\eta="0111
+% \mathchardef\theta="0112
+% \mathchardef\iota="0113
+% \mathchardef\kappa="0114
+% \mathchardef\lambda="0115
+% \mathchardef\mu="0116
+% \mathchardef\nu="0117
+% \mathchardef\xi="0118
+% \mathchardef\pi="0119
+% \mathchardef\rho="011A
+% \mathchardef\sigma="011B
+% \mathchardef\tau="011C
+% \mathchardef\upsilon="011D
+% \mathchardef\phi="011E
+% \mathchardef\chi="011F
+% \mathchardef\psi="0120
+% \mathchardef\omega="0121
+% \mathchardef\varepsilon="0122
+% \mathchardef\vartheta="0123
+% \mathchardef\varpi="0124
+% \mathchardef\varrho="0125
+% \mathchardef\varsigma="0126
+% \mathchardef\varphi="0127
+% \mathchardef\Gamma="7000
+% \mathchardef\Delta="7001
+% \mathchardef\Theta="7002
+% \mathchardef\Lambda="7003
+% \mathchardef\Xi="7004
+% \mathchardef\Pi="7005
+% \mathchardef\Sigma="7006
+% \mathchardef\Upsilon="7007
+% \mathchardef\Phi="7008
+% \mathchardef\Psi="7009
+% \mathchardef\Omega="700A
+% \end{comment}
+
+%\endofchapter
+%%%%% end of input file [tables]
+
+\end{document}

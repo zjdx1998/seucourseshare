@@ -1,0 +1,836 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{5}
+
+\begin{document}
+
+%\chapter{Horizontal and Vertical Mode}\label{hvmode}
+%\label{chap:hvmode}
+\chapter{Horizontal and Vertical Mode}\label{hvmode}
+\label{chap:hvmode}
+
+%At any point in its processing \TeX\ is in some \indexterm{mode}.
+%There are six modes, divided in three categories:
+%\begin{enumerate}
+%\item horizontal mode and restricted horizontal mode,
+%\item vertical mode and internal vertical mode, and
+%\item math mode and display math mode.
+%\end{enumerate}
+%The math modes will be treated elsewhere (see page~\pageref{math:modes}).
+%Here we shall look
+%at the horizontal and vertical modes, the kinds of objects
+%that can occur in the corresponding lists, and the
+%commands that are exclusive for one mode or the other. 
+At any point in its processing \TeX\ is in some \indexterm{mode}.
+There are six modes, divided in three categories:
+\begin{enumerate}
+\item horizontal mode and restricted horizontal mode,
+\item vertical mode and internal vertical mode, and
+\item math mode and display math mode.
+\end{enumerate}
+The math modes will be treated elsewhere (see page~\pageref{math:modes}).
+Here we shall look
+at the horizontal and vertical modes, the kinds of objects
+that can occur in the corresponding lists, and the
+commands that are exclusive for one mode or the other. 
+
+%\label{cschap:vadjust}\label{cschap:showlists}
+%\begin{inventory}
+%\item [\cs{ifhmode}] 
+%      Test whether the current mode is (possibly restricted) horizontal mode.
+\label{cschap:vadjust}\label{cschap:showlists}
+\begin{inventory}
+\item [\cs{ifhmode}] 
+      Test whether the current mode is (possibly restricted) horizontal mode.
+
+%\item [\cs{ifvmode}] 
+%      Test whether the current mode is (possibly internal) vertical mode.
+\item [\cs{ifvmode}] 
+      Test whether the current mode is (possibly internal) vertical mode.
+
+%\item [\cs{ifinner}] 
+%      Test whether the current mode is an internal mode.
+\item [\cs{ifinner}] 
+      Test whether the current mode is an internal mode.
+
+%\item [\cs{vadjust}] 
+%      Specify vertical material for the enclosing vertical list
+%      while in horizontal mode.
+\item [\cs{vadjust}] 
+      Specify vertical material for the enclosing vertical list
+      while in horizontal mode.
+
+%\item [\cs{showlists}] 
+%      Write to the log file the contents of the partial lists 
+%      currently being built in all modes.
+%\end{inventory}
+\item [\cs{showlists}] 
+      Write to the log file the contents of the partial lists 
+      currently being built in all modes.
+\end{inventory}
+
+%%\point Horizontal and vertical mode
+%\section{Horizontal and vertical mode}
+%\point Horizontal and vertical mode
+\section{Horizontal and vertical mode}
+
+%When not typesetting mathematics, \TeX\ is in horizontal
+%or vertical mode, building horizontal or vertical lists
+%respectively. Horizontal mode is typically used to
+%make lines of text; vertical mode is typically used
+%to stack the lines of a paragraph on top of each other.
+%Note that
+%these modes
+%are different from the internal states of \TeX's input processor
+%(see page~\pageref{input:states}).
+When not typesetting mathematics, \TeX\ is in horizontal
+or vertical mode, building horizontal or vertical lists
+respectively. Horizontal mode is typically used to
+make lines of text; vertical mode is typically used
+to stack the lines of a paragraph on top of each other.
+Note that
+these modes
+are different from the internal states of \TeX's input processor
+(see page~\pageref{input:states}).
+
+%%\spoint Horizontal mode
+%\subsection{Horizontal mode}
+%\spoint Horizontal mode
+\subsection{Horizontal mode}
+
+%The main activity in \indextermbus{horizontal}{mode} is building lines of text.
+%Text on the page and text in a \cs{vbox} or \cs{vtop} is built in
+%horizontal mode (this might be called `paragraph mode');
+%if the text is in an \cs{hbox} there is only one line
+%of text, and the corresponding mode is the restricted
+%horizontal mode.
+The main activity in \indextermbus{horizontal}{mode} is building lines of text.
+Text on the page and text in a \cs{vbox} or \cs{vtop} is built in
+horizontal mode (this might be called `paragraph mode');
+if the text is in an \cs{hbox} there is only one line
+of text, and the corresponding mode is the restricted
+horizontal mode.
+
+%In horizontal mode all material is added to a horizontal list.
+%If this list is built in unrestricted horizontal mode, it
+%will later be broken into lines and added to the surrounding vertical list.
+In horizontal mode all material is added to a horizontal list.
+If this list is built in unrestricted horizontal mode, it
+will later be broken into lines and added to the surrounding vertical list.
+
+%Each element of a \indextermbus{horizontal}{list} is one of the following:
+%\begin{itemize} \item a box (a character, ligature, \cs{vrule},
+%or a \gr{box}),
+%\item a discretionary break,
+%\item a whatsit (see Chapter~\ref{io}),
+%\item vertical material enclosed in \cs{mark},
+%\cs{vadjust}, or \cs{insert},
+%\item 
+%\mdqon
+%glue or leaders, a kern, a penalty, or a math-on/""off item.
+%\mdqoff
+%\end{itemize}
+%The items in the last point are all discardable.
+%\emph{Discardable items}\index{discardable items}
+%are called that, because they disappear in
+%a break. Breaking of horizontal
+%lists is discussed in Chapter~\ref{line:break}.
+Each element of a \indextermbus{horizontal}{list} is one of the following:
+\begin{itemize} \item a box (a character, ligature, \cs{vrule},
+or a \gr{box}),
+\item a discretionary break,
+\item a whatsit (see Chapter~\ref{io}),
+\item vertical material enclosed in \cs{mark},
+\cs{vadjust}, or \cs{insert},
+\item 
+\mdqon
+glue or leaders, a kern, a penalty, or a math-on/""off item.
+\mdqoff
+\end{itemize}
+The items in the last point are all discardable.
+\emph{Discardable items}\index{discardable items}
+are called that, because they disappear in
+a break. Breaking of horizontal
+lists is discussed in Chapter~\ref{line:break}.
+
+%\subsection{Vertical mode}
+\subsection{Vertical mode}
+
+%\emph{Vertical mode}\index{mode!vertical}
+%can be used to stack items on top of one another.
+%Most of the time, these items are boxes 
+%containing the lines of paragraphs.
+\emph{Vertical mode}\index{mode!vertical}
+can be used to stack items on top of one another.
+Most of the time, these items are boxes 
+containing the lines of paragraphs.
+
+%Stacking material can take place inside a 
+%vertical box, but the
+%items that are stacked can also 
+%appear by themselves on the page. In the latter case
+%\TeX\ is in vertical mode; in the former case, inside a
+%vertical box, \TeX\ operates in internal vertical mode.
+Stacking material can take place inside a 
+vertical box, but the
+items that are stacked can also 
+appear by themselves on the page. In the latter case
+\TeX\ is in vertical mode; in the former case, inside a
+vertical box, \TeX\ operates in internal vertical mode.
+
+%In vertical mode all material is added to a vertical list.
+%If this list is built in external vertical mode, it
+%will later be broken when pages are formed.
+In vertical mode all material is added to a vertical list.
+If this list is built in external vertical mode, it
+will later be broken when pages are formed.
+
+%Each element of a \indextermbus{vertical}{list} is one of the following:
+%\begin{itemize}
+%\item a box (a horizontal or vertical box or an \cs{hrule}),
+%\item a whatsit,
+%\item a mark,
+%\item glue or leaders, a kern, or a penalty.
+%\end{itemize}
+%The items in the last point are all discardable.
+%Breaking of vertical lists
+%is discussed in Chapter~\ref{page:break}.
+Each element of a \indextermbus{vertical}{list} is one of the following:
+\begin{itemize}
+\item a box (a horizontal or vertical box or an \cs{hrule}),
+\item a whatsit,
+\item a mark,
+\item glue or leaders, a kern, or a penalty.
+\end{itemize}
+The items in the last point are all discardable.
+Breaking of vertical lists
+is discussed in Chapter~\ref{page:break}.
+
+%There are a few exceptional conditions at the beginning
+%of  a vertical list: the value of \cs{prevdepth} is set
+%to \n{-1000pt}. Furthermore, no \cs{parskip} glue is added
+%at the top of an internal vertical list; 
+%at the top of the main vertical list (the top of the
+%`current page') no glue or other discardable items
+%are added, and \cs{topskip} glue is added when the
+%first box is placed on this list
+%(see Chapters \ref{page:shape} and~\ref{page:break}).
+There are a few exceptional conditions at the beginning
+of  a vertical list: the value of \cs{prevdepth} is set
+to \n{-1000pt}. Furthermore, no \cs{parskip} glue is added
+at the top of an internal vertical list; 
+at the top of the main vertical list (the top of the
+`current page') no glue or other discardable items
+are added, and \cs{topskip} glue is added when the
+first box is placed on this list
+(see Chapters \ref{page:shape} and~\ref{page:break}).
+
+%%\point Horizontal and vertical commands
+%\section{Horizontal and vertical commands}
+%\point Horizontal and vertical commands
+\section{Horizontal and vertical commands}
+
+%Some commands are so intrinsically horizontal or vertical
+%in nature that they force \TeX\ to go into that mode, if
+%possible. A~command that forces \TeX\ into horizontal mode
+%is called a \gr{horizontal command}; similarly a command that
+%forces \TeX\ into vertical mode is called a
+%\gr{vertical command}.
+Some commands are so intrinsically horizontal or vertical
+in nature that they force \TeX\ to go into that mode, if
+possible. A~command that forces \TeX\ into horizontal mode
+is called a \gr{horizontal command}; similarly a command that
+forces \TeX\ into vertical mode is called a
+\gr{vertical command}.
+
+%However, not all transitions are possible:
+%\TeX\ can switch from both vertical modes to 
+%(unrestricted) horizontal mode and back
+%through horizontal and vertical commands, but no transitions
+%to or from restricted horizontal mode are possible
+%(other than by enclosing horizontal boxes in vertical boxes or
+%the other way around).
+%A~vertical command in restricted horizontal mode thus gives
+%an error; the \cs{par} command in restricted horizontal mode
+%has no effect.
+However, not all transitions are possible:
+\TeX\ can switch from both vertical modes to 
+(unrestricted) horizontal mode and back
+through horizontal and vertical commands, but no transitions
+to or from restricted horizontal mode are possible
+(other than by enclosing horizontal boxes in vertical boxes or
+the other way around).
+A~vertical command in restricted horizontal mode thus gives
+an error; the \cs{par} command in restricted horizontal mode
+has no effect.
+
+%The \indextermbus{horizontal}{commands} are the following:
+%\label{h:com:list}
+%\begin{itemize}
+%\item any \gr{letter}, \gr{otherchar}, \cs{char}, 
+%a control sequence defined by \cs{chardef}, or \cs{noboundary};
+%\item \cs{accent}, \cs{discretionary}, the discretionary
+%hyphen~\verb|\-| and control space~\verb|\|\n{\char32};
+%\item \cs{unhbox} and \cs{unhcopy};
+%\item \cs{vrule} and the
+%\gr{horizontal skip} commands
+%\cs{hskip}, \cs{hfil}, \cs{hfill}, \cs{hss}, and \cs{hfilneg};
+%\item \cs{valign};
+%\item math shift (\n\$).
+%\end{itemize}
+The \indextermbus{horizontal}{commands} are the following:
+\label{h:com:list}
+\begin{itemize}
+\item any \gr{letter}, \gr{otherchar}, \cs{char}, 
+a control sequence defined by \cs{chardef}, or \cs{noboundary};
+\item \cs{accent}, \cs{discretionary}, the discretionary
+hyphen~\verb|\-| and control space~\verb|\|\n{\char32};
+\item \cs{unhbox} and \cs{unhcopy};
+\item \cs{vrule} and the
+\gr{horizontal skip} commands
+\cs{hskip}, \cs{hfil}, \cs{hfill}, \cs{hss}, and \cs{hfilneg};
+\item \cs{valign};
+\item math shift (\n\$).
+\end{itemize}
+
+%The \indextermbus{vertical}{commands} are the following:
+%\label{v:com:list}
+%\begin{itemize}
+%\item \cs{unvbox} and \cs{unvcopy};
+%\item \cs{hrule} and the \gr{vertical skip} commands
+% \cs{vskip}, \cs{vfil}, \cs{vfill}, \cs{vss}, and \cs{vfilneg};
+%\item \cs{halign};
+%\item \cs{end} and \cs{dump}.
+%\end{itemize}
+%Note that the vertical commands do not include \cs{par};
+%nor are \cs{indent} and \cs{noindent} horizontal commands.
+The \indextermbus{vertical}{commands} are the following:
+\label{v:com:list}
+\begin{itemize}
+\item \cs{unvbox} and \cs{unvcopy};
+\item \cs{hrule} and the \gr{vertical skip} commands
+ \cs{vskip}, \cs{vfil}, \cs{vfill}, \cs{vss}, and \cs{vfilneg};
+\item \cs{halign};
+\item \cs{end} and \cs{dump}.
+\end{itemize}
+Note that the vertical commands do not include \cs{par};
+nor are \cs{indent} and \cs{noindent} horizontal commands.
+
+%The connection between boxes and modes is explored below;
+%see Chapter~\ref{rules} for more on the connection between
+%rules and modes.
+The connection between boxes and modes is explored below;
+see Chapter~\ref{rules} for more on the connection between
+rules and modes.
+
+%\section{The internal modes}
+\section{The internal modes}
+
+%The \indextermbus{restricted horizontal}{mode} and 
+%\indextermbus{internal vertical}{mode}
+%are those variants of horizontal mode and vertical mode
+%that hold inside an \cs{hbox} and \cs{vbox} (or \cs{vtop}
+%or \cs{vcenter}) respectively.
+%However, restricted horizontal mode is rather more
+%restricted in nature than internal vertical mode.
+%The third internal mode is non-display math mode
+%(see Chapter~\ref{math}).
+The \indextermbus{restricted horizontal}{mode} and 
+\indextermbus{internal vertical}{mode}
+are those variants of horizontal mode and vertical mode
+that hold inside an \cs{hbox} and \cs{vbox} (or \cs{vtop}
+or \cs{vcenter}) respectively.
+However, restricted horizontal mode is rather more
+restricted in nature than internal vertical mode.
+The third internal mode is non-display math mode
+(see Chapter~\ref{math}).
+
+%%\spoint Restricted horizontal mode
+%\subsection{Restricted horizontal mode}
+%\spoint Restricted horizontal mode
+\subsection{Restricted horizontal mode}
+
+%The main difference between restricted horizontal mode,
+%the mode in an \cs{hbox}, and unrestricted horizontal mode,
+%the mode in which paragraphs in vertical boxes
+%and on the page are built,
+%is that you cannot break out of restricted horizontal mode: 
+%\cs{par}~does nothing in this mode. 
+%Furthermore, a~\gram{vertical command} in restricted horizontal
+%mode gives an error. 
+%In unrestricted horizontal mode it would cause a
+%\cs{par} token to be inserted and vertical mode to be entered
+%(see also Chapter~\ref{par:end}).
+The main difference between restricted horizontal mode,
+the mode in an \cs{hbox}, and unrestricted horizontal mode,
+the mode in which paragraphs in vertical boxes
+and on the page are built,
+is that you cannot break out of restricted horizontal mode: 
+\cs{par}~does nothing in this mode. 
+Furthermore, a~\gram{vertical command} in restricted horizontal
+mode gives an error. 
+In unrestricted horizontal mode it would cause a
+\cs{par} token to be inserted and vertical mode to be entered
+(see also Chapter~\ref{par:end}).
+
+%%\spoint Internal vertical mode
+%\subsection{Internal vertical mode}
+%\spoint Internal vertical mode
+\subsection{Internal vertical mode}
+
+%Internal vertical mode, the vertical mode inside
+%a~\cs{vbox}, is a lot like external vertical
+%mode, the mode in which pages are built.
+%A~\gram{horizontal command} in internal vertical mode,
+%for instance, is perfectly valid:
+%\TeX\ then starts building a paragraph in
+%unrestricted horizontal mode.
+Internal vertical mode, the vertical mode inside
+a~\cs{vbox}, is a lot like external vertical
+mode, the mode in which pages are built.
+A~\gram{horizontal command} in internal vertical mode,
+for instance, is perfectly valid:
+\TeX\ then starts building a paragraph in
+unrestricted horizontal mode.
+
+%One difference is that the commands
+%\cs{unskip} and \cs{unkern} have no effect
+%in external vertical mode, and
+%\cs{lastbox} is always empty in external vertical mode.
+%See further pages \pageref{lastbox} and~\pageref{unskip}.
+One difference is that the commands
+\cs{unskip} and \cs{unkern} have no effect
+in external vertical mode, and
+\cs{lastbox} is always empty in external vertical mode.
+See further pages \pageref{lastbox} and~\pageref{unskip}.
+
+%The entries of alignments (see Chapter~\ref{align}) are 
+%processed in internal modes: restricted horizontal mode
+%for the entries of an \cs{halign}, and internal vertical
+%mode for the entries of a~\cs{valign}.
+%The material in \cs{vadjust}   and \cs{insert} items
+%is also processed in internal vertical mode; furthermore,
+%\TeX\ enters this mode when processing the \cs{output} token list.
+The entries of alignments (see Chapter~\ref{align}) are 
+processed in internal modes: restricted horizontal mode
+for the entries of an \cs{halign}, and internal vertical
+mode for the entries of a~\cs{valign}.
+The material in \cs{vadjust}   and \cs{insert} items
+is also processed in internal vertical mode; furthermore,
+\TeX\ enters this mode when processing the \cs{output} token list.
+
+%The commands \cs{end} and \cs{dump} (the latter exists only in \IniTeX)
+%are not allowed in
+%internal vertical mode; furthermore, \cs{dump} is not allowed
+%inside a group (see Chapter~\ref{TeXcomm}).
+The commands \cs{end} and \cs{dump} (the latter exists only in \IniTeX)
+are not allowed in
+internal vertical mode; furthermore, \cs{dump} is not allowed
+inside a group (see Chapter~\ref{TeXcomm}).
+
+
+%%\point[hvbox]  Boxes and modes
+%\section{Boxes and modes}
+%\label{hvbox}
+%\point[hvbox]  Boxes and modes
+\section{Boxes and modes}
+\label{hvbox}
+
+%There are horizontal and vertical boxes, and there is
+%horizontal and vertical mode. Not surprisingly, there is
+%a connection between the boxes and the modes.
+%One can ask about this connection in two ways.
+There are horizontal and vertical boxes, and there is
+horizontal and vertical mode. Not surprisingly, there is
+a connection between the boxes and the modes.
+One can ask about this connection in two ways.
+
+%%\spoint What box do you use in what mode?
+%\subsection{What box do you use in what mode?}
+%\spoint What box do you use in what mode?
+\subsection{What box do you use in what mode?}
+
+%This is the wrong question. Both horizontal  and vertical boxes
+%can be used in both horizontal and vertical mode. 
+%Their placement is determined by the prevailing mode at that moment.
+This is the wrong question. Both horizontal  and vertical boxes
+can be used in both horizontal and vertical mode. 
+Their placement is determined by the prevailing mode at that moment.
+
+%%\spoint What mode holds in what box?
+%\subsection{What mode holds in what box?}
+%\spoint What mode holds in what box?
+\subsection{What mode holds in what box?}
+
+%This is the right question.
+%When an \cs{hbox} starts, \TeX\ is in restricted horizontal
+%mode. Thus everything in a horizontal box is lined up horizontally.
+This is the right question.
+When an \cs{hbox} starts, \TeX\ is in restricted horizontal
+mode. Thus everything in a horizontal box is lined up horizontally.
+
+%When a \cs{vbox} is started, \TeX\ is in internal vertical mode.
+%Boxes of both kinds and other items are then stacked
+%on top of each other.
+When a \cs{vbox} is started, \TeX\ is in internal vertical mode.
+Boxes of both kinds and other items are then stacked
+on top of each other.
+
+
+%%\spoint Mode-dependent behaviour of boxes
+%\subsection{Mode-dependent behaviour of boxes}
+%\spoint Mode-dependent behaviour of boxes
+\subsection{Mode-dependent behaviour of boxes}
+
+%Any \gr{box} (see Chapter \ref{boxes} for the full definition)
+%can be used in horizontal, vertical, and math mode.
+%Unboxing commands, however, are specific for horizontal or vertical mode.
+%Both \cs{unhbox} and \cs{unhcopy} are \gr{horizontal command}s,
+%so they can make \TeX\ switch from vertical to horizontal
+%mode; 
+%both \cs{unvbox} and \cs{unvcopy} are \gr{vertical command}s,
+%so they can make \TeX\ switch from horizontal to vertical
+%mode.
+Any \gr{box} (see Chapter \ref{boxes} for the full definition)
+can be used in horizontal, vertical, and math mode.
+Unboxing commands, however, are specific for horizontal or vertical mode.
+Both \cs{unhbox} and \cs{unhcopy} are \gr{horizontal command}s,
+so they can make \TeX\ switch from vertical to horizontal
+mode; 
+both \cs{unvbox} and \cs{unvcopy} are \gr{vertical command}s,
+so they can make \TeX\ switch from horizontal to vertical
+mode.
+
+%In horizontal mode the \cs{spacefactor} is set to 1000
+%after a box has been placed. In vertical mode the
+%\cs{prevdepth} is set to the depth of the box placed.
+%Neither statement holds for
+%unboxing commands: after an \cs{unhbox} or \cs{unhcopy} the 
+%spacefactor is not altered, and after \cs{unvbox} or \cs{unvcopy}
+%the \cs{prevdepth} remains unchanged.
+%After all, these commands do not add a box,
+%but a piece of a~(horizontal or vertical) list.
+In horizontal mode the \cs{spacefactor} is set to 1000
+after a box has been placed. In vertical mode the
+\cs{prevdepth} is set to the depth of the box placed.
+Neither statement holds for
+unboxing commands: after an \cs{unhbox} or \cs{unhcopy} the 
+spacefactor is not altered, and after \cs{unvbox} or \cs{unvcopy}
+the \cs{prevdepth} remains unchanged.
+After all, these commands do not add a box,
+but a piece of a~(horizontal or vertical) list.
+
+%The operations \cs{raise} and \cs{lower} can only be
+%applied to a box in horizontal mode; similarly, \cs{moveleft} and
+%\cs{moveright} can only be applied in vertical mode.
+The operations \cs{raise} and \cs{lower} can only be
+applied to a box in horizontal mode; similarly, \cs{moveleft} and
+\cs{moveright} can only be applied in vertical mode.
+
+
+%%\point Modes and glue
+%\section{Modes and glue}
+%\point Modes and glue
+\section{Modes and glue}
+
+%Both in horizontal and vertical mode
+%\TeX\ can insert glue items the size of which is
+%determined by the preceding object in the list.
+Both in horizontal and vertical mode
+\TeX\ can insert glue items the size of which is
+determined by the preceding object in the list.
+
+%For horizontal mode the amount of glue that is inserted
+%for a space token depends on the \cs{spacefactor} of
+%the previous object in the list. This is treated
+%in Chapter~\ref{space}.
+For horizontal mode the amount of glue that is inserted
+for a space token depends on the \cs{spacefactor} of
+the previous object in the list. This is treated
+in Chapter~\ref{space}.
+
+%In vertical mode \TeX\ inserts glue to keep boxes at a certain
+%distance from each other. This glue is influenced by the
+%height of the current item and the depth of the previous one.
+%The depth of items is recorded in the \cs{prevdepth} parameter
+%(see Chapter~\ref{baseline}).
+In vertical mode \TeX\ inserts glue to keep boxes at a certain
+distance from each other. This glue is influenced by the
+height of the current item and the depth of the previous one.
+The depth of items is recorded in the \cs{prevdepth} parameter
+(see Chapter~\ref{baseline}).
+
+%The two quantities \cs{prevdepth} 
+%and \cs{spacefactor} 
+%use the same internal register of \TeX. Thus the \cs{prevdepth}
+%can be used or asked only in vertical mode, and the \cs{spacefactor}
+%only in horizontal mode.
+The two quantities \cs{prevdepth} 
+and \cs{spacefactor} 
+use the same internal register of \TeX. Thus the \cs{prevdepth}
+can be used or asked only in vertical mode, and the \cs{spacefactor}
+only in horizontal mode.
+
+%%\point[migrate] Migrating material
+%\section{Migrating material}
+%\label{migrate}
+%\point[migrate] Migrating material
+\section{Migrating material}
+\label{migrate}
+
+%The three control sequences \cs{insert}, \cs{mark}, and \cs{vadjust}
+%can be given in a paragraph 
+%(the first two can also occur
+%in vertical mode) to specify \indexterm{migrating material}:
+%material that will wind up on the
+%surrounding vertical list rather than on the current list.
+%Note that this need not be 
+%the main vertical list: it can be a vertical box
+%containing a paragraph of text. In this case a \cs{mark}
+%or \cs{insert} command will not reach the page breaking algorithm.
+The three control sequences \cs{insert}, \cs{mark}, and \cs{vadjust}
+can be given in a paragraph 
+(the first two can also occur
+in vertical mode) to specify \indexterm{migrating material}:
+material that will wind up on the
+surrounding vertical list rather than on the current list.
+Note that this need not be 
+the main vertical list: it can be a vertical box
+containing a paragraph of text. In this case a \cs{mark}
+or \cs{insert} command will not reach the page breaking algorithm.
+
+%When several migrating items are specified in a certain line
+%of text, their left-to-right order is preserved when they are
+%placed on the surrounding vertical list. These items are placed
+%directly after the horizontal box containing the line of text
+%in which they were specified: they come before any
+%penalty or glue items that are automatically inserted
+%(see page~\pageref{between:lines}).
+When several migrating items are specified in a certain line
+of text, their left-to-right order is preserved when they are
+placed on the surrounding vertical list. These items are placed
+directly after the horizontal box containing the line of text
+in which they were specified: they come before any
+penalty or glue items that are automatically inserted
+(see page~\pageref{between:lines}).
+
+%%\spoint \cs{vadjust}
+%\subsection{\cs{vadjust}}
+%\spoint \cs{vadjust}
+\subsection{\cs{vadjust}}
+
+%The command
+%\cstoidx vadjust\par
+%\begin{disp}\cs{vadjust}\gr{filler}\lb\gr{vertical mode material}\rb\end{disp}
+%is only allowed in horizontal and math modes (but it is
+%not a \gr{horizontal command}).
+%Vertical mode material specified by \cs{vadjust} is moved from
+%the horizontal list in which the command is given
+%to the surrounding vertical list, directly after the box
+%in which it occurred.
+The command
+\cstoidx vadjust\par
+\begin{disp}\cs{vadjust}\gr{filler}\lb\gr{vertical mode material}\rb\end{disp}
+is only allowed in horizontal and math modes (but it is
+not a \gr{horizontal command}).
+Vertical mode material specified by \cs{vadjust} is moved from
+the horizontal list in which the command is given
+to the surrounding vertical list, directly after the box
+in which it occurred.
+
+%In the current line
+%\vadjust{\setbox0=\hbox{$\bullet$\hskip1em}\ht0=0pt \dp0=0pt \llap{\box0}}
+%a \cs{vadjust} item was placed to put the bullet in the margin.
+In the current line
+\vadjust{\setbox0=\hbox{$\bullet$\hskip1em}\ht0=0pt \dp0=0pt \llap{\box0}}
+a \cs{vadjust} item was placed to put the bullet in the margin.
+
+
+%Any vertical material in a \cs{vadjust} item is processed
+%in internal vertical mode, even though it will wind up
+%on the main vertical list. For instance, the \cs{ifinner}
+%test is true in a \cs{vadjust}, and at the start
+%\mdqon
+%of the vertical material \cs{prevdepth}$=$""\n{-1000pt}.
+%\mdqoff
+Any vertical material in a \cs{vadjust} item is processed
+in internal vertical mode, even though it will wind up
+on the main vertical list. For instance, the \cs{ifinner}
+test is true in a \cs{vadjust}, and at the start
+\mdqon
+of the vertical material \cs{prevdepth}$=$""\n{-1000pt}.
+\mdqoff
+
+%%\point Testing modes
+%\section{Testing modes}
+%\point Testing modes
+\section{Testing modes}
+
+%The three conditionals \cs{ifhmode}, \cs{ifvmode}, and
+%\cs{ifinner} can distinguish between the four modes of
+%\TeX\ that are not math modes.
+%The \cs{ifinner} test is true if \TeX\ is in 
+%restricted horizontal mode or internal vertical mode
+%(or in non-display math mode).
+%Exceptional condition: during a \cs{write} \TeX\
+%is in a `no mode' state. The tests \cs{ifhmode},
+%\cs{ifvmode}, and \cs{ifmmode} are then all false.
+The three conditionals \cs{ifhmode}, \cs{ifvmode}, and
+\cs{ifinner} can distinguish between the four modes of
+\TeX\ that are not math modes.
+The \cs{ifinner} test is true if \TeX\ is in 
+restricted horizontal mode or internal vertical mode
+(or in non-display math mode).
+Exceptional condition: during a \cs{write} \TeX\
+is in a `no mode' state. The tests \cs{ifhmode},
+\cs{ifvmode}, and \cs{ifmmode} are then all false.
+
+%Inspection of all current lists, including the `recent
+%contributions' (see Chapter~\ref{page:break}),
+%is possible through the command \csidx{showlists}\label{showlists}.
+%This command writes to the log file the contents of all
+%lists that are being built at the moment the command is given.
+Inspection of all current lists, including the `recent
+contributions' (see Chapter~\ref{page:break}),
+is possible through the command \csidx{showlists}\label{showlists}.
+This command writes to the log file the contents of all
+lists that are being built at the moment the command is given.
+
+%Consider the example
+%\begin{verbatim}
+%a\hfil\break b\par 
+%c\hfill\break d
+%\hbox{e\vbox{f\showlists
+%\end{verbatim}
+%Here the first paragraph has been broken into two lines, and
+%these have been added to the current page. The second paragraph
+%has not been concluded or broken into lines.
+Consider the example
+\begin{verbatim}
+a\hfil\break b\par 
+c\hfill\break d
+\hbox{e\vbox{f\showlists
+\end{verbatim}
+Here the first paragraph has been broken into two lines, and
+these have been added to the current page. The second paragraph
+has not been concluded or broken into lines.
+
+%The log file shows the following. \TeX\ was busy
+%building a paragraph (starting with an indentation box
+%\n{20pt} wide):\begin{verbatim}
+%### horizontal mode entered at line 3
+%\hbox(0.0+0.0)x20.0
+%\tenrm f
+%spacefactor 1000
+%\end{verbatim}
+%This paragraph was inside a vertical box:\begin{verbatim}
+%### internal vertical mode entered at line 3
+%prevdepth ignored
+%\end{verbatim}
+%The vertical box was in  a horizontal box, 
+%\begin{verbatim}
+%### restricted horizontal mode entered at line 3
+%\tenrm e
+%spacefactor 1000
+%\end{verbatim}
+%which was part of
+%an as-yet unfinished paragraph:\begin{verbatim}
+%### horizontal mode entered at line 2
+%\hbox(0.0+0.0)x20.0
+%\tenrm c
+%\glue 0.0 plus 1.0fill
+%\penalty -10000
+%\tenrm d
+%etc.
+%spacefactor 1000
+%\end{verbatim}
+%Note how the infinite glue and the \cs{break} penalty
+%are still part of the horizontal list.
+The log file shows the following. \TeX\ was busy
+building a paragraph (starting with an indentation box
+\n{20pt} wide):\begin{verbatim}
+### horizontal mode entered at line 3
+\hbox(0.0+0.0)x20.0
+\tenrm f
+spacefactor 1000
+\end{verbatim}
+This paragraph was inside a vertical box:\begin{verbatim}
+### internal vertical mode entered at line 3
+prevdepth ignored
+\end{verbatim}
+The vertical box was in  a horizontal box, 
+\begin{verbatim}
+### restricted horizontal mode entered at line 3
+\tenrm e
+spacefactor 1000
+\end{verbatim}
+which was part of
+an as-yet unfinished paragraph:\begin{verbatim}
+### horizontal mode entered at line 2
+\hbox(0.0+0.0)x20.0
+\tenrm c
+\glue 0.0 plus 1.0fill
+\penalty -10000
+\tenrm d
+etc.
+spacefactor 1000
+\end{verbatim}
+Note how the infinite glue and the \cs{break} penalty
+are still part of the horizontal list.
+
+%Finally, the first paragraph has been broken into lines and 
+%added to the current page:\begin{verbatim}
+%### vertical mode entered at line 0
+%### current page:
+%\glue(\topskip) 5.69446
+%\hbox(4.30554+0.0)x469.75499, glue set 444.75497fil
+%.\hbox(0.0+0.0)x20.0
+%.\tenrm a
+%.\glue 0.0 plus 1.0fil
+%.\penalty -10000
+%.\glue(\rightskip) 0.0
+%\penalty 300
+%\glue(\baselineskip) 5.05556
+%\hbox(6.94444+0.0)x469.75499, glue set 464.19943fil
+%.\tenrm b
+%.\penalty 10000
+%.\glue(\parfillskip) 0.0 plus 1.0fil
+%.\glue(\rightskip) 0.0
+%etc.
+%total height 22.0 plus 1.0
+% goal height 643.20255
+%prevdepth 0.0
+%\end{verbatim}
+Finally, the first paragraph has been broken into lines and 
+added to the current page:\begin{verbatim}
+### vertical mode entered at line 0
+### current page:
+\glue(\topskip) 5.69446
+\hbox(4.30554+0.0)x469.75499, glue set 444.75497fil
+.\hbox(0.0+0.0)x20.0
+.\tenrm a
+.\glue 0.0 plus 1.0fil
+.\penalty -10000
+.\glue(\rightskip) 0.0
+\penalty 300
+\glue(\baselineskip) 5.05556
+\hbox(6.94444+0.0)x469.75499, glue set 464.19943fil
+.\tenrm b
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+etc.
+total height 22.0 plus 1.0
+ goal height 643.20255
+prevdepth 0.0
+\end{verbatim}
+
+
+%\endofchapter
+%%%%% end of input file [modes]
+\endofchapter
+%%%% end of input file [modes]
+
+\end{document}

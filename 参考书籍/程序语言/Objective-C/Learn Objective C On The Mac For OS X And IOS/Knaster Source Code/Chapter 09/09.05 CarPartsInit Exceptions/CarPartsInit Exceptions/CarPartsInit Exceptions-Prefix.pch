@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'CarPartsInit Exceptions' target in the 'CarPartsInit Exceptions' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

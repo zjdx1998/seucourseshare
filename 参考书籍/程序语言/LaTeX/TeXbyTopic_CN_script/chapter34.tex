@@ -1,0 +1,605 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{33}
+
+\begin{document}
+
+%\chapter{Tracing}\label{trace}
+%\index{tracing|(}
+\chapter{Tracing}\label{trace}
+\index{tracing|(}
+
+%\TeX's workings are often quite different from what
+%the programmer expected, so there are ways to discover how \TeX\
+%arrived at the result it did. The \cs{tracing...} 
+%commands all write
+%\indexterm{statistics}
+%information of a certain kind to the log file 
+%(and to the terminal if \cs{tracingonline} is positive),
+%and a number of \cs{show...} commands can be used to ask the
+%current status or value of various items of \TeX.
+\TeX's workings are often quite different from what
+the programmer expected, so there are ways to discover how \TeX\
+arrived at the result it did. The \cs{tracing...} 
+commands all write
+\indexterm{statistics}
+information of a certain kind to the log file 
+(and to the terminal if \cs{tracingonline} is positive),
+and a number of \cs{show...} commands can be used to ask the
+current status or value of various items of \TeX.
+
+%In the following list, only \cs{show} and \cs{showthe}
+%display their output on the terminal by default,
+%other \cs{show...} and \cs{tracing...} commands
+%write to the log file. They will write in addition to
+%the terminal if \cs{tracingonline} is positive.
+In the following list, only \cs{show} and \cs{showthe}
+display their output on the terminal by default,
+other \cs{show...} and \cs{tracing...} commands
+write to the log file. They will write in addition to
+the terminal if \cs{tracingonline} is positive.
+
+%\label{cschap:meaning}\label{cschap:show}\label{cschap:showthe}\label{cschap:showbox}\label{cschap:tracingoutput}\label{cschap:showboxdepth}\label{cschap:showboxbreadth}\label{cschap:tracingparagraphs}\label{cschap:tracingpages}\label{cschap:tracinglostchars}\label{cschap:tracingrestores}\label{cschap:tracingstats}\label{cschap:tracingcommands}\label{cschap:tracingmacros}\label{cschap:tracingonline}
+%\begin{inventory}
+%\item [\cs{meaning}] 
+%      Give the meaning of a control sequence as a string of characters.
+\label{cschap:meaning}\label{cschap:show}\label{cschap:showthe}\label{cschap:showbox}\label{cschap:tracingoutput}\label{cschap:showboxdepth}\label{cschap:showboxbreadth}\label{cschap:tracingparagraphs}\label{cschap:tracingpages}\label{cschap:tracinglostchars}\label{cschap:tracingrestores}\label{cschap:tracingstats}\label{cschap:tracingcommands}\label{cschap:tracingmacros}\label{cschap:tracingonline}
+\begin{inventory}
+\item [\cs{meaning}] 
+      Give the meaning of a control sequence as a string of characters.
+
+%\item [\cs{show}] 
+%      Display the meaning of a control sequence.
+\item [\cs{show}] 
+      Display the meaning of a control sequence.
+
+%\item [\cs{showthe}] 
+%      Display the result of prefixing a token with \cs{the}.
+\item [\cs{showthe}] 
+      Display the result of prefixing a token with \cs{the}.
+
+%\item [\cs{showbox}] 
+%      Display the contents of a box.
+\item [\cs{showbox}] 
+      Display the contents of a box.
+
+%\item [\cs{showlists}] 
+%      Display
+%      the contents of the partial lists
+%      currently built in all modes.
+%      This is treated on
+%      page~\pageref{showlists}.
+\item [\cs{showlists}] 
+      Display
+      the contents of the partial lists
+      currently built in all modes.
+      This is treated on
+      page~\pageref{showlists}.
+
+%\item [\csidx{tracingcommands}]
+%      If this is~1 \TeX\ displays primitive commands executed; 
+%      if this is 2~or more the outcome of conditionals is also recorded.
+\item [\csidx{tracingcommands}]
+      If this is~1 \TeX\ displays primitive commands executed; 
+      if this is 2~or more the outcome of conditionals is also recorded.
+
+%\item [\csidx{tracingmacros}] 
+%      If this is~1, \TeX\ shows expansion of macros 
+%      that are performed and the actual values of the arguments; 
+%      if this is 2~or more \gr{token parameter}s such as
+%      \cs{output} and \cs{everypar} are also traced.
+\item [\csidx{tracingmacros}] 
+      If this is~1, \TeX\ shows expansion of macros 
+      that are performed and the actual values of the arguments; 
+      if this is 2~or more \gr{token parameter}s such as
+      \cs{output} and \cs{everypar} are also traced.
+
+%\item [\cs{tracingoutput}] 
+%      If this is positive, the log file shows a dump of boxes 
+%      that are shipped to the \n{dvi} file.
+\item [\cs{tracingoutput}] 
+      If this is positive, the log file shows a dump of boxes 
+      that are shipped to the \n{dvi} file.
+
+%\item [\cs{showboxdepth}]  
+%      The number of levels of box dump that are shown when 
+%      boxes are displayed.
+\item [\cs{showboxdepth}]  
+      The number of levels of box dump that are shown when 
+      boxes are displayed.
+
+%\item [\cs{showboxbreadth}] 
+%      Number of successive elements on each level that are shown when 
+%      boxes are displayed.
+\item [\cs{showboxbreadth}] 
+      Number of successive elements on each level that are shown when 
+      boxes are displayed.
+
+%\item [\csidx{tracingonline}] 
+%      If this parameter is positive, \TeX\ will write trace      
+%      information to the terminal in addition to the log file.
+\item [\csidx{tracingonline}] 
+      If this parameter is positive, \TeX\ will write trace      
+      information to the terminal in addition to the log file.
+
+%\item [\cs{tracingparagraphs}] 
+%      If this parameter is positive, \TeX\ generates      
+%      a trace of the line breaking algorithm.
+\item [\cs{tracingparagraphs}] 
+      If this parameter is positive, \TeX\ generates      
+      a trace of the line breaking algorithm.
+
+%\item [\csidx{tracingpages}] 
+%      If this parameter is positive, \TeX\ generates      
+%      a trace of the page breaking algorithm.
+\item [\csidx{tracingpages}] 
+      If this parameter is positive, \TeX\ generates      
+      a trace of the page breaking algorithm.
+
+%\item [\csidx{tracinglostchars}] 
+%      If this parameter is positive, \TeX\ gives      
+%      diagnostic messages whenever a character is accessed that      
+%      is not present in a font.
+%      Plain default:~1.
+\item [\csidx{tracinglostchars}] 
+      If this parameter is positive, \TeX\ gives      
+      diagnostic messages whenever a character is accessed that      
+      is not present in a font.
+      Plain default:~1.
+
+%\item [\csidx{tracingrestores}] 
+%      If this parameter is positive, \TeX\ will report      
+%      all values that are restored when a group ends.
+\item [\csidx{tracingrestores}] 
+      If this parameter is positive, \TeX\ will report      
+      all values that are restored when a group ends.
+
+%\item [\cs{tracingstats}] 
+%      If this parameter is~1, \TeX\ reports at the      
+%      end of the job the usage of various internal arrays;
+%      if it is~2, the memory demands are given whenever
+%      a page is shipped out.
+\item [\cs{tracingstats}] 
+      If this parameter is~1, \TeX\ reports at the      
+      end of the job the usage of various internal arrays;
+      if it is~2, the memory demands are given whenever
+      a page is shipped out.
+
+%\end{inventory}
+\end{inventory}
+
+%\section{Meaning and content: \protect\cs{show}, \protect\cs{showthe}, \protect\cs{meaning}}
+\section{Meaning and content: \protect\cs{show}, \protect\cs{showthe}, \protect\cs{meaning}}
+
+%The meaning of control sequences, and the contents of those
+%that represent internal quantities, can be obtained
+%by the primitive commands \cs{show}, \cs{showthe},
+%and~\cs{meaning}.
+The meaning of control sequences, and the contents of those
+that represent internal quantities, can be obtained
+by the primitive commands \cs{show}, \cs{showthe},
+and~\cs{meaning}.
+
+%The control sequences \cs{show} and \cs{meaning} are similar:
+%\alt
+%the former will give
+%\cstoidx show\par\cstoidx meaning\par
+%output to the log file and the terminal, whereas the latter
+%will produce the same tokens, but they are placed in \TeX's
+%input stream.
+The control sequences \cs{show} and \cs{meaning} are similar:
+\alt
+the former will give
+\cstoidx show\par\cstoidx meaning\par
+output to the log file and the terminal, whereas the latter
+will produce the same tokens, but they are placed in \TeX's
+input stream.
+
+%The meaning of a primitive command of \TeX\ is that command itself:
+%\begin{verbatim}
+%\show\baselineskip
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\baselineskip=\baselineskip
+%\end{verbatim}
+%The meaning of a defined  quantity is its definition:
+%\begin{verbatim}
+%\show\pageno
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\pageno=\count0
+%\end{verbatim}
+%The meaning of a macro is its parameter text and replacement text:
+%\begin{verbatim}
+%\def\foo#1?#2\par{\set{#1!}\set{#2?}}
+%\show\foo
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\foo=macro:
+%#1?#2\par ->\set {#1!}\set {#2?}
+%\end{verbatim}
+%For macros without parameters the part before the arrow
+%(the parameter text) is empty.
+The meaning of a primitive command of \TeX\ is that command itself:
+\begin{verbatim}
+\show\baselineskip
+\end{verbatim}
+gives
+\begin{verbatim}
+\baselineskip=\baselineskip
+\end{verbatim}
+The meaning of a defined  quantity is its definition:
+\begin{verbatim}
+\show\pageno
+\end{verbatim}
+gives
+\begin{verbatim}
+\pageno=\count0
+\end{verbatim}
+The meaning of a macro is its parameter text and replacement text:
+\begin{verbatim}
+\def\foo#1?#2\par{\set{#1!}\set{#2?}}
+\show\foo
+\end{verbatim}
+gives
+\begin{verbatim}
+\foo=macro:
+#1?#2\par ->\set {#1!}\set {#2?}
+\end{verbatim}
+For macros without parameters the part before the arrow
+(the parameter text) is empty.
+
+%The \csidx{showthe} command will display on the log file and terminal 
+%the tokens that \cs{the} produces. 
+%After \cs{show}, \cs{showthe}, \cs{showbox}, and \cs{showlists}
+%\TeX\ asks the user for input; this can be prevented
+%by specifying \cs{scrollmode}.
+%Characters generated
+%by \cs{meaning} and \cs{the} have category~12\index{category!12},
+%except for spaces
+%(see page~\pageref{cat12});
+%the value of \cs{escapechar} is used when control sequences
+%are represented.
+The \csidx{showthe} command will display on the log file and terminal 
+the tokens that \cs{the} produces. 
+After \cs{show}, \cs{showthe}, \cs{showbox}, and \cs{showlists}
+\TeX\ asks the user for input; this can be prevented
+by specifying \cs{scrollmode}.
+Characters generated
+by \cs{meaning} and \cs{the} have category~12\index{category!12},
+except for spaces
+(see page~\pageref{cat12});
+the value of \cs{escapechar} is used when control sequences
+are represented.
+
+%%\point Show boxes: \cs{showbox}, \cs{tracingoutput}
+%\section{Show boxes: \protect\cs{showbox}, \protect\cs{tracingoutput}}
+%\point Show boxes: \cs{showbox}, \cs{tracingoutput}
+\section{Show boxes: \protect\cs{showbox}, \protect\cs{tracingoutput}}
+
+%If \cs{tracingoutput} is positive the log file will
+%\cstoidx tracingoutput\par\cstoidx showbox\par
+%receive a dumped representation of all boxes that are
+%written to the \n{dvi} file with \cs{shipout}.
+%The same representation is used
+%by the command \cs{showbox}\gr{8-bit number}.
+If \cs{tracingoutput} is positive the log file will
+\cstoidx tracingoutput\par\cstoidx showbox\par
+receive a dumped representation of all boxes that are
+written to the \n{dvi} file with \cs{shipout}.
+The same representation is used
+by the command \cs{showbox}\gr{8-bit number}.
+
+%In the first case \TeX\ will report `Completed box being shipped out';
+%in the second case it will enter \cs{errorstopmode}, and
+%tell the user `OK. (see the transcript file)'.
+%If \cs{tracingonline} is positive, the box is also displayed
+%on the terminal; if \cs{scrollmode} has been specified,
+%\TeX\ does not stop for input.
+In the first case \TeX\ will report `Completed box being shipped out';
+in the second case it will enter \cs{errorstopmode}, and
+tell the user `OK. (see the transcript file)'.
+If \cs{tracingonline} is positive, the box is also displayed
+on the terminal; if \cs{scrollmode} has been specified,
+\TeX\ does not stop for input.
+
+%The upper bound on the
+%number of nested boxes that is dumped is \cs{showboxdepth};
+%\cstoidx showboxdepth\par\cstoidx showboxbreadth\par
+%each time a level is visited at most \cs{showboxbreadth}
+%items are shown, the remainder of the list is summarized
+%with~\n{etc.}
+%For each box its height, depth, and width
+%are indicated in that order, and for characters it is
+%stated from what font they were taken. 
+The upper bound on the
+number of nested boxes that is dumped is \cs{showboxdepth};
+\cstoidx showboxdepth\par\cstoidx showboxbreadth\par
+each time a level is visited at most \cs{showboxbreadth}
+items are shown, the remainder of the list is summarized
+with~\n{etc.}
+For each box its height, depth, and width
+are indicated in that order, and for characters it is
+stated from what font they were taken. 
+
+%\begin{example} After
+%\begin{verbatim}
+%\font\tenroman=cmr10 \tenroman
+%\setbox0=\hbox{g}
+%\showbox0
+%\end{verbatim} 
+%the log file will show
+%\begin{verbatim}
+%\hbox(4.30554+1.94444)x5.00002
+%.\tenroman g
+%\end{verbatim}
+%indicating that the box was \n{4.30554pt} high,
+%\n{1.94444pt} deep, and \n{5.00002pt} wide, and that it contained
+%a character `g' from the font \cs{tenroman}. 
+%Note that the fifth decimal of all sizes may be rounded
+%because \TeX\ works with multiples of $2^{-16}$\n{pt}.
+%\message{ifmath: scriptfont fam0 fill!}
+%\end{example}
+\begin{example} After
+\begin{verbatim}
+\font\tenroman=cmr10 \tenroman
+\setbox0=\hbox{g}
+\showbox0
+\end{verbatim} 
+the log file will show
+\begin{verbatim}
+\hbox(4.30554+1.94444)x5.00002
+.\tenroman g
+\end{verbatim}
+indicating that the box was \n{4.30554pt} high,
+\n{1.94444pt} deep, and \n{5.00002pt} wide, and that it contained
+a character `g' from the font \cs{tenroman}. 
+Note that the fifth decimal of all sizes may be rounded
+because \TeX\ works with multiples of $2^{-16}$\n{pt}.
+\message{ifmath: scriptfont fam0 fill!}
+\end{example}
+
+%The next example has nested boxes, 
+%\begin{verbatim}
+%\vbox{\hbox{g}\hbox{o}}
+%\end{verbatim}
+%and it contains \cs{baselineskip} glue between the boxes.
+%After a \cs{showbox} command the log file output is:
+%\begin{verbatim}
+%\vbox(16.30554+0.0)x5.00002
+%.\hbox(4.30554+1.94444)x5.00002
+%..\tenroman g
+%.\glue(\baselineskip) 5.75002
+%.\hbox(4.30554+0.0)x5.00002
+%..\tenroman o
+%\end{verbatim}
+%Each time a new level is entered an extra dot is added to
+%the front of the line. Note that \TeX\ tells explicitly
+%that the glue is \cs{baselineskip} glue;
+%it inserts names like this for all automatically inserted glue.
+%The value of
+%the baselineskip glue here is such that the baselines of
+%the boxes are at 12 point distance.
+The next example has nested boxes, 
+\begin{verbatim}
+\vbox{\hbox{g}\hbox{o}}
+\end{verbatim}
+and it contains \cs{baselineskip} glue between the boxes.
+After a \cs{showbox} command the log file output is:
+\begin{verbatim}
+\vbox(16.30554+0.0)x5.00002
+.\hbox(4.30554+1.94444)x5.00002
+..\tenroman g
+.\glue(\baselineskip) 5.75002
+.\hbox(4.30554+0.0)x5.00002
+..\tenroman o
+\end{verbatim}
+Each time a new level is entered an extra dot is added to
+the front of the line. Note that \TeX\ tells explicitly
+that the glue is \cs{baselineskip} glue;
+it inserts names like this for all automatically inserted glue.
+The value of
+the baselineskip glue here is such that the baselines of
+the boxes are at 12 point distance.
+
+%Now let us look at explicit (user) glue. \TeX\ indicates the ratio
+%by which it is stretched or shrunk. 
+Now let us look at explicit (user) glue. \TeX\ indicates the ratio
+by which it is stretched or shrunk. 
+
+%\begin{example}
+%\begin{verbatim}
+%\hbox to 20pt {\kern10pt \hskip0pt plus 5pt}
+%\end{verbatim}
+%gives (indicating that the available stretch has been 
+%multiplied by~\n{2.0}):
+%\begin{verbatim}
+%\hbox(0.0+0.0)x20.0, glue set 2.0
+%.\kern 10.0
+%.\glue 0.0 plus 5.0
+%\end{verbatim}
+%and
+%\begin{verbatim}
+%\hbox to 0pt {\kern10pt \hskip0pt minus 20pt}
+%\end{verbatim}
+%gives (the shrink has been multiplied by~\n{0.5})
+%\begin{verbatim}
+%\hbox(0.0+0.0)x0.0, glue set - 0.5
+%.\kern 10.0
+%.\glue 0.0 minus 20.0
+%\end{verbatim}
+%respectively.
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\hbox to 20pt {\kern10pt \hskip0pt plus 5pt}
+\end{verbatim}
+gives (indicating that the available stretch has been 
+multiplied by~\n{2.0}):
+\begin{verbatim}
+\hbox(0.0+0.0)x20.0, glue set 2.0
+.\kern 10.0
+.\glue 0.0 plus 5.0
+\end{verbatim}
+and
+\begin{verbatim}
+\hbox to 0pt {\kern10pt \hskip0pt minus 20pt}
+\end{verbatim}
+gives (the shrink has been multiplied by~\n{0.5})
+\begin{verbatim}
+\hbox(0.0+0.0)x0.0, glue set - 0.5
+.\kern 10.0
+.\glue 0.0 minus 20.0
+\end{verbatim}
+respectively.
+\end{example}
+
+%This is an example with infinitely stretchable or shrinkable
+%glue:
+%\begin{verbatim}
+%\hbox(4.00000+0.14000)x15.0, glue set 9.00000fil
+%\end{verbatim}
+%This means that the horizontal box contained \n{fil} glue, and
+%it was set such that its resulting width was \n{9pt}.
+This is an example with infinitely stretchable or shrinkable
+glue:
+\begin{verbatim}
+\hbox(4.00000+0.14000)x15.0, glue set 9.00000fil
+\end{verbatim}
+This means that the horizontal box contained \n{fil} glue, and
+it was set such that its resulting width was \n{9pt}.
+
+%Underfull boxes are dumped like all other boxes, but
+%the usual `\n{Underfull hbox detected at line...}'
+%is given. Overfull horizontal boxes contain a vertical rule
+%of width \cs{overfullrule}:
+%\begin{verbatim}
+%\hbox to 5pt {\kern10pt}
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\hbox(0.0+0.0)x5.0
+%.\kern 10.0
+%.\rule(*+*)x5.0
+%\end{verbatim}
+Underfull boxes are dumped like all other boxes, but
+the usual `\n{Underfull hbox detected at line...}'
+is given. Overfull horizontal boxes contain a vertical rule
+of width \cs{overfullrule}:
+\begin{verbatim}
+\hbox to 5pt {\kern10pt}
+\end{verbatim}
+gives
+\begin{verbatim}
+\hbox(0.0+0.0)x5.0
+.\kern 10.0
+.\rule(*+*)x5.0
+\end{verbatim}
+
+
+%Box leaders are not dumped completely:
+%\begin{verbatim}
+%.\leaders 40.0
+%..\hbox(4.77313+0.14581)x15.0, glue set 9.76852fil
+%...\tenrm a
+%...\glue 0.0 plus 1.0fil
+%\end{verbatim}
+%is the dump for
+%\begin{verbatim}
+%\leaders\hbox to 15pt{\tenrm a\hfil}\hskip 40pt
+%\end{verbatim}
+%Preceding or trailing glue around the leader
+%boxes is also not indicated.
+Box leaders are not dumped completely:
+\begin{verbatim}
+.\leaders 40.0
+..\hbox(4.77313+0.14581)x15.0, glue set 9.76852fil
+...\tenrm a
+...\glue 0.0 plus 1.0fil
+\end{verbatim}
+is the dump for
+\begin{verbatim}
+\leaders\hbox to 15pt{\tenrm a\hfil}\hskip 40pt
+\end{verbatim}
+Preceding or trailing glue around the leader
+boxes is also not indicated.
+
+%%\point Global statistics
+%\section{Global statistics}
+%\point Global statistics
+\section{Global statistics}
+
+%The parameter \csidx{tracingstats} can be used to force \TeX\
+%to report at the end of the job the global use of resources.
+%Some production versions of \TeX\ may not have this option.
+The parameter \csidx{tracingstats} can be used to force \TeX\
+to report at the end of the job the global use of resources.
+Some production versions of \TeX\ may not have this option.
+
+%As an example, here are the statistics for this book:
+%\begin{verbatim}
+%Here is how much of TeX's memory you used:
+%\end{verbatim}
+%String memory (bounded by `pool size'):
+%\begin{verbatim}
+% 877 strings out of 4649
+% 9928 string characters out of 61781
+%\end{verbatim}
+%Main memory, control sequences, font memory:
+%\begin{verbatim}
+% 53071 words of memory out of 262141
+% 2528 multiletter control sequences out of 9500
+% 20137 words of font info for 70 fonts,
+%             out of 72000 for 255
+%\end{verbatim}
+%Hyphenation:
+%\begin{verbatim}
+% 14 hyphenation exceptions out of 607
+%\end{verbatim}
+%Stacks: input, nest, parameter, buffer, and save stack respectively,
+%\begin{verbatim}
+% 17i,6n,19p,245b,422s stack positions out of 
+% 300i,40n,60p,3000b,4000s
+%\end{verbatim}
+As an example, here are the statistics for this book:
+\begin{verbatim}
+Here is how much of TeX's memory you used:
+\end{verbatim}
+String memory (bounded by `pool size'):
+\begin{verbatim}
+ 877 strings out of 4649
+ 9928 string characters out of 61781
+\end{verbatim}
+Main memory, control sequences, font memory:
+\begin{verbatim}
+ 53071 words of memory out of 262141
+ 2528 multiletter control sequences out of 9500
+ 20137 words of font info for 70 fonts,
+             out of 72000 for 255
+\end{verbatim}
+Hyphenation:
+\begin{verbatim}
+ 14 hyphenation exceptions out of 607
+\end{verbatim}
+Stacks: input, nest, parameter, buffer, and save stack respectively,
+\begin{verbatim}
+ 17i,6n,19p,245b,422s stack positions out of 
+ 300i,40n,60p,3000b,4000s
+\end{verbatim}
+
+%%\input tracingparagraphs
+%\input tracingparagraphs
+
+%\index{tracing|)}
+%\endofchapter
+%%%%% end of input file [trace]
+\index{tracing|)}
+\endofchapter
+%%%% end of input file [trace]
+
+\end{document}

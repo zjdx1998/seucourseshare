@@ -1,0 +1,477 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{21}
+
+\begin{document}
+
+%\chapter{Fonts in Formulas}\label{mathfont}
+\chapter{Fonts in Formulas}\label{mathfont}
+
+%For math typesetting a single current font is not sufficient, as it
+%is for text typesetting. Instead \TeX\ uses several font families,
+%and each family can contain three fonts. This chapter
+%explains how font families are organized, and how \TeX\ determines
+%from what families characters should be taken.
+For math typesetting a single current font is not sufficient, as it
+is for text typesetting. Instead \TeX\ uses several font families,
+and each family can contain three fonts. This chapter
+explains how font families are organized, and how \TeX\ determines
+from what families characters should be taken.
+
+%\label{cschap:fam}\label{cschap:newfam}\label{cschap:textfont}\label{cschap:scriptfont}\label{cschap:scriptscriptfont}
+%\begin{inventory}
+\label{cschap:fam}\label{cschap:newfam}\label{cschap:textfont}\label{cschap:scriptfont}\label{cschap:scriptscriptfont}
+\begin{inventory}
+
+%\item [\cs{fam}]  
+%      The number of the current font family.
+\item [\cs{fam}]  
+      The number of the current font family.
+
+%\item [\cs{newfam}]  
+%      Allocate a new math font family.
+\item [\cs{newfam}]  
+      Allocate a new math font family.
+
+%\item [\cs{textfont}]   
+%      Access the textstyle font of a family.\alt
+\item [\cs{textfont}]   
+      Access the textstyle font of a family.\alt
+
+%\item [\cs{scriptfont}]  
+%      Access the scriptstyle font of a family.\alt
+\item [\cs{scriptfont}]  
+      Access the scriptstyle font of a family.\alt
+
+%\item [\cs{scriptscriptfont}]  
+%      Access the scriptscriptstyle font of a family.\alt
+\item [\cs{scriptscriptfont}]  
+      Access the scriptscriptstyle font of a family.\alt
+
+%\end{inventory}
+\end{inventory}
+
+%%\point Determining the font of a character in math mode
+%\section{Determining the font of a character in math mode}
+%\point Determining the font of a character in math mode
+\section{Determining the font of a character in math mode}
+
+%The characters in math formulas can be taken from several
+%different fonts (or better, \indexterm{font families}) without any user
+%commands. For instance, in plain \TeX\ math formulas use
+%the roman font, the math italic font, 
+%the symbol font and the math extension font.
+The characters in math formulas can be taken from several
+different fonts (or better, \indexterm{font families}) without any user
+commands. For instance, in plain \TeX\ math formulas use
+the roman font, the math italic font, 
+the symbol font and the math extension font.
+
+%In order to determine from which font a character is to be
+%taken, \TeX\ considers for each character in a formula its
+%\cs{mathcode} (this is treated in Chapter~\ref{mathchar}).
+%A~\cs{mathcode} is a 15-bit number of the form
+%\verb."xyzz., where the hex digits
+%have the following meaning:
+%\begin{disp}
+%\n x:~class,\nl
+%\n y:~family,\nl
+%\n{zz}:~position in font.\end{disp}
+In order to determine from which font a character is to be
+taken, \TeX\ considers for each character in a formula its
+\cs{mathcode} (this is treated in Chapter~\ref{mathchar}).
+A~\cs{mathcode} is a 15-bit number of the form
+\verb."xyzz., where the hex digits
+have the following meaning:
+\begin{disp}
+\n x:~class,\nl
+\n y:~family,\nl
+\n{zz}:~position in font.\end{disp}
+
+%In general only the family determines from what font 
+%a character is to be taken.
+%The class of a math character is mostly used to
+%control spacing and other aspects of  typesetting.
+%Typical classes include `relation', `operator', `delimiter';
+%see section~\ref{math:class} for details.
+In general only the family determines from what font 
+a character is to be taken.
+The class of a math character is mostly used to
+control spacing and other aspects of  typesetting.
+Typical classes include `relation', `operator', `delimiter';
+see section~\ref{math:class} for details.
+
+%Class~7 is special in this respect: 
+%it is called `variable family'. 
+%If a character has a \cs{mathcode} of the form \verb."7yzz.
+%it is taken from family \n{y},
+%unless the parameter \cs{fam} has a value in the range 0--15;
+%then it is taken from family~\cs{fam}.
+Class~7 is special in this respect: 
+it is called `variable family'. 
+If a character has a \cs{mathcode} of the form \verb."7yzz.
+it is taken from family \n{y},
+unless the parameter \cs{fam} has a value in the range 0--15;
+then it is taken from family~\cs{fam}.
+
+
+%%\point Initial family settings
+%\section{Initial family settings}
+%\point Initial family settings
+\section{Initial family settings}
+
+%Both lowercase and uppercase letters
+%are defined by \IniTeX\ to have math codes \verb>"71zz>,
+%\label{ini:fam}%
+%which means that they are of variable family, initially from
+%family~1.
+%As \TeX\ sets \verb.fam=-1., that is,
+%an invalid value, when a formula starts, 
+%characters are indeed taken from
+%family~1, which in plain \TeX\ is math italic.
+Both lowercase and uppercase letters
+are defined by \IniTeX\ to have math codes \verb>"71zz>,
+\label{ini:fam}%
+which means that they are of variable family, initially from
+family~1.
+As \TeX\ sets \verb.fam=-1., that is,
+an invalid value, when a formula starts, 
+characters are indeed taken from
+family~1, which in plain \TeX\ is math italic.
+
+%Digits have math code \verb>"70zz> so they are initially from
+%family~0, in plain \TeX\ the roman font. 
+%All other character codes have a mathcode
+%assigned by \IniTeX\ as
+%\begin{disp}\cs{mathcode}$\,x=x$\end{disp} which puts them in class~0,
+%ordinary, and family~0, roman in plain \TeX.
+Digits have math code \verb>"70zz> so they are initially from
+family~0, in plain \TeX\ the roman font. 
+All other character codes have a mathcode
+assigned by \IniTeX\ as
+\begin{disp}\cs{mathcode}$\,x=x$\end{disp} which puts them in class~0,
+ordinary, and family~0, roman in plain \TeX.
+
+%In plain \TeX, commands such as \cs{sl} then set both a font and
+%a family:
+%\begin{verbatim}
+%\def\sl{\fam\slfam\tensl}
+%\end{verbatim}
+%so putting \cs{sl} in a formula will cause all letters, digits,
+%and  uppercase Greek characters, to change to
+%slanted style.
+In plain \TeX, commands such as \cs{sl} then set both a font and
+a family:
+\begin{verbatim}
+\def\sl{\fam\slfam\tensl}
+\end{verbatim}
+so putting \cs{sl} in a formula will cause all letters, digits,
+and  uppercase Greek characters, to change to
+slanted style.
+
+%In most cases, any font can be assigned to any family, but
+%two families in \TeX\ have a special meaning: these are
+%families 2 and~3.
+%For instance, their number of \cs{fontdimen} parameters
+%is different from the usual~7. Family~2 needs 22 parameters,
+%and family~3 needs~13. These parameters have all a very
+%specialized meaning for positioning in math typesetting. 
+%Their meaning is explained below, but for the full story
+%the reader is referred to appendix~G of \TeXbook.
+In most cases, any font can be assigned to any family, but
+two families in \TeX\ have a special meaning: these are
+families 2 and~3.
+For instance, their number of \cs{fontdimen} parameters
+is different from the usual~7. Family~2 needs 22 parameters,
+and family~3 needs~13. These parameters have all a very
+specialized meaning for positioning in math typesetting. 
+Their meaning is explained below, but for the full story
+the reader is referred to appendix~G of \TeXbook.
+
+
+%%\point Family definition
+%\section{Family definition}
+%\point Family definition
+\section{Family definition}
+
+%\TeX\ can access 16 families of fonts in math mode;
+%font families have numbers 0--15. 
+%The number of the
+%current family is recorded in the parameter~\csidx{fam}.
+\TeX\ can access 16 families of fonts in math mode;
+font families have numbers 0--15. 
+The number of the
+current family is recorded in the parameter~\csidx{fam}.
+
+%The macro \csidx{newfam} gives the number of an unused family.
+%This number is assigned using \cs{chardef} to the control sequence.
+The macro \csidx{newfam} gives the number of an unused family.
+This number is assigned using \cs{chardef} to the control sequence.
+
+
+%Each font family can have a font meant for text style, script style,
+%and scriptscript style. Below it is explained how \TeX\
+%determines in what style a (sub-) formula is to be typeset.
+Each font family can have a font meant for text style, script style,
+and scriptscript style. Below it is explained how \TeX\
+determines in what style a (sub-) formula is to be typeset.
+
+%Fonts are assigned to a family
+%\cstoidx textfont\par\cstoidx scriptfont\par\cstoidx scriptscriptfont\par
+%as follows:
+%\begin{verbatim}
+%\newfam\MyFam
+%\textfont\MyFam=\tfont \scriptfont\MyFam=\sfont
+%\scriptscriptfont\MyFam=\ssfont
+%\end{verbatim}
+%for the text, script, and scriptscript fonts of a family.
+%In general it is not necessary to fill all three members
+%of a family (but it is for family~3). 
+%If \TeX\ needs a character from a family member
+%that has not been filled,
+%it uses the \cs{nullfont} instead,
+%a~primitive font that has no characters (nor a \n{.tfm} file).
+Fonts are assigned to a family
+\cstoidx textfont\par\cstoidx scriptfont\par\cstoidx scriptscriptfont\par
+as follows:
+\begin{verbatim}
+\newfam\MyFam
+\textfont\MyFam=\tfont \scriptfont\MyFam=\sfont
+\scriptscriptfont\MyFam=\ssfont
+\end{verbatim}
+for the text, script, and scriptscript fonts of a family.
+In general it is not necessary to fill all three members
+of a family (but it is for family~3). 
+If \TeX\ needs a character from a family member
+that has not been filled,
+it uses the \cs{nullfont} instead,
+a~primitive font that has no characters (nor a \n{.tfm} file).
+
+
+%%\point Some specific font changes
+%\section{Some specific font changes}
+%\point Some specific font changes
+\section{Some specific font changes}
+
+%%\spoint Change the font of ordinary characters and uppercase Greek
+%\subsection{Change the font of ordinary characters and uppercase Greek}
+%\spoint Change the font of ordinary characters and uppercase Greek
+\subsection{Change the font of ordinary characters and uppercase Greek}
+
+%All letters and the uppercase Greek characters are
+%by default in plain \TeX\ of class~7,
+%variable family, so changing \cs{fam} will change the font
+%from which they are taken.
+%For example
+%\begin{verbatim}
+%{\fam=9 x}
+%\end{verbatim}
+% gives an \n{x} from family~9.
+All letters and the uppercase Greek characters are
+by default in plain \TeX\ of class~7,
+variable family, so changing \cs{fam} will change the font
+from which they are taken.
+For example
+\begin{verbatim}
+{\fam=9 x}
+\end{verbatim}
+ gives an \n{x} from family~9.
+
+%Uppercase Greek characters are defined by
+%\cs{mathchardef} statements in the plain format as \verb>"70zz>,
+%that is, variable family, initially roman.
+%Therefore, uppercase Greek character also change with the family.
+Uppercase Greek characters are defined by
+\cs{mathchardef} statements in the plain format as \verb>"70zz>,
+that is, variable family, initially roman.
+Therefore, uppercase Greek character also change with the family.
+
+%%\spoint Change uppercase Greek independent of text font
+%\subsection{Change uppercase Greek independent of text font}
+%\spoint Change uppercase Greek independent of text font
+\subsection{Change uppercase Greek independent of text font}
+
+%In the Computer Modern font layout, uppercase Greek letters
+%are part of the roman font; see page~\pageref{cmr:table}.
+%\alt
+%Therefore, introducing another
+%text font (with another layout)
+%will change the uppercase Greek characters
+%(or even make them disappear).
+%One way of remedying this is by introducing a new family in
+%which the \n{cmr} font, which contains the uppercase Greek,
+%resides.
+%The control sequences accessing these characters then have
+%to be redefined:
+%\begin{verbatim}
+%\newfam\Kgreek 
+%\textfont\Kgreek=cmr10 ...
+%\def\hex#1{\ifcase#10\or 1\or 2\or 3\or 4\or 5\or 6\or
+%    7\or 8\or 9\or A\or B\or C\or D\or E\or F\fi}
+%\mathchardef\Gamma="0\hex\Kgreek00 % was: "0100
+%\mathchardef\Beta ="0\hex\Kgreek01 % was: "0101
+%\mathchardef\Gamma ...
+%\end{verbatim}
+%Note, by the way,
+%the absence of a either a space or a \cs{relax} token after
+%\n{\#1} in the definition of \cs{hex}. This implies that this
+%macro can only be called with an argument that is a 
+%control sequence.
+In the Computer Modern font layout, uppercase Greek letters
+are part of the roman font; see page~\pageref{cmr:table}.
+\alt
+Therefore, introducing another
+text font (with another layout)
+will change the uppercase Greek characters
+(or even make them disappear).
+One way of remedying this is by introducing a new family in
+which the \n{cmr} font, which contains the uppercase Greek,
+resides.
+The control sequences accessing these characters then have
+to be redefined:
+\begin{verbatim}
+\newfam\Kgreek 
+\textfont\Kgreek=cmr10 ...
+\def\hex#1{\ifcase#10\or 1\or 2\or 3\or 4\or 5\or 6\or
+    7\or 8\or 9\or A\or B\or C\or D\or E\or F\fi}
+\mathchardef\Gamma="0\hex\Kgreek00 % was: "0100
+\mathchardef\Beta ="0\hex\Kgreek01 % was: "0101
+\mathchardef\Gamma ...
+\end{verbatim}
+Note, by the way,
+the absence of a either a space or a \cs{relax} token after
+\n{\#1} in the definition of \cs{hex}. This implies that this
+macro can only be called with an argument that is a 
+control sequence.
+
+%%\spoint Change the font of lowercase Greek 
+%\subsection{Change the font of lowercase Greek
+%       and mathematical symbols}
+%\spoint Change the font of lowercase Greek 
+\subsection{Change the font of lowercase Greek
+       and mathematical symbols}
+
+%Lowercase Greek characters have math code
+%\verb>"01zz>, meaning they are always from the math italic family. 
+%In order to change this one might redefine them,
+%\mdqon
+%for instance \verb.\mathchardef.""\verb.\alpha="710B., 
+%\mdqoff
+%to make them variable family.
+%This is not done in plain \TeX, because the Computer Modern
+%roman font does not
+%have Greek lowercase, although it does have the uppercase characters.
+Lowercase Greek characters have math code
+\verb>"01zz>, meaning they are always from the math italic family. 
+In order to change this one might redefine them,
+\mdqon
+for instance \verb.\mathchardef.""\verb.\alpha="710B., 
+\mdqoff
+to make them variable family.
+This is not done in plain \TeX, because the Computer Modern
+roman font does not
+have Greek lowercase, although it does have the uppercase characters.
+
+%Another way is to redefine them like \verb.\mathchardef\alpha="0n0B.
+%where \n{n} is the (hexadecimal) number of a family
+%compatible with math italic, containing for instance a bold
+%math italic font.
+Another way is to redefine them like \verb.\mathchardef\alpha="0n0B.
+where \n{n} is the (hexadecimal) number of a family
+compatible with math italic, containing for instance a bold
+math italic font.
+
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{Assorted remarks}
+
+%%\spoint New fonts in formulas
+%\subsection{New fonts in formulas}
+%\spoint New fonts in formulas
+\subsection{New fonts in formulas}
+
+%There are two ways to access a font inside mathematics.
+%\howto Change fonts in a math formula\par
+%\mdqon
+%After \cs{font}""\cs{newfont=....} it is not possible to get
+%\mdqoff
+%the `a' of the new font by \verb-$...{\newfont a}...$-
+%because \TeX\ does not look at the current font in math mode.
+%What does work is
+%\begin{verbatim}
+%$ ... \hbox{\newfont a} ...$
+%\end{verbatim}
+%but this precludes the use of the new font in script and 
+%scriptscript styles.
+There are two ways to access a font inside mathematics.
+\howto Change fonts in a math formula\par
+\mdqon
+After \cs{font}""\cs{newfont=....} it is not possible to get
+\mdqoff
+the `a' of the new font by \verb-$...{\newfont a}...$-
+because \TeX\ does not look at the current font in math mode.
+What does work is
+\begin{verbatim}
+$ ... \hbox{\newfont a} ...$
+\end{verbatim}
+but this precludes the use of the new font in script and 
+scriptscript styles.
+
+%The proper solution  takes a bit more work:
+%\begin{verbatim}
+%\font\newtextfont=... 
+%\font\newscriptfont=... \font\newsscriptfont=...
+%\newfam\newfontfam
+%\textfont\newfontfam=\newtextfont
+%\scriptfont\newfontfam=\newscriptfont
+%\scriptscriptfont\newfontfam=\newsscriptfont
+%\def\newfont{\newtextfont \fam=\newfontfam}
+%\end{verbatim}
+%after which the font can be used as
+%\begin{verbatim}
+%$... {\newfont a_{b_c}} ...$
+%\end{verbatim}
+%in all three styles.
+The proper solution  takes a bit more work:
+\begin{verbatim}
+\font\newtextfont=... 
+\font\newscriptfont=... \font\newsscriptfont=...
+\newfam\newfontfam
+\textfont\newfontfam=\newtextfont
+\scriptfont\newfontfam=\newscriptfont
+\scriptscriptfont\newfontfam=\newsscriptfont
+\def\newfont{\newtextfont \fam=\newfontfam}
+\end{verbatim}
+after which the font can be used as
+\begin{verbatim}
+$... {\newfont a_{b_c}} ...$
+\end{verbatim}
+in all three styles.
+
+%%\spoint Evaluating the families
+%\subsection{Evaluating the families}
+%\spoint Evaluating the families
+\subsection{Evaluating the families}
+
+%\TeX\ will only look at what is actually in the \cs{textfont}
+%et cetera of the various families at the end of the whole
+%formula. Switching fonts in the families is thus not possible
+%inside a single formula.
+%The number of 16 families may therefore turn out to be restrictive
+%for some applications.
+\TeX\ will only look at what is actually in the \cs{textfont}
+et cetera of the various families at the end of the whole
+formula. Switching fonts in the families is thus not possible
+inside a single formula.
+The number of 16 families may therefore turn out to be restrictive
+for some applications.
+
+
+%\endofchapter
+\endofchapter
+
+\end{document}

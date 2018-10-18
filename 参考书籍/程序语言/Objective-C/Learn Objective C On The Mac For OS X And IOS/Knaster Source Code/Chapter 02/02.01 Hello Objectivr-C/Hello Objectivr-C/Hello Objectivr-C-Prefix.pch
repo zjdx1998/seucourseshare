@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Hello Objectivr-C' target in the 'Hello Objectivr-C' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

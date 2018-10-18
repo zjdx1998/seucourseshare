@@ -1,0 +1,698 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{19}
+
+\begin{document}
+
+%\chapter{Spacing}\label{space}
+%\index{spacing|(}
+\chapter{Spacing}\label{space}
+\index{spacing|(}
+
+%The usual interword space in \TeX\ is specified in the
+%font information, but the user can override this.
+%This chapter explains the rules by which
+%\TeX\ calculates interword space.
+The usual interword space in \TeX\ is specified in the
+font information, but the user can override this.
+This chapter explains the rules by which
+\TeX\ calculates interword space.
+
+%\label{cschap:char322}\label{cschap:spaceskip}\label{cschap:xspaceskip}\label{cschap:spacefactor}\label{cschap:sfcode}\label{cschap:frenchspacing}\label{cschap:nonfrenchspacing}
+%\begin{inventory}
+\label{cschap:char322}\label{cschap:spaceskip}\label{cschap:xspaceskip}\label{cschap:spacefactor}\label{cschap:sfcode}\label{cschap:frenchspacing}\label{cschap:nonfrenchspacing}
+\begin{inventory}
+
+%\item [\cs{\char32}]
+%      Control space.
+%      Insert the same amount of space as a space token would
+%      if \cs{spacefactor}${}=1000$.
+\item [\cs{\char32}]
+      Control space.
+      Insert the same amount of space as a space token would
+      if \cs{spacefactor}${}=1000$.
+
+%\item [\cs{spaceskip}] 
+%      Interword glue if non-zero.
+\item [\cs{spaceskip}] 
+      Interword glue if non-zero.
+
+%\item [\cs{xspaceskip}] 
+%      Interword glue if non-zero and \cs{spacefactor}${}\geq2000$.
+\item [\cs{xspaceskip}] 
+      Interword glue if non-zero and \cs{spacefactor}${}\geq2000$.
+
+%\item [\cs{spacefactor}] 
+%      1000 times the ratio by which the stretch (shrink) component of the
+%      interword glue should be multiplied (divided).
+\item [\cs{spacefactor}] 
+      1000 times the ratio by which the stretch (shrink) component of the
+      interword glue should be multiplied (divided).
+
+%\item [\cs{sfcode}] 
+%      Value for \cs{spacefactor} associated with a character.
+\item [\cs{sfcode}] 
+      Value for \cs{spacefactor} associated with a character.
+
+%\item [\cs{frenchspacing}]
+%      Macro to switch off extra space after punctuation.
+\item [\cs{frenchspacing}]
+      Macro to switch off extra space after punctuation.
+
+%\item [\cs{nonfrenchspacing}]
+%      Macro to switch on extra space after punctuation.
+\item [\cs{nonfrenchspacing}]
+      Macro to switch on extra space after punctuation.
+
+%\end{inventory}
+\end{inventory}
+
+
+%\section{Introduction}
+\section{Introduction}
+
+%In between words in a text, \TeX\ inserts space. This space has a
+%natural component, plus stretch and shrink to make justified
+%(right-aligned) text possible. Now, in certain styles of typesetting,
+%there is more space after punctuation. This chapter discusses the
+%mechanism that \TeX\ uses to realize such effect.
+In between words in a text, \TeX\ inserts space. This space has a
+natural component, plus stretch and shrink to make justified
+(right-aligned) text possible. Now, in certain styles of typesetting,
+there is more space after punctuation. This chapter discusses the
+mechanism that \TeX\ uses to realize such effect.
+
+%Here is the general idea:
+%\begin{itemize}
+%\item After every character token, the \cs{spacefactor} quantity is
+%  updated with the space factor code of that character.
+%\item When space is inserted, its natural size can be augmented
+%  (if \cs{spacefactor}${}\geq2000$), and in general its stretch is
+%  multiplied, and its shrink divided, by \cs{spacefactor}${}/1000$.
+%\item There are further rules, for instance so that in \n{...word.)
+%  And...} the space is modified according to the period, not the
+%  closing parenthesis.
+%\end{itemize}
+Here is the general idea:
+\begin{itemize}
+\item After every character token, the \cs{spacefactor} quantity is
+  updated with the space factor code of that character.
+\item When space is inserted, its natural size can be augmented
+  (if \cs{spacefactor}${}\geq2000$), and in general its stretch is
+  multiplied, and its shrink divided, by \cs{spacefactor}${}/1000$.
+\item There are further rules, for instance so that in \n{...word.)
+  And...} the space is modified according to the period, not the
+  closing parenthesis.
+\end{itemize}
+
+%%\point Automatic interword space
+%\section{Automatic interword space}
+%\point Automatic interword space
+\section{Automatic interword space}
+
+
+%For every space token in horizontal mode the interword glue
+%of the current font
+%is inserted, with stretch and shrink components, all
+%determined by \cs{fontdimen} parameters.
+%To be specific, font dimension~2 is the normal interword space,
+%dimension~3 is the amount of stretch of the interword
+%space, and 4~is the amount of shrink. Font dimension
+%7 is called the `extra space'; see below (the list
+%of all the font dimensions appears on page~\pageref{font:dims}). 
+For every space token in horizontal mode the interword glue
+of the current font
+is inserted, with stretch and shrink components, all
+determined by \cs{fontdimen} parameters.
+To be specific, font dimension~2 is the normal interword space,
+dimension~3 is the amount of stretch of the interword
+space, and 4~is the amount of shrink. Font dimension
+7 is called the `extra space'; see below (the list
+of all the font dimensions appears on page~\pageref{font:dims}). 
+
+%Ordinarily all spaces between words (in one font) would be treated the
+%same. To allow for differently sized spaces \ldash for instance a
+%typeset equivalent of the double spacing after punctuation in
+%typewritten documents \rdash \TeX\ associates with each character a
+%so-called \indextermsub{space}{factor}.
+Ordinarily all spaces between words (in one font) would be treated the
+same. To allow for differently sized spaces \ldash for instance a
+typeset equivalent of the double spacing after punctuation in
+typewritten documents \rdash \TeX\ associates with each character a
+so-called \indextermsub{space}{factor}.
+
+%When a character is added to the current horizontal list,
+%the space factor code (\csidx{sfcode})
+%of that character
+%is assigned to the space factor \csidx{spacefactor}.
+%There are two exceptions to this rule:
+%\begin{itemize}
+%\item When the space factor code is zero, the \cs{spacefactor} does
+%  not change. This mechanism allows space factors to persist through
+%  parentheses and such; see section~\ref{sec:sf-through-paren}.
+%\item When the space factor code of the last character is ${>}1000$
+%  and the current space factor is ${<}1000$, the space factor
+%  becomes~1000. This mechanism prevents elongated spaces after
+%  initials; see section~\ref{sec:sf-punct}.
+%\end{itemize}
+%The maximum space factor  is~$32\,767$.
+When a character is added to the current horizontal list,
+the space factor code (\csidx{sfcode})
+of that character
+is assigned to the space factor \csidx{spacefactor}.
+There are two exceptions to this rule:
+\begin{itemize}
+\item When the space factor code is zero, the \cs{spacefactor} does
+  not change. This mechanism allows space factors to persist through
+  parentheses and such; see section~\ref{sec:sf-through-paren}.
+\item When the space factor code of the last character is ${>}1000$
+  and the current space factor is ${<}1000$, the space factor
+  becomes~1000. This mechanism prevents elongated spaces after
+  initials; see section~\ref{sec:sf-punct}.
+\end{itemize}
+The maximum space factor  is~$32\,767$.
+
+%The stretch component of the interword space is
+%multiplied by the space factor divided by 1000;
+%the shrink component is divided by this factor. 
+%The extra space (font dimension~7) is
+%added to the natural component of the
+%interword space when the space factor is~${}\geq2000$.
+The stretch component of the interword space is
+multiplied by the space factor divided by 1000;
+the shrink component is divided by this factor. 
+The extra space (font dimension~7) is
+added to the natural component of the
+interword space when the space factor is~${}\geq2000$.
+
+%%\point User interword space
+%\section{User interword space}
+%\point User interword space
+\section{User interword space}
+
+%The user can override the interword space contained in
+%the \cs{fontdimen} parameters
+%by setting the
+%\csidx{spaceskip} and the \csidx{xspaceskip} to non-zero values.
+%If \cs{spaceskip} is non-zero, it is taken instead
+%of the normal interword space
+%(\cs{fontdimen2} plus \cs{fontdimen3} minus \cs{fontdimen4}), but
+%a non-zero \cs{xspaceskip} is used as interword space if
+%the space factor is~${}\geq2000$.
+The user can override the interword space contained in
+the \cs{fontdimen} parameters
+by setting the
+\csidx{spaceskip} and the \csidx{xspaceskip} to non-zero values.
+If \cs{spaceskip} is non-zero, it is taken instead
+of the normal interword space
+(\cs{fontdimen2} plus \cs{fontdimen3} minus \cs{fontdimen4}), but
+a non-zero \cs{xspaceskip} is used as interword space if
+the space factor is~${}\geq2000$.
+
+%If the \cs{spaceskip} is used,
+%its stretch and shrink components are
+%multiplied and divided respectively by \cs{spacefactor}$/1000$.
+If the \cs{spaceskip} is used,
+its stretch and shrink components are
+multiplied and divided respectively by \cs{spacefactor}$/1000$.
+
+%Note that, if \cs{spaceskip} and \cs{xspaceskip} are
+%defined in terms of \n{em}, they change with the font.
+Note that, if \cs{spaceskip} and \cs{xspaceskip} are
+defined in terms of \n{em}, they change with the font.
+
+%\begin{example} Let the following macros be given:
+%\begin{verbatim}
+%\def\a.{\vrule height10pt width4pt\spacefactor=1000\relax}
+%\def\b.{\vrule height10pt width4pt\spacefactor=3000\relax}
+%\def\c{\vrule height10pt width4pt\relax}
+%\end{verbatim} 
+%    then
+\begin{example} Let the following macros be given:
+\begin{verbatim}
+\def\a.{\vrule height10pt width4pt\spacefactor=1000\relax}
+\def\b.{\vrule height10pt width4pt\spacefactor=3000\relax}
+\def\c{\vrule height10pt width4pt\relax}
+\end{verbatim} 
+    then
+
+%%\begin{disp}\leavevmode\PopIndentLevel
+%\begin{disp}\leavevmode\PopIndentLevel
+
+%\hbox{%
+%$\vcenter{\hsize=3in \snugbox{%
+%\begin{verbatim}
+%\vbox{
+%\fontdimen2\font=4pt % normal space 
+%\fontdimen7\font=3pt % extra space
+%\a. \b. \c\par
+%% zero extra space
+%\fontdimen7\font=0pt
+%\a. \b. \c\par
+%% set \spaceskip for normal space
+%\spaceskip=2\fontdimen2\font
+%\a. \b. \c\par
+%% set \xspaceskip
+%\xspaceskip=2pt
+%\a. \b. \c\par
+%}
+%\end{verbatim}
+%}}$%
+%%
+%\quad\quad gives\quad\quad
+%%
+%\message{Check snug and drop!}%
+%$\vcenter{\snugbox{\parindent0pt\parskip=0pt
+%\def\a.{\vrule height10pt width4pt\spacefactor=1000\relax}
+%\def\b.{\vrule height10pt width4pt\spacefactor=3000\relax}
+%\def\c{\vrule height10pt width4pt\relax}
+%\leavevmode\strut\par\hbox{}\hbox{}
+%% set the normal space and extra space
+%\fontdimen2\font=4pt \fontdimen7\font=3pt
+%\a. \b. \c\par \vskip2\baselineskip
+%% zero extra space
+%\fontdimen7\font=0pt
+%\a. \b. \c\par \vskip2\baselineskip
+%% set \spaceskip for normal space
+%\spaceskip=2\fontdimen2\font
+%\a. \b. \c\par \vskip2\baselineskip
+%% set \xspaceskip
+%\xspaceskip=2pt
+%\a. \b. \c\par \leavevmode\strut
+%}}$%
+%%
+%}
+%%\end{disp}
+\hbox{%
+$\vcenter{\hsize=3in \snugbox{%
+\begin{verbatim}
+\vbox{
+\fontdimen2\font=4pt % normal space 
+\fontdimen7\font=3pt % extra space
+\a. \b. \c\par
+% zero extra space
+\fontdimen7\font=0pt
+\a. \b. \c\par
+% set \spaceskip for normal space
+\spaceskip=2\fontdimen2\font
+\a. \b. \c\par
+% set \xspaceskip
+\xspaceskip=2pt
+\a. \b. \c\par
+}
+\end{verbatim}
+}}$%
+%
+\quad\quad gives\quad\quad
+%
+\message{Check snug and drop!}%
+$\vcenter{\snugbox{\parindent0pt\parskip=0pt
+\def\a.{\vrule height10pt width4pt\spacefactor=1000\relax}
+\def\b.{\vrule height10pt width4pt\spacefactor=3000\relax}
+\def\c{\vrule height10pt width4pt\relax}
+\leavevmode\strut\par\hbox{}\hbox{}
+% set the normal space and extra space
+\fontdimen2\font=4pt \fontdimen7\font=3pt
+\a. \b. \c\par \vskip2\baselineskip
+% zero extra space
+\fontdimen7\font=0pt
+\a. \b. \c\par \vskip2\baselineskip
+% set \spaceskip for normal space
+\spaceskip=2\fontdimen2\font
+\a. \b. \c\par \vskip2\baselineskip
+% set \xspaceskip
+\xspaceskip=2pt
+\a. \b. \c\par \leavevmode\strut
+}}$%
+%
+}
+%\end{disp}
+
+%In all of these lines the glue is set at natural width. In the first
+%line the high space factor value after \cs{b} causes the extra
+%space \cs{fontdimen7} to be added. If this is zero (second line), the
+%only difference between space factor values is the stretch/shrink
+%ratio. In the third line the \cs{spaceskip} is taken
+%for all space factor values. If the \cs{xspaceskip} is nonzero,
+%it is taken (fourth line) instead of the \cs{spaceskip}
+%for the high value of the space factor.
+%\end{example}
+In all of these lines the glue is set at natural width. In the first
+line the high space factor value after \cs{b} causes the extra
+space \cs{fontdimen7} to be added. If this is zero (second line), the
+only difference between space factor values is the stretch/shrink
+ratio. In the third line the \cs{spaceskip} is taken
+for all space factor values. If the \cs{xspaceskip} is nonzero,
+it is taken (fourth line) instead of the \cs{spaceskip}
+for the high value of the space factor.
+\end{example}
+
+%%\point[tie] Control space and tie
+%\section{Control space and tie}
+%\label{tie}
+%\point[tie] Control space and tie
+\section{Control space and tie}
+\label{tie}
+
+%The control character \csc{\char32}, \indextermbus{control}{space}
+%is a horizontal command
+%which inserts a space,  \csidx{\char32}
+%acting as if the current space factor is~1000.
+%However, it does not affect the value of \cs{spacefactor}.
+The control character \csc{\char32}, \indextermbus{control}{space}
+is a horizontal command
+which inserts a space,  \csidx{\char32}
+acting as if the current space factor is~1000.
+However, it does not affect the value of \cs{spacefactor}.
+
+%Control space has two main uses. First, it is convenient to use after
+%a control sequence: \verb+\TeX\ is fun!+
+%Secondly, it can be used after abbreviations when \cs{nonfrenchspacing}
+%(see below) is in effect. For example:
+%\begin{verbatim}
+%\hbox spread 9pt{\nonfrenchspacing
+%      The Reverend Dr. Drofnats}
+%\end{verbatim}
+%gives
+%\begin{disp} \hbadness=10000 \leavevmode
+%\hbox spread 9pt{\nonfrenchspacing
+%      The Reverend Dr. Drofnats}\end{disp}
+%while
+%\begin{verbatim}
+%\hbox spread 9pt{\nonfrenchspacing
+%      The Reverend Dr.\ Drofnats}
+%\end{verbatim}
+%gives
+%\begin{disp} \hbadness=10000 \leavevmode
+%\hbox spread 9pt{\nonfrenchspacing
+%      The Reverend Dr.\ Drofnats}\end{disp}
+%(The \n{spread 9pt} is used to make the effect more visible.)
+Control space has two main uses. First, it is convenient to use after
+a control sequence: \verb+\TeX\ is fun!+
+Secondly, it can be used after abbreviations when \cs{nonfrenchspacing}
+(see below) is in effect. For example:
+\begin{verbatim}
+\hbox spread 9pt{\nonfrenchspacing
+      The Reverend Dr. Drofnats}
+\end{verbatim}
+gives
+\begin{disp} \hbadness=10000 \leavevmode
+\hbox spread 9pt{\nonfrenchspacing
+      The Reverend Dr. Drofnats}\end{disp}
+while
+\begin{verbatim}
+\hbox spread 9pt{\nonfrenchspacing
+      The Reverend Dr.\ Drofnats}
+\end{verbatim}
+gives
+\begin{disp} \hbadness=10000 \leavevmode
+\hbox spread 9pt{\nonfrenchspacing
+      The Reverend Dr.\ Drofnats}\end{disp}
+(The \n{spread 9pt} is used to make the effect more visible.)
+
+%The active character (in the plain format) tilde or
+%\indexterm{tie},~\n{\char126},
+%\term ~@\char126\par
+%uses control space: it is defined as
+%\begin{verbatim}
+%\catcode`\~=\active
+%\def~{\penalty10000\ }
+%\end{verbatim}
+%Such an active tilde is called a `tie'; it inserts an ordinary 
+%amount of space, and prohibits breaking at this space.
+The active character (in the plain format) tilde or
+\indexterm{tie},~\n{\char126},
+\term ~@\char126\par
+uses control space: it is defined as
+\begin{verbatim}
+\catcode`\~=\active
+\def~{\penalty10000\ }
+\end{verbatim}
+Such an active tilde is called a `tie'; it inserts an ordinary 
+amount of space, and prohibits breaking at this space.
+
+
+%%\point More on the space factor
+%\section{More on the space factor}
+%\point More on the space factor
+\section{More on the space factor}
+
+%%\spoint Space factor assignments
+%\subsection{Space factor assignments}
+%\spoint Space factor assignments
+\subsection{Space factor assignments}
+
+%The space factor of a particular character 
+%is contained in its \indexterm{spacefactor code}
+%and can be assigned as
+%\cstoidx sfcode\par
+%\begin{disp}\cs{sfcode}\gr{8-bit number}\gr{equals}\gr{number}\end{disp}
+The space factor of a particular character 
+is contained in its \indexterm{spacefactor code}
+and can be assigned as
+\cstoidx sfcode\par
+\begin{disp}\cs{sfcode}\gr{8-bit number}\gr{equals}\gr{number}\end{disp}
+
+%\IniTeX\ assigns a space factor code of 1000 to all characters
+%\label{ini:sf}%
+%except uppercase characters; they get a space factor code of~999.
+%The plain format then assigns space factor codes greater than
+%1000 to various punctuation symbols, for instance
+%\verb-\sfcode`\.=3000-, which triples the stretch and shrink
+%after a full stop. Also, for all space factor values $\geq2000$
+%the extra space is added; see above.
+\IniTeX\ assigns a space factor code of 1000 to all characters
+\label{ini:sf}%
+except uppercase characters; they get a space factor code of~999.
+The plain format then assigns space factor codes greater than
+1000 to various punctuation symbols, for instance
+\verb-\sfcode`\.=3000-, which triples the stretch and shrink
+after a full stop. Also, for all space factor values $\geq2000$
+the extra space is added; see above.
+
+%%\spoint Punctuation
+%\subsection{Punctuation}
+%\label{sec:sf-punct}
+%\spoint Punctuation
+\subsection{Punctuation}
+\label{sec:sf-punct}
+
+%Because the space factor cannot jump from a value below 1000
+%to one above, a punctuation symbol after an uppercase
+%character will not have the effect on the interword space
+%that punctuation after a lowercase character has.
+Because the space factor cannot jump from a value below 1000
+to one above, a punctuation symbol after an uppercase
+character will not have the effect on the interword space
+that punctuation after a lowercase character has.
+
+%\begin{example}
+%\begin{verbatim}
+%a% \sfcode`a=1000, space factor becomes 1000
+%.% \sfcode`.=3000, spacefactor becomes 3000
+% % subsequent spaces will be increased.
+
+%A% \sfcode`A=999,  space factor becomes 999
+%.% \sfcode`.=3000, space factor becomes 1000
+% % subsequent spaces will not be increased.
+%\end{verbatim}
+%\end{example}
+\begin{example}
+\begin{verbatim}
+a% \sfcode`a=1000, space factor becomes 1000
+.% \sfcode`.=3000, spacefactor becomes 3000
+ % subsequent spaces will be increased.
+
+A% \sfcode`A=999,  space factor becomes 999
+.% \sfcode`.=3000, space factor becomes 1000
+ % subsequent spaces will not be increased.
+\end{verbatim}
+\end{example}
+
+%Thus, initials
+%are not mistaken for sentence ends.
+%If an uppercase character does end a sentence, for instance
+%\begin{verbatim}
+%... and NASA.
+%\end{verbatim}
+%there are several solutions:
+%\begin{verbatim}
+%... NASA\spacefactor=1000.
+%\end{verbatim}
+%or
+%\begin{verbatim}
+%... NASA\hbox{}.
+%\end{verbatim}
+%which abuses the fact that after
+%a box the space factor is set to~1000.
+%The \LaTeX\ macro \cs{@} is equivalent to the first
+%possibility.
+Thus, initials
+are not mistaken for sentence ends.
+If an uppercase character does end a sentence, for instance
+\begin{verbatim}
+... and NASA.
+\end{verbatim}
+there are several solutions:
+\begin{verbatim}
+... NASA\spacefactor=1000.
+\end{verbatim}
+or
+\begin{verbatim}
+... NASA\hbox{}.
+\end{verbatim}
+which abuses the fact that after
+a box the space factor is set to~1000.
+The \LaTeX\ macro \cs{@} is equivalent to the first
+possibility.
+
+%In the plain format two macros are defined that switch between
+%\cstoidx frenchspacing\par
+%\cstoidx nonfrenchspacing\par
+%uniform interword spacing, \indexterm{frenchspacing},
+%and extra space after punctuation, which is more an American custom.
+%The macro \cs{frenchspacing} sets the space factor code
+%of all punctuation to~1000; the macro \cs{nonfrenchspacing}
+%sets it to values greater than~1000.
+In the plain format two macros are defined that switch between
+\cstoidx frenchspacing\par
+\cstoidx nonfrenchspacing\par
+uniform interword spacing, \indexterm{frenchspacing},
+and extra space after punctuation, which is more an American custom.
+The macro \cs{frenchspacing} sets the space factor code
+of all punctuation to~1000; the macro \cs{nonfrenchspacing}
+sets it to values greater than~1000.
+
+%Here are the actual definitions from \n{plain.tex}:
+%\begin{verbatim}
+%\def\frenchspacing{\sfcode`\.\@m \sfcode`\?\@m 
+%  \sfcode`\!\@m \sfcode`\:\@m 
+%  \sfcode`\;\@m \sfcode`\,\@m}
+%\def\nonfrenchspacing{\sfcode`\.3000 \sfcode`\?3000
+%  \sfcode`\!3000 \sfcode`\:2000
+%  \sfcode`\;1500 \sfcode`\,1250 }
+%\end{verbatim}
+%where
+%\begin{verbatim}
+%\mathchardef\@m=1000
+%\end{verbatim}
+%is given in the plain format.
+Here are the actual definitions from \n{plain.tex}:
+\begin{verbatim}
+\def\frenchspacing{\sfcode`\.\@m \sfcode`\?\@m 
+  \sfcode`\!\@m \sfcode`\:\@m 
+  \sfcode`\;\@m \sfcode`\,\@m}
+\def\nonfrenchspacing{\sfcode`\.3000 \sfcode`\?3000
+  \sfcode`\!3000 \sfcode`\:2000
+  \sfcode`\;1500 \sfcode`\,1250 }
+\end{verbatim}
+where
+\begin{verbatim}
+\mathchardef\@m=1000
+\end{verbatim}
+is given in the plain format.
+
+%French spacing is a somewhat controversial issue:
+%\TeXbook\ acts as if non-French spacing
+%is standard practice in printing, but for instance in~\cite{Hart}
+%one finds `The space of the line should be used after
+%all points in normal text'.
+%Extra space after punctuation 
+%may be considered a `typewriter habit', but this is
+%not entirely true. It used to be a lot more common
+%than it is nowadays, and there are rational arguments
+%against it: the full stop (point, period) at the end of a
+%sentence, where extra punctuation is most visible, 
+%is rather small, so it carries some extra visual space 
+% of its own above it. This book does not use extra space
+%after punctuation.
+French spacing is a somewhat controversial issue:
+\TeXbook\ acts as if non-French spacing
+is standard practice in printing, but for instance in~\cite{Hart}
+one finds `The space of the line should be used after
+all points in normal text'.
+Extra space after punctuation 
+may be considered a `typewriter habit', but this is
+not entirely true. It used to be a lot more common
+than it is nowadays, and there are rational arguments
+against it: the full stop (point, period) at the end of a
+sentence, where extra punctuation is most visible, 
+is rather small, so it carries some extra visual space 
+ of its own above it. This book does not use extra space
+after punctuation.
+
+%%\spoint Other non-letters
+%\subsection{Other non-letters}
+%\label{sec:sf-through-paren}
+%\spoint Other non-letters
+\subsection{Other non-letters}
+\label{sec:sf-through-paren}
+
+%The zero value of the space factor code makes
+%characters that are not a letter and not punctuation
+%`transparent' for the space factor.
+The zero value of the space factor code makes
+characters that are not a letter and not punctuation
+`transparent' for the space factor.
+
+%\message{check break after Example}
+%\begin{example}
+%\begin{verbatim}
+%a% \sfcode`a=1000, space factor becomes 1000
+%.% \sfcode`.=3000, spacefactor becomes 3000
+% % subsequent spaces will be increased.
+
+%a% \sfcode`a=1000, space factor becomes 1000
+%.% \sfcode`.=3000, space factor becomes 3000
+%)% \sfcode`)=0,    space factor stays 3000
+% % subsequent spaces will be increased.
+%\end{verbatim}
+%\end{example}
+\message{check break after Example}
+\begin{example}
+\begin{verbatim}
+a% \sfcode`a=1000, space factor becomes 1000
+.% \sfcode`.=3000, spacefactor becomes 3000
+ % subsequent spaces will be increased.
+
+a% \sfcode`a=1000, space factor becomes 1000
+.% \sfcode`.=3000, space factor becomes 3000
+)% \sfcode`)=0,    space factor stays 3000
+ % subsequent spaces will be increased.
+\end{verbatim}
+\end{example}
+
+%%\spoint Other influences on the space factor
+%\subsection{Other influences on the space factor}
+%\spoint Other influences on the space factor
+\subsection{Other influences on the space factor}
+
+%The space factor is 1000 when \TeX\ starts forming a
+%horizontal list, in particular after \cs{indent}, \cs{noindent},
+%and directly after a display. It is also 1000 after
+%a \cs{vrule}, an accent, or a \gr{box} (in horizontal mode), but
+%it is not influenced by \cs{unhbox} or \cs{unhcopy}
+%commands.
+The space factor is 1000 when \TeX\ starts forming a
+horizontal list, in particular after \cs{indent}, \cs{noindent},
+and directly after a display. It is also 1000 after
+a \cs{vrule}, an accent, or a \gr{box} (in horizontal mode), but
+it is not influenced by \cs{unhbox} or \cs{unhcopy}
+commands.
+
+%In the first column of a \cs{valign} the space factor of
+%the surrounding horizontal list is carried over; similarly,
+%after a vertical alignment the space factor is set to the
+%value reached in the last column.
+In the first column of a \cs{valign} the space factor of
+the surrounding horizontal list is carried over; similarly,
+after a vertical alignment the space factor is set to the
+value reached in the last column.
+
+%\endofchapter
+\endofchapter
+
+\end{document}
+

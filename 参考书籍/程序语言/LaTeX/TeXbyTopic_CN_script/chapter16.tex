@@ -1,0 +1,671 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{15}
+
+\begin{document}
+
+%\chapter{Paragraph Start}\label{par:start}
+%\index{paragraph!start|(}
+\chapter{Paragraph Start}\label{par:start}
+\index{paragraph!start|(}
+
+%At the start of a paragraph \TeX\ inserts a vertical skip
+%as a separation from the preceding paragraph, and a horizontal
+%skip as an indentation for the current paragraph.
+%This chapter explains the exact sequence
+%of actions,
+%and it discusses how \TeX's decisions can be altered.
+At the start of a paragraph \TeX\ inserts a vertical skip
+as a separation from the preceding paragraph, and a horizontal
+skip as an indentation for the current paragraph.
+This chapter explains the exact sequence
+of actions,
+and it discusses how \TeX's decisions can be altered.
+
+%\label{cschap:indent}\label{cschap:noindent}\label{cschap:parskip}\label{cschap:parindent}\label{cschap:everypar}\label{cschap:leavevmode}
+%\begin{inventory}
+%\item [\cs{indent}] 
+%      Switch to horizontal mode and insert a box of width \cs{parindent}.
+\label{cschap:indent}\label{cschap:noindent}\label{cschap:parskip}\label{cschap:parindent}\label{cschap:everypar}\label{cschap:leavevmode}
+\begin{inventory}
+\item [\cs{indent}] 
+      Switch to horizontal mode and insert a box of width \cs{parindent}.
+
+%\item [\cs{noindent}]  
+%      Switch to horizontal mode with an empty horizontal list.
+\item [\cs{noindent}]  
+      Switch to horizontal mode with an empty horizontal list.
+
+%\item [\cs{parskip}] 
+%      Amount of glue added to 
+%      the surrounding vertical list when a paragraph starts.
+%      Plain \TeX\ default:~\n{0pt plus 1pt}.
+\item [\cs{parskip}] 
+      Amount of glue added to 
+      the surrounding vertical list when a paragraph starts.
+      Plain \TeX\ default:~\n{0pt plus 1pt}.
+
+%\item [\cs{parindent}]  
+%      Size of the indentation box added in front of a paragraph.
+%      Plain \TeX\ default:~\n{20pt}.
+\item [\cs{parindent}]  
+      Size of the indentation box added in front of a paragraph.
+      Plain \TeX\ default:~\n{20pt}.
+
+%\item [\cs{everypar}] 
+%      Token list inserted in front of paragraph text; 
+\item [\cs{everypar}] 
+      Token list inserted in front of paragraph text; 
+
+%\item [\cs{leavevmode}] 
+%      Macro to switch to horizontal mode if necessary.
+\item [\cs{leavevmode}] 
+      Macro to switch to horizontal mode if necessary.
+
+%\end{inventory}
+\end{inventory}
+
+
+%%\point When does a paragraph start
+%\section{When does a paragraph start}
+%\point When does a paragraph start
+\section{When does a paragraph start}
+
+%\TeX\ starts a paragraph whenever it switches from 
+%vertical mode to (unrestricted) horizontal mode. This switch can
+%be effected by one of the commands
+%\cs{indent} and 
+%\cs{noindent}, for example
+%\begin{verbatim}
+%{\bf And now~\dots}
+%\vskip3pt
+%\noindent It's~\dots
+%\end{verbatim}
+%or by any \gram{horizontal command}.
+%Horizontal commands include characters, in-line formulas,
+%and horizontal skips, but not boxes.
+%Consider the following examples.
+%\alt
+%The character `I' is a horizontal command:
+%\begin{verbatim}
+%\vskip3pt
+%It's~\dots
+%\end{verbatim}
+%A single \n\$ is a horizontal command:
+%\begin{verbatim}
+%$x$ is supposed~\dots
+%\end{verbatim} 
+%The control sequence \cs{hskip} is a horizontal command:
+%\begin{verbatim}
+%\hskip .5\hsize Long indentation~\dots
+%\end{verbatim}
+%The full list of horizontal commands is given on
+%page~\pageref{h:com:list}.
+\TeX\ starts a paragraph whenever it switches from 
+vertical mode to (unrestricted) horizontal mode. This switch can
+be effected by one of the commands
+\cs{indent} and 
+\cs{noindent}, for example
+\begin{verbatim}
+{\bf And now~\dots}
+\vskip3pt
+\noindent It's~\dots
+\end{verbatim}
+or by any \gram{horizontal command}.
+Horizontal commands include characters, in-line formulas,
+and horizontal skips, but not boxes.
+Consider the following examples.
+\alt
+The character `I' is a horizontal command:
+\begin{verbatim}
+\vskip3pt
+It's~\dots
+\end{verbatim}
+A single \n\$ is a horizontal command:
+\begin{verbatim}
+$x$ is supposed~\dots
+\end{verbatim} 
+The control sequence \cs{hskip} is a horizontal command:
+\begin{verbatim}
+\hskip .5\hsize Long indentation~\dots
+\end{verbatim}
+The full list of horizontal commands is given on
+page~\pageref{h:com:list}.
+
+%Upon recognizing a horizontal command in vertical mode,
+%\TeX\ will perform an \cs{indent} command (and all the actions
+%associated with it; see below), 
+%and after that it will reexamine the horizontal command,
+%this time executing it.
+Upon recognizing a horizontal command in vertical mode,
+\TeX\ will perform an \cs{indent} command (and all the actions
+associated with it; see below), 
+and after that it will reexamine the horizontal command,
+this time executing it.
+
+
+
+%%\point What happens when a paragraph starts
+%\section{What happens when a paragraph starts}
+%\point What happens when a paragraph starts
+\section{What happens when a paragraph starts}
+
+%The \csidx{indent} and \csidx{noindent}  commands 
+%cause a paragraph to be started.
+%An~\cs{indent} command can either be placed explicitly by
+%the user or a macro, or it can be inserted by \TeX\ when
+%a \gr{horizontal command} occurs in vertical mode;
+%a~\cs{noindent} command can only be placed explicitly.
+The \csidx{indent} and \csidx{noindent}  commands 
+cause a paragraph to be started.
+An~\cs{indent} command can either be placed explicitly by
+the user or a macro, or it can be inserted by \TeX\ when
+a \gr{horizontal command} occurs in vertical mode;
+a~\cs{noindent} command can only be placed explicitly.
+
+%After  either command is encountered,
+%\csidx{parskip} glue is appended to the surrounding vertical
+%list
+%unless \TeX\ is in internal vertical mode 
+%and that list is empty
+%(for example, at the start of a \cs{vbox} or \cs{vtop}).
+%\TeX\ then switches to unrestricted horizontal mode
+%with an empty horizontal list.
+%In the case of \cs{indent} (which may be inserted
+%implicitly) an empty \cs{hbox} of width
+%\cstoidx parindent\par
+%\cs{parindent} is placed at the start of the horizontal list; 
+%after \cs{noindent} no indentation
+%box is inserted. 
+After  either command is encountered,
+\csidx{parskip} glue is appended to the surrounding vertical
+list
+unless \TeX\ is in internal vertical mode 
+and that list is empty
+(for example, at the start of a \cs{vbox} or \cs{vtop}).
+\TeX\ then switches to unrestricted horizontal mode
+with an empty horizontal list.
+In the case of \cs{indent} (which may be inserted
+implicitly) an empty \cs{hbox} of width
+\cstoidx parindent\par
+\cs{parindent} is placed at the start of the horizontal list; 
+after \cs{noindent} no indentation
+box is inserted. 
+
+%The contents of the \csidx{everypar} \gr{token parameter}
+%are then inserted into the input (see some applications below).
+%After that,
+%the page builder is exercised (see Chapter~\ref{page:break}).
+%Note that this happens in horizontal mode: this is to 
+%move the \cs{parskip} glue to the current page.
+The contents of the \csidx{everypar} \gr{token parameter}
+are then inserted into the input (see some applications below).
+After that,
+the page builder is exercised (see Chapter~\ref{page:break}).
+Note that this happens in horizontal mode: this is to 
+move the \cs{parskip} glue to the current page.
+
+%If an \cs{indent} command is given while \TeX\ is already in
+%horizontal mode, the indentation box is inserted just the same.
+%This is not very useful.
+If an \cs{indent} command is given while \TeX\ is already in
+horizontal mode, the indentation box is inserted just the same.
+This is not very useful.
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{Assorted remarks}
+
+%%\spoint Starting a paragraph with a box
+%\subsection{Starting a paragraph with a box}
+%\spoint Starting a paragraph with a box
+\subsection{Starting a paragraph with a box}
+
+%An \cs{hbox} does not imply horizontal mode, so 
+%an attempt to start a paragraph with a box, for instance
+%\begin{verbatim}
+%\hbox to 0cm{\hss$\bullet$\hskip1em}Text ....
+%\end{verbatim}
+%will make the text following the box
+%wind up one line below the box.
+%It is necessary to switch to horizontal mode
+%explicitly, using for instance \cs{noindent} or
+%\cs{leavevmode}. 
+%The latter is defined using \cs{unhbox},
+%which is a horizontal command.
+An \cs{hbox} does not imply horizontal mode, so 
+an attempt to start a paragraph with a box, for instance
+\begin{verbatim}
+\hbox to 0cm{\hss$\bullet$\hskip1em}Text ....
+\end{verbatim}
+will make the text following the box
+wind up one line below the box.
+It is necessary to switch to horizontal mode
+explicitly, using for instance \cs{noindent} or
+\cs{leavevmode}. 
+The latter is defined using \cs{unhbox},
+which is a horizontal command.
+
+%%\spoint Starting a paragraph with a group
+%\subsection{Starting a paragraph with a group}
+%\spoint Starting a paragraph with a group
+\subsection{Starting a paragraph with a group}
+
+%If the first \gram{horizontal command} of a paragraph
+%is enclosed in braces, the \cs{everypar} is evaluated
+%inside the group. This may give unexpected results.
+%Consider this example:
+%\begin{verbatim}
+%\everypar={\setbox0=\vbox\bgroup\def\par{\egroup}}
+%{\bf Start} a paragraph ... \par
+%\end{verbatim}
+%The \gr{horizontal command} starting the paragraph is the
+%character~`S', so when \cs{everypar} has been inserted
+%the input is essentially
+%\begin{verbatim}
+%{\bf \indent\setbox0=\vbox\bgroup
+%    \def\par{\egroup}Start} a paragraph ... \par
+%\end{verbatim}
+%which is equivalent to
+%\begin{verbatim}
+%{\bf \setbox0=\vbox{Start} a paragraph ... \par
+%\end{verbatim}
+%The effect of this is rather different from what was intended.
+%\alt
+%Also, \TeX\ will probably end the job inside a group.
+If the first \gram{horizontal command} of a paragraph
+is enclosed in braces, the \cs{everypar} is evaluated
+inside the group. This may give unexpected results.
+Consider this example:
+\begin{verbatim}
+\everypar={\setbox0=\vbox\bgroup\def\par{\egroup}}
+{\bf Start} a paragraph ... \par
+\end{verbatim}
+The \gr{horizontal command} starting the paragraph is the
+character~`S', so when \cs{everypar} has been inserted
+the input is essentially
+\begin{verbatim}
+{\bf \indent\setbox0=\vbox\bgroup
+    \def\par{\egroup}Start} a paragraph ... \par
+\end{verbatim}
+which is equivalent to
+\begin{verbatim}
+{\bf \setbox0=\vbox{Start} a paragraph ... \par
+\end{verbatim}
+The effect of this is rather different from what was intended.
+\alt
+Also, \TeX\ will probably end the job inside a group.
+
+%%\point Examples
+%\section{Examples}
+%\point Examples
+\section{Examples}
+
+%%\spoint Stretchable indentation 
+%\subsection{Stretchable indentation }
+%\spoint Stretchable indentation 
+\subsection{Stretchable indentation }
+
+%Considering that \cs{parindent} is a \gram{dimen}, not a \gram{glue},
+%it is not possible to declare
+%\begin{verbatim}
+%\parindent=1cm plus 1fil
+%\end{verbatim}
+%in order to get
+%a variable indentation at the start of a paragraph.
+%This problem may be solved by putting
+%\begin{verbatim}
+%\everypar={\nobreak\hskip 1cm plus 1fil\relax}
+%\end{verbatim}
+%The \cs{nobreak} serves to prevent (in rare cases) a line break
+%at the stretchable glue.
+Considering that \cs{parindent} is a \gram{dimen}, not a \gram{glue},
+it is not possible to declare
+\begin{verbatim}
+\parindent=1cm plus 1fil
+\end{verbatim}
+in order to get
+a variable indentation at the start of a paragraph.
+This problem may be solved by putting
+\begin{verbatim}
+\everypar={\nobreak\hskip 1cm plus 1fil\relax}
+\end{verbatim}
+The \cs{nobreak} serves to prevent (in rare cases) a line break
+at the stretchable glue.
+
+%%\spoint Suppressing indentation
+%\subsection{Suppressing indentation}
+%\spoint Suppressing indentation
+\subsection{Suppressing indentation}
+
+%Inserting 
+%\verb.{\setbox0=\lastbox}. in the horizontal list
+%at the beginning of the paragraph
+%removes the indentation:
+%indentation consists of a box, which is available through
+%\cs{lastbox}. Assigning it effectively removes it from the list.
+Inserting 
+\verb.{\setbox0=\lastbox}. in the horizontal list
+at the beginning of the paragraph
+removes the indentation:
+indentation consists of a box, which is available through
+\cs{lastbox}. Assigning it effectively removes it from the list.
+
+%However, this command sequence
+%has to be inserted at a moment when \TeX\ has
+%already switched to horizontal mode, so explicit insertion
+%of these commands in front of the first \gram{horizontal
+%command} of the paragraph does not work. 
+%The moment of insertion of the \cs{everypar} tokens 
+%is a better candidate: specifying
+%\begin{verbatim}
+%\everypar={{\setbox0=\lastbox}}
+%\end{verbatim}
+%leads to unindented paragraphs, even if \cs{parindent} is 
+%not zero. 
+However, this command sequence
+has to be inserted at a moment when \TeX\ has
+already switched to horizontal mode, so explicit insertion
+of these commands in front of the first \gram{horizontal
+command} of the paragraph does not work. 
+The moment of insertion of the \cs{everypar} tokens 
+is a better candidate: specifying
+\begin{verbatim}
+\everypar={{\setbox0=\lastbox}}
+\end{verbatim}
+leads to unindented paragraphs, even if \cs{parindent} is 
+not zero. 
+
+
+%%\spoint[indent:scheme] An indentation scheme
+%\subsection{An indentation scheme}
+%\label{indent:scheme}
+%\spoint[indent:scheme] An indentation scheme
+\subsection{An indentation scheme}
+\label{indent:scheme}
+
+%The above idea of letting the indentation box be removed
+%\howto Control indentation systematically\par
+%by \cs{everypar} can be put to use in a systematic approach
+%to indentation, where two conditionals
+%\begin{verbatim}
+%\newif\ifNeedIndent %as a rule
+%\newif\ifneedindent %special cases
+%\end{verbatim}
+%control whether paragraphs should indent as a rule, and
+%whether in special cases indentation is needed.
+%This section is taken from~\cite{E3}.
+The above idea of letting the indentation box be removed
+\howto Control indentation systematically\par
+by \cs{everypar} can be put to use in a systematic approach
+to indentation, where two conditionals
+\begin{verbatim}
+\newif\ifNeedIndent %as a rule
+\newif\ifneedindent %special cases
+\end{verbatim}
+control whether paragraphs should indent as a rule, and
+whether in special cases indentation is needed.
+This section is taken from~\cite{E3}.
+
+%We take a fixed \cs{everypar}:
+%\begin{verbatim}
+%\everypar={\ControlledIndentation}
+%\end{verbatim}
+%which executes in some cases the macro \cs{RemoveIndentation}
+%\begin{verbatim}
+%\def\RemoveIndentation{{\setbox0=\lastbox}}
+%\end{verbatim}
+%The implementation of \cs{ControlledIndentation} is:
+%\begin{verbatim}
+%\def\ControlledIndentation
+%   {\ifNeedIndent \ifneedindent 
+%                  \else \RemoveIndentation\needindenttrue \fi
+%    \else \ifneedindent \needindentfalse
+%          \else         \RemoveIndentation
+%    \fi   \fi}
+%\end{verbatim}
+%In order to regulate indentation for a whole document,
+%the user now once specifies, for instance,
+%\begin{verbatim}
+%\NeedIndenttrue
+%\end{verbatim}
+%to indicate that, in principle,
+%all paragraphs should indent.
+%Macros such as \cs{section} can then prevent
+%indentation in individual cases:
+%\begin{verbatim}
+%\def\section#1{ ... \needindentfalse}
+%\end{verbatim}
+%    
+We take a fixed \cs{everypar}:
+\begin{verbatim}
+\everypar={\ControlledIndentation}
+\end{verbatim}
+which executes in some cases the macro \cs{RemoveIndentation}
+\begin{verbatim}
+\def\RemoveIndentation{{\setbox0=\lastbox}}
+\end{verbatim}
+The implementation of \cs{ControlledIndentation} is:
+\begin{verbatim}
+\def\ControlledIndentation
+   {\ifNeedIndent \ifneedindent 
+                  \else \RemoveIndentation\needindenttrue \fi
+    \else \ifneedindent \needindentfalse
+          \else         \RemoveIndentation
+    \fi   \fi}
+\end{verbatim}
+In order to regulate indentation for a whole document,
+the user now once specifies, for instance,
+\begin{verbatim}
+\NeedIndenttrue
+\end{verbatim}
+to indicate that, in principle,
+all paragraphs should indent.
+Macros such as \cs{section} can then prevent
+indentation in individual cases:
+\begin{verbatim}
+\def\section#1{ ... \needindentfalse}
+\end{verbatim}
+    
+
+%%\spoint[skip:scheme] A paragraph skip scheme
+%\subsection{A paragraph skip scheme}
+%\label{skip:scheme}
+%\spoint[skip:scheme] A paragraph skip scheme
+\subsection{A paragraph skip scheme}
+\label{skip:scheme}
+
+%The use of \cs{everypar} to control indentation,
+%\howto Control vertical white space systematically\par
+%as was sketched above, can be extended to the
+%paragraph skip.
+The use of \cs{everypar} to control indentation,
+\howto Control vertical white space systematically\par
+as was sketched above, can be extended to the
+paragraph skip.
+
+%A visible white space between paragraphs can be
+%created by the \cs{parskip} parameter, but, once this
+%parameter has been set to some value, it is difficult
+%to prevent paragraph skip in certain places elegantly.
+%Usually, white space above and below environments
+%and section headings should be specifiable independently
+%of the paragraph skip. This section sketches an
+%approach where \cs{parskip} is set to zero directly
+%above and below certain constructs, while the \cs{everypar}
+%is used to restore former values. This section is
+%taken from~\cite{E4}.
+A visible white space between paragraphs can be
+created by the \cs{parskip} parameter, but, once this
+parameter has been set to some value, it is difficult
+to prevent paragraph skip in certain places elegantly.
+Usually, white space above and below environments
+and section headings should be specifiable independently
+of the paragraph skip. This section sketches an
+approach where \cs{parskip} is set to zero directly
+above and below certain constructs, while the \cs{everypar}
+is used to restore former values. This section is
+taken from~\cite{E4}.
+
+%First of all, here are two tools. The control sequence
+%\cs{csarg} will be used only inside other macros;
+%a typical call will look like
+%\begin{verbatim}
+%\csarg\vskip{#1Parskip}
+%\end{verbatim}
+%Here is the definition:
+%\begin{verbatim}
+%\def\csarg#1#2{\expandafter#1\csname#2\endcsname}
+%\end{verbatim}
+%Next follows a generalization of \cs{vskip}: the macro
+%\cs{vspace} will not place its argument if the previous glue item
+%is larger; otherwise it will eliminate the preceding
+%glue, and place its argument.\begin{verbatim}
+%\newskip\tempskipa
+%\def\vspace#1{\tempskipa=#1\relax
+%    \ifvmode \ifdim\tempskipa<\lastskip 
+%             \else \vskip-\lastskip \vskip\tempskipa \fi
+%    \else    \vskip\tempskipa \fi}
+%\end{verbatim}
+%    
+%Now assume that any construct \n{foo} 
+%with surrounding white space
+%starts and ends with macro calls \verb>\StartEnvironment{foo}> and
+%\verb>\EndEnvironment{foo}> respectively.
+%Furthermore, assume that to this environment there correspond
+%three glue registers:
+%the \cs{fooStartskip} (glue
+%above the environment), \cs{fooParskip} (the paragraph skip
+%inside the environment), and the \cs{fooEndskip} (glue below
+%the environment).
+First of all, here are two tools. The control sequence
+\cs{csarg} will be used only inside other macros;
+a typical call will look like
+\begin{verbatim}
+\csarg\vskip{#1Parskip}
+\end{verbatim}
+Here is the definition:
+\begin{verbatim}
+\def\csarg#1#2{\expandafter#1\csname#2\endcsname}
+\end{verbatim}
+Next follows a generalization of \cs{vskip}: the macro
+\cs{vspace} will not place its argument if the previous glue item
+is larger; otherwise it will eliminate the preceding
+glue, and place its argument.\begin{verbatim}
+\newskip\tempskipa
+\def\vspace#1{\tempskipa=#1\relax
+    \ifvmode \ifdim\tempskipa<\lastskip 
+             \else \vskip-\lastskip \vskip\tempskipa \fi
+    \else    \vskip\tempskipa \fi}
+\end{verbatim}
+    
+Now assume that any construct \n{foo} 
+with surrounding white space
+starts and ends with macro calls \verb>\StartEnvironment{foo}> and
+\verb>\EndEnvironment{foo}> respectively.
+Furthermore, assume that to this environment there correspond
+three glue registers:
+the \cs{fooStartskip} (glue
+above the environment), \cs{fooParskip} (the paragraph skip
+inside the environment), and the \cs{fooEndskip} (glue below
+the environment).
+
+%For restoring the value of the paragraph skip
+%a conditional and a glue register are needed:
+%\begin{verbatim}
+%\newskip\TempParskip \newif\ifParskipNeedsRestoring
+%\end{verbatim}
+%The basic sequence for the
+%starting and ending macros for the environments is then
+%\begin{verbatim}
+%\TempParskip=\parskip\parskip=0cm\relax
+%\ParskipNeedsRestoringtrue
+%\end{verbatim}
+For restoring the value of the paragraph skip
+a conditional and a glue register are needed:
+\begin{verbatim}
+\newskip\TempParskip \newif\ifParskipNeedsRestoring
+\end{verbatim}
+The basic sequence for the
+starting and ending macros for the environments is then
+\begin{verbatim}
+\TempParskip=\parskip\parskip=0cm\relax
+\ParskipNeedsRestoringtrue
+\end{verbatim}
+
+%The implementations can now be given as:
+%\begin{verbatim}
+%\def\StartEnvironment#1{\csarg\vspace{#1Startskip}
+%    
+%\begingroup % make changes local
+%    \csarg\TempParskip{#1Parskip} \parskip=0cm\relax
+%    \ParskipNeedsRestoringtrue}
+%\def\EndEnvironment#1{\csarg\vspace{#1Endskip}
+%    \endgroup % restore global values
+%    \ifParskipNeedsRestoring
+%    \else \TempParskip=\parskip \parskip=0cm\relax
+%          \ParskipNeedsRestoringtrue
+%    \fi}
+%\end{verbatim}
+%The \cs{EndEnvironment} macro needs a little comment:
+%if an environment is used inside another one, and
+%it occurs before the first paragraph in that environment,
+%the value of the paragraph skip for the outer environment
+%has already been saved. Therefore no further actions are
+%required in that case.
+The implementations can now be given as:
+\begin{verbatim}
+\def\StartEnvironment#1{\csarg\vspace{#1Startskip}
+    
+\begingroup % make changes local
+    \csarg\TempParskip{#1Parskip} \parskip=0cm\relax
+    \ParskipNeedsRestoringtrue}
+\def\EndEnvironment#1{\csarg\vspace{#1Endskip}
+    \endgroup % restore global values
+    \ifParskipNeedsRestoring
+    \else \TempParskip=\parskip \parskip=0cm\relax
+          \ParskipNeedsRestoringtrue
+    \fi}
+\end{verbatim}
+The \cs{EndEnvironment} macro needs a little comment:
+if an environment is used inside another one, and
+it occurs before the first paragraph in that environment,
+the value of the paragraph skip for the outer environment
+has already been saved. Therefore no further actions are
+required in that case.
+
+%Note that both macros start with a vertical skip. This prevents
+%the \cs{begingroup} and \cs{endgroup} statements from
+%occurring in a paragraph. 
+Note that both macros start with a vertical skip. This prevents
+the \cs{begingroup} and \cs{endgroup} statements from
+occurring in a paragraph. 
+
+%We now come to the main point: if necessary, the
+%\cs{everypar} will restore the value of the paragraph skip.
+%\begin{verbatim}
+%\everypar={\ControlledIndentation\ControlledParskip}
+%\def\ControlledParskip
+%   {\ifParskipNeedsRestoring
+%       \parskip=\TempParskip \ParskipNeedsRestoringfalse
+%    \fi}
+%\end{verbatim}
+We now come to the main point: if necessary, the
+\cs{everypar} will restore the value of the paragraph skip.
+\begin{verbatim}
+\everypar={\ControlledIndentation\ControlledParskip}
+\def\ControlledParskip
+   {\ifParskipNeedsRestoring
+       \parskip=\TempParskip \ParskipNeedsRestoringfalse
+    \fi}
+\end{verbatim}
+
+%\index{paragraph!start|)}
+%\endofchapter
+\index{paragraph!start|)}
+\endofchapter
+
+\end{document}

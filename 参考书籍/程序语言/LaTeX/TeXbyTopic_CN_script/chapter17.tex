@@ -1,0 +1,443 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{16}
+
+\begin{document}
+
+%\chapter{Paragraph End}\label{par:end}
+%\index{paragraph!end|(}
+\chapter{Paragraph End}\label{par:end}
+\index{paragraph!end|(}
+
+%\TeX's mechanism for ending a paragraph is ingenious and effective.
+%This chapter explains the mechanism, the role of \cs{par} in it,
+%and it gives a number of practical remarks.
+\TeX's mechanism for ending a paragraph is ingenious and effective.
+This chapter explains the mechanism, the role of \cs{par} in it,
+and it gives a number of practical remarks.
+
+%\label{cschap:par}\label{cschap:endgraf}\label{cschap:parfillskip}
+%\begin{inventory}
+%\item [\cs{par}] 
+%      Finish off a paragraph and go into vertical mode.
+\label{cschap:par}\label{cschap:endgraf}\label{cschap:parfillskip}
+\begin{inventory}
+\item [\cs{par}] 
+      Finish off a paragraph and go into vertical mode.
+
+%\item [\cs{endgraf}]
+%      Synonym for \cs{par}: \verb>\let\endgraf=\par>
+\item [\cs{endgraf}]
+      Synonym for \cs{par}: \verb>\let\endgraf=\par>
+
+%\item [\cs{parfillskip}] 
+%      Glue that is placed between the last          
+%      element of the paragraph and the line end.
+%      Plain \TeX\ default:~\n{0pt plus 1fil}.
+%\end{inventory}
+\item [\cs{parfillskip}] 
+      Glue that is placed between the last          
+      element of the paragraph and the line end.
+      Plain \TeX\ default:~\n{0pt plus 1fil}.
+\end{inventory}
+
+%\section{The way paragraphs end}
+\section{The way paragraphs end}
+
+%A paragraph is terminated by the primitive \cs{par} command, 
+%which can
+%be explicitly typed by the user (or inserted by
+%a macro expansion):
+%\begin{verbatim}
+%... last words.\par
+%A new paragraph ...
+%\end{verbatim}
+%It can be implicitly generated in the input processor of \TeX\
+%by an empty line (see Chapter~\ref{mouth}):
+%\begin{verbatim}
+%... last words.
+
+%A new paragraph ...
+%\end{verbatim}
+A paragraph is terminated by the primitive \cs{par} command, 
+which can
+be explicitly typed by the user (or inserted by
+a macro expansion):
+\begin{verbatim}
+... last words.\par
+A new paragraph ...
+\end{verbatim}
+It can be implicitly generated in the input processor of \TeX\
+by an empty line (see Chapter~\ref{mouth}):
+\begin{verbatim}
+... last words.
+
+A new paragraph ...
+\end{verbatim} 
+%The \cs{par} can be inserted because a \gr{vertical command}
+%occurred in unrestricted horizontal mode:
+%\begin{verbatim}
+%... last words.\vskip6pt
+%A new paragraph ...
+%\end{verbatim}
+%Also, a paragraph ends if a closing brace is found
+%in horizontal mode inside \cs{vbox}, \cs{insert}, or \cs{output}.
+The \cs{par} can be inserted because a \gr{vertical command}
+occurred in unrestricted horizontal mode:
+\begin{verbatim}
+... last words.\vskip6pt
+A new paragraph ...
+\end{verbatim}
+Also, a paragraph ends if a closing brace is found
+in horizontal mode inside \cs{vbox}, \cs{insert}, or \cs{output}.
+
+%After the \cs{par} command \TeX\ goes into vertical mode
+%and exercises the page builder (see page~\pageref{par:page:build}).
+%If the \cs{par} was inserted because a vertical command occurred in
+%horizontal mode, the vertical command is then examined anew.
+%The \cs{par} does not insert any vertical
+%glue or penalties itself. A~\cs{par} command also clears
+%the paragraph shape parameters (see Chapter~\ref{par:shape}).
+After the \cs{par} command \TeX\ goes into vertical mode
+and exercises the page builder (see page~\pageref{par:page:build}).
+If the \cs{par} was inserted because a vertical command occurred in
+horizontal mode, the vertical command is then examined anew.
+The \cs{par} does not insert any vertical
+glue or penalties itself. A~\cs{par} command also clears
+the paragraph shape parameters (see Chapter~\ref{par:shape}).
+
+%%\spoint The \cs{par} command and the \cs{par} token
+%\subsection{The \cs{par} command and the \cs{par} token}
+%\spoint The \cs{par} command and the \cs{par} token
+\subsection{The \cs{par} command and the \cs{par} token}
+
+%It is important to distinguish between the \cs{par} token
+%and the primitive \cs{par} command that is the initial meaning of
+%that token. The \cs{par} token is inserted when the input
+%processor sees an empty
+%line, or when the execution processor finds a \gram{vertical command}
+%in horizontal mode;
+%the \cs{par} command is what actually closes off a paragraph.
+%Decoupling the token and the command is an important tool
+%for special effects in paragraphs (see some examples in
+%Chapters \ref{boxes} and~\ref{rules}).
+It is important to distinguish between the \cs{par} token
+and the primitive \cs{par} command that is the initial meaning of
+that token. The \cs{par} token is inserted when the input
+processor sees an empty
+line, or when the execution processor finds a \gram{vertical command}
+in horizontal mode;
+the \cs{par} command is what actually closes off a paragraph.
+Decoupling the token and the command is an important tool
+for special effects in paragraphs (see some examples in
+Chapters \ref{boxes} and~\ref{rules}).
+
+
+%%\spoint Paragraph filling: \cs{parfillskip}
+%\subsection{Paragraph filling: \cs{parfillskip}}
+%\spoint Paragraph filling: \cs{parfillskip}
+\subsection{Paragraph filling: \cs{parfillskip}}
+
+%After the last element of the paragraph \TeX\ implicitly inserts
+%the equivalent of
+%\cstoidx parfillskip\par
+%\begin{verbatim}
+%\unskip \penalty10000 \hskip\parfillskip
+%\end{verbatim}
+%The \cs{unskip} serves to remove any spurious glue at the
+%paragraph end, such as the space generated by the
+%line end if the \cs{par} was inserted by the input processor.
+%For example:\message{check unsplit paragraph example}
+%\begin{verbatim}
+%end.
+
+%\noindent Begin
+%\end{verbatim}
+After the last element of the paragraph \TeX\ implicitly inserts
+the equivalent of
+\cstoidx parfillskip\par
+\begin{verbatim}
+\unskip \penalty10000 \hskip\parfillskip
+\end{verbatim}
+The \cs{unskip} serves to remove any spurious glue at the
+paragraph end, such as the space generated by the
+line end if the \cs{par} was inserted by the input processor.
+For example:\message{check unsplit paragraph example}
+\begin{verbatim}
+end.
+
+\noindent Begin
+\end{verbatim}
+%results in the tokens
+%\begin{disp}\n{end.\char32}\cs{par} \n{Begin}\end{disp}
+%With the sequence inserted by the \cs{par} this becomes
+%\begin{disp}\n{end.\char32}\verb>\unskip\penalty10000\hskip ...>\end{disp}
+%which in turn gives
+%\begin{disp}\verb>end.\penalty ...>\end{disp}
+results in the tokens
+\begin{disp}\n{end.\char32}\cs{par} \n{Begin}\end{disp}
+With the sequence inserted by the \cs{par} this becomes
+\begin{disp}\n{end.\char32}\verb>\unskip\penalty10000\hskip ...>\end{disp}
+which in turn gives
+\begin{disp}\verb>end.\penalty ...>\end{disp}
+
+%The \cs{parfillskip} is in plain \TeX\ first-order infinite
+%(\n{0pt plus 1fil}),
+%so ending a paragraph with \verb.\hfil$\bullet$\par.
+%will give a bullet halfway between the last word and the
+%line end; with \verb.\hfill$\bullet$\par. it will be
+%flush right.
+The \cs{parfillskip} is in plain \TeX\ first-order infinite
+(\n{0pt plus 1fil}),
+so ending a paragraph with \verb.\hfil$\bullet$\par.
+will give a bullet halfway between the last word and the
+line end; with \verb.\hfill$\bullet$\par. it will be
+flush right.
+
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{Assorted remarks}
+
+%%\spoint Ending a paragraph and a group at the same time
+%\subsection{Ending a paragraph and a group at the same time}
+%\spoint Ending a paragraph and a group at the same time
+\subsection{Ending a paragraph and a group at the same time}
+
+%If a paragraph is set in a group, 
+%it may be necessary to ensure that the \cs{par} ending
+%the paragraph occurs inside the group.
+%The parameters influencing the typesetting of the paragraph,
+%such as the \cs{leftskip} and the \cs{baselineskip},
+%are only looked at when the paragraph is finished.
+%Thus finishing off a paragraph with 
+%\begin{verbatim}
+%... last words.}\par
+%\end{verbatim}
+%causes the values to be used
+%that prevail outside the group, instead of those inside.
+If a paragraph is set in a group, 
+it may be necessary to ensure that the \cs{par} ending
+the paragraph occurs inside the group.
+The parameters influencing the typesetting of the paragraph,
+such as the \cs{leftskip} and the \cs{baselineskip},
+are only looked at when the paragraph is finished.
+Thus finishing off a paragraph with 
+\begin{verbatim}
+... last words.}\par
+\end{verbatim}
+causes the values to be used
+that prevail outside the group, instead of those inside.
+
+%Better ways to end the paragraph are
+%\begin{verbatim}
+%... last words.\par}
+%\end{verbatim}
+%or
+%\begin{verbatim}
+%... last words.\medskip}
+%\end{verbatim}
+%In the second example the vertical command \cs{medskip}
+%causes the \cs{par} token to be inserted.
+Better ways to end the paragraph are
+\begin{verbatim}
+... last words.\par}
+\end{verbatim}
+or
+\begin{verbatim}
+... last words.\medskip}
+\end{verbatim}
+In the second example the vertical command \cs{medskip}
+causes the \cs{par} token to be inserted.
+
+%%\spoint Ending a paragraph with \cs{hfill}\cs{break}
+%\subsection{Ending a paragraph with \cs{hfill}\cs{break}}
+%\spoint Ending a paragraph with \cs{hfill}\cs{break}
+\subsection{Ending a paragraph with \cs{hfill}\cs{break}}
+
+%The sequence \verb.\hfill\break. is a way to force
+%a `newline' inside a paragraph. If you end a paragraph
+%with this, however, you will probably
+%get an \verb-Underfull \hbox- error.
+%Surprisingly, the underfull box is not the broken line
+%\ldash after all, that one was filled \rdash 
+%but a completely empty box following it (actually, it
+%does contain the \cs{leftskip} and \cs{rightskip}). 
+The sequence \verb.\hfill\break. is a way to force
+a `newline' inside a paragraph. If you end a paragraph
+with this, however, you will probably
+get an \verb-Underfull \hbox- error.
+Surprisingly, the underfull box is not the broken line
+\ldash after all, that one was filled \rdash 
+but a completely empty box following it (actually, it
+does contain the \cs{leftskip} and \cs{rightskip}). 
+
+%What happens?
+%The paragraph ends with
+%\begin{verbatim}
+%\hfill\break\par
+%\end{verbatim}
+%which turns into 
+%\begin{verbatim}
+%\hfill\break\unskip\nobreak\hskip\parfillskip
+%\end{verbatim}
+%The \cs{unskip} finds no preceding glue, so the \cs{break}
+%is followed by a penalty item and a glue item, both of
+%which disappear after the line break has been chosen at the
+%\cs{break}.
+%However, \TeX\ has already decided that there should be an extra
+%line, that is, an \verb.\hbox to \hsize.. And there is nothing
+%\alt
+%to fill it with, so an underfull box results.
+What happens?
+The paragraph ends with
+\begin{verbatim}
+\hfill\break\par
+\end{verbatim}
+which turns into 
+\begin{verbatim}
+\hfill\break\unskip\nobreak\hskip\parfillskip
+\end{verbatim}
+The \cs{unskip} finds no preceding glue, so the \cs{break}
+is followed by a penalty item and a glue item, both of
+which disappear after the line break has been chosen at the
+\cs{break}.
+However, \TeX\ has already decided that there should be an extra
+line, that is, an \verb.\hbox to \hsize.. And there is nothing
+\alt
+to fill it with, so an underfull box results.
+
+%%\spoint Ending a paragraph with a rule
+%\subsection{Ending a paragraph with a rule}
+%\spoint Ending a paragraph with a rule
+\subsection{Ending a paragraph with a rule}
+
+%See page~\pageref{par:leaders:end} for paragraphs ending with 
+%rule leaders instead of the default \cs{parfillskip}
+%white space.
+See page~\pageref{par:leaders:end} for paragraphs ending with 
+rule leaders instead of the default \cs{parfillskip}
+white space.
+
+%%\spoint No page breaks in between paragraphs
+%\subsection{No page breaks in between paragraphs}
+%\spoint No page breaks in between paragraphs
+\subsection{No page breaks in between paragraphs}
+
+%The \cs{par} command does not insert any glue in the
+%\howto Prevent page breaks in between paragraphs\par
+%vertical list, so
+%in the sequence
+%\begin{verbatim}
+% ... last words.\par \nobreak \medskip 
+%\noindent First words ...
+%\end{verbatim}
+%no page breaks will occur  between the paragraphs.
+%The vertical list generated is
+%\begin{verbatim}
+%\hbox(6.94444+0.0)x ...       % last line of paragraph
+%\penalty 10000                % \nobreak
+%\glue 6.0 plus 2.0 minus 2.0  % \medskip
+%\glue(\parskip) 0.0 plus 1.0  % \parskip
+%\glue(\baselineskip) 5.05556  % interline glue
+%\hbox(6.94444+0.0)x ...       % first line of paragraph
+%\end{verbatim}
+%\TeX\ will not break this vertical list above the \cs{medskip},
+%because the penalty value prohibits it; it will not break
+%at any other place, because it can only break at glue if
+%that glue is preceded by a  non-discardable item.
+The \cs{par} command does not insert any glue in the
+\howto Prevent page breaks in between paragraphs\par
+vertical list, so
+in the sequence
+\begin{verbatim}
+ ... last words.\par \nobreak \medskip 
+\noindent First words ...
+\end{verbatim}
+no page breaks will occur  between the paragraphs.
+The vertical list generated is
+\begin{verbatim}
+\hbox(6.94444+0.0)x ...       % last line of paragraph
+\penalty 10000                % \nobreak
+\glue 6.0 plus 2.0 minus 2.0  % \medskip
+\glue(\parskip) 0.0 plus 1.0  % \parskip
+\glue(\baselineskip) 5.05556  % interline glue
+\hbox(6.94444+0.0)x ...       % first line of paragraph
+\end{verbatim}
+\TeX\ will not break this vertical list above the \cs{medskip},
+because the penalty value prohibits it; it will not break
+at any other place, because it can only break at glue if
+that glue is preceded by a  non-discardable item.
+
+%%\spoint Finite \cs{parfillskip}
+%\subsection{Finite \cs{parfillskip}}
+%\spoint Finite \cs{parfillskip}
+\subsection{Finite \cs{parfillskip}}
+
+%In plain \TeX, \cs{parfillskip} has a (first-order) infinite
+%stretch component. All other glue in the last line of a 
+%paragraph will then be set at natural width.
+%If the \cs{parfillskip} has only finite (or possibly zero)
+%stretch, other glue will be stretched or shrunk.
+%A display formula in a paragraph with such a last line
+%will be surrounded by \cs{abovedisplayskip} and \cs{belowdisplayskip},
+%even if \cs{abovedisplayshortskip} glue would be in order.
+In plain \TeX, \cs{parfillskip} has a (first-order) infinite
+stretch component. All other glue in the last line of a 
+paragraph will then be set at natural width.
+If the \cs{parfillskip} has only finite (or possibly zero)
+stretch, other glue will be stretched or shrunk.
+A display formula in a paragraph with such a last line
+will be surrounded by \cs{abovedisplayskip} and \cs{belowdisplayskip},
+even if \cs{abovedisplayshortskip} glue would be in order.
+
+%The reason for this is that glue setting is slightly
+%machine-dependent, and any such processes should be kept
+%out of \TeX's global decisions.
+The reason for this is that glue setting is slightly
+machine-dependent, and any such processes should be kept
+out of \TeX's global decisions.
+
+%%\spoint A precaution for paragraphs that do not indent
+%\subsection{A precaution for paragraphs that do not indent}
+%\spoint A precaution for paragraphs that do not indent
+\subsection{A precaution for paragraphs that do not indent}
+
+%If you are setting a text with both the paragraph indentation
+%and the white space between paragraphs zero, you run the risk
+%that the start of a new paragraph may be indiscernible when
+%the last line of the previous paragraph ends almost
+%or completely flush right.
+%A~sensible precaution for this is to set the \cs{parfillskip}
+%to, for instance
+%\begin{verbatim}
+% \parfillskip=1cm plus 1fil
+%\end{verbatim}
+%instead of the usual \n{0cm~plus~1fil}.
+If you are setting a text with both the paragraph indentation
+and the white space between paragraphs zero, you run the risk
+that the start of a new paragraph may be indiscernible when
+the last line of the previous paragraph ends almost
+or completely flush right.
+A~sensible precaution for this is to set the \cs{parfillskip}
+to, for instance
+\begin{verbatim}
+ \parfillskip=1cm plus 1fil
+\end{verbatim}
+instead of the usual \n{0cm~plus~1fil}.
+
+%On the other hand, you may let yourself be convinced by
+%\cite{Tsch} that paragraphs should always indent.
+On the other hand, you may let yourself be convinced by
+\cite{Tsch} that paragraphs should always indent.
+
+
+%\index{paragraph!end|)}
+%\endofchapter
+\index{paragraph!end|)}
+\endofchapter
+
+\end{document}

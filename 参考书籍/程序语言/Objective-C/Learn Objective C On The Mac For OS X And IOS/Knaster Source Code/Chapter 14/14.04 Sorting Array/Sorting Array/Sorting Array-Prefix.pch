@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Sorting Array' target in the 'Sorting Array' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

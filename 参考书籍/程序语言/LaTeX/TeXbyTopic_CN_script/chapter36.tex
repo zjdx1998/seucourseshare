@@ -1,0 +1,443 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{35}
+
+\begin{document}
+
+%\chapter{The Grammar of \TeX}\label{gramm}
+\chapter{The Grammar of \TeX}\label{gramm}
+
+%Many  chapters in this book contain pieces of the
+%grammar that defines the formal syntax of \TeX.
+%In this chapter the structure of the rewriting rules of the
+%grammar is explained, and some key notions are presented.
+Many  chapters in this book contain pieces of the
+grammar that defines the formal syntax of \TeX.
+In this chapter the structure of the rewriting rules of the
+grammar is explained, and some key notions are presented.
+
+%In \TeXbook\ a grammar appears in Chapters~24--27.
+%An even more rigorous grammar of \TeX\ can be found in~\cite{Appelt}.
+%The grammar presented in this book is virtually identical 
+%to that of \TeXbook.
+In \TeXbook\ a grammar appears in Chapters~24--27.
+An even more rigorous grammar of \TeX\ can be found in~\cite{Appelt}.
+The grammar presented in this book is virtually identical 
+to that of \TeXbook.
+
+%%\point Notations
+%\section{Notations}
+%\point Notations
+\section{Notations}
+
+%Basic to the grammar are 
+%\begin{description}\item [grammatical terms]
+%These are enclosed in angle brackets:
+%\begin{disp}\gr{term}\end{disp}
+%\item [control sequences]
+%These are given in typewriter type with a backslash for
+%the escape character:
+%\begin{disp}\cs{command}\end{disp}
+%\end{description}
+%Lastly there are 
+%\begin{description}\item [keywords]
+%Also given in typewriter type
+%\begin{disp}\n{keyword}\end{disp}
+%This is a limited collection of words that have a special
+%meaning for \TeX\ in certain contexts; see below.\end{description}
+Basic to the grammar are 
+\begin{description}\item [grammatical terms]
+These are enclosed in angle brackets:
+\begin{disp}\gr{term}\end{disp}
+\item [control sequences]
+These are given in typewriter type with a backslash for
+the escape character:
+\begin{disp}\cs{command}\end{disp}
+\end{description}
+Lastly there are 
+\begin{description}\item [keywords]
+Also given in typewriter type
+\begin{disp}\n{keyword}\end{disp}
+This is a limited collection of words that have a special
+meaning for \TeX\ in certain contexts; see below.\end{description}
+
+%The three elements of the grammar are used in syntax rules:
+%\begin{disp}\gr{snark} $\longrightarrow$ \n{boojum} $|$ \gr{empty}
+%\end{disp}
+%This rule says that the grammatical entity \gr{snark}
+%is either the keyword \n{boojum}, or the grammatical
+%entity \gr{empty}.
+The three elements of the grammar are used in syntax rules:
+\begin{disp}\gr{snark} $\longrightarrow$ \n{boojum} $|$ \gr{empty}
+\end{disp}
+This rule says that the grammatical entity \gr{snark}
+is either the keyword \n{boojum}, or the grammatical
+entity \gr{empty}.
+
+%There are two other notational conventions.
+%The first is that the double quote
+%is used to indicate hexadecimal (base~16) notation.
+%For instance \verb>"ab56> stands for $10\times16^3+11\times16^2
+%+5\times16^1+6\times16^0$. The second convention
+%is that subscripts are used to denote category codes.
+%Thus \n{a}$_{12}$ denotes an `a' of category~12.
+There are two other notational conventions.
+The first is that the double quote
+is used to indicate hexadecimal (base~16) notation.
+For instance \verb>"ab56> stands for $10\times16^3+11\times16^2
++5\times16^1+6\times16^0$. The second convention
+is that subscripts are used to denote category codes.
+Thus \n{a}$_{12}$ denotes an `a' of category~12.
+
+%%\point[keywords] Keywords
+%\section{Keywords}
+%\label{keywords}
+%\index{keywords|(}
+%\point[keywords] Keywords
+\section{Keywords}
+\label{keywords}
+\index{keywords|(}
+
+%A keyword is sequence of characters (or character tokens)
+%of any category code but~13\index{category!13} (active).
+%Unlike the situation in control sequences, \TeX\ does not 
+%distinguish between lowercase and uppercase characters
+%in keywords. Uppercase characters in keywords are converted to
+%lowercase by adding 32 to them; the \cs{lccode} and \cs{uccode}
+%are not used here. Furthermore, any keyword can be preceded by
+%optional spaces.
+A keyword is sequence of characters (or character tokens)
+of any category code but~13\index{category!13} (active).
+Unlike the situation in control sequences, \TeX\ does not 
+distinguish between lowercase and uppercase characters
+in keywords. Uppercase characters in keywords are converted to
+lowercase by adding 32 to them; the \cs{lccode} and \cs{uccode}
+are not used here. Furthermore, any keyword can be preceded by
+optional spaces.
+
+%Thus both \n{true cm} and \n{truecm} are legal.
+%By far the strangest example, however, is provided
+%by the grammar rule
+%\begin{disp}\gr{fil unit} $\longrightarrow$ \n{fil} $|$ \gr{fil unit}\n l
+%\end{disp} which implies that \hbox{\n{fil L l}} is also
+%a legal \gr{fil dimen}. Strange errors can ensue from this;
+%see page~\pageref{fil:l:l} for an example.
+Thus both \n{true cm} and \n{truecm} are legal.
+By far the strangest example, however, is provided
+by the grammar rule
+\begin{disp}\gr{fil unit} $\longrightarrow$ \n{fil} $|$ \gr{fil unit}\n l
+\end{disp} which implies that \hbox{\n{fil L l}} is also
+a legal \gr{fil dimen}. Strange errors can ensue from this;
+see page~\pageref{fil:l:l} for an example.
+
+%Here is the full list of all keywords: \n{at}, \n{bp},
+%\n{by}, \n{cc}, \n{cm}, \n{dd}, \n{depth}, \n{em}, \n{ex},
+%\n{fil}, \n{height}, \n{in}, \n l, \n{minus}, \n{mm}, \n{mu},
+%\n{pc}, \n{plus}, \n{pt}, \n{scaled}, \n{sp}, \n{spread},
+%\n{to}, \n{true}, \n{width}.
+Here is the full list of all keywords: \n{at}, \n{bp},
+\n{by}, \n{cc}, \n{cm}, \n{dd}, \n{depth}, \n{em}, \n{ex},
+\n{fil}, \n{height}, \n{in}, \n l, \n{minus}, \n{mm}, \n{mu},
+\n{pc}, \n{plus}, \n{pt}, \n{scaled}, \n{sp}, \n{spread},
+\n{to}, \n{true}, \n{width}.
+
+%\index{keywords|)}
+\index{keywords|)}
+
+%\section{Specific grammatical terms}
+\section{Specific grammatical terms}
+
+%Some grammatical terms appear in a lot of rules.
+%One such term is \gr{optional spaces}.
+%The term \indextermbus{optional}{space} is probably clear enough,
+%but here is the formal definition:
+%\begin{disp}\gr{optional spaces} $\longrightarrow$
+%     \gr{empty} $|$ \gr{space token}\gr{optional spaces}
+%     \end{disp}
+%which amounts to saying that \gr{optional spaces}
+%is zero or more space tokens.
+Some grammatical terms appear in a lot of rules.
+One such term is \gr{optional spaces}.
+The term \indextermbus{optional}{space} is probably clear enough,
+but here is the formal definition:
+\begin{disp}\gr{optional spaces} $\longrightarrow$
+     \gr{empty} $|$ \gr{space token}\gr{optional spaces}
+     \end{disp}
+which amounts to saying that \gr{optional spaces}
+is zero or more space tokens.
+
+%Other terms may not be so immediately obvious.
+%Below are some of them.
+Other terms may not be so immediately obvious.
+Below are some of them.
+
+%%\spoint \gr{equals}
+%\subsection{\gr{equals}}
+%\spoint \gr{equals}
+\subsection{\gr{equals}}
+
+%In assignments the equals sign is optional; therefore there
+%is a term
+%\begin{disp}\gr{equals} $\longrightarrow$ \gr{optional spaces}
+%     $|$ \gr{optional spaces}$=_{12}$\end{disp}
+%in \TeX's grammar.
+%%% 
+%\begin{comment}
+%%% One assignment exists where the equals sign cannot
+%%% be left out:
+%%%
+%\begin{verbatim}
+%%% \let\spacetoken= %assign a space
+%\end{verbatim}
+%%% Here the space would have been skipped in \TeX's input processor
+%%% if the equals sign had been left out.
+%\end{comment}
+In assignments the equals sign is optional; therefore there
+is a term
+\begin{disp}\gr{equals} $\longrightarrow$ \gr{optional spaces}
+     $|$ \gr{optional spaces}$=_{12}$\end{disp}
+in \TeX's grammar.
+%% 
+\begin{comment}
+%% One assignment exists where the equals sign cannot
+%% be left out:
+%%
+\begin{verbatim}
+%% \let\spacetoken= %assign a space
+\end{verbatim}
+%% Here the space would have been skipped in \TeX's input processor
+%% if the equals sign had been left out.
+\end{comment}
+
+%%\spoint \gr{filler}, \gr{general text}
+%\subsection{\gr{filler}, \gr{general text}}
+%\spoint \gr{filler}, \gr{general text}
+\subsection{\gr{filler}, \gr{general text}}
+
+%More obscure than the \gr{optional spaces} is the combination
+%of spaces and \cs{relax} tokens that is allowed
+%in some places, for instance
+%\begin{verbatim}
+%\setbox0= \relax\box1
+%\end{verbatim}
+%The quantity involved is 
+%\begin{disp}\gr{filler} $\longrightarrow$ \gr{optional spaces}
+%     $|$ \gr{filler}\cs{relax}\gr{optional spaces}\end{disp}
+%One important occurrence of \gr{filler} is in
+%\begin{disp}\gr{general text} $\longrightarrow$
+%     \gr{filler}\lb\gr{balanced text}\gr{right brace}
+%     \end{disp}
+%A \gr{general text} follows such control sequences as
+%\cs{message}, \cs{uppercase}, or \cs{mark}. The braces around
+%the \gr{balanced text} are explained in the next point.
+More obscure than the \gr{optional spaces} is the combination
+of spaces and \cs{relax} tokens that is allowed
+in some places, for instance
+\begin{verbatim}
+\setbox0= \relax\box1
+\end{verbatim}
+The quantity involved is 
+\begin{disp}\gr{filler} $\longrightarrow$ \gr{optional spaces}
+     $|$ \gr{filler}\cs{relax}\gr{optional spaces}\end{disp}
+One important occurrence of \gr{filler} is in
+\begin{disp}\gr{general text} $\longrightarrow$
+     \gr{filler}\lb\gr{balanced text}\gr{right brace}
+     \end{disp}
+A \gr{general text} follows such control sequences as
+\cs{message}, \cs{uppercase}, or \cs{mark}. The braces around
+the \gr{balanced text} are explained in the next point.
+
+%%\spoint \lb\rb\ and \gr{left brace}\gr{right brace}
+%\subsection{\lb\rb\ and \gr{left brace}\gr{right brace}}
+%\spoint \lb\rb\ and \gr{left brace}\gr{right brace}
+\subsection{\lb\rb\ and \gr{left brace}\gr{right brace}}
+
+%The \TeX\ grammar uses a perhaps somewhat unfortunate
+%convention for braces. First of all 
+%\begin{disp}\lb\ and \rb\end{disp}
+%stand for braces that are either explicit open/close group
+%characters, or control sequences defined by \cs{let},
+%such as
+%\begin{verbatim}
+%\let\bgroup={ \let\egroup=}
+%\end{verbatim}
+%The grammatical terms 
+%\begin{disp}\gr{left brace} and \gr{right brace}
+%\end{disp} stand for explicit open/close group characters,
+%that is, characters of categories 1 and~2 respectively.
+The \TeX\ grammar uses a perhaps somewhat unfortunate
+convention for braces. First of all 
+\begin{disp}\lb\ and \rb\end{disp}
+stand for braces that are either explicit open/close group
+characters, or control sequences defined by \cs{let},
+such as
+\begin{verbatim}
+\let\bgroup={ \let\egroup=}
+\end{verbatim}
+The grammatical terms 
+\begin{disp}\gr{left brace} and \gr{right brace}
+\end{disp} stand for explicit open/close group characters,
+that is, characters of categories 1 and~2 respectively.
+
+%Various combinations of these two kinds of braces exist.
+%Braces around boxes can be implicit:
+%\begin{disp}\cs{hbox}\gr{box specification}\lb
+%     \gr{horizontal mode material}\rb\end{disp}
+%Around a macro definition there must be explicit braces:
+%\begin{disp}\gr{definition text} $\longrightarrow$
+%     \gr{parameter text}\gr{left brace}\gr{balanced text}\gr{right brace}
+%     \end{disp}
+%Finally, the \gr{general text} that was mentioned above
+%has to be explicitly closed, but it can be implicitly opened:
+%\begin{disp}\gr{general text} $\longrightarrow$
+%     \gr{filler}\lb\gr{balanced text}\gr{right brace}
+%     \end{disp}
+%The closing brace of a \gr{general text} has to be explicit,
+%since a general text is a token list, which may
+%contain \cs{egroup} tokens.
+%\TeX\ performs expansion to find the opening 
+%brace of a \gr{general text}.
+Various combinations of these two kinds of braces exist.
+Braces around boxes can be implicit:
+\begin{disp}\cs{hbox}\gr{box specification}\lb
+     \gr{horizontal mode material}\rb\end{disp}
+Around a macro definition there must be explicit braces:
+\begin{disp}\gr{definition text} $\longrightarrow$
+     \gr{parameter text}\gr{left brace}\gr{balanced text}\gr{right brace}
+     \end{disp}
+Finally, the \gr{general text} that was mentioned above
+has to be explicitly closed, but it can be implicitly opened:
+\begin{disp}\gr{general text} $\longrightarrow$
+     \gr{filler}\lb\gr{balanced text}\gr{right brace}
+     \end{disp}
+The closing brace of a \gr{general text} has to be explicit,
+since a general text is a token list, which may
+contain \cs{egroup} tokens.
+\TeX\ performs expansion to find the opening 
+brace of a \gr{general text}.
+
+%%\spoint \gr{math field}
+%\subsection{\gr{math field}}
+%\spoint \gr{math field}
+\subsection{\gr{math field}}
+
+%In math mode various operations such as subscripting
+%or applying \cs{underline} take an argument that
+%is a \gr{math field}: either a single symbol, or
+%a group. Here is the exact definition.
+%\begin{disp}\gr{math field} $\longrightarrow$
+%    \gr{math symbol} $|$ \gr{filler}\lb\gr{math mode material}\rb\nl
+% \gr{math symbol}  $\longrightarrow$ \gr{character} $|$
+%    \gr{math character}
+%\end{disp}
+%See page~\pageref{character} for \gr{character},
+%\alt
+%and page~\pageref{math:character} for \gr{math character}.
+In math mode various operations such as subscripting
+or applying \cs{underline} take an argument that
+is a \gr{math field}: either a single symbol, or
+a group. Here is the exact definition.
+\begin{disp}\gr{math field} $\longrightarrow$
+    \gr{math symbol} $|$ \gr{filler}\lb\gr{math mode material}\rb\nl
+ \gr{math symbol}  $\longrightarrow$ \gr{character} $|$
+    \gr{math character}
+\end{disp}
+See page~\pageref{character} for \gr{character},
+\alt
+and page~\pageref{math:character} for \gr{math character}.
+
+%%\point[2vs3] Differences between \TeX\ versions 2 and 3
+%\section{Differences between \TeX\ versions 2 and 3}
+%\label{2vs3}
+%\point[2vs3] Differences between \TeX\ versions 2 and 3
+\section{Differences between \TeX\ versions 2 and 3}
+\label{2vs3}
+
+%In 1989 Knuth released \TeX\ version~3.0, which is 
+%\thecstoidxsub{TeX}{version 2}
+%\thecstoidxsub{TeX}{version 3}
+%the first real change in \TeX\ since version~2.0,
+%which was released in~1986 (version~0 of \TeX\ was
+%released in 1982; see~\cite{Knuth:TeXerrors} for more about
+%the history of \TeX).
+%All intermediate versions were merely bug fixes.
+In 1989 Knuth released \TeX\ version~3.0, which is 
+\thecstoidxsub{TeX}{version 2}
+\thecstoidxsub{TeX}{version 3}
+the first real change in \TeX\ since version~2.0,
+which was released in~1986 (version~0 of \TeX\ was
+released in 1982; see~\cite{Knuth:TeXerrors} for more about
+the history of \TeX).
+All intermediate versions were merely bug fixes.
+
+%The main difference between versions 2~and~3 lies
+%in the fact that 8-bit input has become possible.
+%Associated with this, various quantities that
+%used to be 127 or~128 have been raised to 255
+%or~256 respectively. Here is a short list.
+%The full description is in~\cite{K:TeX23}.
+The main difference between versions 2~and~3 lies
+in the fact that 8-bit input has become possible.
+Associated with this, various quantities that
+used to be 127 or~128 have been raised to 255
+or~256 respectively. Here is a short list.
+The full description is in~\cite{K:TeX23}.
+
+%\begin{inventory}\message{Remove other TeX3 refernces!}
+%\item All `codes' (\cs{catcode}, \cs{sfcode}, et cetera;
+%    see page~\pageref{codename})
+%    now apply to 256 character codes instead of~128.
+%\item A character with code \cs{endlinechar}
+%    is appended to the line unless this parameter is negative
+%or more than~255 (this was~127) (see page~\pageref{append:elc}).
+%\item No escape character is output by \cs{write} and
+%    other commands if \cs{escapechar} is negative or more than~255
+%(this was~127) (see page~\pageref{use:escape}).
+%\item The \verb>^^> replacement mechanism has been extended
+%    (see page~\pageref{hathat}).
+%\item Parameters \cs{language}, \cs{inputlineno},
+%    \cs{errorcontextlines}, \cs{lefthyphenmin}, \cs{righthyphenmin},
+%\cs{badness}, \cs{holdinginserts}, \cs{emergencystretch},
+%and commands \cs{noboundary}, \cs{setlanguage}
+%have been added.
+%\item The value of \cs{outputpenalty} is no longer zero
+%    if the page break was not at a penalty item;
+%    instead it is~$10\,000$ (see page~\pageref{break:penalty}).
+%\end{inventory}
+\begin{inventory}\message{Remove other TeX3 refernces!}
+\item All `codes' (\cs{catcode}, \cs{sfcode}, et cetera;
+    see page~\pageref{codename})
+    now apply to 256 character codes instead of~128.
+\item A character with code \cs{endlinechar}
+    is appended to the line unless this parameter is negative
+or more than~255 (this was~127) (see page~\pageref{append:elc}).
+\item No escape character is output by \cs{write} and
+    other commands if \cs{escapechar} is negative or more than~255
+(this was~127) (see page~\pageref{use:escape}).
+\item The \verb>^^> replacement mechanism has been extended
+    (see page~\pageref{hathat}).
+\item Parameters \cs{language}, \cs{inputlineno},
+    \cs{errorcontextlines}, \cs{lefthyphenmin}, \cs{righthyphenmin},
+\cs{badness}, \cs{holdinginserts}, \cs{emergencystretch},
+and commands \cs{noboundary}, \cs{setlanguage}
+have been added.
+\item The value of \cs{outputpenalty} is no longer zero
+    if the page break was not at a penalty item;
+    instead it is~$10\,000$ (see page~\pageref{break:penalty}).
+\end{inventory}
+
+%The plain format has also been updated, mostly
+%with default settings for parameters such as
+%\cs{lefthyphenmin}, but also a few macros have been added.
+The plain format has also been updated, mostly
+with default settings for parameters such as
+\cs{lefthyphenmin}, but also a few macros have been added.
+
+%\endofchapter
+%%%%% end of input file [syntax]
+\endofchapter
+%%%% end of input file [syntax]
+
+\end{document}

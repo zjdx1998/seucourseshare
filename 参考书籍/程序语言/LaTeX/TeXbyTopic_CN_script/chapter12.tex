@@ -1,0 +1,2052 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{11}
+
+\begin{document}
+
+%\chapter{Expansion}\label{expand}
+\chapter{Expansion}\label{expand}
+
+%\emph{Expansion}\index{expansion} in \TeX\ is rather different from
+%procedure calls in most programming languages. This chapter treats the
+%commands connected with expansion, and gives a number of (non-trivial)
+%examples.
+\emph{Expansion}\index{expansion} in \TeX\ is rather different from
+procedure calls in most programming languages. This chapter treats the
+commands connected with expansion, and gives a number of (non-trivial)
+examples.
+
+%\label{cschap:relax}\label{cschap:expandafter}\label{cschap:noexpand}\label{cschap:afterassignment}\label{cschap:the}
+%\begin{inventory}
+%\item [\cs{relax}] 
+%     Do nothing.
+\label{cschap:relax}\label{cschap:expandafter}\label{cschap:noexpand}\label{cschap:afterassignment}\label{cschap:the}
+\begin{inventory}
+\item [\cs{relax}] 
+     Do nothing.
+
+
+%\item [\cs{expandafter}]  
+%      Take the next two tokens and place the expansion of the
+%      second after the first.
+\item [\cs{expandafter}]  
+      Take the next two tokens and place the expansion of the
+      second after the first.
+
+%\item [\cs{noexpand}]   
+%      Do not expand the next token.
+\item [\cs{noexpand}]   
+      Do not expand the next token.
+
+
+%\item [\cs{edef}] 
+%      Start a macro definition; 
+%      the replacement text is expanded at definition time.
+\item [\cs{edef}] 
+      Start a macro definition; 
+      the replacement text is expanded at definition time.
+
+% 
+%\item [\cs{aftergroup}]  
+%      Save the next token for insertion after the current group.
+ 
+\item [\cs{aftergroup}]  
+      Save the next token for insertion after the current group.
+
+%\item [\cs{afterassignment}]   
+%      Save the next token for execution after the next assignment
+%      or macro definition.
+\item [\cs{afterassignment}]   
+      Save the next token for execution after the next assignment
+      or macro definition.
+
+
+%\item [\cs{the}] 
+%      Expand the value of various quantities in \TeX\ into a string
+%      of character tokens.
+\item [\cs{the}] 
+      Expand the value of various quantities in \TeX\ into a string
+      of character tokens.
+
+%\end{inventory}
+\end{inventory}
+
+
+%%\point Introduction
+%\section{Introduction}
+%\point Introduction
+\section{Introduction}
+
+%\TeX's expansion processor accepts a stream of tokens
+%coming out of the input processor, and its result is
+%again a stream of tokens, which it feeds to the execution
+%processor. For the input processor there are two
+%kinds of tokens: expandable and unexpandable ones.
+%The latter category is passed untouched, and it contains
+%largely assignments and typesettable material;
+%the former category
+%is expanded, and the result of that expansion is examined anew.
+\TeX's expansion processor accepts a stream of tokens
+coming out of the input processor, and its result is
+again a stream of tokens, which it feeds to the execution
+processor. For the input processor there are two
+kinds of tokens: expandable and unexpandable ones.
+The latter category is passed untouched, and it contains
+largely assignments and typesettable material;
+the former category
+is expanded, and the result of that expansion is examined anew.
+
+%%\point Ordinary expansion
+%\section{Ordinary expansion}
+%\point Ordinary expansion
+\section{Ordinary expansion}
+
+%The following list gives those constructs
+%that are expanded, unless
+%expansion is inhibited:
+%\index{expansion!expandable constructs}
+%\begin{itemize}
+%\item macros\label{expand:lijst}
+%\item conditionals
+%\item \cs{number}, \cs{romannumeral}
+%\item \cs{string}, \cs{fontname}, \cs{jobname}, 
+%      \cs{meaning}, \cs{the}
+%\item \verb,\csname ... \endcsname,
+%\item \cs{expandafter}, \cs{noexpand}
+%\item \cs{topmark}, \cs{botmark}, \cs{firstmark}, 
+%      \cs{splitfirstmark}, \cs{splitbotmark}
+%\item \cs{input}, \cs{endinput}
+%\end{itemize}
+The following list gives those constructs
+that are expanded, unless
+expansion is inhibited:
+\index{expansion!expandable constructs}
+\begin{itemize}
+\item macros\label{expand:lijst}
+\item conditionals
+\item \cs{number}, \cs{romannumeral}
+\item \cs{string}, \cs{fontname}, \cs{jobname}, 
+      \cs{meaning}, \cs{the}
+\item \verb,\csname ... \endcsname,
+\item \cs{expandafter}, \cs{noexpand}
+\item \cs{topmark}, \cs{botmark}, \cs{firstmark}, 
+      \cs{splitfirstmark}, \cs{splitbotmark}
+\item \cs{input}, \cs{endinput}
+\end{itemize}
+
+%This is the list of all instances where
+%expansion is inhibited:
+%\begin{itemize}\label{noexp:list}
+%\item when \TeX\ is reading a token to be defined by
+%      
+%\begin{itemize} \item a \gr{let assignment}, that is,
+%           by \cs{let} or \cs{futurelet},
+%        \item a \gr{shorthand definition}, that is,
+%           by \cs{chardef} or \cs{mathchardef}, or a
+%           \gr{register def}, that is, \cs{countdef},
+%           \cs{dimendef}, \cs{skipdef}, \cs{muskipdef},
+%           or~\cs{toksdef},
+%        \item a \gr{definition}, that is a macro definition
+%           with \cs{def}, \cs{gdef}, \cs{edef}, or~\cs{xdef},
+%        \item the \gr{simple assignment}s \cs{read} and \cs{font};
+%      \end{itemize}
+%\item when a \gr{parameter text} or macro arguments
+%      are being read; also when  the replacement text of a 
+%      control sequence
+%      being defined by \cs{def}, \cs{gdef}, or \cs{read}
+%      is being read;
+%\item when the token list for a \gr{token variable} or
+%      \cs{uppercase}, \cs{lowercase}, or \cs{write}
+%      is being read; however, the token list for \cs{write}
+%      will be  expanded later when it is shipped out;
+%\item when tokens are being deleted during error recovery;
+%\item when part of a conditional is being skipped;
+%\item in two instances when \TeX\ has to know what follows
+%      
+%\begin{itemize}\item after a left quote in a context where
+%         that is used to denote an integer (thus in 
+%         \verb-\catcode`\a- the \cs{a} is not expanded), or
+%        \item after a math shift character that begins math mode
+%         to see whether another math shift character follows (in which case
+%         a display opens);
+%        \end{itemize}
+%\item when an alignment preamble is being scanned; however,
+%      in this case a~token
+%      preceded by \cs{span} and the tokens in a \cs{tabskip} 
+%      assignment are still expanded.
+%\end{itemize}
+This is the list of all instances where
+expansion is inhibited:
+\begin{itemize}\label{noexp:list}
+\item when \TeX\ is reading a token to be defined by
+      
+\begin{itemize} \item a \gr{let assignment}, that is,
+           by \cs{let} or \cs{futurelet},
+        \item a \gr{shorthand definition}, that is,
+           by \cs{chardef} or \cs{mathchardef}, or a
+           \gr{register def}, that is, \cs{countdef},
+           \cs{dimendef}, \cs{skipdef}, \cs{muskipdef},
+           or~\cs{toksdef},
+        \item a \gr{definition}, that is a macro definition
+           with \cs{def}, \cs{gdef}, \cs{edef}, or~\cs{xdef},
+        \item the \gr{simple assignment}s \cs{read} and \cs{font};
+      \end{itemize}
+\item when a \gr{parameter text} or macro arguments
+      are being read; also when  the replacement text of a 
+      control sequence
+      being defined by \cs{def}, \cs{gdef}, or \cs{read}
+      is being read;
+\item when the token list for a \gr{token variable} or
+      \cs{uppercase}, \cs{lowercase}, or \cs{write}
+      is being read; however, the token list for \cs{write}
+      will be  expanded later when it is shipped out;
+\item when tokens are being deleted during error recovery;
+\item when part of a conditional is being skipped;
+\item in two instances when \TeX\ has to know what follows
+      
+\begin{itemize}\item after a left quote in a context where
+         that is used to denote an integer (thus in 
+         \verb-\catcode`\a- the \cs{a} is not expanded), or
+        \item after a math shift character that begins math mode
+         to see whether another math shift character follows (in which case
+         a display opens);
+        \end{itemize}
+\item when an alignment preamble is being scanned; however,
+      in this case a~token
+      preceded by \cs{span} and the tokens in a \cs{tabskip} 
+      assignment are still expanded.
+\end{itemize}
+
+%%\point Reversing expansion order
+%\section{Reversing expansion order}
+%\point Reversing expansion order
+\section{Reversing expansion order}
+
+%Every once in a while you need to change the normal order of
+%expansion of tokens. \TeX\ provides several mechanisms for
+%this. Some of the control sequences in this section are
+%not strictly concerned with expansion.
+Every once in a while you need to change the normal order of
+expansion of tokens. \TeX\ provides several mechanisms for
+this. Some of the control sequences in this section are
+not strictly concerned with expansion.
+
+%%\spoint One step expansion: \cs{expandafter}
+%\subsection{One step expansion: \protect\cs{expandafter}}
+%\spoint One step expansion: \cs{expandafter}
+\subsection{One step expansion: \protect\cs{expandafter}}
+
+%The most obvious tool for reversed expansion order is
+%\csidx{expandafter}. The sequence
+%\begin{disp}\cs{expandafter}\gr{token$_1$}\gr{token$_2$}\end{disp}
+%expands to 
+%\begin{disp}\gr{token$_1$}\gr{\italic the expansion of token$_2$}
+%\end{disp}
+%Note the following.
+%\begin{itemize} \item If \gr{token$_2$} is a macro, it is replaced
+%by its replacement text, not by its final expansion.
+%Thus, if 
+%\begin{verbatim}
+%\def\tokentwo{\ifsomecondition this \else that \fi}
+%\def\tokenone#1{ ... }
+%\end{verbatim}
+%the call
+%\begin{verbatim}
+%\expandafter\tokenone\tokentwo
+%\end{verbatim}
+%will give \cs{ifsomecondition} as the parameter
+%to \cs{tokenone}:
+%\begin{verbatim}
+%\tokenone #1-> ...
+%#1<-\ifsomecondition
+%\end{verbatim}
+%\item If the \cs{tokentwo} is a macro with one or more
+%parameters, sufficiently many subsequent tokens will be absorbed
+%to form the replacement text.\end{itemize}
+The most obvious tool for reversed expansion order is
+\csidx{expandafter}. The sequence
+\begin{disp}\cs{expandafter}\gr{token$_1$}\gr{token$_2$}\end{disp}
+expands to 
+\begin{disp}\gr{token$_1$}\gr{\italic the expansion of token$_2$}
+\end{disp}
+Note the following.
+\begin{itemize} \item If \gr{token$_2$} is a macro, it is replaced
+by its replacement text, not by its final expansion.
+Thus, if 
+\begin{verbatim}
+\def\tokentwo{\ifsomecondition this \else that \fi}
+\def\tokenone#1{ ... }
+\end{verbatim}
+the call
+\begin{verbatim}
+\expandafter\tokenone\tokentwo
+\end{verbatim}
+will give \cs{ifsomecondition} as the parameter
+to \cs{tokenone}:
+\begin{verbatim}
+\tokenone #1-> ...
+#1<-\ifsomecondition
+\end{verbatim}
+\item If the \cs{tokentwo} is a macro with one or more
+parameters, sufficiently many subsequent tokens will be absorbed
+to form the replacement text.\end{itemize}
+
+%\subsection{Total expansion: \protect\cs{edef}}
+%\label{expand:edef}
+\subsection{Total expansion: \protect\cs{edef}}
+\label{expand:edef}
+
+%Macros are usually defined by \cs{def}, but for the cases where
+%one wants the replacement text to reflect current conditions
+%(as opposed to conditions at the time of the call),
+%there is an `expanding define', \csidx{edef}, which expands
+%everything in the replacement text, before assigning it to the
+%control sequence. 
+Macros are usually defined by \cs{def}, but for the cases where
+one wants the replacement text to reflect current conditions
+(as opposed to conditions at the time of the call),
+there is an `expanding define', \csidx{edef}, which expands
+everything in the replacement text, before assigning it to the
+control sequence. 
+
+%\begin{example}
+%\begin{verbatim}
+%\edef\modedef{This macro was defined in
+%    `\ifvmode vertical\else \ifmmode math
+%     \else horizontal\fi\fi' mode}
+%\end{verbatim}
+%The mode tests will be executed at definition time, so the 
+%replacement text will be a single string.
+\begin{example}
+\begin{verbatim}
+\edef\modedef{This macro was defined in
+    `\ifvmode vertical\else \ifmmode math
+     \else horizontal\fi\fi' mode}
+\end{verbatim}
+The mode tests will be executed at definition time, so the 
+replacement text will be a single string.
+
+%As a more useful example, suppose that in a file that will be
+%\cs{input} the category code of the~\n@ will be changed.
+%One could then write
+%\begin{verbatim}
+%\edef\restorecat{\catcode`@=\the\catcode`@}
+%\end{verbatim}
+%at the start, and 
+%\begin{verbatim}
+%\restorecat
+%\end{verbatim}
+%at the end. See page~\pageref{store:cat}
+%for a fully worked-out version of this.
+%\end{example}
+As a more useful example, suppose that in a file that will be
+\cs{input} the category code of the~\n@ will be changed.
+One could then write
+\begin{verbatim}
+\edef\restorecat{\catcode`@=\the\catcode`@}
+\end{verbatim}
+at the start, and 
+\begin{verbatim}
+\restorecat
+\end{verbatim}
+at the end. See page~\pageref{store:cat}
+for a fully worked-out version of this.
+\end{example}
+
+%Contrary to the `one step expansion' of
+%\cs{expandafter}, the expansion inside an \cs{edef} is complete:
+%it goes on
+%until only unexpandable character and control sequence
+%tokens remain.
+%There are two exceptions to this total expansion:
+%\begin{itemize} \item any control sequence preceded by \cs{noexpand}
+%is not expanded, and,
+%\item if \cs{sometokenlist} is a token list, the expression
+%\begin{verbatim}
+%\the\sometokenlist 
+%\end{verbatim}
+%is expanded to the contents
+%of the list, but the contents are not expanded
+%any further (see Chapter~\ref{token} for examples).\end{itemize}
+Contrary to the `one step expansion' of
+\cs{expandafter}, the expansion inside an \cs{edef} is complete:
+it goes on
+until only unexpandable character and control sequence
+tokens remain.
+There are two exceptions to this total expansion:
+\begin{itemize} \item any control sequence preceded by \cs{noexpand}
+is not expanded, and,
+\item if \cs{sometokenlist} is a token list, the expression
+\begin{verbatim}
+\the\sometokenlist 
+\end{verbatim}
+is expanded to the contents
+of the list, but the contents are not expanded
+any further (see Chapter~\ref{token} for examples).\end{itemize}
+
+%On certain occasions the \cs{edef} can conveniently be
+%abused, in the sense that one is not interested in defining
+%a control sequence, but only in the result of the  expansion.
+%For example, with the definitions
+%\alt
+%\begin{verbatim}
+%\def\othermacro{\ifnum1>0 {this}\else {that}\fi}
+%\def\somemacro#1{ ... }
+%\end{verbatim}
+%the call
+%\begin{verbatim}
+%\expandafter\somemacro\othermacro 
+%\end{verbatim}
+%gives the parameter assignment
+%\begin{verbatim}
+%#1<-\ifnum
+%\end{verbatim}
+%This can be repaired by calling
+%\begin{verbatim}
+%\edef\next{\noexpand\somemacro\othermacro}\next
+%\end{verbatim}
+%Conditionals are completely expanded inside an \cs{edef},
+%so the replacement text of \cs{next} will consist of the sequence
+%\begin{verbatim}
+%\somemacro{this}
+%\end{verbatim} 
+%and a~subsequent call to \cs{next} executes this statement.
+On certain occasions the \cs{edef} can conveniently be
+abused, in the sense that one is not interested in defining
+a control sequence, but only in the result of the  expansion.
+For example, with the definitions
+\alt
+\begin{verbatim}
+\def\othermacro{\ifnum1>0 {this}\else {that}\fi}
+\def\somemacro#1{ ... }
+\end{verbatim}
+the call
+\begin{verbatim}
+\expandafter\somemacro\othermacro 
+\end{verbatim}
+gives the parameter assignment
+\begin{verbatim}
+#1<-\ifnum
+\end{verbatim}
+This can be repaired by calling
+\begin{verbatim}
+\edef\next{\noexpand\somemacro\othermacro}\next
+\end{verbatim}
+Conditionals are completely expanded inside an \cs{edef},
+so the replacement text of \cs{next} will consist of the sequence
+\begin{verbatim}
+\somemacro{this}
+\end{verbatim} 
+and a~subsequent call to \cs{next} executes this statement.
+
+
+%%\spoint \cs{afterassignment}
+%\subsection{\protect\cs{afterassignment}}
+%\label{sec:afterassignment}
+%\spoint \cs{afterassignment}
+\subsection{\protect\cs{afterassignment}}
+\label{sec:afterassignment}
+
+%The \csterm afterassignment\par\ command
+%takes one token and sets it aside for insertion
+%in the token stream
+%after the next assignment or macro definition.
+%If the first assignment is of a~box
+% to a box register,
+%the token will be inserted right after the opening
+%\alt
+%brace of the box (see page~\pageref{every:box:assign}).
+The \csterm afterassignment\par\ command
+takes one token and sets it aside for insertion
+in the token stream
+after the next assignment or macro definition.
+If the first assignment is of a~box
+ to a box register,
+the token will be inserted right after the opening
+\alt
+brace of the box (see page~\pageref{every:box:assign}).
+
+%Only one token can be saved this way; a subsequent token 
+%saved by \cs{afterassignment} will override the first.
+Only one token can be saved this way; a subsequent token 
+saved by \cs{afterassignment} will override the first.
+
+%Let us consider an example of the use of \cs{afterassignment}.
+%It is often desirable to have a macro that will
+%\begin{itemize} \item assign the argument to some variable, and then
+%\item do a little calculation, based on the new value
+%of the variable.\end{itemize}
+%The following example illustrates the
+%straightforward approach:
+%\begin{verbatim}
+%\def\setfontsize#1{\thefontsize=#1pt\relax
+%    \baselineskip=1.2\thefontsize\relax}
+%\setfontsize{10}
+%\end{verbatim}
+%A more elegant solution is possible using \cs{afterassignment}:
+%\begin{verbatim}
+%\def\setbaselineskip
+%   {\baselineskip=1.2\thefontsize\relax}
+%\def\fontsize{\afterassignment\setbaselineskip
+%    \thefontsize}
+%\fontsize=10pt
+%\end{verbatim}
+%Now the macro looks like an assignment: the equals sign
+%is even optional. In reality its expansion
+%ends with a variable to be assigned to. The control sequence
+%\cs{setbaselineskip} is saved for execution after
+%the assignment to \cs{thefontsize}.
+Let us consider an example of the use of \cs{afterassignment}.
+It is often desirable to have a macro that will
+\begin{itemize} \item assign the argument to some variable, and then
+\item do a little calculation, based on the new value
+of the variable.\end{itemize}
+The following example illustrates the
+straightforward approach:
+\begin{verbatim}
+\def\setfontsize#1{\thefontsize=#1pt\relax
+    \baselineskip=1.2\thefontsize\relax}
+\setfontsize{10}
+\end{verbatim}
+A more elegant solution is possible using \cs{afterassignment}:
+\begin{verbatim}
+\def\setbaselineskip
+   {\baselineskip=1.2\thefontsize\relax}
+\def\fontsize{\afterassignment\setbaselineskip
+    \thefontsize}
+\fontsize=10pt
+\end{verbatim}
+Now the macro looks like an assignment: the equals sign
+is even optional. In reality its expansion
+ends with a variable to be assigned to. The control sequence
+\cs{setbaselineskip} is saved for execution after
+the assignment to \cs{thefontsize}.
+
+%Examples of \cs{afterassignment} in plain \TeX\ are
+%the \cs{magnification} and \cs{hglue} macros.
+%See \cite{Maus} for another creative application of
+%this command.
+Examples of \cs{afterassignment} in plain \TeX\ are
+the \cs{magnification} and \cs{hglue} macros.
+See \cite{Maus} for another creative application of
+this command.
+
+%\subsection{\protect\cs{aftergroup}}
+%\label{sec:aftergroup}
+\subsection{\protect\cs{aftergroup}}
+\label{sec:aftergroup}
+
+%Several tokens can be saved for insertion after the current
+%\cstoidx aftergroup\par
+%group with an 
+%\begin{disp}\cs{aftergroup}\gr{token}\end{disp} command.
+%The tokens are inserted after the group in the sequence
+%the \cs{aftergroup} commands were given in.
+%The group can be delimited either by implicit or explicit
+%braces, or by \cs{begingroup} and \cs{endgroup}.
+Several tokens can be saved for insertion after the current
+\cstoidx aftergroup\par
+group with an 
+\begin{disp}\cs{aftergroup}\gr{token}\end{disp} command.
+The tokens are inserted after the group in the sequence
+the \cs{aftergroup} commands were given in.
+The group can be delimited either by implicit or explicit
+braces, or by \cs{begingroup} and \cs{endgroup}.
+
+%\begin{example}
+%\begin{verbatim}
+%{\aftergroup\a \aftergroup\b}
+%\end{verbatim}
+%is equivalent to
+%\begin{verbatim}
+%\a \b
+%\end{verbatim}
+%\end{example}
+\begin{example}
+\begin{verbatim}
+{\aftergroup\a \aftergroup\b}
+\end{verbatim}
+is equivalent to
+\begin{verbatim}
+\a \b
+\end{verbatim}
+\end{example}
+
+%This command has many applications. One can be found
+%\alt
+%in the \cs{textvcenter} macro on page~\pageref{text:vcenter};
+%another one is provided
+%by the footnote mechanism of plain \TeX.
+This command has many applications. One can be found
+\alt
+in the \cs{textvcenter} macro on page~\pageref{text:vcenter};
+another one is provided
+by the footnote mechanism of plain \TeX.
+
+%The footnote command of plain \TeX\ has the layout
+%\label{footnote:ex}
+%\begin{disp}\cs{footnote}\gr{footnote symbol}\lb\gr{footnote text}\rb
+%\end{disp} which looks like a macro with two arguments.
+%However, it is undesirable to scoop up the footnote text,
+%since this precludes for
+%instance category code changes in the footnote.
+The footnote command of plain \TeX\ has the layout
+\label{footnote:ex}
+\begin{disp}\cs{footnote}\gr{footnote symbol}\lb\gr{footnote text}\rb
+\end{disp} which looks like a macro with two arguments.
+However, it is undesirable to scoop up the footnote text,
+since this precludes for
+instance category code changes in the footnote.
+
+%What happens in the plain footnote macro is (globally) the following.
+%\begin{itemize}\item The \cs{footnote} command opens
+%an insert,
+%\begin{verbatim}
+%\def\footnote#1{ ...#1... %treat the footnote sign
+%    \insert\footins\bgroup
+%\end{verbatim}
+%\item In the insert box a group is opened,
+%and an \cs{aftergroup} command
+%is given to close off the insert properly:
+%\begin{verbatim}
+%    \bgroup\aftergroup\@foot
+%\end{verbatim}
+%This command is meant to wind up after the closing brace of
+%the text that the user typed to end the footnote text;
+%the opening brace of the user's footnote text must
+%be removed by 
+%\begin{verbatim}
+%    \let\next=}%end of definition \footnote
+%\end{verbatim}
+%which assigns the next token, the brace, to \cs{next}.
+%\item The footnote text is set as ordinary text
+%in this insert box.
+%\item After the footnote the command \cs{@foot}
+%defined by
+%\begin{verbatim}
+%\def\@foot{\strut\egroup}
+%\end{verbatim}
+%will be executed.\end{itemize}
+What happens in the plain footnote macro is (globally) the following.
+\begin{itemize}\item The \cs{footnote} command opens
+an insert,
+\begin{verbatim}
+\def\footnote#1{ ...#1... %treat the footnote sign
+    \insert\footins\bgroup
+\end{verbatim}
+\item In the insert box a group is opened,
+and an \cs{aftergroup} command
+is given to close off the insert properly:
+\begin{verbatim}
+    \bgroup\aftergroup\@foot
+\end{verbatim}
+This command is meant to wind up after the closing brace of
+the text that the user typed to end the footnote text;
+the opening brace of the user's footnote text must
+be removed by 
+\begin{verbatim}
+    \let\next=}%end of definition \footnote
+\end{verbatim}
+which assigns the next token, the brace, to \cs{next}.
+\item The footnote text is set as ordinary text
+in this insert box.
+\item After the footnote the command \cs{@foot}
+defined by
+\begin{verbatim}
+\def\@foot{\strut\egroup}
+\end{verbatim}
+will be executed.\end{itemize}
+
+
+%%\point Preventing expansion
+%\section{Preventing expansion}
+%\point Preventing expansion
+\section{Preventing expansion}
+
+%Sometimes it is necessary to prevent expansion in a place
+%where it normally occurs. For this purpose the control
+%sequences \csidx{string} and \csidx{noexpand} are available.
+Sometimes it is necessary to prevent expansion in a place
+where it normally occurs. For this purpose the control
+sequences \csidx{string} and \csidx{noexpand} are available.
+
+%The use of \cs{string} is rather limited, since it converts
+%a control sequence token into a string of characters, with
+%the value of \cs{escapechar} used for the character of
+%category code~0\index{category!0}.
+%It is eminently suitable for use in a 
+%\cs{write}, in order to output a control sequence name
+%(see also Chapter~\ref{io}); for another application see
+%the explanation of \cs{newif} in Chapter~\ref{if}.
+The use of \cs{string} is rather limited, since it converts
+a control sequence token into a string of characters, with
+the value of \cs{escapechar} used for the character of
+category code~0\index{category!0}.
+It is eminently suitable for use in a 
+\cs{write}, in order to output a control sequence name
+(see also Chapter~\ref{io}); for another application see
+the explanation of \cs{newif} in Chapter~\ref{if}.
+
+%All characters resulting from \cs{string} have category
+%code~12, `other', except for space characters; they receive
+%code~10. See also Chapter~\ref{char}.
+All characters resulting from \cs{string} have category
+code~12, `other', except for space characters; they receive
+code~10. See also Chapter~\ref{char}.
+
+%%\spoint \cs{noexpand}
+%\subsection{\protect\cs{noexpand}}
+%\spoint \cs{noexpand}
+\subsection{\protect\cs{noexpand}}
+
+%The \cs{noexpand} command is expandable, and its expansion
+%is the following token. The meaning of that token is
+%made temporarily equal to \cs{relax}, so that it cannot
+%be expanded further.
+The \cs{noexpand} command is expandable, and its expansion
+is the following token. The meaning of that token is
+made temporarily equal to \cs{relax}, so that it cannot
+be expanded further.
+
+%For \cs{noexpand} the most important application is probably
+%in \cs{edef} commands (but in write statements it can often
+%replace \cs{string}). Consider as an example
+%\begin{verbatim}
+% \edef\one{\def\noexpand\two{\the\prevdepth}}
+%\end{verbatim}
+%Without the \cs{noexpand}, \TeX\ would try to expand
+%\cs{two}, thus giving an `undefined control sequence' error.
+For \cs{noexpand} the most important application is probably
+in \cs{edef} commands (but in write statements it can often
+replace \cs{string}). Consider as an example
+\begin{verbatim}
+ \edef\one{\def\noexpand\two{\the\prevdepth}}
+\end{verbatim}
+Without the \cs{noexpand}, \TeX\ would try to expand
+\cs{two}, thus giving an `undefined control sequence' error.
+
+%A  (rather pointless)
+%illustration of the fact that \cs{noexpand} makes the following
+%token effectively into a \cs{relax} is
+%\begin{verbatim}
+%\def\a{b}
+%\noexpand\a
+%\end{verbatim}
+%This will not produce any output, because the
+%effect of the \cs{noexpand} is to make the control sequence
+%\cs{a} temporarily equal to \cs{relax}.
+A  (rather pointless)
+illustration of the fact that \cs{noexpand} makes the following
+token effectively into a \cs{relax} is
+\begin{verbatim}
+\def\a{b}
+\noexpand\a
+\end{verbatim}
+This will not produce any output, because the
+effect of the \cs{noexpand} is to make the control sequence
+\cs{a} temporarily equal to \cs{relax}.
+
+%%\spoint \cs{noexpand} and active characters
+%\subsection{\protect\cs{noexpand} and active characters}
+%\spoint \cs{noexpand} and active characters
+\subsection{\protect\cs{noexpand} and active characters}
+
+%The combination \cs{noexpand}\gr{token} 
+%is\index{character!active, and \cs{noexpand}}
+%equivalent to \cs{relax}, even if the token
+%is an active character. Thus,
+%\begin{verbatim}
+%\csname\noexpand~\endcsname
+%\end{verbatim}
+%will not be the same as~\verb>\char`\~>.
+%Instead it will give an error message, because
+%unexpandable commands \ldash such as \cs{relax} \rdash  are not allowed to appear
+%in between \cs{csname} and \cs{endcsname}.
+%The solution is to use \cs{string} instead; see page~\pageref{store:cat}
+%for an example.
+The combination \cs{noexpand}\gr{token} 
+is\index{character!active, and \cs{noexpand}}
+equivalent to \cs{relax}, even if the token
+is an active character. Thus,
+\begin{verbatim}
+\csname\noexpand~\endcsname
+\end{verbatim}
+will not be the same as~\verb>\char`\~>.
+Instead it will give an error message, because
+unexpandable commands \ldash such as \cs{relax} \rdash  are not allowed to appear
+in between \cs{csname} and \cs{endcsname}.
+The solution is to use \cs{string} instead; see page~\pageref{store:cat}
+for an example.
+
+%In another context, however, the sequence
+%\cs{noexpand}\gr{active character} is equivalent
+%to the character, but in unexpandable form. This is
+%when the conditionals \cs{if} and \cs{ifcat} are used
+%(for an explanation of these, see Chapter~\ref{if}).
+%Compare
+%\begin{verbatim}
+%\if\noexpand~\relax % is false
+%\end{verbatim}
+%where the character code of the tilde is tested, with
+%\begin{verbatim}
+%\def\a{ ... } \if\noexpand\a\relax % is true
+%\end{verbatim}
+%where two control sequences are tested.
+In another context, however, the sequence
+\cs{noexpand}\gr{active character} is equivalent
+to the character, but in unexpandable form. This is
+when the conditionals \cs{if} and \cs{ifcat} are used
+(for an explanation of these, see Chapter~\ref{if}).
+Compare
+\begin{verbatim}
+\if\noexpand~\relax % is false
+\end{verbatim}
+where the character code of the tilde is tested, with
+\begin{verbatim}
+\def\a{ ... } \if\noexpand\a\relax % is true
+\end{verbatim}
+where two control sequences are tested.
+
+%%\point \cs{relax}
+%\section{\protect\cs{relax}}
+%\point \cs{relax}
+\section{\protect\cs{relax}}
+
+%The control sequence \csidx{relax} cannot be expanded, but
+%when it is executed nothing happens.
+The control sequence \csidx{relax} cannot be expanded, but
+when it is executed nothing happens.
+
+%This statement sounds a bit paradoxical, so  consider
+%an example. Let  counters
+%\begin{verbatim}
+%\newcount\MyCount
+%\newcount\MyOtherCount \MyOtherCount=2
+%\end{verbatim}
+%be given.
+%In the assignment
+%\begin{verbatim}
+%\MyCount=1\number\MyOtherCount3\relax4
+%\end{verbatim}
+%the command \cs{number} is expandable, and \cs{relax} is not.
+%When \TeX\ constructs the number that is to be assigned
+%it will expand all commands, either until a non-digit is 
+%found, or until an unexpandable command is encountered.
+%Thus it reads the~\n1; it expands the sequence \verb>\number\MyOtherCount>,
+%which gives~\n2; it reads the~\n3; it sees the \cs{relax}, and
+%as this is unexpandable it halts. The number to be assigned
+%is then \n{123}, and the whole call has been expanded into
+%\begin{verbatim}
+%\MyCount=123\relax4
+%\end{verbatim}
+%Since the \cs{relax} token has no effect when it is executed,
+%the result of this line is that \n{123} is assigned to
+%\cs{MyCount}, and the digit 4 is printed.
+This statement sounds a bit paradoxical, so  consider
+an example. Let  counters
+\begin{verbatim}
+\newcount\MyCount
+\newcount\MyOtherCount \MyOtherCount=2
+\end{verbatim}
+be given.
+In the assignment
+\begin{verbatim}
+\MyCount=1\number\MyOtherCount3\relax4
+\end{verbatim}
+the command \cs{number} is expandable, and \cs{relax} is not.
+When \TeX\ constructs the number that is to be assigned
+it will expand all commands, either until a non-digit is 
+found, or until an unexpandable command is encountered.
+Thus it reads the~\n1; it expands the sequence \verb>\number\MyOtherCount>,
+which gives~\n2; it reads the~\n3; it sees the \cs{relax}, and
+as this is unexpandable it halts. The number to be assigned
+is then \n{123}, and the whole call has been expanded into
+\begin{verbatim}
+\MyCount=123\relax4
+\end{verbatim}
+Since the \cs{relax} token has no effect when it is executed,
+the result of this line is that \n{123} is assigned to
+\cs{MyCount}, and the digit 4 is printed.
+
+%Another example of how \cs{relax} can be used to indicate
+%the end of a command\label{fil:l:l}\ is
+%\begin{verbatim}
+%\everypar{\hskip 0cm plus 1fil }
+%\indent Later that day, ... 
+%\end{verbatim}
+%This will be misunderstood: \TeX\ will see
+%\begin{verbatim}
+%\hskip 0cm plus 1fil L
+%\end{verbatim}
+%and \hbox{\n{fil L}} is a~valid,
+%if bizarre,
+%way of writing \n{fill} (see Chapter~\ref{gramm}).
+%One remedy is to write
+%\begin{verbatim}
+%\everypar{\hskip 0cm plus 1fil\relax}
+%\end{verbatim}
+Another example of how \cs{relax} can be used to indicate
+the end of a command\label{fil:l:l}\ is
+\begin{verbatim}
+\everypar{\hskip 0cm plus 1fil }
+\indent Later that day, ... 
+\end{verbatim}
+This will be misunderstood: \TeX\ will see
+\begin{verbatim}
+\hskip 0cm plus 1fil L
+\end{verbatim}
+and \hbox{\n{fil L}} is a~valid,
+if bizarre,
+way of writing \n{fill} (see Chapter~\ref{gramm}).
+One remedy is to write
+\begin{verbatim}
+\everypar{\hskip 0cm plus 1fil\relax}
+\end{verbatim}
+
+%%\spoint[relax:cs] \cs{relax} and \cs{csname}
+%\subsection{\cs{relax} and \cs{csname}}
+%\label{relax:cs}
+%\spoint[relax:cs] \cs{relax} and \cs{csname}
+\subsection{\cs{relax} and \cs{csname}}
+\label{relax:cs}
+
+%If a \verb-\csname ... \endcsname- command forms the name
+%of a previously undefined control sequence,
+%that control sequence is made equal to \cs{relax},
+%and the whole statement is also equivalent to \cs{relax}
+%(see also page~\pageref{cs:name}).
+If a \verb-\csname ... \endcsname- command forms the name
+of a previously undefined control sequence,
+that control sequence is made equal to \cs{relax},
+and the whole statement is also equivalent to \cs{relax}
+(see also page~\pageref{cs:name}).
+
+%However,  this assignment of \cs{relax} is
+%\altt
+%only local:
+%\begin{verbatim}
+%{\xdef\test{\expandafter\noexpand\csname xx\endcsname}}
+%\test
+%\end{verbatim}
+%gives an error message for an
+%undefined control sequence~\cs{xx}.
+However,  this assignment of \cs{relax} is
+\altt
+only local:
+\begin{verbatim}
+{\xdef\test{\expandafter\noexpand\csname xx\endcsname}}
+\test
+\end{verbatim}
+gives an error message for an
+undefined control sequence~\cs{xx}.
+
+%Consider as an example the \LaTeX\ environments,
+%which are delimited by
+%\begin{verbatim}
+%\begin{...} ... \end{...}
+%\end{verbatim}
+%The begin and end commands are (in essence)
+%defined as follows:
+%\begin{verbatim}
+%\def
+%\begin#1{\begingroup\csname#1\endcsname}
+%\def\end#1{\csname end#1\endcsname \endgroup}
+%\end{verbatim}
+%Thus, for the list environment the commands
+%\cs{list} and \cs{endlist} are defined, but any
+%command can be used as an environment name,
+%even if no corresponding \cs{end...} has been defined.
+%For instance,
+%\begin{verbatim}
+%\begin{it} ... \end{it}
+%\end{verbatim}
+%is equivalent to 
+%\begin{verbatim}
+%\begingroup\it ... \relax\endgroup
+%\end{verbatim}
+%See page~\pageref{begin:end:macros} for the rationale
+%behind using \cs{begingroup} and \cs{endgroup}
+%instead of \cs{bgroup} and \cs{egroup}.
+Consider as an example the \LaTeX\ environments,
+which are delimited by
+\begin{verbatim}
+\begin{...} ... \end{...}
+\end{verbatim}
+The begin and end commands are (in essence)
+defined as follows:
+\begin{verbatim}
+\def
+\begin#1{\begingroup\csname#1\endcsname}
+\def\end#1{\csname end#1\endcsname \endgroup}
+\end{verbatim}
+Thus, for the list environment the commands
+\cs{list} and \cs{endlist} are defined, but any
+command can be used as an environment name,
+even if no corresponding \cs{end...} has been defined.
+For instance,
+\begin{verbatim}
+\begin{it} ... \end{it}
+\end{verbatim}
+is equivalent to 
+\begin{verbatim}
+\begingroup\it ... \relax\endgroup
+\end{verbatim}
+See page~\pageref{begin:end:macros} for the rationale
+behind using \cs{begingroup} and \cs{endgroup}
+instead of \cs{bgroup} and \cs{egroup}.
+
+%%\spoint Preventing expansion with \cs{relax}
+%\subsection{Preventing expansion with \cs{relax}}
+%\spoint Preventing expansion with \cs{relax}
+\subsection{Preventing expansion with \cs{relax}}
+
+%Because \cs{relax} 
+%cannot be expanded, a control sequence can be prevented
+%from being expanded (for instance in an \cs{edef} or a \cs{write})
+%by making it temporarily equal to \cs{relax}:
+%\begin{verbatim}
+%{\let\somemacro=\relax \write\outfile{\somemacro}}
+%\end{verbatim}
+%will write the string `\cs{somemacro}' to an output file.
+%It would write the expansion 
+%of the macro \cs{somemacro} (or give an error message
+%if the macro is undefined) if the \cs{let} statement
+%had been omitted.
+Because \cs{relax} 
+cannot be expanded, a control sequence can be prevented
+from being expanded (for instance in an \cs{edef} or a \cs{write})
+by making it temporarily equal to \cs{relax}:
+\begin{verbatim}
+{\let\somemacro=\relax \write\outfile{\somemacro}}
+\end{verbatim}
+will write the string `\cs{somemacro}' to an output file.
+It would write the expansion 
+of the macro \cs{somemacro} (or give an error message
+if the macro is undefined) if the \cs{let} statement
+had been omitted.
+
+%%\spoint[bump:relax] \TeX\ inserts a \cs{relax}
+%\subsection{\TeX\ inserts a \cs{relax}}
+%\label{bump:relax}
+%\spoint[bump:relax] \TeX\ inserts a \cs{relax}
+\subsection{\TeX\ inserts a \cs{relax}}
+\label{bump:relax}
+
+%\TeX\ itself inserts \cs{relax} on some occasions.
+%For instance, \cs{relax} is inserted if \TeX\ encounters an
+%\cs{or}, \cs{else}, or~\cs{fi} while still determining
+%the extent of the test. 
+%\begin{example}
+%\begin{verbatim}
+%\ifvoid1\else ... \fi
+%\end{verbatim}
+%is changed into
+%\begin{verbatim}
+%\ifvoid1\relax \else ...\fi
+%\end{verbatim}
+%internally.
+%\end{example}
+\TeX\ itself inserts \cs{relax} on some occasions.
+For instance, \cs{relax} is inserted if \TeX\ encounters an
+\cs{or}, \cs{else}, or~\cs{fi} while still determining
+the extent of the test. 
+\begin{example}
+\begin{verbatim}
+\ifvoid1\else ... \fi
+\end{verbatim}
+is changed into
+\begin{verbatim}
+\ifvoid1\relax \else ...\fi
+\end{verbatim}
+internally.
+\end{example}
+
+%Similarly, if one of the tests \cs{if}, \cs{ifcat}
+%is given only one comparand, as in
+%\begin{verbatim}
+%\if1\else ...
+%\end{verbatim}
+%a \cs{relax} token is inserted. Thus this test
+%is equivalent to
+%\begin{verbatim}
+%\if1\relax\else ...
+%\end{verbatim}
+Similarly, if one of the tests \cs{if}, \cs{ifcat}
+is given only one comparand, as in
+\begin{verbatim}
+\if1\else ...
+\end{verbatim}
+a \cs{relax} token is inserted. Thus this test
+is equivalent to
+\begin{verbatim}
+\if1\relax\else ...
+\end{verbatim}
+
+%Another place where \cs{relax} is used is the following.
+%While a control sequence is being defined in a \gr{shorthand
+%definition} \ldash that is, a \gr{registerdef} or \cs{chardef}
+%or \cs{mathchardef} \rdash  its meaning is temporarily made
+%equal to \cs{relax}. This makes it possible to write
+%\verb>\chardef\foo=123\foo>.
+Another place where \cs{relax} is used is the following.
+While a control sequence is being defined in a \gr{shorthand
+definition} \ldash that is, a \gr{registerdef} or \cs{chardef}
+or \cs{mathchardef} \rdash  its meaning is temporarily made
+equal to \cs{relax}. This makes it possible to write
+\verb>\chardef\foo=123\foo>.
+
+%%\spoint The value of non-macros; \cs{the}
+%\subsection{The value of non-macros; \cs{the}}
+%\spoint The value of non-macros; \cs{the}
+\subsection{The value of non-macros; \cs{the}}
+
+%Expansion is a precisely defined activity in \TeX.
+%\cstoidx the\par
+%The full list of tokens that can be expanded
+%was given above. 
+%Other tokens than those in the above list may have an `expansion'
+%in an informal sense. For instance one may wish to `expand'
+%the \cs{parindent} into its value, say~\n{20pt}.
+Expansion is a precisely defined activity in \TeX.
+\cstoidx the\par
+The full list of tokens that can be expanded
+was given above. 
+Other tokens than those in the above list may have an `expansion'
+in an informal sense. For instance one may wish to `expand'
+the \cs{parindent} into its value, say~\n{20pt}.
+
+%Converting  the value of (among others) an
+%\gr{integer parameter}, a \gr{glue parameter}, 
+%\gr{dimen parameter} or a \gr{token parameter}
+%into a string of character tokens is done by the expansion processor.
+%The command \cs{the}
+%is expanded whenever expansion is not inhibited,
+%and it takes the value of various sorts of parameters.
+%Its result (in most cases)
+%is a string of tokens of category~12\index{category!12}, except
+%that spaces have category code~10\index{category!10}.
+Converting  the value of (among others) an
+\gr{integer parameter}, a \gr{glue parameter}, 
+\gr{dimen parameter} or a \gr{token parameter}
+into a string of character tokens is done by the expansion processor.
+The command \cs{the}
+is expanded whenever expansion is not inhibited,
+and it takes the value of various sorts of parameters.
+Its result (in most cases)
+is a string of tokens of category~12\index{category!12}, except
+that spaces have category code~10\index{category!10}.
+
+%Here is the list of everything that can be prefixed with \cs{the}.
+%\begin{description}\item [\gr{parameter} or \gr{register}]
+%If the parameter or register is of type integer, glue, dimen
+%or muglue,
+%its value is given as a string of character tokens;
+%if it is of type token list (for instance
+%\cs{everypar} or \cs{toks5}), the result is a string of tokens.
+%Box registers are excluded here.
+%\item [\gr{codename}\gr{8-bit number}]
+%See page~\pageref{codename}.
+%\item [\gr{special register}]
+%The integer registers \cs{prevgraf}, \cs{deadcycles}, \cs{insertpenalties}
+%\cs{inputlineno}, \cs{badness}, \cs{parshape}, \cs{spacefactor}
+%(only in horizontal mode), or \cs{prevdepth} (only in vertical mode).
+%The dimension registers \cs{pagetotal}, \cs{pagegoal}, \cs{pagestretch},
+%\handbreak \cs{pagefilstretch}, \cs{pagefillstretch}, \cs{pagefilllstretch},
+%\cs{pageshrink}, or \cs{pagedepth}.
+%\item [Font properties:]
+%\cs{fontdimen}\gr{parameter number}\gr{font}, 
+%\cs{skew\-char}\gr{font},
+%\cs{hy\-phen\-char}\gr{font}.
+%\item [Last quantities:]
+%\cs{lastpenalty}, \cs{lastkern}, \cs{lastskip}.
+%\item [\gr{defined character}]
+%Any control sequence defined by \cs{chardef} or \cs{mathchardef};
+%the result is the decimal value.
+%\end{description}
+%In some cases \cs{the} can give a control sequence token 
+%or list of such tokens.
+%\begin{description}\item [\gr{font}]
+%The result is the control sequence that stands for the
+%font.
+%\item [\gr{token variable}]
+%Token list registers and \gr{token parameter}s can be prefixed
+%with \cs{the}; the result is their contents.
+%\end{description}
+Here is the list of everything that can be prefixed with \cs{the}.
+\begin{description}\item [\gr{parameter} or \gr{register}]
+If the parameter or register is of type integer, glue, dimen
+or muglue,
+its value is given as a string of character tokens;
+if it is of type token list (for instance
+\cs{everypar} or \cs{toks5}), the result is a string of tokens.
+Box registers are excluded here.
+\item [\gr{codename}\gr{8-bit number}]
+See page~\pageref{codename}.
+\item [\gr{special register}]
+The integer registers \cs{prevgraf}, \cs{deadcycles}, \cs{insertpenalties}
+\cs{inputlineno}, \cs{badness}, \cs{parshape}, \cs{spacefactor}
+(only in horizontal mode), or \cs{prevdepth} (only in vertical mode).
+The dimension registers \cs{pagetotal}, \cs{pagegoal}, \cs{pagestretch},
+\handbreak \cs{pagefilstretch}, \cs{pagefillstretch}, \cs{pagefilllstretch},
+\cs{pageshrink}, or \cs{pagedepth}.
+\item [Font properties:]
+\cs{fontdimen}\gr{parameter number}\gr{font}, 
+\cs{skew\-char}\gr{font},
+\cs{hy\-phen\-char}\gr{font}.
+\item [Last quantities:]
+\cs{lastpenalty}, \cs{lastkern}, \cs{lastskip}.
+\item [\gr{defined character}]
+Any control sequence defined by \cs{chardef} or \cs{mathchardef};
+the result is the decimal value.
+\end{description}
+In some cases \cs{the} can give a control sequence token 
+or list of such tokens.
+\begin{description}\item [\gr{font}]
+The result is the control sequence that stands for the
+font.
+\item [\gr{token variable}]
+Token list registers and \gr{token parameter}s can be prefixed
+with \cs{the}; the result is their contents.
+\end{description}
+
+%Let us consider an example of the use of \cs{the}.
+%If in a file that is to be \cs{input} the
+%category code of a character, say the at~sign, is changed,
+%one could write
+%\begin{verbatim}
+%\edef\restorecat{\catcode`@=\the\catcode`@}
+%\end{verbatim}
+%and call \cs{restorecat} at the end of the file.
+%If the category code was~11, \cs{restorecat}
+%is defined equivalent to
+%\begin{verbatim}
+%\catcode`@=11
+%\end{verbatim}
+%See page~\pageref{store:cat} for more elaborate macros
+%for saving and restoring catcodes.
+Let us consider an example of the use of \cs{the}.
+If in a file that is to be \cs{input} the
+category code of a character, say the at~sign, is changed,
+one could write
+\begin{verbatim}
+\edef\restorecat{\catcode`@=\the\catcode`@}
+\end{verbatim}
+and call \cs{restorecat} at the end of the file.
+If the category code was~11, \cs{restorecat}
+is defined equivalent to
+\begin{verbatim}
+\catcode`@=11
+\end{verbatim}
+See page~\pageref{store:cat} for more elaborate macros
+for saving and restoring catcodes.
+
+
+%%\point Examples
+%\section{Examples}
+%\point Examples
+\section{Examples}
+
+%%\spoint Expanding after
+%\subsection{Expanding after}
+%\spoint Expanding after
+\subsection{Expanding after}
+
+%The most obvious use of \cs{expandafter} is to reach over
+%a control sequence:
+%\begin{verbatim}
+%\def\stepcounter
+%    #1{\expandafter\advance\csname 
+%             #1:counter\endcsname 1\relax}
+%\stepcounter{foo}
+%\end{verbatim}
+%Here the \cs{expandafter} lets the \cs{csname} command form
+%the control sequence \cs{foo:counter}; after \cs{expandafter}
+%is finished the statement has reduced to
+%\begin{verbatim}
+%\advance\foo:counter 1\relax
+%\end{verbatim}
+%It is possible to reach over tokens other than control sequences: in
+%\begin{verbatim}
+%\uppercase\expandafter{\romannumeral \year}
+%\end{verbatim}
+%it expands  \cs{romannumeral} on the other side of the opening
+%brace.
+The most obvious use of \cs{expandafter} is to reach over
+a control sequence:
+\begin{verbatim}
+\def\stepcounter
+    #1{\expandafter\advance\csname 
+             #1:counter\endcsname 1\relax}
+\stepcounter{foo}
+\end{verbatim}
+Here the \cs{expandafter} lets the \cs{csname} command form
+the control sequence \cs{foo:counter}; after \cs{expandafter}
+is finished the statement has reduced to
+\begin{verbatim}
+\advance\foo:counter 1\relax
+\end{verbatim}
+It is possible to reach over tokens other than control sequences: in
+\begin{verbatim}
+\uppercase\expandafter{\romannumeral \year}
+\end{verbatim}
+it expands  \cs{romannumeral} on the other side of the opening
+brace.
+
+%You can expand after two control sequences:
+%\begin{verbatim}
+%\def\globalstepcounter
+%    #1{\expandafter\global\expandafter\advance
+%             \csname #1:counter\endcsname 1\relax}
+%\end{verbatim}
+%If you think of \cs{expandafter} as reversing the evaluation
+%order of {\sl two\/} control sequences, you can reverse
+%{\sl three\/} by
+%\begin{verbatim}
+%\expandafter\expandafter\expandafter\a\expandafter\b\c 
+%\end{verbatim}
+%which reaches across the three control sequences
+%\begin{verbatim}
+%            \expandafter            \a            \b 
+%\end{verbatim} 
+%to expand \cs{c} first.
+You can expand after two control sequences:
+\begin{verbatim}
+\def\globalstepcounter
+    #1{\expandafter\global\expandafter\advance
+             \csname #1:counter\endcsname 1\relax}
+\end{verbatim}
+If you think of \cs{expandafter} as reversing the evaluation
+order of {\sl two\/} control sequences, you can reverse
+{\sl three\/} by
+\begin{verbatim}
+\expandafter\expandafter\expandafter\a\expandafter\b\c 
+\end{verbatim}
+which reaches across the three control sequences
+\begin{verbatim}
+            \expandafter            \a            \b 
+\end{verbatim} 
+to expand \cs{c} first.
+
+%There is even an unexpected use for \cs{expandafter} in
+%conditionals;
+%with
+%\begin{verbatim}
+%\def\bold#1{{\bf #1}}
+%\end{verbatim}
+%the sequence
+%\begin{verbatim}
+%\ifnum1>0 \bold \fi {word}
+%\end{verbatim}
+%will not give a boldface `word', but
+%\begin{verbatim}
+%\ifnum1>0 \expandafter\bold \fi {word}
+%\end{verbatim}
+%will.
+%The \cs{expandafter} lets \TeX\ see the \cs{fi} and remove it
+%before it tackles the macro \cs{bold}
+%(see also page~\pageref{after:cond}).
+There is even an unexpected use for \cs{expandafter} in
+conditionals;
+with
+\begin{verbatim}
+\def\bold#1{{\bf #1}}
+\end{verbatim}
+the sequence
+\begin{verbatim}
+\ifnum1>0 \bold \fi {word}
+\end{verbatim}
+will not give a boldface `word', but
+\begin{verbatim}
+\ifnum1>0 \expandafter\bold \fi {word}
+\end{verbatim}
+will.
+The \cs{expandafter} lets \TeX\ see the \cs{fi} and remove it
+before it tackles the macro \cs{bold}
+(see also page~\pageref{after:cond}).
+
+%%\spoint Defining inside an \cs{edef}
+%\subsection{Defining inside an \cs{edef}}
+%\spoint Defining inside an \cs{edef}
+\subsection{Defining inside an \cs{edef}}
+
+%There is one \TeX\ command that is executed instead of
+%expanded that is worth pointing out explicitly:
+%the primitive command \cs{def} (and all other \gr{def} commands)
+%is not expanded.
+There is one \TeX\ command that is executed instead of
+expanded that is worth pointing out explicitly:
+the primitive command \cs{def} (and all other \gr{def} commands)
+is not expanded.
+
+%Thus the call
+%\begin{verbatim}
+%\edef\next{\def\thing{text}}
+%\end{verbatim}
+%will give an `undefined
+%control sequence' for \cs{thing}, even though after
+%\cs{def} expansion is ordinarily inhibited (see page~\pageref{noexp:list}).
+%After
+%\begin{verbatim}
+%\edef\next{\def\noexpand\thing{text}}
+%\end{verbatim}
+%the `meaning' of \cs{next} will be
+%\begin{verbatim}
+%macro: \def \thing {text}
+%\end{verbatim}
+%The definition
+%\begin{verbatim}
+%\edef\next{\def\noexpand\thing{text}\thing}
+%\end{verbatim}
+%will again give an `undefined control sequence' for \cs{thing}
+%(this time on its second occurrence),
+%as it will only be defined when \cs{next} is called,
+%not when \cs{next} is defined.
+Thus the call
+\begin{verbatim}
+\edef\next{\def\thing{text}}
+\end{verbatim}
+will give an `undefined
+control sequence' for \cs{thing}, even though after
+\cs{def} expansion is ordinarily inhibited (see page~\pageref{noexp:list}).
+After
+\begin{verbatim}
+\edef\next{\def\noexpand\thing{text}}
+\end{verbatim}
+the `meaning' of \cs{next} will be
+\begin{verbatim}
+macro: \def \thing {text}
+\end{verbatim}
+The definition
+\begin{verbatim}
+\edef\next{\def\noexpand\thing{text}\thing}
+\end{verbatim}
+will again give an `undefined control sequence' for \cs{thing}
+(this time on its second occurrence),
+as it will only be defined when \cs{next} is called,
+not when \cs{next} is defined.
+
+
+%%\spoint[expand:write] Expansion and \cs{write}
+%\subsection{Expansion and \cs{write}}
+%\label{expand:write}
+%\spoint[expand:write] Expansion and \cs{write}
+\subsection{Expansion and \cs{write}}
+\label{expand:write}
+
+%The argument token list of \csidx{write} is treated in much
+%the same way as the replacement text of an \cs{edef};
+%that is, expandable control sequences and active characters
+%are completely expanded. Unexpandable control sequences
+%are treated by \cs{write} as if they are prefixed
+%by \cs{string}.
+The argument token list of \csidx{write} is treated in much
+the same way as the replacement text of an \cs{edef};
+that is, expandable control sequences and active characters
+are completely expanded. Unexpandable control sequences
+are treated by \cs{write} as if they are prefixed
+by \cs{string}.
+
+%Because of the expansion performed by \cs{write},
+%some care has to be taken when outputting control
+%sequences with \cs{write}.
+%Even more complications arise from the fact that 
+%the expansion of the argument of \cs{write} is only performed
+%when it is shipped out. Here follows a worked-out
+%example.
+Because of the expansion performed by \cs{write},
+some care has to be taken when outputting control
+sequences with \cs{write}.
+Even more complications arise from the fact that 
+the expansion of the argument of \cs{write} is only performed
+when it is shipped out. Here follows a worked-out
+example.
+
+%Suppose \cs{somecs} is a macro, and you
+%want to write the string 
+%\begin{disp}\verb-\def\othercs-\lb {\italic the expansion of \cs{somecs}}\rb
+%\end{disp}
+%to a file.
+Suppose \cs{somecs} is a macro, and you
+want to write the string 
+\begin{disp}\verb-\def\othercs-\lb {\italic the expansion of \cs{somecs}}\rb
+\end{disp}
+to a file.
+
+%The first attempt is
+%\begin{verbatim}
+%\write\myfile{\def\othercs{\somecs}}
+%\end{verbatim}
+%This gives an error `undefined control sequence' for \cs{othercs},
+%\altt
+%because the \cs{write} will try to expand that token. 
+%Note that the \cs{somecs} is also  expanded, 
+%so that part is right.
+The first attempt is
+\begin{verbatim}
+\write\myfile{\def\othercs{\somecs}}
+\end{verbatim}
+This gives an error `undefined control sequence' for \cs{othercs},
+\altt
+because the \cs{write} will try to expand that token. 
+Note that the \cs{somecs} is also  expanded, 
+so that part is right.
+
+%The next attempt is
+%\begin{verbatim}
+%\write\myfile{\def\noexpand\othercs{\somecs}}
+%\end{verbatim}
+%This is almost right, but not quite. The
+%statement written is
+%\begin{disp}\verb>\def\othercs>\lb{\italic expansion of \cs{somecs}}\rb\end{disp}
+%which looks right.
+The next attempt is
+\begin{verbatim}
+\write\myfile{\def\noexpand\othercs{\somecs}}
+\end{verbatim}
+This is almost right, but not quite. The
+statement written is
+\begin{disp}\verb>\def\othercs>\lb{\italic expansion of \cs{somecs}}\rb\end{disp}
+which looks right.
+
+%However, writes \ldash and the expansion of their argument \rdash 
+%are not executed
+%on the spot, but saved until the part of the page on which
+%they occur is shipped out (see Chapter~\ref{io}).
+%So, in the meantime, the value of \cs{somecs} may have
+%changed. In other words, the value written may not be the
+%value at the time the \cs{write} command was given.
+%Somehow, therefore, the current expansion must be
+%inserted in the write command.
+However, writes \ldash and the expansion of their argument \rdash 
+are not executed
+on the spot, but saved until the part of the page on which
+they occur is shipped out (see Chapter~\ref{io}).
+So, in the meantime, the value of \cs{somecs} may have
+changed. In other words, the value written may not be the
+value at the time the \cs{write} command was given.
+Somehow, therefore, the current expansion must be
+inserted in the write command.
+
+%The following is an attempt at repair:
+%\begin{verbatim}
+%\edef\act{\write\myfile{\def\noexpand\othercs{\somecs}}}
+%\act
+%\end{verbatim} 
+%Now the  write command will be
+%\begin{disp}\verb>\write\myfile{\def\othercs{>\italic value of\/
+%     \verb>\somecs}}>\end{disp}
+%The \cs{noexpand} prevented the \cs{edef} from expanding
+%the \cs{othercs}, but after the definition it has disappeared,
+%so that execution of the write will again give an undefined control
+%sequence. The final solution is
+%\begin{verbatim}
+%\edef\act{\write\myfile
+%          {\def \noexpand\noexpand \noexpand\othercs{\somecs}}}
+%\act
+%\end{verbatim} 
+%In this case the write command caused by the expansion of \cs{act}
+%will be
+%\begin{disp}\verb>\write\myfile{\def\noexpand\othercs>\lb
+%     {\italic current value of \cs{somecs}}\rb\end{disp}
+%and the string actually written is
+%\begin{disp}\verb>\def\othercs>\lb
+%     {\italic current value of \cs{somecs}}\rb\end{disp}
+%This mechanism is the basis for cross-referencing
+%macros in several macro packages.
+The following is an attempt at repair:
+\begin{verbatim}
+\edef\act{\write\myfile{\def\noexpand\othercs{\somecs}}}
+\act
+\end{verbatim} 
+Now the  write command will be
+\begin{disp}\verb>\write\myfile{\def\othercs{>\italic value of\/
+     \verb>\somecs}}>\end{disp}
+The \cs{noexpand} prevented the \cs{edef} from expanding
+the \cs{othercs}, but after the definition it has disappeared,
+so that execution of the write will again give an undefined control
+sequence. The final solution is
+\begin{verbatim}
+\edef\act{\write\myfile
+          {\def \noexpand\noexpand \noexpand\othercs{\somecs}}}
+\act
+\end{verbatim} 
+In this case the write command caused by the expansion of \cs{act}
+will be
+\begin{disp}\verb>\write\myfile{\def\noexpand\othercs>\lb
+     {\italic current value of \cs{somecs}}\rb\end{disp}
+and the string actually written is
+\begin{disp}\verb>\def\othercs>\lb
+     {\italic current value of \cs{somecs}}\rb\end{disp}
+This mechanism is the basis for cross-referencing
+macros in several macro packages.
+
+
+%%\spoint Controlled expansion inside an \cs{edef}
+%\subsection{Controlled expansion inside an \cs{edef}}
+%\spoint Controlled expansion inside an \cs{edef}
+\subsection{Controlled expansion inside an \cs{edef}}
+
+%Sometimes you may need an \cs{edef} to evaluate current
+%\howto Control expansion inside an \cs{edef}\par
+%conditions, but you want to expand something in the replacement
+%text only to a certain level. Suppose that
+%\begin{verbatim}
+%\def\a{\b} \def\b{c} \def\d{\e} \def\e{f}
+%\end{verbatim}
+%is given, and you want to define \cs{g} as \cs{a} expanded
+%one step, followed by \cs{d} fully expanded. The following
+%works:
+%\begin{verbatim}
+%\edef\g{\expandafter\noexpand\a \d}
+%\end{verbatim}
+%Explanation: the \cs{expandafter} reaches over the \cs{noexpand}
+%to expand \cs{a} one step, after which the 
+%sequence \verb-\noexpand\b- is left.
+Sometimes you may need an \cs{edef} to evaluate current
+\howto Control expansion inside an \cs{edef}\par
+conditions, but you want to expand something in the replacement
+text only to a certain level. Suppose that
+\begin{verbatim}
+\def\a{\b} \def\b{c} \def\d{\e} \def\e{f}
+\end{verbatim}
+is given, and you want to define \cs{g} as \cs{a} expanded
+one step, followed by \cs{d} fully expanded. The following
+works:
+\begin{verbatim}
+\edef\g{\expandafter\noexpand\a \d}
+\end{verbatim}
+Explanation: the \cs{expandafter} reaches over the \cs{noexpand}
+to expand \cs{a} one step, after which the 
+sequence \verb-\noexpand\b- is left.
+
+%This trick comes in handy when you need to
+%construct a control sequence with \cs{csname} inside 
+%an \cs{edef}. The following sequence inside an \cs{edef}
+%\begin{verbatim}
+%\expandafter\noexpand\csname name\endcsname
+%\end{verbatim}
+%will expand exactly to \cs{name}, but not further.
+%As an example, suppose
+%\begin{verbatim}
+%\def\condition{true}
+%\end{verbatim}
+%has been given, then
+%\begin{verbatim}
+%\edef\setmycondition{\expandafter\noexpand
+%           \csname mytest\condition\endcsname}
+%\end{verbatim}
+%will let \cs{setmycondition} expand to \cs{mytesttrue}.
+This trick comes in handy when you need to
+construct a control sequence with \cs{csname} inside 
+an \cs{edef}. The following sequence inside an \cs{edef}
+\begin{verbatim}
+\expandafter\noexpand\csname name\endcsname
+\end{verbatim}
+will expand exactly to \cs{name}, but not further.
+As an example, suppose
+\begin{verbatim}
+\def\condition{true}
+\end{verbatim}
+has been given, then
+\begin{verbatim}
+\edef\setmycondition{\expandafter\noexpand
+           \csname mytest\condition\endcsname}
+\end{verbatim}
+will let \cs{setmycondition} expand to \cs{mytesttrue}.
+
+%%\spoint Multiple prevention of expansion
+%\subsection{Multiple prevention of expansion}
+%\spoint Multiple prevention of expansion
+\subsection{Multiple prevention of expansion}
+
+%As   was pointed out above, prefixing  a command with
+%\cs{noexpand} prevents its expansion in commands
+%such as \cs{edef} and~\cs{write}. However, if a sequence of tokens
+%passes through more than one expanding command
+%stronger measures are needed.
+As   was pointed out above, prefixing  a command with
+\cs{noexpand} prevents its expansion in commands
+such as \cs{edef} and~\cs{write}. However, if a sequence of tokens
+passes through more than one expanding command
+stronger measures are needed.
+
+%The following trick can be used:
+%in order to protect a command against expansion
+%it can be prefixed with \csidx{protect}.
+%During the stages of processing where expansion is
+%not desired the definition of \cs{protect} is
+%\begin{verbatim}
+%\def\protect{\noexpand\protect\noexpand}
+%\end{verbatim}
+%Later on, when the command is actually needed,
+%\cs{protect} is defined as 
+%\begin{verbatim}
+%\def\protect{}
+%\end{verbatim}
+The following trick can be used:
+in order to protect a command against expansion
+it can be prefixed with \csidx{protect}.
+During the stages of processing where expansion is
+not desired the definition of \cs{protect} is
+\begin{verbatim}
+\def\protect{\noexpand\protect\noexpand}
+\end{verbatim}
+Later on, when the command is actually needed,
+\cs{protect} is defined as 
+\begin{verbatim}
+\def\protect{}
+\end{verbatim}
+
+%Why does this work? The expansion of
+%\begin{verbatim}
+%\protect\somecs
+%\end{verbatim}
+%is at first
+%\begin{verbatim}
+%\noexpand\protect\noexpand\somecs
+%\end{verbatim}
+%Inside an \cs{edef} this sequence is expanded further,
+%and the subsequent expansion is
+%\begin{verbatim}
+%\protect\somecs
+%\end{verbatim}
+%That is, the expansion is equal to the original sequence.
+Why does this work? The expansion of
+\begin{verbatim}
+\protect\somecs
+\end{verbatim}
+is at first
+\begin{verbatim}
+\noexpand\protect\noexpand\somecs
+\end{verbatim}
+Inside an \cs{edef} this sequence is expanded further,
+and the subsequent expansion is
+\begin{verbatim}
+\protect\somecs
+\end{verbatim}
+That is, the expansion is equal to the original sequence.
+
+
+%%\spoint More examples with \cs{relax}
+%\subsection{More examples with \cs{relax}}
+%\spoint More examples with \cs{relax}
+\subsection{More examples with \cs{relax}}
+
+%Above, a first example was given in which \cs{relax} served
+%to prevent \TeX\ from scanning too far.
+%Here are some more examples, using \cs{relax} to bound
+%numbers.
+Above, a first example was given in which \cs{relax} served
+to prevent \TeX\ from scanning too far.
+Here are some more examples, using \cs{relax} to bound
+numbers.
+
+%After
+%\begin{verbatim}
+%\countdef\pageno=0 \pageno=1
+%\def\Par{\par\penalty200}
+%\end{verbatim}
+%the sequence
+%\begin{verbatim}
+%\Par\number\pageno
+%\end{verbatim}
+%is misunderstood as
+%\begin{verbatim}
+%\par\penalty2001
+%\end{verbatim}
+%In this case it is sufficient to define
+%\begin{verbatim}
+%\def\Par{\par\penalty200 }
+%\end{verbatim}
+%as an \gr{optional space} is allowed to follow a number.
+After
+\begin{verbatim}
+\countdef\pageno=0 \pageno=1
+\def\Par{\par\penalty200}
+\end{verbatim}
+the sequence
+\begin{verbatim}
+\Par\number\pageno
+\end{verbatim}
+is misunderstood as
+\begin{verbatim}
+\par\penalty2001
+\end{verbatim}
+In this case it is sufficient to define
+\begin{verbatim}
+\def\Par{\par\penalty200 }
+\end{verbatim}
+as an \gr{optional space} is allowed to follow a number.
+
+%Sometimes, however, such a simple escape is not possible.
+%Consider the definition
+%\begin{verbatim}
+%\def\ifequal#1#2{\ifnum#1=#2 1\else 0\fi}
+%\end{verbatim}
+%The question is whether the space after \verb-#2-
+%is necessary, superfluous, or simply wrong.
+%Calls such as \verb-\ifequal{27}{28}- that compare two
+%numbers (denotations) will correctly give \n1 or~\n0,
+%and the space is necessary to prevent misinterpretation.
+Sometimes, however, such a simple escape is not possible.
+Consider the definition
+\begin{verbatim}
+\def\ifequal#1#2{\ifnum#1=#2 1\else 0\fi}
+\end{verbatim}
+The question is whether the space after \verb-#2-
+is necessary, superfluous, or simply wrong.
+Calls such as \verb-\ifequal{27}{28}- that compare two
+numbers (denotations) will correctly give \n1 or~\n0,
+and the space is necessary to prevent misinterpretation.
+
+%However, \verb-\ifequal\somecounter\othercounter- will
+%give \n{\char 32 1} if the counters are equal; in this
+%case the space could have been dispensed with.
+%The solution that works in both cases is
+%\begin{verbatim}
+%\def\ifequal#1#2{\ifnum#1=#2\relax 1\else 0\fi}
+%\end{verbatim}
+%Note that \cs{relax} is not expanded, so
+%\begin{verbatim}
+%\edef\foo{1\ifequal\counta\countb}
+%\end{verbatim}
+%will define \cs{foo} as either \verb-1\relax1- or~\n{10}.
+However, \verb-\ifequal\somecounter\othercounter- will
+give \n{\char 32 1} if the counters are equal; in this
+case the space could have been dispensed with.
+The solution that works in both cases is
+\begin{verbatim}
+\def\ifequal#1#2{\ifnum#1=#2\relax 1\else 0\fi}
+\end{verbatim}
+Note that \cs{relax} is not expanded, so
+\begin{verbatim}
+\edef\foo{1\ifequal\counta\countb}
+\end{verbatim}
+will define \cs{foo} as either \verb-1\relax1- or~\n{10}.
+
+%\subsection{Example: category code saving and restoring}
+%\label{store:cat}
+\subsection{Example: category code saving and restoring}
+\label{store:cat}
+
+%In many applications it is necessary to change
+%\howto Save and restore category codes\par
+%the category code of a certain character during the
+%execution of some piece of code. If the writer of
+%that code is also the writer of the surrounding code,
+%s/he can simply change the category code back and forth.
+%However, if the surrounding code is by another author,
+%the value of the category code will have to be stored
+%and restored.
+In many applications it is necessary to change
+\howto Save and restore category codes\par
+the category code of a certain character during the
+execution of some piece of code. If the writer of
+that code is also the writer of the surrounding code,
+s/he can simply change the category code back and forth.
+However, if the surrounding code is by another author,
+the value of the category code will have to be stored
+and restored.
+
+%Thus one would like to write
+%\begin{verbatim}
+%\storecat@
+%... some code ...
+%\restorecat@
+%\end{verbatim}
+%or maybe
+%\begin{verbatim}
+%\storecat\%
+%\end{verbatim}
+%for characters that
+%are possibly a comment character (or ignored or invalid).
+%\alt
+%The basic idea is to define
+%\begin{verbatim}
+%\def\storecat#1{%
+%    \expandafter\edef\csname restorecat#1\endcsname
+%        {\catcode`#1=\the\catcode`#1}}
+%\end{verbatim}
+%so that, for instance, \verb>\storecat$> will define
+%the single control sequence `\verb>\restorecat$>'
+%(one control sequence) as
+%\begin{verbatim}
+%\catcode`$=3
+%\end{verbatim}
+%The macro \cs{restorecat} can then be implemented as
+%\begin{verbatim}
+%\def\restorecat#1{%
+%    \csname restorecat#1\endcsname}
+%\end{verbatim}
+%Unfortunately, things are not so simple.
+Thus one would like to write
+\begin{verbatim}
+\storecat@
+... some code ...
+\restorecat@
+\end{verbatim}
+or maybe
+\begin{verbatim}
+\storecat\%
+\end{verbatim}
+for characters that
+are possibly a comment character (or ignored or invalid).
+\alt
+The basic idea is to define
+\begin{verbatim}
+\def\storecat#1{%
+    \expandafter\edef\csname restorecat#1\endcsname
+        {\catcode`#1=\the\catcode`#1}}
+\end{verbatim}
+so that, for instance, \verb>\storecat$> will define
+the single control sequence `\verb>\restorecat$>'
+(one control sequence) as
+\begin{verbatim}
+\catcode`$=3
+\end{verbatim}
+The macro \cs{restorecat} can then be implemented as
+\begin{verbatim}
+\def\restorecat#1{%
+    \csname restorecat#1\endcsname}
+\end{verbatim}
+Unfortunately, things are not so simple.
+
+%The problems occur with active characters, because these
+%are expanded inside the \cs{csname} \verb>...> \cs{endcsname} pairs.
+%One might be tempted to write \verb>\noexpand#1> everywhere,
+%but this is wrong. As was explained above, this is essentially
+%equal to \cs{relax}, which is unexpandable, and will therefore
+%lead to an error message when it appears between
+%\cs{csname} and \cs{endcsname}. The proper solution is then
+%to use \verb>\string#1>. For the case where the argument
+%was given as a control symbol (for example~\verb>\%>),
+%the escape character has to be switched off for a while.
+% 
+%Here are the complete macros. The \cs{storecat} macro
+%gives its argument a default category code of~12.
+%\begin{verbatim}
+%\newcount\tempcounta % just a temporary
+%\def\csarg#1#2{\expandafter#1\csname#2\endcsname}
+%\def\storecat#1%
+%   {\tempcounta\escapechar \escapechar=-1
+%    \csarg\edef{restorecat\string#1}%
+%          {\catcode`\string#1=
+%                \the\catcode\expandafter`\string#1}%
+%    \catcode\expandafter`\string#1=12\relax
+%    \escapechar\tempcounta}
+%\def\restorecat#1%
+%   {\tempcounta\escapechar \escapechar=-1
+%    \csname restorecat\string#1\endcsname
+%    \escapechar\tempcounta}
+%\end{verbatim}
+The problems occur with active characters, because these
+are expanded inside the \cs{csname} \verb>...> \cs{endcsname} pairs.
+One might be tempted to write \verb>\noexpand#1> everywhere,
+but this is wrong. As was explained above, this is essentially
+equal to \cs{relax}, which is unexpandable, and will therefore
+lead to an error message when it appears between
+\cs{csname} and \cs{endcsname}. The proper solution is then
+to use \verb>\string#1>. For the case where the argument
+was given as a control symbol (for example~\verb>\%>),
+the escape character has to be switched off for a while.
+ 
+Here are the complete macros. The \cs{storecat} macro
+gives its argument a default category code of~12.
+\begin{verbatim}
+\newcount\tempcounta % just a temporary
+\def\csarg#1#2{\expandafter#1\csname#2\endcsname}
+\def\storecat#1%
+   {\tempcounta\escapechar \escapechar=-1
+    \csarg\edef{restorecat\string#1}%
+          {\catcode`\string#1=
+                \the\catcode\expandafter`\string#1}%
+    \catcode\expandafter`\string#1=12\relax
+    \escapechar\tempcounta}
+\def\restorecat#1%
+   {\tempcounta\escapechar \escapechar=-1
+    \csname restorecat\string#1\endcsname
+    \escapechar\tempcounta}
+\end{verbatim}
+
+%%\spoint Combining \cs{aftergroup} and boxes
+%\subsection{Combining \cs{aftergroup} and boxes}
+%\spoint Combining \cs{aftergroup} and boxes
+\subsection{Combining \cs{aftergroup} and boxes}
+
+%At times, one wants to construct a box and immediately
+%after it has been constructed to
+%do something with it. The \cs{aftergroup} command
+%can be used to put both the commands creating the box,
+%and the ones handling it, in one macro.
+At times, one wants to construct a box and immediately
+after it has been constructed to
+do something with it. The \cs{aftergroup} command
+can be used to put both the commands creating the box,
+and the ones handling it, in one macro.
+
+%As an example, here is a macro 
+%\cs{textvcenter}\label{text:vcenter}\
+%which defines a variant of the \cs{vcenter} box
+%\howto \cs{vcenter} outside math mode\par
+%(see page~\pageref{vcenter}\label{tvcenter})
+%that can be used outside math mode.
+%\begin{verbatim}
+%\def\textvcenter
+%   {\hbox \bgroup$\everyvbox{\everyvbox{}%
+%    \aftergroup$\aftergroup\egroup}\vcenter}
+%\end{verbatim}
+%The idea is that the macro inserts \verb>\hbox {$>,
+%and that the matching \verb>$}> gets inserted
+%by the \cs{aftergroup} commands. In order to get the 
+%\cs{aftergroup} commands inside the box, an
+%\cs{everyvbox} command is  used.
+As an example, here is a macro 
+\cs{textvcenter}\label{text:vcenter}\
+which defines a variant of the \cs{vcenter} box
+\howto \cs{vcenter} outside math mode\par
+(see page~\pageref{vcenter}\label{tvcenter})
+that can be used outside math mode.
+\begin{verbatim}
+\def\textvcenter
+   {\hbox \bgroup$\everyvbox{\everyvbox{}%
+    \aftergroup$\aftergroup\egroup}\vcenter}
+\end{verbatim}
+The idea is that the macro inserts \verb>\hbox {$>,
+and that the matching \verb>$}> gets inserted
+by the \cs{aftergroup} commands. In order to get the 
+\cs{aftergroup} commands inside the box, an
+\cs{everyvbox} command is  used.
+
+%This macro can even be used with a \gr{box specification}
+%(see page~\pageref{box:spec}), for example
+%\begin{verbatim}
+%\textvcenter spread 8pt{\hbox{a}\vfil\hbox{b}}
+%\end{verbatim}
+%and because it  is really just an \cs{hbox}, it can also
+%be used in a \cs{setbox} assignment.
+This macro can even be used with a \gr{box specification}
+(see page~\pageref{box:spec}), for example
+\begin{verbatim}
+\textvcenter spread 8pt{\hbox{a}\vfil\hbox{b}}
+\end{verbatim}
+and because it  is really just an \cs{hbox}, it can also
+be used in a \cs{setbox} assignment.
+
+%\subsection{More expansion}
+\subsection{More expansion}
+
+%There is a particular charm to macros that work
+%purely by expansion. See the articles by
+%\cite{E2}, \cite{Jeffrey:lists}, and~\cite{Maus2}.
+There is a particular charm to macros that work
+purely by expansion. See the articles by
+\cite{E2}, \cite{Jeffrey:lists}, and~\cite{Maus2}.
+
+%\endofchapter
+%%%%% end of input file [expand]
+\endofchapter
+%%%% end of input file [expand]
+
+\end{document}

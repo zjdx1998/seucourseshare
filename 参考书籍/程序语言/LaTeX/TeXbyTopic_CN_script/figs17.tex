@@ -1,0 +1,107 @@
+\def\doosje#1,#2 {\dh=#1\fbh \dw=#2\fbw % actual sizes
+    \hbox
+       {\vrule height\dh width\lw
+        \raise\dh\vbox{\hrule depth\lw height0pt width\dw}%
+        \hbox{\vrule height\dh width\lw}%
+        \hskip -\lw % let next left side coincide with this right side
+        }%
+    }
+\def\dkern#1 % kern the amount of space of a \doosje
+   {\kern#1\fbw \kern\lw}
+\def\hdoosje#1,#2 {\dh=#1\fbh \dw=#2\fbw % actual sizes
+    \hbox
+       {\vrule height0pt depth\dh width\lw
+        \lower\dh\vbox{\hrule height\lw depth0pt width\dw}%
+        \hbox{\vrule height0pt depth\dh width\lw}%
+        \hskip -\lw % let next left side coincide with this right side
+        }%
+    }
+\def\hang#1{{\let\doosje\hdoosje
+    \setbox0=\hbox{#1}\raise\dp0\box0 }\ignorespaces}
+\def\pijl#1 #2.%
+   {\vbox to #1\fbh
+         {\copy\hpbox \kern-\dp\hpbox
+          \kern7pt\vfil\setbox0=\hbox{\figfont #2}
+                       \ht0=0pt \dp0=0pt \box0 \vfil 
+          \kern-\ht\spbox \copy\spbox}}
+\def\figfont{\footnotesize\sl}
+\newbox\hpbox \newbox\spbox
+\setbox\hpbox=\vtop{\kern0pt \hbox{$\uparrow$}}
+\setbox\spbox=\vbox{\hbox{$\downarrow$} \kern0pt}
+
+\def\fraction{.9}
+
+\def\figone{\vbox{\advance\hsize by -2.5\leftskip
+                  \offinterlineskip\leftskip0pt\parskip0pt
+    \hdotfill \kern-\lw
+    \hbox to \hsize
+         {\doosje .8,.5 \doosje .5,.5 \doosje 1.,.4 
+          \hss\pijl 1. height of the first line. \hss\hss}
+    \hlinefill
+    \hbox{\vtop{\kern0pt
+      \hbox to \hsize{\hang{\dkern .5 \doosje .1,.5 \doosje .3,.4 }
+            \hss \pijl .3 \ \ depth of the first line.\hss\hss}
+      \kern-\lw {\hsize=\fraction\hsize\hdotfill}
+      \hbox to \fraction\hsize{\hskip.3\hsize
+            \pijl .4 \ \ interline glue. \hfil
+            \raise .1\fbh\vbox
+                 {\hsize=.3\hsize 
+                  \pijl .3 \ \ lineskip limit.
+                  \kern-\lw \hdotfill}
+            }
+      {\hsize=\fraction\hsize\hdotfill} \kern-\lw
+      \hbox to \hsize
+           {\doosje .2,.3 \doosje .6,.5 \doosje .3,.1 \doosje .4,.8 
+            \hss \pijl .6 height of the second line.\hss\hss\hss}
+      \hlinefill
+      \hbox to \hsize
+           {\hang{\dkern .3 \doosje .1,.5 \dkern .1 \doosje .2,.8 }
+            \hss \pijl .2 \ \ depth of the second line.\hss\hss}
+      \kern-\lw \hdotfill}%
+     \vtop{
+      \kern0pt \hbox{\pijl 1.3 \hskip-20pt Baselineskip.}}%
+     }}}
+
+\def\figtwo{\vbox{\advance\hsize by -2.5\leftskip
+                  \offinterlineskip\leftskip0pt \parskip0pt
+  \hlinefill
+  \hbox{\vtop{\kern0pt
+    \hbox to \hsize
+         {\hang{\dkern .5 \doosje .1,.5 \doosje .5,.4 }
+          \hss \pijl .5 \ \ depth of the first line.\hss\hss}
+    \kern-\lw {\hsize=\fraction\hsize\hdotfill}
+    \hbox to \fraction\hsize{\kern.3\hsize 
+          \vrule height.1\fbh width0pt \hfil
+          \setbox0=\vtop{\hsize=.3\hsize \kern0pt
+                \pijl .3 \ \ lineskip limit.
+                \kern-\lw \hdotfill}
+          \dp0=0pt \raise .1\fbh\box0
+          }
+    {\hsize=.5\hsize\hdotfill} \kern-\lw
+    \hbox to \hsize
+         {\doosje .2,.3 \doosje .7,.5 \doosje .3,.1 \doosje .4,.8 
+          \hskip15pt \pijl .7 height of the second line.\hss\hss}
+    \hlinefill}
+   \vtop{\kern0pt \hbox{\pijl 1.3 \hskip-20pt Baselineskip.}}%
+   }}}
+
+
+\def\figthree{\vbox{\advance\hsize by -2.5\leftskip
+                    \offinterlineskip\leftskip0pt \parskip0pt
+  \hlinefill
+  \hbox{\vtop{\kern0pt
+    \hbox to \hsize
+         {\hang{\dkern .5 \doosje .1,.5 \doosje .5,.4 }
+          \hss \pijl .5 \ \ depth of the first line.\hss\hss}
+    \kern-\lw {\hsize=\fraction\hsize\hdotfill }
+    \hbox{\kern.3\hsize 
+          \pijl .2 \ \ lineskip glue.}
+    {\hsize=\fraction\hsize\hdotfill} \kern-\lw
+    \hbox to \hsize
+         {\doosje .2,.3 \doosje .7,.5 \doosje .3,.1 \doosje .4,.8 
+          \hss \pijl .7 height of the second line.\hss\hss}
+    \hlinefill}
+   \vtop{\kern0pt \hbox{\pijl 1.4 \hskip-3pt ???.}}%
+   }}}
+
+\endinput

@@ -1,0 +1,1637 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{12}
+
+\begin{document}
+
+%\chapter{Conditionals}\label{if}
+\chapter{Conditionals}\label{if}
+
+%\emph{Conditionals}\index{conditionals}
+%are an indispensible tool for powerful macros.
+%\TeX\ has a large repertoire of conditionals for querying
+%such things as category codes or processing modes.
+%This chapter gives an inventory of the various conditionals,
+%and it treats the evaluation of
+%conditionals in detail.
+\emph{Conditionals}\index{conditionals}
+are an indispensible tool for powerful macros.
+\TeX\ has a large repertoire of conditionals for querying
+such things as category codes or processing modes.
+This chapter gives an inventory of the various conditionals,
+and it treats the evaluation of
+conditionals in detail.
+
+%\label{cschap:if}\label{cschap:ifcat}\label{cschap:ifx}\label{cschap:ifcase}\label{cschap:ifnum}\label{cschap:ifodd}\label{cschap:ifhmode}\label{cschap:ifvmode}\label{cschap:ifmmode}\label{cschap:ifinner}\label{cschap:ifdim}\label{cschap:ifvoid}\label{cschap:ifhbox2}\label{cschap:ifvbox2}\label{cschap:iftrue}\label{cschap:iffalse}\label{cschap:fi}\label{cschap:else}\label{cschap:or}\label{cschap:newif}
+%\begin{inventory}
+%\item [\cs{if}] 
+%      Test equality of character codes. 
+\label{cschap:if}\label{cschap:ifcat}\label{cschap:ifx}\label{cschap:ifcase}\label{cschap:ifnum}\label{cschap:ifodd}\label{cschap:ifhmode}\label{cschap:ifvmode}\label{cschap:ifmmode}\label{cschap:ifinner}\label{cschap:ifdim}\label{cschap:ifvoid}\label{cschap:ifhbox2}\label{cschap:ifvbox2}\label{cschap:iftrue}\label{cschap:iffalse}\label{cschap:fi}\label{cschap:else}\label{cschap:or}\label{cschap:newif}
+\begin{inventory}
+\item [\cs{if}] 
+      Test equality of character codes. 
+
+%\item [\cs{ifcat}] 
+%      Test equality of category codes. 
+\item [\cs{ifcat}] 
+      Test equality of category codes. 
+
+%\item [\cs{ifx}] 
+%      Test equality of macro expansion, or equality of character code and
+%      category code.
+\item [\cs{ifx}] 
+      Test equality of macro expansion, or equality of character code and
+      category code.
+
+%\item [\cs{ifcase}] 
+%      Enumerated case statement.
+\item [\cs{ifcase}] 
+      Enumerated case statement.
+
+%\item [\cs{ifnum}] 
+%      Test relations between numbers.
+\item [\cs{ifnum}] 
+      Test relations between numbers.
+
+%\item [\cs{ifodd}] 
+%      Test whether a number is odd.
+\item [\cs{ifodd}] 
+      Test whether a number is odd.
+
+%\item [\cs{ifhmode}] 
+%      Test whether the current mode is (possibly restricted) horizontal mode.
+\item [\cs{ifhmode}] 
+      Test whether the current mode is (possibly restricted) horizontal mode.
+
+%\item [\cs{ifvmode}] 
+%      Test whether the current mode is (possibly internal) vertical mode.
+\item [\cs{ifvmode}] 
+      Test whether the current mode is (possibly internal) vertical mode.
+
+%\item [\cs{ifmmode}] 
+%     Test whether the current mode is (possibly display) math mode.
+\item [\cs{ifmmode}] 
+     Test whether the current mode is (possibly display) math mode.
+
+%\item [\cs{ifinner}] 
+%      Test whether the current mode is an internal mode.
+\item [\cs{ifinner}] 
+      Test whether the current mode is an internal mode.
+
+%\item [\cs{ifdim}] 
+%      Compare two dimensions. 
+\item [\cs{ifdim}] 
+      Compare two dimensions. 
+
+%\item [\cs{ifvoid}] 
+%      Test whether a box register is empty.
+\item [\cs{ifvoid}] 
+      Test whether a box register is empty.
+
+%\item [\cs{ifhbox}] 
+%      Test whether a box register contains a horizontal box.
+\item [\cs{ifhbox}] 
+      Test whether a box register contains a horizontal box.
+
+%\item [\cs{ifvbox}] 
+%      Test whether a box register contains a vertical box. 
+\item [\cs{ifvbox}] 
+      Test whether a box register contains a vertical box. 
+
+%\item [\cs{ifeof}] 
+%      Test for end of input stream or non-existence of file.
+\item [\cs{ifeof}] 
+      Test for end of input stream or non-existence of file.
+
+%\item [\cs{iftrue}] 
+%      A test that is always true.
+%\item [\cs{iffalse}] 
+%      A test that is always false.
+%\item [\cs{fi}] 
+%      Closing delimiter for all conditionals.
+\item [\cs{iftrue}] 
+      A test that is always true.
+\item [\cs{iffalse}] 
+      A test that is always false.
+\item [\cs{fi}] 
+      Closing delimiter for all conditionals.
+
+%\item [\cs{else}] 
+%      Select \gr{false text} of a conditional 
+%      or default case of \cs{ifcase}.
+\item [\cs{else}] 
+      Select \gr{false text} of a conditional 
+      or default case of \cs{ifcase}.
+
+%\item [\cs{or}] 
+%      Separator for entries of an \cs{ifcase}.
+\item [\cs{or}] 
+      Separator for entries of an \cs{ifcase}.
+
+%\item [\cs{newif}] 
+%     Create a new test.
+\item [\cs{newif}] 
+     Create a new test.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point The shape of conditionals
+%\section{The shape of conditionals}
+%\point The shape of conditionals
+\section{The shape of conditionals}
+
+%Conditionals in \TeX\ have one of the following two forms
+%\cstoidx else\par\cstoidx fi\par
+%\begin{disp}\cs{if...}\gr{test tokens}\gr{true text}\cs{fi}\nl
+%     \cs{if...}\gr{test tokens}\gr{true text}\cs{else}%
+%     \gr{false text}\cs{fi}\end{disp}
+%where the \gr{test tokens} are zero or more tokens, depending on
+%the particular conditional; the \gr{true text} is a series of tokens
+%to be processed if the test turns out true, and the \gr{false text}
+%is a series of tokens to be processed if the test turns out false.
+%Both the \gr{true text} and the \gr{false text} can be empty.
+Conditionals in \TeX\ have one of the following two forms
+\cstoidx else\par\cstoidx fi\par
+\begin{disp}\cs{if...}\gr{test tokens}\gr{true text}\cs{fi}\nl
+     \cs{if...}\gr{test tokens}\gr{true text}\cs{else}%
+     \gr{false text}\cs{fi}\end{disp}
+where the \gr{test tokens} are zero or more tokens, depending on
+the particular conditional; the \gr{true text} is a series of tokens
+to be processed if the test turns out true, and the \gr{false text}
+is a series of tokens to be processed if the test turns out false.
+Both the \gr{true text} and the \gr{false text} can be empty.
+
+%The exact process of how \TeX\ expands conditionals is treated
+%below.
+The exact process of how \TeX\ expands conditionals is treated
+below.
+
+
+%\section{Character and control sequence tests}
+%\label{sec:charactertests}
+\section{Character and control sequence tests}
+\label{sec:charactertests}
+
+%Three tests exist for testing character tokens and
+%control sequence tokens.
+Three tests exist for testing character tokens and
+control sequence tokens.
+
+
+%\subsection{\cs{if}}
+\subsection{\cs{if}}
+
+%Equality of character codes can be tested by
+%\cstoidx if\par
+%\begin{Disp}\cs{if}\gr{token$_1$}\gr{token$_2$}\end{Disp}
+%In order to allow the tokens to be control sequences,
+%\TeX\ assigns character code~256 to control sequences,
+%the lowest positive number that is not the character code of a
+%character token (remember that the legal character codes
+%are~0--255).
+Equality of character codes can be tested by
+\cstoidx if\par
+\begin{Disp}\cs{if}\gr{token$_1$}\gr{token$_2$}\end{Disp}
+In order to allow the tokens to be control sequences,
+\TeX\ assigns character code~256 to control sequences,
+the lowest positive number that is not the character code of a
+character token (remember that the legal character codes
+are~0--255).
+
+%Thus all control sequences are equal as far as \cs{if} is
+%concerned, and they are unequal to all character tokens.
+%As an example, this fact can be used to define
+%\howto Test whether a token is a control sequence\par
+%\begin{verbatim}
+%\def\ifIsControlSequence#1{\if\noexpand#1\relax}
+%\end{verbatim}
+%which tests whether a token is a control sequence token
+%instead of a character token (its result is unpredictable
+%if the argument is a \verb>{...}> group).
+Thus all control sequences are equal as far as \cs{if} is
+concerned, and they are unequal to all character tokens.
+As an example, this fact can be used to define
+\howto Test whether a token is a control sequence\par
+\begin{verbatim}
+\def\ifIsControlSequence#1{\if\noexpand#1\relax}
+\end{verbatim}
+which tests whether a token is a control sequence token
+instead of a character token (its result is unpredictable
+if the argument is a \verb>{...}> group).
+
+%After \cs{if} \TeX\ will expand until two unexpandable
+%tokens are obtained, so it is necessary to prefix
+%expandable control sequences and active characters
+%with \cs{noexpand} when testing them with~\cs{if}.
+After \cs{if} \TeX\ will expand until two unexpandable
+tokens are obtained, so it is necessary to prefix
+expandable control sequences and active characters
+with \cs{noexpand} when testing them with~\cs{if}.
+
+%\begin{example} After
+%\begin{verbatim}
+%\catcode`\b=13 \catcode`\c=13 \def b{a} \def c{a} \let\d=a
+%\end{verbatim}
+%we find that
+%\begin{tdisp}
+%\verb-\if bc- is true, because both \n b and \n c expand to \n a,\nl
+%\verb-\if\noexpand b\noexpand c- is false, and\nl
+%\verb-\if b\d- is true because \n{b} expands to the character~\n{a},
+%   and \cs{d} is an implicit character token~\n{a}.
+%\end{tdisp}
+%\end{example}
+\begin{example} After
+\begin{verbatim}
+\catcode`\b=13 \catcode`\c=13 \def b{a} \def c{a} \let\d=a
+\end{verbatim}
+we find that
+\begin{tdisp}
+\verb-\if bc- is true, because both \n b and \n c expand to \n a,\nl
+\verb-\if\noexpand b\noexpand c- is false, and\nl
+\verb-\if b\d- is true because \n{b} expands to the character~\n{a},
+   and \cs{d} is an implicit character token~\n{a}.
+\end{tdisp}
+\end{example}
+
+%%\spoint \cs{ifcat}
+%\subsection{\cs{ifcat}}
+%\spoint \cs{ifcat}
+\subsection{\cs{ifcat}}
+
+%The \cs{if} test ignores category codes; these can be tested
+%\cstoidx ifcat\par
+%by 
+%\begin{Disp}\cs{ifcat}\gr{token$_1$}\gr{token$_2$}\end{Disp}
+The \cs{if} test ignores category codes; these can be tested
+\cstoidx ifcat\par
+by 
+\begin{Disp}\cs{ifcat}\gr{token$_1$}\gr{token$_2$}\end{Disp}
+
+%This test is a lot like \cs{if}: \TeX\ expands after it
+%until unexpandable tokens remain. For this test
+%control sequences
+%are considered to have category code~16\index{category!16}
+%(ordinarily, category codes are in the range~0--15), which makes them
+%all equal to each other, and different from all character
+%tokens.
+This test is a lot like \cs{if}: \TeX\ expands after it
+until unexpandable tokens remain. For this test
+control sequences
+are considered to have category code~16\index{category!16}
+(ordinarily, category codes are in the range~0--15), which makes them
+all equal to each other, and different from all character
+tokens.
+
+%%\spoint \cs{ifx}
+%\subsection{\protect\cs{ifx}}
+%\spoint \cs{ifx}
+\subsection{\protect\cs{ifx}}
+
+%Equality of tokens is tested in a stronger sense than
+%\cstoidx ifx\par
+%the above by 
+%\begin{Disp}\cs{ifx}\gr{token$_1$}\gr{token$_2$}\end{Disp}
+Equality of tokens is tested in a stronger sense than
+\cstoidx ifx\par
+the above by 
+\begin{Disp}\cs{ifx}\gr{token$_1$}\gr{token$_2$}\end{Disp}
+
+%\begin{itemize}\item Character tokens are equal for \cs{ifx} if
+%they have the same character code and category code.
+%    \item Control sequence tokens are equal if they represent the
+%same \TeX\ primitive, or have been similarly defined by
+%\cs{font}, \cs{countdef}, or some such. For example,
+%\begin{verbatim}
+%\let\boxhor=\hbox \ifx\boxhor\hbox %is true
+%\font\a=cmr10 \font\b=cmr10 \ifx\a\b %is true
+%\end{verbatim}
+%\item Control sequences are also equal if they are
+%macros with the same parameter text and replacement text,
+%and the same status with respect to \cs{outer} and~\cs{long}.
+%For example,
+%\begin{verbatim}
+%\def\a{z} \def\b{z} \def\c1{z} \def\d{\a}
+%\ifx\a\b %is true
+%\ifx\a\c %is false
+%\ifx\a\d %is false
+%\end{verbatim}
+%\end{itemize}
+\begin{itemize}\item Character tokens are equal for \cs{ifx} if
+they have the same character code and category code.
+    \item Control sequence tokens are equal if they represent the
+same \TeX\ primitive, or have been similarly defined by
+\cs{font}, \cs{countdef}, or some such. For example,
+\begin{verbatim}
+\let\boxhor=\hbox \ifx\boxhor\hbox %is true
+\font\a=cmr10 \font\b=cmr10 \ifx\a\b %is true
+\end{verbatim}
+\item Control sequences are also equal if they are
+macros with the same parameter text and replacement text,
+and the same status with respect to \cs{outer} and~\cs{long}.
+For example,
+\begin{verbatim}
+\def\a{z} \def\b{z} \def\c1{z} \def\d{\a}
+\ifx\a\b %is true
+\ifx\a\c %is false
+\ifx\a\d %is false
+\end{verbatim}
+\end{itemize}
+
+%Tokens following this test are not expanded.
+Tokens following this test are not expanded.
+
+%By way of example of the use of \cs{ifx} consider string testing.
+%A simple implementation of string testing in \TeX\ is as follows:
+%\begin{verbatim}
+%\def\ifEqString#1#2{\def\testa{#1}\def\testb{#2}%
+%    \ifx\testa\testb}
+%\end{verbatim}
+%The two strings are used as the replacement text of two macros,
+%and equality of these macros is tested.
+%This is about as efficient as string testing can get:
+%\TeX\ will traverse the definition texts of the
+%macros \cs{testa} and \cs{testb}, which has precisely the
+%right effect.
+By way of example of the use of \cs{ifx} consider string testing.
+A simple implementation of string testing in \TeX\ is as follows:
+\begin{verbatim}
+\def\ifEqString#1#2{\def\testa{#1}\def\testb{#2}%
+    \ifx\testa\testb}
+\end{verbatim}
+The two strings are used as the replacement text of two macros,
+and equality of these macros is tested.
+This is about as efficient as string testing can get:
+\TeX\ will traverse the definition texts of the
+macros \cs{testa} and \cs{testb}, which has precisely the
+right effect.
+
+%As another example, one can test whether a control sequence is defined
+%by\howto Test whether a control sequence is (un)defined\par
+%\begin{verbatim}
+%\def\ifUnDefinedCs#1{\expandafter
+%    \ifx\csname#1\endcsname\relax}
+%\ifUnDefinedCs{parindent} %is not true
+%\ifUnDefinedCs{undefined} %is (one hopes) true
+%\end{verbatim}
+%This uses the fact that a \verb>\csname...\endcsname> command
+%is equivalent to \cs{relax} if the control sequence
+%has not been defined before. Unfortunately, this test also
+%turns out true if a control sequence has been \cs{let} to
+%\cs{relax}.
+As another example, one can test whether a control sequence is defined
+by\howto Test whether a control sequence is (un)defined\par
+\begin{verbatim}
+\def\ifUnDefinedCs#1{\expandafter
+    \ifx\csname#1\endcsname\relax}
+\ifUnDefinedCs{parindent} %is not true
+\ifUnDefinedCs{undefined} %is (one hopes) true
+\end{verbatim}
+This uses the fact that a \verb>\csname...\endcsname> command
+is equivalent to \cs{relax} if the control sequence
+has not been defined before. Unfortunately, this test also
+turns out true if a control sequence has been \cs{let} to
+\cs{relax}.
+
+
+%\section{Mode tests}
+\section{Mode tests}
+
+%In order to determine in which of the six modes 
+%(see Chapter~\ref{hvmode}) \TeX\ 
+%is currently operating, the tests \csidx{ifhmode},
+%\csidx{ifvmode}, \csidx{ifmmode}, and~\csidx{ifinner}
+%are available.
+In order to determine in which of the six modes 
+(see Chapter~\ref{hvmode}) \TeX\ 
+is currently operating, the tests \csidx{ifhmode},
+\csidx{ifvmode}, \csidx{ifmmode}, and~\csidx{ifinner}
+are available.
+
+%\begin{itemize}\item\cs{ifhmode} is true if \TeX\ is in horizontal mode
+%or restricted horizontal mode.
+%\item\cs{ifvmode} is true if \TeX\ is in vertical mode or
+%internal vertical mode.
+%\item\cs{ifmmode} is true if \TeX\ is in math mode or display
+%math mode.\end{itemize}
+\begin{itemize}\item\cs{ifhmode} is true if \TeX\ is in horizontal mode
+or restricted horizontal mode.
+\item\cs{ifvmode} is true if \TeX\ is in vertical mode or
+internal vertical mode.
+\item\cs{ifmmode} is true if \TeX\ is in math mode or display
+math mode.\end{itemize}
+
+%The \cs{ifinner} test is true if \TeX\ is in any of the three
+%internal modes: restricted horizontal mode, internal vertical
+%mode, and non-display math mode.
+The \cs{ifinner} test is true if \TeX\ is in any of the three
+internal modes: restricted horizontal mode, internal vertical
+mode, and non-display math mode.
+
+%See also chapter~\ref{chap:hvmode}.
+See also chapter~\ref{chap:hvmode}.
+
+%\section{Numerical tests}
+\section{Numerical tests}
+
+%Numerical relations between \gr{number}s can be tested
+%\cstoidx ifnum\par
+%with 
+%\begin{disp}\cs{ifnum}\gr{number$_1$}\gr{relation}%
+%\gr{number$_2$}\end{disp}
+%where the relation is a character \n{<}, \n{=}, or~\n{>},
+%of category~12\index{category!12}.
+Numerical relations between \gr{number}s can be tested
+\cstoidx ifnum\par
+with 
+\begin{disp}\cs{ifnum}\gr{number$_1$}\gr{relation}%
+\gr{number$_2$}\end{disp}
+where the relation is a character \n{<}, \n{=}, or~\n{>},
+of category~12\index{category!12}.
+
+%Quantities such as glue can be used as a number here
+%through the conversion to scaled points, and \TeX\
+%will expand in order to arrive at the two \gr{number}s.
+Quantities such as glue can be used as a number here
+through the conversion to scaled points, and \TeX\
+will expand in order to arrive at the two \gr{number}s.
+
+%Testing for odd or even numbers can be done with \csidx{ifodd}:
+%the test
+%\begin{disp}\cs{ifodd}\gr{number}\end{disp}
+%is true if the \gr{number} is odd.
+Testing for odd or even numbers can be done with \csidx{ifodd}:
+the test
+\begin{disp}\cs{ifodd}\gr{number}\end{disp}
+is true if the \gr{number} is odd.
+
+%%\point Other tests
+%\section{Other tests}
+%\point Other tests
+\section{Other tests}
+
+%%\spoint Dimension testing
+%\subsection{Dimension testing}
+%\spoint Dimension testing
+\subsection{Dimension testing}
+
+%Relations between \gr{dimen} values (Chapter~\ref{glue})
+%can be tested with
+%\csidx{ifdim} using the same three relations as in \cs{ifnum}.
+Relations between \gr{dimen} values (Chapter~\ref{glue})
+can be tested with
+\csidx{ifdim} using the same three relations as in \cs{ifnum}.
+
+%%\spoint Box tests
+%\subsection{Box tests}
+%\spoint Box tests
+\subsection{Box tests}
+
+%Contents of box registers (Chapter~\ref{boxes}) can be tested with
+%\cstoidx ifhbox\par\cstoidx ifvbox\par\cstoidx ifvoid\par
+%\begin{disp}\cs{ifvoid}\gr{8-bit number}\end{disp}
+%which is true if the register contains no box,
+%\begin{disp}\cs{ifhbox}\gr{8-bit number}\end{disp}
+%which is true if the register contains a horizontal box, and
+%\begin{disp}\cs{ifvbox}\gr{8-bit number}\end{disp}
+%which is true if the register contains a vertical box.
+Contents of box registers (Chapter~\ref{boxes}) can be tested with
+\cstoidx ifhbox\par\cstoidx ifvbox\par\cstoidx ifvoid\par
+\begin{disp}\cs{ifvoid}\gr{8-bit number}\end{disp}
+which is true if the register contains no box,
+\begin{disp}\cs{ifhbox}\gr{8-bit number}\end{disp}
+which is true if the register contains a horizontal box, and
+\begin{disp}\cs{ifvbox}\gr{8-bit number}\end{disp}
+which is true if the register contains a vertical box.
+
+%%\spoint I{/}O tests
+%\subsection{I{/}O tests}
+%\spoint I{/}O tests
+\subsection{I{/}O tests}
+
+%The status of input streams (Chapter~\ref{io}) can be tested with
+%\cstoidx ifeof\par
+%the end-of-file test
+%\cs{ifeof}\gr{number}, which is only false
+%if the number is in the range 0--15, and the corresponding
+%stream is open and not fully read. In particular, this test
+%is true if the file name connected
+%to this stream (through \cs{openin})
+%does not correspond to an existing file.
+%See the example on page~\pageref{ex:eof}.
+The status of input streams (Chapter~\ref{io}) can be tested with
+\cstoidx ifeof\par
+the end-of-file test
+\cs{ifeof}\gr{number}, which is only false
+if the number is in the range 0--15, and the corresponding
+stream is open and not fully read. In particular, this test
+is true if the file name connected
+to this stream (through \cs{openin})
+does not correspond to an existing file.
+See the example on page~\pageref{ex:eof}.
+
+%%\spoint Case statement
+%\subsection{Case statement}
+%\spoint Case statement
+\subsection{Case statement}
+
+%The \TeX\ case statement is called \cs{ifcase};
+%\cstoidx ifcase\par\cstoidx or\par
+%its syntax is
+%\begin{disp}\cs{ifcase}\gr{number}\gr{case$_0$}\cs{or}%
+%\n{...}\cs{or}\gr{case$_n$}\cs{else}\gr{other cases}\cs{fi}
+%\end{disp} where for $n$ cases there are $n-1$ \cs{or}
+%control sequences. Each of the \gr{case$_i$}
+%parts can be empty,
+%and the \cs{else}\gr{other cases} part is optional.
+The \TeX\ case statement is called \cs{ifcase};
+\cstoidx ifcase\par\cstoidx or\par
+its syntax is
+\begin{disp}\cs{ifcase}\gr{number}\gr{case$_0$}\cs{or}%
+\n{...}\cs{or}\gr{case$_n$}\cs{else}\gr{other cases}\cs{fi}
+\end{disp} where for $n$ cases there are $n-1$ \cs{or}
+control sequences. Each of the \gr{case$_i$}
+parts can be empty,
+and the \cs{else}\gr{other cases} part is optional.
+
+%%\spoint Special tests
+%\subsection{Special tests}
+%\spoint Special tests
+\subsection{Special tests}
+
+%The tests \cs{iftrue} and \cs{iffalse} are always
+%\cstoidx iftrue\par\cstoidx iffalse\par
+%true and false respectively.
+%They are mainly useful as tools in macros.
+The tests \cs{iftrue} and \cs{iffalse} are always
+\cstoidx iftrue\par\cstoidx iffalse\par
+true and false respectively.
+They are mainly useful as tools in macros.
+
+%For instance, the sequences
+%\begin{verbatim}
+%\iftrue{\else}\fi
+%\end{verbatim}
+%and
+%\begin{verbatim}
+%\iffalse{\else}\fi
+%\end{verbatim}
+%yield a left and right
+%brace respectively, but they have balanced braces, so they
+%can be used inside a macro replacement text.
+For instance, the sequences
+\begin{verbatim}
+\iftrue{\else}\fi
+\end{verbatim}
+and
+\begin{verbatim}
+\iffalse{\else}\fi
+\end{verbatim}
+yield a left and right
+brace respectively, but they have balanced braces, so they
+can be used inside a macro replacement text.
+
+%The \cs{newif} macro, treated below,
+%provides another use of \cs{iftrue} and \cs{iffalse}.
+%On page 260 of \TeXbook\ these control sequences
+%are also used in an interesting manner.
+The \cs{newif} macro, treated below,
+provides another use of \cs{iftrue} and \cs{iffalse}.
+On page 260 of \TeXbook\ these control sequences
+are also used in an interesting manner.
+
+%%\point[newif:def] The \cs{newif} macro
+%\section{The \protect\cs{newif} macro}
+%\label{newif:def}
+%\point[newif:def] The \cs{newif} macro
+\section{The \protect\cs{newif} macro}
+\label{newif:def}
+
+%The plain format defines an (outer) macro \csidx{newif} by
+%which the user can define new conditionals.
+%If the user defines
+%\begin{verbatim}
+%\newif\iffoo
+%\end{verbatim}
+%\TeX\ defines three new control sequences,
+%\cs{footrue} and \cs{foofalse} with which the user can set
+%the condition, and \cs{iffoo} which tests the `foo' condition.
+The plain format defines an (outer) macro \csidx{newif} by
+which the user can define new conditionals.
+If the user defines
+\begin{verbatim}
+\newif\iffoo
+\end{verbatim}
+\TeX\ defines three new control sequences,
+\cs{footrue} and \cs{foofalse} with which the user can set
+the condition, and \cs{iffoo} which tests the `foo' condition.
+
+%The macro call \verb-\newif\iffoo- expands to
+%\begin{verbatim}
+%\def\footrue{\let\iffoo=\iftrue} \def\foofalse{\let\iffoo=\iffalse}
+%\foofalse
+%\end{verbatim}
+%The actual definition, especially the part that ensures that
+%the \cs{iffoo} indeed starts with \cs{if}, is a pretty hack.
+%An explanation follows here.
+%This uses concepts from Chapters~\ref{macro}
+%and~\ref{expand}.
+The macro call \verb-\newif\iffoo- expands to
+\begin{verbatim}
+\def\footrue{\let\iffoo=\iftrue} \def\foofalse{\let\iffoo=\iffalse}
+\foofalse
+\end{verbatim}
+The actual definition, especially the part that ensures that
+the \cs{iffoo} indeed starts with \cs{if}, is a pretty hack.
+An explanation follows here.
+This uses concepts from Chapters~\ref{macro}
+and~\ref{expand}.
+
+%The macro \cs{newif} starts as follows:
+%\begin{verbatim}
+%\outer\def\newif#1{\count@\escapechar \escapechar\m@ne
+%\end{verbatim}
+%This saves the current escape character in \cs{count@}, and
+%sets the value of \cs{escapechar} to~\n{-1}.
+%The latter action has the
+%effect that no escape character is used in the output
+%of \cs{string}\gr{control sequence}.
+The macro \cs{newif} starts as follows:
+\begin{verbatim}
+\outer\def\newif#1{\count@\escapechar \escapechar\m@ne
+\end{verbatim}
+This saves the current escape character in \cs{count@}, and
+sets the value of \cs{escapechar} to~\n{-1}.
+The latter action has the
+effect that no escape character is used in the output
+of \cs{string}\gr{control sequence}.
+
+%An auxiliary macro \verb>\if@> is defined by
+%\begin{verbatim}
+%{\uccode`1=`i \uccode`2=`f \uppercase{\gdef\if@12{}}}
+%\end{verbatim}
+%Since the uppercase command changes only character codes, and
+%not category codes, the macro \cs{if@} now has
+%to be followed by the characters \n{if} of category~12\index{category!12}.
+%Ordinarily, these characters have category code~11\index{category!11}.
+%In effect this
+%macro then eats these two characters, and \TeX\ complains if
+%they are not present.
+An auxiliary macro \verb>\if@> is defined by
+\begin{verbatim}
+{\uccode`1=`i \uccode`2=`f \uppercase{\gdef\if@12{}}}
+\end{verbatim}
+Since the uppercase command changes only character codes, and
+not category codes, the macro \cs{if@} now has
+to be followed by the characters \n{if} of category~12\index{category!12}.
+Ordinarily, these characters have category code~11\index{category!11}.
+In effect this
+macro then eats these two characters, and \TeX\ complains if
+they are not present.
+
+%Next there is a macro \verb>\@if> defined by
+%\begin{verbatim}
+%\def\@if#1#2{\csname\expandafter\if@\string#1#2\endcsname}
+%\end{verbatim}
+%which will be called like \verb>\@if\iffoo{true}> and
+%\verb>\@if\iffoo{false}>. 
+Next there is a macro \verb>\@if> defined by
+\begin{verbatim}
+\def\@if#1#2{\csname\expandafter\if@\string#1#2\endcsname}
+\end{verbatim}
+which will be called like \verb>\@if\iffoo{true}> and
+\verb>\@if\iffoo{false}>. 
+
+%Let us examine the call \verb>\@if\iffoo{true}>.
+%\begin{itemize}\item The \cs{expandafter} reaches over the \verb>\if@>
+%\mdqon
+%to expand \cs{string} first. The part \cs{string}""\cs{iffoo}
+%\mdqoff
+%expands to \n{iffoo} because the escape character is not printed,
+%and all characters have category~12.
+%\item The \verb>\if@> eats the first two characters
+%\n i$_{12}$\n f$_{12}$ of this.
+%\item As a result, the final expansion of \verb>\@if\iffoo{true}>
+%is then
+%\begin{verbatim}
+%\csname footrue\endcsname
+%\end{verbatim}
+%\end{itemize}
+Let us examine the call \verb>\@if\iffoo{true}>.
+\begin{itemize}\item The \cs{expandafter} reaches over the \verb>\if@>
+\mdqon
+to expand \cs{string} first. The part \cs{string}""\cs{iffoo}
+\mdqoff
+expands to \n{iffoo} because the escape character is not printed,
+and all characters have category~12.
+\item The \verb>\if@> eats the first two characters
+\n i$_{12}$\n f$_{12}$ of this.
+\item As a result, the final expansion of \verb>\@if\iffoo{true}>
+is then
+\begin{verbatim}
+\csname footrue\endcsname
+\end{verbatim}
+\end{itemize}
+
+%Now we can treat the relevant parts of \cs{newif} itself:
+%\begin{verbatim}
+%\expandafter\expandafter\expandafter
+%   \edef\@if#1{true}{\let\noexpand#1=\noexpand\iftrue}%
+%\end{verbatim}
+Now we can treat the relevant parts of \cs{newif} itself:
+\begin{verbatim}
+\expandafter\expandafter\expandafter
+   \edef\@if#1{true}{\let\noexpand#1=\noexpand\iftrue}%
+\end{verbatim}
+
+%The three \cs{expandafter} commands may look intimidating, so let us
+%take one step at a time.
+%\begin{itemize}\item One \cs{expandafter} is necessary to reach over the \cs{edef},
+%such that \verb>\@if> will expand:
+%\begin{verbatim}
+%\expandafter\edef\@if\iffoo{true}
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\edef\csname footrue\endcsname
+%\end{verbatim}
+%\item Then another \cs{expandafter} is necessary to activate
+%\altt
+%the \cs{csname}:
+%\begin{verbatim}
+%\expandafter \expandafter \expandafter \edef \@if ...
+%%   new          old          new
+%\end{verbatim}
+%\item This makes the final expansion 
+%\begin{verbatim}
+%\edef\footrue{\let\noexpand\iffoo=\noexpand\iftrue}
+%\end{verbatim}
+%\end{itemize}
+The three \cs{expandafter} commands may look intimidating, so let us
+take one step at a time.
+\begin{itemize}\item One \cs{expandafter} is necessary to reach over the \cs{edef},
+such that \verb>\@if> will expand:
+\begin{verbatim}
+\expandafter\edef\@if\iffoo{true}
+\end{verbatim}
+gives
+\begin{verbatim}
+\edef\csname footrue\endcsname
+\end{verbatim}
+\item Then another \cs{expandafter} is necessary to activate
+\altt
+the \cs{csname}:
+\begin{verbatim}
+\expandafter \expandafter \expandafter \edef \@if ...
+%   new          old          new
+\end{verbatim}
+\item This makes the final expansion 
+\begin{verbatim}
+\edef\footrue{\let\noexpand\iffoo=\noexpand\iftrue}
+\end{verbatim}
+\end{itemize}
+
+%After this follows a similar statement for the \n{false} case:
+%\begin{verbatim}
+%   \expandafter\expandafter\expandafter
+%   \edef\@if#1{false}{\let\noexpand#1=\noexpand\iffalse}%
+%\end{verbatim}
+%The conditional starts out false, and the escape character
+%has to be reset:
+%\begin{verbatim}
+%  \@if#1{false}\escapechar\count@} 
+%\end{verbatim}
+After this follows a similar statement for the \n{false} case:
+\begin{verbatim}
+   \expandafter\expandafter\expandafter
+   \edef\@if#1{false}{\let\noexpand#1=\noexpand\iffalse}%
+\end{verbatim}
+The conditional starts out false, and the escape character
+has to be reset:
+\begin{verbatim}
+  \@if#1{false}\escapechar\count@} 
+\end{verbatim}
+
+
+%\section{Evaluation of conditionals}
+\section{Evaluation of conditionals}
+
+%\TeX's conditionals behave differently from those
+%in ordinary programming languages. In many instances
+%one may not notice the difference, but in certain contexts
+%it is important to know precisely the \indextermbus{evaluation of}{conditionals} proceeds.
+\TeX's conditionals behave differently from those
+in ordinary programming languages. In many instances
+one may not notice the difference, but in certain contexts
+it is important to know precisely the \indextermbus{evaluation of}{conditionals} proceeds.
+
+%When \TeX\ evaluates a conditional, it first determines
+%what is to be tested. This in itself may involve some
+%expansion; as we saw in the previous chapter, 
+%only after an \cs{ifx} test
+%does \TeX\  not expand. After all other tests \TeX\ will
+%expand tokens until the extent of the test and the tokens
+%to be tested have been determined. On the basis of the outcome
+%of this test the \gr{true text} and the \gr{false text}
+%are either expanded or skipped.
+When \TeX\ evaluates a conditional, it first determines
+what is to be tested. This in itself may involve some
+expansion; as we saw in the previous chapter, 
+only after an \cs{ifx} test
+does \TeX\  not expand. After all other tests \TeX\ will
+expand tokens until the extent of the test and the tokens
+to be tested have been determined. On the basis of the outcome
+of this test the \gr{true text} and the \gr{false text}
+are either expanded or skipped.
+
+%For the processing of the parts of the conditional
+%let us consider some cases separately.
+%\begin{itemize}
+%\item \verb>\if... ... \fi> and the result of the test is false.
+% After the test \TeX\ will start skipping material
+% without expansion, without counting braces, but balancing
+% nested conditionals, until a \cs{fi} token is encountered.
+% If the \cs{fi} is not found an error message results
+% at the end of the file:
+% 
+%\begin{disp}\tt Incomplete \cs{if...}; all text was ignored after line \n{...}
+% \end{disp} where the line number indicated is that of the line
+% where \TeX\ started skipping, that is, where the conditional
+% occurred.
+For the processing of the parts of the conditional
+let us consider some cases separately.
+\begin{itemize}
+\item \verb>\if... ... \fi> and the result of the test is false.
+ After the test \TeX\ will start skipping material
+ without expansion, without counting braces, but balancing
+ nested conditionals, until a \cs{fi} token is encountered.
+ If the \cs{fi} is not found an error message results
+ at the end of the file:
+ 
+\begin{disp}\tt Incomplete \cs{if...}; all text was ignored after line \n{...}
+ \end{disp} where the line number indicated is that of the line
+ where \TeX\ started skipping, that is, where the conditional
+ occurred.
+
+%\item \verb>\if... \else ... \fi> and the result of the test is false.
+% Any material in between the condition and the \cs{else} is skipped
+% without expansion, without counting braces, but balancing nested
+% conditionals.
+\item \verb>\if... \else ... \fi> and the result of the test is false.
+ Any material in between the condition and the \cs{else} is skipped
+ without expansion, without counting braces, but balancing nested
+ conditionals.
+
+% The \cs{fi} token can be the result of expansion; if it never
+% turns up \TeX\ will give a diagnostic message
+% 
+%\begin{disp}\tt \cs{end} occurred when \cs{if...} on line \n{...}
+%      was incomplete\end{disp}
+% This sort of error is not visible in the output.
+ The \cs{fi} token can be the result of expansion; if it never
+ turns up \TeX\ will give a diagnostic message
+ 
+\begin{disp}\tt \cs{end} occurred when \cs{if...} on line \n{...}
+      was incomplete\end{disp}
+ This sort of error is not visible in the output.
+
+% This point plus the previous may jointly be described as follows:
+% after a false condition \TeX\ skips until an \cs{else} or \cs{fi}
+% is found; any material in between \cs{else} and \cs{fi} is processed.
+% 
+%\item \verb>\if... ... \fi> and the result of the test is true.
+% \TeX\ will start processing the material following the condition.
+% As above, the \cs{fi} token may be inserted by expansion of
+% a macro.
+% 
+%\item \verb>\if... \else ... \fi> and the result of the test is true.
+% Any material following the condition is processed until the \cs{else}
+% is found; then \TeX\ skips everything until the matching \cs{fi}
+% is found.
+% 
+% This point plus the previous may be described as follows:
+% after a true test \TeX\ starts processing material until
+% an \cs{else} or \cs{fi} is found; if an \cs{else} is found
+% \TeX\ skips until it finds the matching \cs{fi}.
+%\end{itemize}
+ This point plus the previous may jointly be described as follows:
+ after a false condition \TeX\ skips until an \cs{else} or \cs{fi}
+ is found; any material in between \cs{else} and \cs{fi} is processed.
+ 
+\item \verb>\if... ... \fi> and the result of the test is true.
+ \TeX\ will start processing the material following the condition.
+ As above, the \cs{fi} token may be inserted by expansion of
+ a macro.
+ 
+\item \verb>\if... \else ... \fi> and the result of the test is true.
+ Any material following the condition is processed until the \cs{else}
+ is found; then \TeX\ skips everything until the matching \cs{fi}
+ is found.
+ 
+ This point plus the previous may be described as follows:
+ after a true test \TeX\ starts processing material until
+ an \cs{else} or \cs{fi} is found; if an \cs{else} is found
+ \TeX\ skips until it finds the matching \cs{fi}.
+\end{itemize}
+
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{Assorted remarks}
+
+%%\spoint The test gobbles up tokens
+%\subsection{The test gobbles up tokens}
+%\spoint The test gobbles up tokens
+\subsection{The test gobbles up tokens}
+
+%A common mistake is to write the following:
+%\begin{verbatim}
+%\ifnum\x>0\someaction \else\anotheraction \fi
+%\end{verbatim}
+%which has the effect that the \verb.\someaction. is expanded,
+%regardless of whether the test succeeds or not. 
+%The reason for this is that \TeX\ evaluates the input stream until
+%it is certain that it has found the arguments to be tested.
+%In this case it is perfectly possible for the \verb.\someaction.
+%to yield a digit, so it is expanded. The remedy is to insert
+%\altt
+%a space or a \cs{relax} control sequence
+%after the last digit of the number to be tested.
+A common mistake is to write the following:
+\begin{verbatim}
+\ifnum\x>0\someaction \else\anotheraction \fi
+\end{verbatim}
+which has the effect that the \verb.\someaction. is expanded,
+regardless of whether the test succeeds or not. 
+The reason for this is that \TeX\ evaluates the input stream until
+it is certain that it has found the arguments to be tested.
+In this case it is perfectly possible for the \verb.\someaction.
+to yield a digit, so it is expanded. The remedy is to insert
+\altt
+a space or a \cs{relax} control sequence
+after the last digit of the number to be tested.
+
+%%\spoint The test wants to gobble up the \cs{else} or \cs{fi}
+%\subsection{The test wants to gobble up the \cs{else} or \cs{fi}}
+%\spoint The test wants to gobble up the \cs{else} or \cs{fi}
+\subsection{The test wants to gobble up the \cs{else} or \cs{fi}}
+
+%The same mechanism that underlies the phenomenon in the previous
+%point can lead to even more surprising effects if \TeX\
+%bumps into an \verb.\else., \verb.\or., or \verb.\fi. 
+%while still busy determining the extent of the test itself.
+The same mechanism that underlies the phenomenon in the previous
+point can lead to even more surprising effects if \TeX\
+bumps into an \verb.\else., \verb.\or., or \verb.\fi. 
+while still busy determining the extent of the test itself.
+
+%Recall that \verb.\pageno. is a synomym for \verb.\count0., and
+%consider the following examples:
+%\begin{verbatim}
+%\newcount\nct \nct=1\ifodd\pageno\else 2\fi 1
+%\end{verbatim}
+%and
+%\begin{verbatim}
+%\newcount\nct \nct=1\ifodd\count0\else 2\fi 1
+%\end{verbatim}
+%The first example will assign either 11 or~121 to \cs{nct}, 
+%but the second one will assign 1 or~121. 
+%The explanation is that
+%in cases like the second, where
+%\altt
+%an \verb.\else. is encountered while the
+%test still has not been delimited, a \verb.\relax. is inserted.
+%In the case that \verb.\count0. is odd the result will thus be \verb.\relax.,
+%and the example will yield
+%\begin{verbatim}
+%\nct=1\relax2
+%\end{verbatim}
+%which will assign~1 to \cs{nct}, and print~2.
+Recall that \verb.\pageno. is a synomym for \verb.\count0., and
+consider the following examples:
+\begin{verbatim}
+\newcount\nct \nct=1\ifodd\pageno\else 2\fi 1
+\end{verbatim}
+and
+\begin{verbatim}
+\newcount\nct \nct=1\ifodd\count0\else 2\fi 1
+\end{verbatim}
+The first example will assign either 11 or~121 to \cs{nct}, 
+but the second one will assign 1 or~121. 
+The explanation is that
+in cases like the second, where
+\altt
+an \verb.\else. is encountered while the
+test still has not been delimited, a \verb.\relax. is inserted.
+In the case that \verb.\count0. is odd the result will thus be \verb.\relax.,
+and the example will yield
+\begin{verbatim}
+\nct=1\relax2
+\end{verbatim}
+which will assign~1 to \cs{nct}, and print~2.
+
+
+%%\spoint[after:cond] Macros and conditionals; the use of \cs{expandafter}
+%\subsection{Macros and conditionals; the use of \cs{expandafter}}
+%\label{after:cond}
+%\spoint[after:cond] Macros and conditionals; the use of \cs{expandafter}
+\subsection{Macros and conditionals; the use of \cs{expandafter}}
+\label{after:cond}
+
+%Consider the following example:
+%\begin{verbatim}
+%\def\bold#1{{\bf #1}} \def\slant#1{{\sl #1}}
+%\ifnum1>0 \bold \else \slant \fi {some text} ...
+%\end{verbatim}
+%This will make not only `some text', 
+%but {\sl all\/} subsequent text bold.
+%Also, at the end of the job there will be a notice that
+%`end occurred inside a group at level~1'.
+%Switching on \cs{tracingmacros} reveals that the argument
+%of \verb.\bold. was \verb.\else..
+%This means that, after expansion of \verb.\bold., 
+%the input stream looked like
+%\begin{verbatim}
+%\ifnum1>0 {\bf \else }\fi {some text} rest of the text 
+%\end{verbatim}
+%so the closing brace was skipped as part of the \gram{false text}.
+%Effectively, then, the resulting stream is
+%\begin{verbatim}
+%{\bf {some text} rest of the text
+%\end{verbatim}
+%which is unbalanced.
+Consider the following example:
+\begin{verbatim}
+\def\bold#1{{\bf #1}} \def\slant#1{{\sl #1}}
+\ifnum1>0 \bold \else \slant \fi {some text} ...
+\end{verbatim}
+This will make not only `some text', 
+but {\sl all\/} subsequent text bold.
+Also, at the end of the job there will be a notice that
+`end occurred inside a group at level~1'.
+Switching on \cs{tracingmacros} reveals that the argument
+of \verb.\bold. was \verb.\else..
+This means that, after expansion of \verb.\bold., 
+the input stream looked like
+\begin{verbatim}
+\ifnum1>0 {\bf \else }\fi {some text} rest of the text 
+\end{verbatim}
+so the closing brace was skipped as part of the \gram{false text}.
+Effectively, then, the resulting stream is
+\begin{verbatim}
+{\bf {some text} rest of the text
+\end{verbatim}
+which is unbalanced.
+
+%One solution to this sort of problem would be to write
+%\begin{verbatim}
+%\ifnum1>0 \let\next=\bold \else \let\next=\slant \fi \next
+%\end{verbatim}
+%but  a solution using \cs{expandafter} is also possible:
+%\begin{verbatim}
+%\ifnum1>0 \expandafter \bold \else \expandafter \slant \fi
+%\end{verbatim}
+%This works, because the \cs{expandafter} commands let \TeX\ determine
+%the boundaries of the \gram{true text} and the \gram{false text}.
+One solution to this sort of problem would be to write
+\begin{verbatim}
+\ifnum1>0 \let\next=\bold \else \let\next=\slant \fi \next
+\end{verbatim}
+but  a solution using \cs{expandafter} is also possible:
+\begin{verbatim}
+\ifnum1>0 \expandafter \bold \else \expandafter \slant \fi
+\end{verbatim}
+This works, because the \cs{expandafter} commands let \TeX\ determine
+the boundaries of the \gram{true text} and the \gram{false text}.
+
+%In fact, the second solution may be preferred over the first,
+%since conditionals are handled by the expansion processor,
+%and the \cs{let} statements are tackled only by the execution
+%processor; that is, they are not expandable.
+%Thus the second solution will (and the first will not)
+%work, for instance,
+%inside an~\cs{edef}.
+In fact, the second solution may be preferred over the first,
+since conditionals are handled by the expansion processor,
+and the \cs{let} statements are tackled only by the execution
+processor; that is, they are not expandable.
+Thus the second solution will (and the first will not)
+work, for instance,
+inside an~\cs{edef}.
+
+%Another example with \cs{expandafter} is the sequence
+%\begin{verbatim}
+%\def\get#1\get{ ... }
+%\expandafter \get \ifodd1 \ifodd3 5\fi \fi \get
+%\end{verbatim}
+%This gives
+%\begin{verbatim}
+%#1<- \ifodd3 5\fi \fi
+%\end{verbatim}
+%and
+%\begin{verbatim}
+%\expandafter \get \ifodd2 \ifodd3 5\fi\fi \get
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%#1<-
+%\end{verbatim}
+%This illustrates again that the result of evaluating a 
+%conditional is not the final expansion, but the start
+%of the expansion of the \gr{true text} or \gr{false text},
+%depending on the outcome of the test.
+Another example with \cs{expandafter} is the sequence
+\begin{verbatim}
+\def\get#1\get{ ... }
+\expandafter \get \ifodd1 \ifodd3 5\fi \fi \get
+\end{verbatim}
+This gives
+\begin{verbatim}
+#1<- \ifodd3 5\fi \fi
+\end{verbatim}
+and
+\begin{verbatim}
+\expandafter \get \ifodd2 \ifodd3 5\fi\fi \get
+\end{verbatim}
+gives
+\begin{verbatim}
+#1<-
+\end{verbatim}
+This illustrates again that the result of evaluating a 
+conditional is not the final expansion, but the start
+of the expansion of the \gr{true text} or \gr{false text},
+depending on the outcome of the test.
+
+%A detail should be noted: with \cs{expandafter}
+%it is possible that the \verb.\else. is encountered
+%before the \gram{true text} has been expanded completely.
+%This raises the question as to the exact timing of expansion
+%and skipping.
+%In the example
+%\begin{verbatim}
+%\def\hello{\message{Hello!}}
+%\ifnum1>0 \expandafter \hello \else \message{goodbye} \bye
+%\end{verbatim}
+%the error message caused by the missing \verb.\fi. is given
+%without \verb.\hello. ever having been expanded.
+%The conclusion must be that the \gram{false text} is
+%skipped as soon as it has been located, even if this is at a time
+%when the \gram{true text} has not been expanded completely.
+A detail should be noted: with \cs{expandafter}
+it is possible that the \verb.\else. is encountered
+before the \gram{true text} has been expanded completely.
+This raises the question as to the exact timing of expansion
+and skipping.
+In the example
+\begin{verbatim}
+\def\hello{\message{Hello!}}
+\ifnum1>0 \expandafter \hello \else \message{goodbye} \bye
+\end{verbatim}
+the error message caused by the missing \verb.\fi. is given
+without \verb.\hello. ever having been expanded.
+The conclusion must be that the \gram{false text} is
+skipped as soon as it has been located, even if this is at a time
+when the \gram{true text} has not been expanded completely.
+
+%%\spoint Incorrect matching
+%\subsection{Incorrect matching}
+%\spoint Incorrect matching
+\subsection{Incorrect matching}
+
+%\TeX's matching of \verb.\if., \verb.\else., and \verb.\fi.
+%is easily upset. For instance, \TeXbook\ warns you that
+%you should not say
+%\begin{verbatim}
+% \let\ifabc=\iftrue
+%\end{verbatim}
+%inside a 
+%conditional, because if this text is skipped \TeX\ sees
+%at least one \verb.\if. to be matched. 
+\TeX's matching of \verb.\if., \verb.\else., and \verb.\fi.
+is easily upset. For instance, \TeXbook\ warns you that
+you should not say
+\begin{verbatim}
+ \let\ifabc=\iftrue
+\end{verbatim}
+inside a 
+conditional, because if this text is skipped \TeX\ sees
+at least one \verb.\if. to be matched. 
+
+%The reason for this is that when \TeX\ is skipping
+%it recognizes all \cs{if...}, \cs{or}, \cs{else}, and \cs{fi}
+%tokens, and everything that has been declared a synonym of
+%such a token by \cs{let}. In \verb>\let\ifabc=\iftrue>
+%\TeX\ will therefore at least see the \cs{iftrue} as
+%the opening of a conditional, and, if the current meaning
+%of \cs{ifabc} was for instance \cs{iffalse}, it will also
+%be considered as the opening of a conditional statement.
+The reason for this is that when \TeX\ is skipping
+it recognizes all \cs{if...}, \cs{or}, \cs{else}, and \cs{fi}
+tokens, and everything that has been declared a synonym of
+such a token by \cs{let}. In \verb>\let\ifabc=\iftrue>
+\TeX\ will therefore at least see the \cs{iftrue} as
+the opening of a conditional, and, if the current meaning
+of \cs{ifabc} was for instance \cs{iffalse}, it will also
+be considered as the opening of a conditional statement.
+
+%As another example, if
+%\begin{verbatim}
+% \csname if\sometest\endcsname \someaction \fi
+%\end{verbatim}
+%is skipped as part of conditional text,
+%the \verb.\fi. will unintentionally close the
+%outer conditional.
+As another example, if
+\begin{verbatim}
+ \csname if\sometest\endcsname \someaction \fi
+\end{verbatim}
+is skipped as part of conditional text,
+the \verb.\fi. will unintentionally close the
+outer conditional.
+
+%It does not help to enclose such potentially dangerous
+%constructs inside a group, because grouping is independent of
+%conditional structure. Burying such commands inside macros is
+%the safest approach.
+It does not help to enclose such potentially dangerous
+constructs inside a group, because grouping is independent of
+conditional structure. Burying such commands inside macros is
+the safest approach.
+
+%Sometimes another solution is possible, however.
+%The \cs{loop} macro of plain \TeX\ (see page~\pageref{loop:ex})
+%is used as
+%\begin{verbatim}
+%\loop ... \if ... \repeat
+%\end{verbatim}
+%where the \cs{repeat} is not an actually executable
+%command, but is merely a delimiter:
+%\begin{verbatim}
+%\def\loop#1\repeat{ ... }
+%\end{verbatim}
+%Therefore,
+%by declaring
+%\begin{verbatim}
+%\let\repeat\fi
+%\end{verbatim}
+%the \cs{repeat} balances the \cs{if...} that terminates
+%the loop, and it becomes possible to have loops in
+%skipped conditional text.
+Sometimes another solution is possible, however.
+The \cs{loop} macro of plain \TeX\ (see page~\pageref{loop:ex})
+is used as
+\begin{verbatim}
+\loop ... \if ... \repeat
+\end{verbatim}
+where the \cs{repeat} is not an actually executable
+command, but is merely a delimiter:
+\begin{verbatim}
+\def\loop#1\repeat{ ... }
+\end{verbatim}
+Therefore,
+by declaring
+\begin{verbatim}
+\let\repeat\fi
+\end{verbatim}
+the \cs{repeat} balances the \cs{if...} that terminates
+the loop, and it becomes possible to have loops in
+skipped conditional text.
+
+%%\spoint Conditionals and grouping
+%\subsection{Conditionals and grouping}
+%\spoint Conditionals and grouping
+\subsection{Conditionals and grouping}
+
+%It has already been mentioned above that group nesting in \TeX\
+%is independent of conditional nesting.
+%The reason for this is that conditionals are handled by the
+%expansion part of \TeX; in that stage braces are just
+%unexpandable tokens that require no special treatment.
+%Grouping is only performed in the later stage of execution
+%processing.
+It has already been mentioned above that group nesting in \TeX\
+is independent of conditional nesting.
+The reason for this is that conditionals are handled by the
+expansion part of \TeX; in that stage braces are just
+unexpandable tokens that require no special treatment.
+Grouping is only performed in the later stage of execution
+processing.
+
+%An example of this independence is now given.
+%One may write a macro that yields part of
+%a conditional:
+%\begin{verbatim}
+%\def\elsepart{\else \dosomething \fi}
+%\end{verbatim}
+%The other way around, the following macros
+%yield a left brace and a right brace respectively:
+%\begin{verbatim}
+%\def\leftbrace{\iftrue{\else}\fi}
+%\def\rightbrace{\iffalse{\else}\fi}
+%\end{verbatim}
+%Note that braces in these definitions are properly nested.
+An example of this independence is now given.
+One may write a macro that yields part of
+a conditional:
+\begin{verbatim}
+\def\elsepart{\else \dosomething \fi}
+\end{verbatim}
+The other way around, the following macros
+yield a left brace and a right brace respectively:
+\begin{verbatim}
+\def\leftbrace{\iftrue{\else}\fi}
+\def\rightbrace{\iffalse{\else}\fi}
+\end{verbatim}
+Note that braces in these definitions are properly nested.
+
+%%\spoint A trick
+%\subsection{A trick}
+%\spoint A trick
+\subsection{A trick}
+
+%In some contexts it may be hard to get rid of
+%\cs{else} or \cs{fi} tokens in a proper
+%manner. The above approach with \cs{expandafter}
+%works only if there is a limited number of tokens involved.
+%In other cases the following trick may provide a way out:
+%\begin{verbatim}
+%\def\hop#1\fi{\fi #1}
+%\end{verbatim}
+%Using this as
+%\begin{disp}\verb>\if... \hop >\gr{lots of tokens}\verb>\fi>\end{disp}
+%will place the tokens outside the conditional.
+%This is for instance used in~\cite{E2}.
+In some contexts it may be hard to get rid of
+\cs{else} or \cs{fi} tokens in a proper
+manner. The above approach with \cs{expandafter}
+works only if there is a limited number of tokens involved.
+In other cases the following trick may provide a way out:
+\begin{verbatim}
+\def\hop#1\fi{\fi #1}
+\end{verbatim}
+Using this as
+\begin{disp}\verb>\if... \hop >\gr{lots of tokens}\verb>\fi>\end{disp}
+will place the tokens outside the conditional.
+This is for instance used in~\cite{E2}.
+
+%As a further example of this sort of trick,
+%consider the problem (suggested to me and solved by
+%Alan Jeffrey) of implementing a conditional 
+%\verb-\ifLessThan#1#2#3#4-
+%such that the arguments corresponding to \verb-#3- or
+%\verb-#4- result, depending on whether \verb-#1- is
+%less than \verb-#2- or not. 
+As a further example of this sort of trick,
+consider the problem (suggested to me and solved by
+Alan Jeffrey) of implementing a conditional 
+\verb-\ifLessThan#1#2#3#4-
+such that the arguments corresponding to \verb-#3- or
+\verb-#4- result, depending on whether \verb-#1- is
+less than \verb-#2- or not. 
+
+%The problem here is how to get rid of the \cs{else} and the~\cs{fi}.
+%The \ldash or at least, one \rdash solution is to scoop them up
+%as delimiters for macros:
+%\begin{verbatim}
+%\def\ifLessThan#1#2{\ifnum#1<#2\relax\taketrue \else \takefalse \fi}
+%\def\takefalse\fi#1#2{\fi#2}
+%\def\taketrue\else\takefalse\fi#1#2{\fi#1}
+%\end{verbatim}
+%Note that \cs{ifLessThan} has only two parameters
+%(the things to be tested); however, its
+%result is a macro that
+%chooses between the next two arguments.
+The problem here is how to get rid of the \cs{else} and the~\cs{fi}.
+The \ldash or at least, one \rdash solution is to scoop them up
+as delimiters for macros:
+\begin{verbatim}
+\def\ifLessThan#1#2{\ifnum#1<#2\relax\taketrue \else \takefalse \fi}
+\def\takefalse\fi#1#2{\fi#2}
+\def\taketrue\else\takefalse\fi#1#2{\fi#1}
+\end{verbatim}
+Note that \cs{ifLessThan} has only two parameters
+(the things to be tested); however, its
+result is a macro that
+chooses between the next two arguments.
+
+%%\spoint More examples of expansion in conditionals
+%\subsection{More examples of expansion in conditionals}
+%\spoint More examples of expansion in conditionals
+\subsection{More examples of expansion in conditionals}
+
+%Above, the macro \cs{ifEqString} was given
+%\alt
+%that compares two strings:
+%\howto Compare two strings\par
+%\begin{verbatim}
+%\def\ifEqString#1#2%
+%   {\def\csa{#1}\def\csb{#2}\ifx\csa\csb }
+%\end{verbatim}
+%However, this macro relies on \cs{def},  which is not an
+%expandable command. If we need a string tester that will
+%work, for instance, inside an  \cs{edef}, we need some
+%more ingenuity (this solution was taken from~\cite{E2}).
+%The basic principle of this solution is to compare the strings
+%one character at a time. Macro delimiting by \cs{fi} is used;
+%this was explained above.
+Above, the macro \cs{ifEqString} was given
+\alt
+that compares two strings:
+\howto Compare two strings\par
+\begin{verbatim}
+\def\ifEqString#1#2%
+   {\def\csa{#1}\def\csb{#2}\ifx\csa\csb }
+\end{verbatim}
+However, this macro relies on \cs{def},  which is not an
+expandable command. If we need a string tester that will
+work, for instance, inside an  \cs{edef}, we need some
+more ingenuity (this solution was taken from~\cite{E2}).
+The basic principle of this solution is to compare the strings
+one character at a time. Macro delimiting by \cs{fi} is used;
+this was explained above.
+
+%First of all, the \cs{ifEqString} call is replaced by a
+%sequence \verb>\ifAllChars ...\Are ...\TheSame>, and both
+%strings are delimited by a dollar sign, which is not supposed
+%to appear in the strings themselves.
+%\begin{verbatim}
+%\def\ifEqString
+%    #1#2{\ifAllChars#1$\Are#2$\TheSame}
+%\end{verbatim}
+%The test for equality of characters first determines
+%whether either string has ended. If both have ended, the original
+%strings were equal; if only one has ended, they were of unequal
+%length, hence unequal. If neither string has ended, we test
+%whether the first characters are equal, and if so, we make a recursive
+%call to test the remainder of the string.
+%\begin{verbatim}
+%\def\ifAllChars#1#2\Are#3#4\TheSame
+%   {\if#1$\if#3$\say{true}%
+%          \else \say{false}\fi
+%    \else \if#1#3\ifRest#2\TheSame#4\else
+%                 \say{false}\fi\fi}
+%\def\ifRest#1\TheSame#2\else#3\fi\fi
+%   {\fi\fi \ifAllChars#1\Are#2\TheSame}
+%\end{verbatim}
+%The \cs{say} macro is supposed to  give \cs{iftrue} for
+%\verb>\say{true}> and \cs{iffalse} for \verb>\say{false}>.
+%Observing that all  calls to this macro occur two conditionals deep,
+%we use the `hop' trick explained above as follows.
+%\begin{verbatim}
+%\def\say#1#2\fi\fi
+%   {\fi\fi\csname if#1\endcsname}
+%\end{verbatim}
+First of all, the \cs{ifEqString} call is replaced by a
+sequence \verb>\ifAllChars ...\Are ...\TheSame>, and both
+strings are delimited by a dollar sign, which is not supposed
+to appear in the strings themselves.
+\begin{verbatim}
+\def\ifEqString
+    #1#2{\ifAllChars#1$\Are#2$\TheSame}
+\end{verbatim}
+The test for equality of characters first determines
+whether either string has ended. If both have ended, the original
+strings were equal; if only one has ended, they were of unequal
+length, hence unequal. If neither string has ended, we test
+whether the first characters are equal, and if so, we make a recursive
+call to test the remainder of the string.
+\begin{verbatim}
+\def\ifAllChars#1#2\Are#3#4\TheSame
+   {\if#1$\if#3$\say{true}%
+          \else \say{false}\fi
+    \else \if#1#3\ifRest#2\TheSame#4\else
+                 \say{false}\fi\fi}
+\def\ifRest#1\TheSame#2\else#3\fi\fi
+   {\fi\fi \ifAllChars#1\Are#2\TheSame}
+\end{verbatim}
+The \cs{say} macro is supposed to  give \cs{iftrue} for
+\verb>\say{true}> and \cs{iffalse} for \verb>\say{false}>.
+Observing that all  calls to this macro occur two conditionals deep,
+we use the `hop' trick explained above as follows.
+\begin{verbatim}
+\def\say#1#2\fi\fi
+   {\fi\fi\csname if#1\endcsname}
+\end{verbatim}
+
+%Similar to the above example, let us write a macro
+%that will test lexicographic (`dictionary') precedence
+%of two strings:
+%\howto Compare two strings lexicographically\par
+%\begin{verbatim}
+%\let\ex=\expandafter
+%\def\ifbefore
+%    #1#2{\ifallchars#1$\are#2$\before}
+%\def\ifallchars#1#2\are#3#4\before
+%   {\if#1$\say{true\ex}\else
+%     \if#3$\say{false\ex\ex\ex}\else
+%      \ifnum`#1>`#3 \say{false%
+%         \ex\ex\ex\ex\ex\ex\ex}\else
+%       \ifnum`#1<`#3 \say{true%
+%         \ex\ex\ex\ex\ex\ex\ex
+%         \ex\ex\ex\ex\ex\ex\ex\ex}\else
+%       \ifrest#2\before#4\fi\fi\fi\fi}
+%\def\ifrest#1\before#2\fi\fi\fi\fi
+%   {\fi\fi\fi\fi
+%    \ifallchars#1\are#2\before}
+%\def\say#1{\csname if#1\endcsname}
+%\end{verbatim}
+%In this macro a slightly
+%different implementation of \cs{say} is used.
+Similar to the above example, let us write a macro
+that will test lexicographic (`dictionary') precedence
+of two strings:
+\howto Compare two strings lexicographically\par
+\begin{verbatim}
+\let\ex=\expandafter
+\def\ifbefore
+    #1#2{\ifallchars#1$\are#2$\before}
+\def\ifallchars#1#2\are#3#4\before
+   {\if#1$\say{true\ex}\else
+     \if#3$\say{false\ex\ex\ex}\else
+      \ifnum`#1>`#3 \say{false%
+         \ex\ex\ex\ex\ex\ex\ex}\else
+       \ifnum`#1<`#3 \say{true%
+         \ex\ex\ex\ex\ex\ex\ex
+         \ex\ex\ex\ex\ex\ex\ex\ex}\else
+       \ifrest#2\before#4\fi\fi\fi\fi}
+\def\ifrest#1\before#2\fi\fi\fi\fi
+   {\fi\fi\fi\fi
+    \ifallchars#1\are#2\before}
+\def\say#1{\csname if#1\endcsname}
+\end{verbatim}
+In this macro a slightly
+different implementation of \cs{say} is used.
+
+%Simplified, a call to \cs{ifbefore} will eventually lead to a situation
+%that looks (in the `true' case) like
+%\begin{verbatim}
+%\ifbefore{...}{...}
+%       \if... %% some comparison that turns out true
+%          \csname iftrue\expandafter\endcsname
+%       \else .... \fi
+%   ... %% commands for the `before' case
+%\else
+%   ... %% commands for the `not-before' case
+%\fi
+%\end{verbatim}
+%When the comparison has turned out true, \TeX\ will start processing
+%the \gr{true text}, and make a mental note to remove any
+%\verb>\else ... \fi> part once an \cs{else} token is seen.
+%Thus, the sequence
+%\begin{verbatim}
+%\csname iftrue\expandafter\endcsname \else ... \fi
+%\end{verbatim}
+%is replaced by
+%\begin{verbatim}
+% \csname iftrue\endcsname
+%\end{verbatim}
+%as the \cs{else} is seen while \TeX\ is still processing
+%\verb>\csname...\endcsname>.
+Simplified, a call to \cs{ifbefore} will eventually lead to a situation
+that looks (in the `true' case) like
+\begin{verbatim}
+\ifbefore{...}{...}
+       \if... %% some comparison that turns out true
+          \csname iftrue\expandafter\endcsname
+       \else .... \fi
+   ... %% commands for the `before' case
+\else
+   ... %% commands for the `not-before' case
+\fi
+\end{verbatim}
+When the comparison has turned out true, \TeX\ will start processing
+the \gr{true text}, and make a mental note to remove any
+\verb>\else ... \fi> part once an \cs{else} token is seen.
+Thus, the sequence
+\begin{verbatim}
+\csname iftrue\expandafter\endcsname \else ... \fi
+\end{verbatim}
+is replaced by
+\begin{verbatim}
+ \csname iftrue\endcsname
+\end{verbatim}
+as the \cs{else} is seen while \TeX\ is still processing
+\verb>\csname...\endcsname>.
+
+%Calls to \cs{say} occur inside nested conditionals, so
+%the number of \cs{expandafter} commands necessary may be 
+%\alt
+%larger than~1: for level two it is~3, for level three
+%it is~7, and for level~4 it is 15. Slightly more compact
+%implementations of this macro do exist.
+Calls to \cs{say} occur inside nested conditionals, so
+the number of \cs{expandafter} commands necessary may be 
+\alt
+larger than~1: for level two it is~3, for level three
+it is~7, and for level~4 it is 15. Slightly more compact
+implementations of this macro do exist.
+
+%\endofchapter
+%%%%% end of input file [ifelsefi]
+\endofchapter
+%%%% end of input file [ifelsefi]
+
+\end{document}

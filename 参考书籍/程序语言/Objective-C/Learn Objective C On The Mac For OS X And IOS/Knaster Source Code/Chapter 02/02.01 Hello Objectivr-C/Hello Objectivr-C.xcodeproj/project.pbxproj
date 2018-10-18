@@ -1,0 +1,239 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		846CF52A14D635CF005C1CB5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 846CF52914D635CF005C1CB5 /* Foundation.framework */; };
+		846CF52D14D635CF005C1CB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 846CF52C14D635CF005C1CB5 /* main.m */; };
+		846CF53114D635CF005C1CB5 /* Hello_Objectivr_C.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 846CF53014D635CF005C1CB5 /* Hello_Objectivr_C.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		846CF52314D635CF005C1CB5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				846CF53114D635CF005C1CB5 /* Hello_Objectivr_C.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		846CF52514D635CF005C1CB5 /* Hello Objectivr-C */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Hello Objectivr-C"; sourceTree = BUILT_PRODUCTS_DIR; };
+		846CF52914D635CF005C1CB5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		846CF52C14D635CF005C1CB5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		846CF52F14D635CF005C1CB5 /* Hello Objectivr-C-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hello Objectivr-C-Prefix.pch"; sourceTree = "<group>"; };
+		846CF53014D635CF005C1CB5 /* Hello_Objectivr_C.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Hello_Objectivr_C.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		846CF52214D635CF005C1CB5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846CF52A14D635CF005C1CB5 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		846CF51A14D635CF005C1CB5 = {
+			isa = PBXGroup;
+			children = (
+				846CF52B14D635CF005C1CB5 /* Hello Objectivr-C */,
+				846CF52814D635CF005C1CB5 /* Frameworks */,
+				846CF52614D635CF005C1CB5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		846CF52614D635CF005C1CB5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				846CF52514D635CF005C1CB5 /* Hello Objectivr-C */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		846CF52814D635CF005C1CB5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				846CF52914D635CF005C1CB5 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		846CF52B14D635CF005C1CB5 /* Hello Objectivr-C */ = {
+			isa = PBXGroup;
+			children = (
+				846CF52C14D635CF005C1CB5 /* main.m */,
+				846CF53014D635CF005C1CB5 /* Hello_Objectivr_C.1 */,
+				846CF52E14D635CF005C1CB5 /* Supporting Files */,
+			);
+			path = "Hello Objectivr-C";
+			sourceTree = "<group>";
+		};
+		846CF52E14D635CF005C1CB5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				846CF52F14D635CF005C1CB5 /* Hello Objectivr-C-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		846CF52414D635CF005C1CB5 /* Hello Objectivr-C */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 846CF53414D635CF005C1CB5 /* Build configuration list for PBXNativeTarget "Hello Objectivr-C" */;
+			buildPhases = (
+				846CF52114D635CF005C1CB5 /* Sources */,
+				846CF52214D635CF005C1CB5 /* Frameworks */,
+				846CF52314D635CF005C1CB5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Hello Objectivr-C";
+			productName = "Hello Objectivr-C";
+			productReference = 846CF52514D635CF005C1CB5 /* Hello Objectivr-C */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		846CF51C14D635CF005C1CB5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+			};
+			buildConfigurationList = 846CF51F14D635CF005C1CB5 /* Build configuration list for PBXProject "Hello Objectivr-C" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 846CF51A14D635CF005C1CB5;
+			productRefGroup = 846CF52614D635CF005C1CB5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				846CF52414D635CF005C1CB5 /* Hello Objectivr-C */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		846CF52114D635CF005C1CB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846CF52D14D635CF005C1CB5 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		846CF53214D635CF005C1CB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		846CF53314D635CF005C1CB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		846CF53514D635CF005C1CB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Hello Objectivr-C/Hello Objectivr-C-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		846CF53614D635CF005C1CB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Hello Objectivr-C/Hello Objectivr-C-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		846CF51F14D635CF005C1CB5 /* Build configuration list for PBXProject "Hello Objectivr-C" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				846CF53214D635CF005C1CB5 /* Debug */,
+				846CF53314D635CF005C1CB5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		846CF53414D635CF005C1CB5 /* Build configuration list for PBXNativeTarget "Hello Objectivr-C" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				846CF53514D635CF005C1CB5 /* Debug */,
+				846CF53614D635CF005C1CB5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 846CF51C14D635CF005C1CB5 /* Project object */;
+}

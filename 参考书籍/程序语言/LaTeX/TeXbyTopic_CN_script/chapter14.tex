@@ -1,0 +1,668 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{13}
+
+\begin{document}
+
+%\chapter{Token Lists}\label{token}
+\chapter{Token Lists}\label{token}
+
+%\TeX\ has only one type of data structure: the \indextermsub{token}{list}
+%There are token list registers that are available to the user,
+%and \TeX\ has some special token lists: the \cs{every...}
+%variables, \cs{errhelp}, and \cs{output}.
+\TeX\ has only one type of data structure: the \indextermsub{token}{list}
+There are token list registers that are available to the user,
+and \TeX\ has some special token lists: the \cs{every...}
+variables, \cs{errhelp}, and \cs{output}.
+
+%\label{cschap:toks}\label{cschap:toksdef}\label{cschap:newtoks}
+%\begin{inventory}
+%\item [\cs{toks}] 
+%      Prefix for a token list register.
+\label{cschap:toks}\label{cschap:toksdef}\label{cschap:newtoks}
+\begin{inventory}
+\item [\cs{toks}] 
+      Prefix for a token list register.
+
+%\item [\cs{toksdef}] 
+%      Define a control sequence to be a synonym for
+%      a~\cs{toks} register.
+\item [\cs{toksdef}] 
+      Define a control sequence to be a synonym for
+      a~\cs{toks} register.
+
+%\item [\cs{newtoks}] 
+%      Macro that allocates a token list register.
+\item [\cs{newtoks}] 
+      Macro that allocates a token list register.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point Token lists
+%\section{Token lists}
+%\point Token lists
+\section{Token lists}
+
+%Token lists are the only type of data structure that \TeX\ knows.
+%They can contain character tokens and control sequence tokens.
+%Spaces in a token list are significant.
+%The only operations on token lists are assignment and
+%unpacking.
+Token lists are the only type of data structure that \TeX\ knows.
+They can contain character tokens and control sequence tokens.
+Spaces in a token list are significant.
+The only operations on token lists are assignment and
+unpacking.
+
+%\TeX\ has 256 token list registers \verb|\toks|$nnn$ that can be
+%allocated using the macro \verb|\newtoks|, or explicitly
+%assigned by \cs{toksdef}; see below.
+\TeX\ has 256 token list registers \verb|\toks|$nnn$ that can be
+allocated using the macro \verb|\newtoks|, or explicitly
+assigned by \cs{toksdef}; see below.
+
+%%\point Use of token lists
+%\section{Use of token lists}
+%\point Use of token lists
+\section{Use of token lists}
+
+%Token lists are  assigned by a \gr{variable assignment},
+%which is in this case takes one of the forms
+%\begin{disp}\gr{token variable}\gr{equals}\gr{general text}\nl
+%     \gr{token variable}\gr{equals}\gr{filler}\gr{token variable}\end{disp}
+%Here a \gr{token variable} is an explicit \cs{toks}$nnn$
+%register, something that has been defined to such a register
+%by \cs{toksdef} (probably hidden in \cs{newtoks}),
+%or one of the special \gr{token parameter}
+%lists below.
+%A~\gr{general text} has an explicit closing brace, but the
+%open brace can be implicit.
+Token lists are  assigned by a \gr{variable assignment},
+which is in this case takes one of the forms
+\begin{disp}\gr{token variable}\gr{equals}\gr{general text}\nl
+     \gr{token variable}\gr{equals}\gr{filler}\gr{token variable}\end{disp}
+Here a \gr{token variable} is an explicit \cs{toks}$nnn$
+register, something that has been defined to such a register
+by \cs{toksdef} (probably hidden in \cs{newtoks}),
+or one of the special \gr{token parameter}
+lists below.
+A~\gr{general text} has an explicit closing brace, but the
+open brace can be implicit.
+
+%Examples of token lists are (the first two lines are equivalent):
+%\begin{verbatim}
+%\toks0=\bgroup \a \b cd}
+%\toks0={\a \b cd}
+%\toks1=\toks2
+%\end{verbatim}
+Examples of token lists are (the first two lines are equivalent):
+\begin{verbatim}
+\toks0=\bgroup \a \b cd}
+\toks0={\a \b cd}
+\toks1=\toks2
+\end{verbatim}
+
+%Unpacking a token list is done by the command \cs{the}:
+%the expansion of \cs{the}\gr{token variable} is the 
+%sequence of tokens that was in the token list.
+Unpacking a token list is done by the command \cs{the}:
+the expansion of \cs{the}\gr{token variable} is the 
+sequence of tokens that was in the token list.
+
+%Token lists have a special behaviour in \cs{edef}:
+%when prefixed by \verb|\the| they are unpacked, 
+%but the resulting tokens
+%are not evaluated further. Thus
+%\begin{verbatim}
+%\toks0={\a \b} \edef\SomeCs{\the\toks0}
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%\SomeCs: macro:-> \a \b
+%\end{verbatim}
+%This is in contrast to what happens ordinarily in an~\cs{edef};
+%see page~\pageref{expand:edef}.
+Token lists have a special behaviour in \cs{edef}:
+when prefixed by \verb|\the| they are unpacked, 
+but the resulting tokens
+are not evaluated further. Thus
+\begin{verbatim}
+\toks0={\a \b} \edef\SomeCs{\the\toks0}
+\end{verbatim}
+gives
+\begin{verbatim}
+\SomeCs: macro:-> \a \b
+\end{verbatim}
+This is in contrast to what happens ordinarily in an~\cs{edef};
+see page~\pageref{expand:edef}.
+
+
+%%\point \gr{token parameter}
+%\section{\gr{token parameter}}
+%\point \gr{token parameter}
+\section{\gr{token parameter}}
+
+%There are in \TeX\ a number of token lists that are automatically
+%inserted at certain points. These \gr{token parameter}s are
+%the following:
+%\begin{description} \item [\cs{output}]
+%   this token list is inserted
+%   whenever \TeX\ decides it has sufficient material for a page,
+%   or when the user forces activation by a penalty~$\leq-10\,000$
+%   in vertical mode
+%   (see Chapter~\ref{output});
+%\item [\cs{everypar}]
+%   is inserted when \TeX\ switches from external or internal
+%   vertical mode to unrestricted horizontal mode 
+%   (see Chapter~\ref{par:start});
+%\item [\cs{everymath}]
+%   is inserted after a single math-shift character that starts
+%   a formula;
+%\item [\cs{everydisplay}]
+%   is inserted after a double math-shift character that starts
+%   a display formula;
+%\item [\cs{everyhbox}]
+%   is inserted when an \cs{hbox} begins (see Chapter~\ref{boxes});
+%\item [\cs{everyvbox}]
+%   is inserted when a vertical box begins (see Chapter~\ref{boxes});
+%\item [\cs{everyjob}]
+%   is inserted when a job begins (see Chapter~\ref{run});
+%\item [\cs{everycr}]
+%   is inserted in alignments after \cs{cr} or a non-redundant
+%   \cs{crcr} (see Chapter~\ref{align});
+%\item [\cs{errhelp}]
+%   contains tokens to supplement an \cs{errmessage}
+%    (see Chapter~\ref{error}).
+%\end{description}
+There are in \TeX\ a number of token lists that are automatically
+inserted at certain points. These \gr{token parameter}s are
+the following:
+\begin{description} \item [\cs{output}]
+   this token list is inserted
+   whenever \TeX\ decides it has sufficient material for a page,
+   or when the user forces activation by a penalty~$\leq-10\,000$
+   in vertical mode
+   (see Chapter~\ref{output});
+\item [\cs{everypar}]
+   is inserted when \TeX\ switches from external or internal
+   vertical mode to unrestricted horizontal mode 
+   (see Chapter~\ref{par:start});
+\item [\cs{everymath}]
+   is inserted after a single math-shift character that starts
+   a formula;
+\item [\cs{everydisplay}]
+   is inserted after a double math-shift character that starts
+   a display formula;
+\item [\cs{everyhbox}]
+   is inserted when an \cs{hbox} begins (see Chapter~\ref{boxes});
+\item [\cs{everyvbox}]
+   is inserted when a vertical box begins (see Chapter~\ref{boxes});
+\item [\cs{everyjob}]
+   is inserted when a job begins (see Chapter~\ref{run});
+\item [\cs{everycr}]
+   is inserted in alignments after \cs{cr} or a non-redundant
+   \cs{crcr} (see Chapter~\ref{align});
+\item [\cs{errhelp}]
+   contains tokens to supplement an \cs{errmessage}
+    (see Chapter~\ref{error}).
+\end{description}
+
+%A \gr{token parameter} behaves the same as an explicit \cs{toks}$nnn$
+%list, or a quantity defined by \cs{toksdef}.
+A \gr{token parameter} behaves the same as an explicit \cs{toks}$nnn$
+list, or a quantity defined by \cs{toksdef}.
+
+%%\point Token list registers
+%\section{Token list registers}
+%\point Token list registers
+\section{Token list registers}
+
+%Token lists can be stored in \csidx{toks} registers:
+%\begin{Disp}\cs{toks}\gr{8-bit number}\end{Disp}
+%which is a \gr{token variable}.
+%Synonyms for token list registers can be made by the \gr{registerdef}
+%command \csidx{toksdef} in a \gr{shorthand definition}:
+%\begin{Disp}\cs{toksdef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+%\end{Disp} A control sequence defined this way is called
+%a \gr{toksdef token}, and this is also a token variable
+%(the remaining third kind of token variable is
+%the \gr{token parameter}).
+Token lists can be stored in \csidx{toks} registers:
+\begin{Disp}\cs{toks}\gr{8-bit number}\end{Disp}
+which is a \gr{token variable}.
+Synonyms for token list registers can be made by the \gr{registerdef}
+command \csidx{toksdef} in a \gr{shorthand definition}:
+\begin{Disp}\cs{toksdef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+\end{Disp} A control sequence defined this way is called
+a \gr{toksdef token}, and this is also a token variable
+(the remaining third kind of token variable is
+the \gr{token parameter}).
+
+%The plain \TeX\ macro \csidx{newtoks} uses \cs{toksdef} to 
+%allocate unused token list registers. This macro is \cs{outer}.
+The plain \TeX\ macro \csidx{newtoks} uses \cs{toksdef} to 
+allocate unused token list registers. This macro is \cs{outer}.
+
+%\section{Examples}
+\section{Examples}
+
+%Token lists are probably among the least obvious components
+%of \TeX: most \TeX\ users will never find occasion  for their use,
+%but format designers and other macro writers
+%can find interesting applications.
+%Following are some examples of the sorts of things that can be
+%done with token lists.
+Token lists are probably among the least obvious components
+of \TeX: most \TeX\ users will never find occasion  for their use,
+but format designers and other macro writers
+can find interesting applications.
+Following are some examples of the sorts of things that can be
+done with token lists.
+
+%%\spoint Operations on token lists: stack macros
+%\subsection{Operations on token lists: stack macros}
+%\spoint Operations on token lists: stack macros
+\subsection{Operations on token lists: stack macros}
+
+%The number of primitive operations available for token lists is
+%\howto Stack macros\par
+%rather limited: assignment and unpacking. However, these are
+%sufficient to implement other operations such as appending.
+The number of primitive operations available for token lists is
+\howto Stack macros\par
+rather limited: assignment and unpacking. However, these are
+sufficient to implement other operations such as appending.
+
+%Let us say we have allocated a token register
+%\begin{verbatim}
+%\newtoks\list \list={\c} 
+%\end{verbatim}
+%and we want to add tokens to it,
+%\alt
+%using the syntax
+%\begin{verbatim}
+%\Prepend \a \b (to:)\list
+%\end{verbatim}
+%such that
+%\begin{verbatim}
+%\showthe\list
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%> \a \b \c .
+%\end{verbatim}
+%For this the original list has to be unpacked, and 
+%\alt
+%the new tokens followed by the old contents have to assigned
+%again to the register. Unpacking can be done with \cs{the}
+%inside an \cs{edef}, so we arrive at the following macro:
+%\begin{verbatim}
+%\def\Prepend#1(to:)#2{\toks0={#1}%
+%    \edef\act{\noexpand#2={\the\toks0 \the#2}}%
+%    \act}
+%\end{verbatim}
+%Note that the tokens that are to be added are first packed
+%\alt
+%into a temporary token list, which is then again unpacked
+%inside the \cs{edef}. Including them directly would have
+%led to their expansion.
+Let us say we have allocated a token register
+\begin{verbatim}
+\newtoks\list \list={\c} 
+\end{verbatim}
+and we want to add tokens to it,
+\alt
+using the syntax
+\begin{verbatim}
+\Prepend \a \b (to:)\list
+\end{verbatim}
+such that
+\begin{verbatim}
+\showthe\list
+\end{verbatim}
+gives
+\begin{verbatim}
+> \a \b \c .
+\end{verbatim}
+For this the original list has to be unpacked, and 
+\alt
+the new tokens followed by the old contents have to assigned
+again to the register. Unpacking can be done with \cs{the}
+inside an \cs{edef}, so we arrive at the following macro:
+\begin{verbatim}
+\def\Prepend#1(to:)#2{\toks0={#1}%
+    \edef\act{\noexpand#2={\the\toks0 \the#2}}%
+    \act}
+\end{verbatim}
+Note that the tokens that are to be added are first packed
+\alt
+into a temporary token list, which is then again unpacked
+inside the \cs{edef}. Including them directly would have
+led to their expansion.
+
+%Next we want to use token lists as a sort of stack:
+%we want a `pop' operation that removes the first element
+%from the list. Specifically,
+%\begin{verbatim}
+%\Pop\list(into:)\first
+%\show\first \showthe\list
+%\end{verbatim}
+%should give
+%\begin{verbatim}
+%> \first=macro:
+%->\a .
+%\end{verbatim}
+%and for the remaining list
+%\begin{verbatim}
+% 
+%> \b \c .
+%\end{verbatim}
+Next we want to use token lists as a sort of stack:
+we want a `pop' operation that removes the first element
+from the list. Specifically,
+\begin{verbatim}
+\Pop\list(into:)\first
+\show\first \showthe\list
+\end{verbatim}
+should give
+\begin{verbatim}
+> \first=macro:
+->\a .
+\end{verbatim}
+and for the remaining list
+\begin{verbatim}
+ 
+> \b \c .
+\end{verbatim}
+
+%Here we make creative use of delimited and undelimited
+%parameters. With an \cs{edef} we unpack the list,
+%and the auxiliary macro \cs{SplitOff} scoops up the elements
+%as one undelimited argument, the first element, and one
+%delimited argument, the rest of the elements.
+%\begin{verbatim}
+%\def\Pop#1(into:)#2{%
+%    \edef\act{\noexpand\SplitOff\the#1%
+%              (head:)\noexpand#2(tail:)\noexpand#1}%
+%    \act}
+%\def\SplitOff#1#2(head:)#3(tail:)#4{\def#3{#1}#4={#2}}
+%\end{verbatim}
+Here we make creative use of delimited and undelimited
+parameters. With an \cs{edef} we unpack the list,
+and the auxiliary macro \cs{SplitOff} scoops up the elements
+as one undelimited argument, the first element, and one
+delimited argument, the rest of the elements.
+\begin{verbatim}
+\def\Pop#1(into:)#2{%
+    \edef\act{\noexpand\SplitOff\the#1%
+              (head:)\noexpand#2(tail:)\noexpand#1}%
+    \act}
+\def\SplitOff#1#2(head:)#3(tail:)#4{\def#3{#1}#4={#2}}
+\end{verbatim}
+
+%\subsection{Executing token lists}
+\subsection{Executing token lists}
+
+%The \cs{the} operation for unpacking token lists was used above
+%only inside an \cs{edef}. Used on its own it has the effect
+%of feeding the tokens of the list to \TeX's expansion mechanism.
+%If the tokens have been added to the list in a uniform syntax,
+%this gives rise to some interesting possibilities.
+The \cs{the} operation for unpacking token lists was used above
+only inside an \cs{edef}. Used on its own it has the effect
+of feeding the tokens of the list to \TeX's expansion mechanism.
+If the tokens have been added to the list in a uniform syntax,
+this gives rise to some interesting possibilities.
+
+%Imagine that we are implementing the bookkeeping of external
+%files for a format. Such external files can be used for
+%table of contents, list of figures, et cetera.
+%If the presence
+%of such objects is under the control of the user, we need some
+%general routines for opening and closing files, and keeping
+%track of what files we have opened at the user's request.
+Imagine that we are implementing the bookkeeping of external
+files for a format. Such external files can be used for
+table of contents, list of figures, et cetera.
+If the presence
+of such objects is under the control of the user, we need some
+general routines for opening and closing files, and keeping
+track of what files we have opened at the user's request.
+
+%Here only  some routines for bookkeeping will be described.
+%Let us say there is a list of auxiliary files, and an auxiliary
+%counter:
+%\begin{verbatim}
+%\newtoks\auxlist \newcount\auxcount
+%\end{verbatim}
+%First of all there must be an operation to add auxiliary files:
+%\begin{verbatim}
+%\def\NewAuxFile#1{\AddToAuxList{#1}%
+%    % plus other actions
+%    }
+%\def\AddToAuxList#1{\let\\=\relax
+%    \edef\act{\noexpand\auxlist={\the\auxlist \\{#1}}}%
+%    \act}
+%\end{verbatim}
+%This adds the name to the list in a uniform format:
+%\begin{verbatim}
+%\NewAuxFile{toc} \NewAuxFile{lof}
+%\showthe\auxlist
+%> \\{toc}\\{lof}.
+%\end{verbatim}
+%using the control sequence \verb>\\> which is left undefined.
+Here only  some routines for bookkeeping will be described.
+Let us say there is a list of auxiliary files, and an auxiliary
+counter:
+\begin{verbatim}
+\newtoks\auxlist \newcount\auxcount
+\end{verbatim}
+First of all there must be an operation to add auxiliary files:
+\begin{verbatim}
+\def\NewAuxFile#1{\AddToAuxList{#1}%
+    % plus other actions
+    }
+\def\AddToAuxList#1{\let\\=\relax
+    \edef\act{\noexpand\auxlist={\the\auxlist \\{#1}}}%
+    \act}
+\end{verbatim}
+This adds the name to the list in a uniform format:
+\begin{verbatim}
+\NewAuxFile{toc} \NewAuxFile{lof}
+\showthe\auxlist
+> \\{toc}\\{lof}.
+\end{verbatim}
+using the control sequence \verb>\\> which is left undefined.
+
+%Now this control sequence can be used for instance to
+%count the number of elements in the list:
+%\begin{verbatim}
+%\def\ComputeLengthOfAuxList{\auxcount=0 
+%    \def\\##1{\advance\auxcount1\relax}%
+%    \the\auxlist}
+%\ComputeLengthOfAuxList \showthe\auxcount
+%> 2.
+%\end{verbatim}
+%Another use of this structure is the following:
+%at the end of the job we can now close all auxiliary
+%files at once, by
+%\begin{verbatim}
+%\def\CloseAuxFiles{\def\\##1{\CloseAuxFile{##1}}%
+%    \the\auxlist}
+%\def\CloseAuxFile#1{\message{closing file: #1. }%
+%    % plus other actions
+%    }
+%\CloseAuxFiles
+%\end{verbatim}
+%which gives the output
+%\begin{verbatim}
+%closing file: toc.  closing file: lof. 
+%\end{verbatim}
+Now this control sequence can be used for instance to
+count the number of elements in the list:
+\begin{verbatim}
+\def\ComputeLengthOfAuxList{\auxcount=0 
+    \def\\##1{\advance\auxcount1\relax}%
+    \the\auxlist}
+\ComputeLengthOfAuxList \showthe\auxcount
+> 2.
+\end{verbatim}
+Another use of this structure is the following:
+at the end of the job we can now close all auxiliary
+files at once, by
+\begin{verbatim}
+\def\CloseAuxFiles{\def\\##1{\CloseAuxFile{##1}}%
+    \the\auxlist}
+\def\CloseAuxFile#1{\message{closing file: #1. }%
+    % plus other actions
+    }
+\CloseAuxFiles
+\end{verbatim}
+which gives the output
+\begin{verbatim}
+closing file: toc.  closing file: lof. 
+\end{verbatim}
+
+%% 
+%%%% \begin{comment}
+%%%% 
+%%%% % %\spoint Dynamic macro definition
+%%%% % \subsection{Dynamic macro definition}
+%%%% 
+%%%% % Unpacking token lists inside an \cs{edef} can be put to a
+%%%% % rather ambitious use: dynamic definition of macros.
+%%%% % Consider a simple example.
+%%%% % \altt
+%%%% % We set ourselves the goal of letting
+%%%% % the user define macros, without ever having to use \cs{def}.
+%%%% % The syntax for this could look like
+%%%% \begin{verbatim}
+%%%% % \startdefinition
+%%%% % \do:this
+%%%% % \do:that
+%%%% % \define:MyMacro
+%%%% % \end{verbatim}
+%%%% % such that \verb>\show\MyMacro> gives
+%%%% \begin{verbatim}
+%%%% % > \MyMacro=macro:
+%%%% % ->\this \that .
+%%%% % \end{verbatim}
+%%%% % An implementation of this uses a token list to collect
+%%%% % the commands that the user specifies:
+%%%% \begin{verbatim}
+%%%% % \newtoks\actionlist
+%%%% % \end{verbatim}
+%%%% % The first command is easy:
+%%%% \begin{verbatim}
+%%%% % \def\startdefinition{\actionlist{}}
+%%%% % \end{verbatim}
+%%%% % Now the \cs{do} command has to hang control sequences
+%%%% % in the \cs{actionlist}:
+%%%% \begin{verbatim}
+%%%% % \def\do:#1 {%
+%%%% %     \edef\act{\noexpand\appendaction
+%%%% %               \expandafter\noexpand\csname#1\endcsname}%
+%%%% %     \act}
+%%%% % \end{verbatim}
+%%%% % The \cs{edef} is used solely to form the actual control sequence.
+%%%% % The next macro uses \cs{edef} to unpack the \cs{actionlist} so far:
+%%%% %
+%%%% \begin{verbatim}
+%%%% % \def\appendaction#1{%
+%%%% %     \edef\act{\noexpand\actionlist=
+%%%% %                  {\the\actionlist \noexpand#1}}%
+%%%% %     \act}
+%%%% % \end{verbatim}
+%%%% % Finally, definition of the user macro also needs an \cs{edef}.
+%%%% % Some \cs{expandafter} trickery is necessary here to form
+%%%% % the control sequence of the user macro:
+%%%% \begin{verbatim}
+%%%% % \def\define:#1 {%
+%%%% %     \expandafter\edef\csname#1\endcsname{\the\actionlist}}
+%%%% % \end{verbatim}
+%%%% 
+%%%% % Of course, this is a very simple, rather pointless, example.
+%%%% % However, it illustrates an important principle of how
+%%%% % token lists can be used to implement another syntax level
+%%%% % in \TeX\ (see~\cite{EL}). This principle underlies the
+%%%% % \indexterm{Lollipop}
+%%%% % `Lollipop' format that was used to typeset this book.
+%%%% 
+%%%% % \end{comment}
+%%%% %%%% end of input file [token]
+% 
+%%% \begin{comment}
+%%% 
+%%% % %\spoint Dynamic macro definition
+%%% % \subsection{Dynamic macro definition}
+%%% 
+%%% % Unpacking token lists inside an \cs{edef} can be put to a
+%%% % rather ambitious use: dynamic definition of macros.
+%%% % Consider a simple example.
+%%% % \altt
+%%% % We set ourselves the goal of letting
+%%% % the user define macros, without ever having to use \cs{def}.
+%%% % The syntax for this could look like
+%%% \begin{verbatim}
+%%% % \startdefinition
+%%% % \do:this
+%%% % \do:that
+%%% % \define:MyMacro
+%%% % \end{verbatim}
+%%% % such that \verb>\show\MyMacro> gives
+%%% \begin{verbatim}
+%%% % > \MyMacro=macro:
+%%% % ->\this \that .
+%%% % \end{verbatim}
+%%% % An implementation of this uses a token list to collect
+%%% % the commands that the user specifies:
+%%% \begin{verbatim}
+%%% % \newtoks\actionlist
+%%% % \end{verbatim}
+%%% % The first command is easy:
+%%% \begin{verbatim}
+%%% % \def\startdefinition{\actionlist{}}
+%%% % \end{verbatim}
+%%% % Now the \cs{do} command has to hang control sequences
+%%% % in the \cs{actionlist}:
+%%% \begin{verbatim}
+%%% % \def\do:#1 {%
+%%% %     \edef\act{\noexpand\appendaction
+%%% %               \expandafter\noexpand\csname#1\endcsname}%
+%%% %     \act}
+%%% % \end{verbatim}
+%%% % The \cs{edef} is used solely to form the actual control sequence.
+%%% % The next macro uses \cs{edef} to unpack the \cs{actionlist} so far:
+%%% %
+%%% \begin{verbatim}
+%%% % \def\appendaction#1{%
+%%% %     \edef\act{\noexpand\actionlist=
+%%% %                  {\the\actionlist \noexpand#1}}%
+%%% %     \act}
+%%% % \end{verbatim}
+%%% % Finally, definition of the user macro also needs an \cs{edef}.
+%%% % Some \cs{expandafter} trickery is necessary here to form
+%%% % the control sequence of the user macro:
+%%% \begin{verbatim}
+%%% % \def\define:#1 {%
+%%% %     \expandafter\edef\csname#1\endcsname{\the\actionlist}}
+%%% % \end{verbatim}
+%%% 
+%%% % Of course, this is a very simple, rather pointless, example.
+%%% % However, it illustrates an important principle of how
+%%% % token lists can be used to implement another syntax level
+%%% % in \TeX\ (see~\cite{EL}). This principle underlies the
+%%% % \indexterm{Lollipop}
+%%% % `Lollipop' format that was used to typeset this book.
+%%% 
+%%% % \end{comment}
+%%% %%%% end of input file [token]
+
+%\endofchapter
+\endofchapter
+
+\end{document}

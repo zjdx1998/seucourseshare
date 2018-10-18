@@ -1,0 +1,578 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{28}
+
+\begin{document}
+
+%\chapter{Insertions}\label{insert}
+\chapter{Insertions}\label{insert}
+
+%Insertions are \TeX's way of handling floating information.
+%\TeX's page builder calculates what insertions and how many
+%of them will fit on the page; these insertion items are then
+%placed in insertion boxes which are to be handled by the
+%output routine.
+Insertions are \TeX's way of handling floating information.
+\TeX's page builder calculates what insertions and how many
+of them will fit on the page; these insertion items are then
+placed in insertion boxes which are to be handled by the
+output routine.
+
+
+%\label{cschap:insert}\label{cschap:newinsert}\label{cschap:insertpenalties}\label{cschap:floatingpenalty}\label{cschap:holdinginserts}\label{cschap:footins}\label{cschap:topins}\label{cschap:topinsert}\label{cschap:pageinsert}\label{cschap:midinsert}\label{cschap:endinsert}
+%\begin{inventory}
+%\item [\cs{insert}] 
+%      Start an insertion item.
+\label{cschap:insert}\label{cschap:newinsert}\label{cschap:insertpenalties}\label{cschap:floatingpenalty}\label{cschap:holdinginserts}\label{cschap:footins}\label{cschap:topins}\label{cschap:topinsert}\label{cschap:pageinsert}\label{cschap:midinsert}\label{cschap:endinsert}
+\begin{inventory}
+\item [\cs{insert}] 
+      Start an insertion item.
+
+%\item [\cs{newinsert}] 
+%      Allocate a new insertion class. 
+\item [\cs{newinsert}] 
+      Allocate a new insertion class. 
+
+%\item [\cs{insertpenalties}] 
+%      Total of penalties for split insertions.
+%      Inside the output routine, the number of held-over insertions.
+\item [\cs{insertpenalties}] 
+      Total of penalties for split insertions.
+      Inside the output routine, the number of held-over insertions.
+
+%\item [\cs{floatingpenalty}] 
+%      Penalty added when an insertion is split.
+\item [\cs{floatingpenalty}] 
+      Penalty added when an insertion is split.
+
+%\item [\cs{holdinginserts}]
+%      (\TeX3 only)
+%      If this is positive, insertions are not placed in their boxes 
+%      at output time.
+\item [\cs{holdinginserts}]
+      (\TeX3 only)
+      If this is positive, insertions are not placed in their boxes 
+      at output time.
+
+%\item [\cs{footins}]
+%      Number of the footnote insertion class in plain \TeX.
+\item [\cs{footins}]
+      Number of the footnote insertion class in plain \TeX.
+
+%\item [\cs{topins}]
+%      Number of the top insertion class.
+\item [\cs{topins}]
+      Number of the top insertion class.
+
+%\item [\cs{topinsert}]
+%      Plain \TeX\ macro to start a top insert.
+\item [\cs{topinsert}]
+      Plain \TeX\ macro to start a top insert.
+
+%\item [\cs{pageinsert}]
+%      Plain \TeX\ macro to start an insert that will take
+%      up a whole page.
+\item [\cs{pageinsert}]
+      Plain \TeX\ macro to start an insert that will take
+      up a whole page.
+
+%\item [\cs{midinsert}]
+%      Plain \TeX\ macro that places its argument if there is space,
+%      and converts it into a top insert otherwise.
+\item [\cs{midinsert}]
+      Plain \TeX\ macro that places its argument if there is space,
+      and converts it into a top insert otherwise.
+
+%\item [\cs{endinsert}]
+%      Plain \TeX\ macro to wind up an insertion item
+%      that started with \cs{topinsert}, \cs{midinsert},
+%      or \cs{pageinsert}.
+\item [\cs{endinsert}]
+      Plain \TeX\ macro to wind up an insertion item
+      that started with \cs{topinsert}, \cs{midinsert},
+      or \cs{pageinsert}.
+
+%\end{inventory}
+\end{inventory}
+
+
+%%\point Insertion items
+%\section{Insertion items}
+%\point Insertion items
+\section{Insertion items}
+
+%Floating information, items that are not bound to a fixed
+%place in the vertical list, such as figures or footnotes,
+%are handled by \indexterm{insertions}.
+%The treatment of insertions is a strange interplay between the
+%user, \TeX's internal workings, and the output routine.
+%First the user specifies an insertion, which is
+%a certain amount of vertical material; 
+%then \TeX's page builder decides what insertions should go
+%on the current page and puts these insertions in insertion boxes;
+%finally, the output routine has to do something with these boxes.
+Floating information, items that are not bound to a fixed
+place in the vertical list, such as figures or footnotes,
+are handled by \indexterm{insertions}.
+The treatment of insertions is a strange interplay between the
+user, \TeX's internal workings, and the output routine.
+First the user specifies an insertion, which is
+a certain amount of vertical material; 
+then \TeX's page builder decides what insertions should go
+on the current page and puts these insertions in insertion boxes;
+finally, the output routine has to do something with these boxes.
+
+%An insertion item looks like
+%\cstoidx insert\par
+%\begin{disp}\cs{insert}\gr{8-bit number}\lb\gr{vertical mode material}\rb
+%\end{disp} where the 8-bit number should not be~255,
+%because \cs{box255} is used by \TeX\ for passing the page to the output
+%routine.
+An insertion item looks like
+\cstoidx insert\par
+\begin{disp}\cs{insert}\gr{8-bit number}\lb\gr{vertical mode material}\rb
+\end{disp} where the 8-bit number should not be~255,
+because \cs{box255} is used by \TeX\ for passing the page to the output
+routine.
+
+%The braces around the vertical mode material in an insertion
+%item can be implicit; they imply a new level of grouping.
+%The vertical mode material is processed in internal
+%vertical mode.
+The braces around the vertical mode material in an insertion
+item can be implicit; they imply a new level of grouping.
+The vertical mode material is processed in internal
+vertical mode.
+
+%Values of \cs{splittopskip}, \cs{splitmaxdepth}, 
+%and \cs{floatingpenalty} are relevant for split insertions
+%(see below); the values that are current just before
+%the end of the group are used.
+Values of \cs{splittopskip}, \cs{splitmaxdepth}, 
+and \cs{floatingpenalty} are relevant for split insertions
+(see below); the values that are current just before
+the end of the group are used.
+
+%Insertion items can appear in vertical mode, horizontal
+%mode, and math mode. For the latter two modes they have to
+%migrate to the surrounding vertical list
+%(see page~\pageref{migrate}).
+%After an insertion item is put on  the vertical list the
+%page builder is exercised.
+Insertion items can appear in vertical mode, horizontal
+mode, and math mode. For the latter two modes they have to
+migrate to the surrounding vertical list
+(see page~\pageref{migrate}).
+After an insertion item is put on  the vertical list the
+page builder is exercised.
+
+
+%%\point Insertion class declaration
+%\section{Insertion class declaration}
+%\point Insertion class declaration
+\section{Insertion class declaration}
+
+%In the plain format 
+%the  number for a new insertion class
+%is allocated by \csidx{newinsert}:
+%\begin{verbatim}
+%\newinsert\myinsert % new insertion class
+%\end{verbatim}
+%which uses \cs{chardef} to assign a number to the control
+%sequence.
+In the plain format 
+the  number for a new insertion class
+is allocated by \csidx{newinsert}:
+\begin{verbatim}
+\newinsert\myinsert % new insertion class
+\end{verbatim}
+which uses \cs{chardef} to assign a number to the control
+sequence.
+
+%Insertion classes are allocated numbering from 254 downward.
+%As box~255 is used for output, this allocation scheme leaves
+%\cs{skip255}, \cs{dimen255}, and \cs{count255}
+%free for scratch use.
+Insertion classes are allocated numbering from 254 downward.
+As box~255 is used for output, this allocation scheme leaves
+\cs{skip255}, \cs{dimen255}, and \cs{count255}
+free for scratch use.
+
+%%\point Insertion parameters
+%\section{Insertion parameters}
+%\point Insertion parameters
+\section{Insertion parameters}
+
+%For each insertion class~$n$ four registers are allocated:
+%\begin{itemize}
+%\item \cs{box}$\,n$ When the output routine is active this
+% box contains the insertion items of class~$n$ that should
+% be placed on the current page.
+%\item \cs{dimen}$\,n$ This is the maximum space allotted for
+% insertions of class~$n$ per page. If this amount would
+% be exceeded \TeX\ will split insertions.
+%\item \cs{skip}$\,n$ Glue of this size is added the first
+% time an insertion item of class~$n$ is added to the
+% current page. This is useful for such phenomena as a rule
+% separating the footnotes from the text of the page.
+%\item \cs{count}$\,n$ Each insertion item is a vertical list,
+% so it has a certain height. However, the effective height,
+% the amount of influence it has on the text height of the
+% page, may differ from this real height.
+% The value of \cs{count}$\,n$
+% is then 1000 times the factor by which the height should
+% be multiplied to obtain the effective height.
+% 
+% Consider the following examples:
+% 
+%\begin{itemize}\item Marginal notes do not affect
+% the text height, so the factor should be~0. \item Footnotes
+% set in double column mode affect the page by half of their height:
+% the count value should by~500. \item Conversely, footnotes
+% set at page width underneath a page in double column mode
+% affect both columns, so \ldash provided that the double column mode
+% is implemented by applying \cs{vsplit} to a double-height column \rdash 
+% the count value should be~2000.\end{itemize}
+%\end{itemize}
+For each insertion class~$n$ four registers are allocated:
+\begin{itemize}
+\item \cs{box}$\,n$ When the output routine is active this
+ box contains the insertion items of class~$n$ that should
+ be placed on the current page.
+\item \cs{dimen}$\,n$ This is the maximum space allotted for
+ insertions of class~$n$ per page. If this amount would
+ be exceeded \TeX\ will split insertions.
+\item \cs{skip}$\,n$ Glue of this size is added the first
+ time an insertion item of class~$n$ is added to the
+ current page. This is useful for such phenomena as a rule
+ separating the footnotes from the text of the page.
+\item \cs{count}$\,n$ Each insertion item is a vertical list,
+ so it has a certain height. However, the effective height,
+ the amount of influence it has on the text height of the
+ page, may differ from this real height.
+ The value of \cs{count}$\,n$
+ is then 1000 times the factor by which the height should
+ be multiplied to obtain the effective height.
+ 
+ Consider the following examples:
+ 
+\begin{itemize}\item Marginal notes do not affect
+ the text height, so the factor should be~0. \item Footnotes
+ set in double column mode affect the page by half of their height:
+ the count value should by~500. \item Conversely, footnotes
+ set at page width underneath a page in double column mode
+ affect both columns, so \ldash provided that the double column mode
+ is implemented by applying \cs{vsplit} to a double-height column \rdash 
+ the count value should be~2000.\end{itemize}
+\end{itemize}
+
+%%\point Moving insertion items from the contributions list
+%\section{Moving insertion items from the contributions list}
+%\point Moving insertion items from the contributions list
+\section{Moving insertion items from the contributions list}
+
+%The most complicated issue with insertions is the algorithm
+%that adds insertion items to the main vertical list,
+%and calculates breakpoints if necessary.
+The most complicated issue with insertions is the algorithm
+that adds insertion items to the main vertical list,
+and calculates breakpoints if necessary.
+
+%\TeX\ never changes the \cs{vsize}, but it diminishes the
+%\csidx{pagegoal} by the (effective) heights of the insertion
+%items that will appear before a page break. Thus the output
+%routine will receive a \cs{box255} that has height \cs{pagegoal},
+%not necessarily \cs{vsize}.
+\TeX\ never changes the \cs{vsize}, but it diminishes the
+\csidx{pagegoal} by the (effective) heights of the insertion
+items that will appear before a page break. Thus the output
+routine will receive a \cs{box255} that has height \cs{pagegoal},
+not necessarily \cs{vsize}.
+
+%\begin{enumerate}
+%\item When the first insertion of a certain class $n$ occurs
+%  on the current page \TeX\ has to account for the quantity
+%  \cs{skip}$\,n$. This step is executed only if no earlier
+%  insertion item of this class occurs on the vertical list
+%  \ldash this includes insertions that were split \rdash  but \cs{box}$\,n$
+%  need not be empty at this time.
+%  
+%  If \cs{box}$\,n$ is not empty, its height plus depth is multiplied
+%  by \cs{count}$\,n/1000$ and the result is subtracted
+%  from \cs{pagegoal}. Then the \cs{pagegoal} is diminished
+%  by the natural component of \cs{skip}$\,n$. Any stretch and
+%  shrink of \cs{skip}$\,n$ are incorporated in \cs{pagestretch}
+%  and \cs{pageshrink} respectively.
+%\item If there is a split insertion of class $n$ on the page
+%  \ldash this case and the previous step in the algorithm are
+%  mutually exclusive \rdash  the \csidx{floatingpenalty} is added to
+%  \csidx{insertpenalties}. A~split insertion is an insertion item
+%  for which a breakpoint has been calculated as it will not
+%  fit on the current page in its entirety. Thus the insertion
+%  currently under consideration will certainly not wind up 
+%  on the current page.
+%\item After the preliminary action of the two previous points
+%  \TeX\ will place the actual insertion item on the main vertical
+%  list, at the end of the current contributions.
+%  First it will check whether the item will fit without being split.
+%  
+%  There are two conditions to be checked:
+%\begin{itemize}\item
+%  adding the insertion item (plus all previous insertions of that class)
+%  to \cs{box}$\,n$ should not let
+%  the height plus depth of that box exceed \cs{dimen}$\,n$, and
+%  \item either the effective height of the insertion is negative, or
+%  \cs{pagetotal} plus \cs{pagedepth} minus \cs{pageshrink}
+%  plus the effective size of the insertion should be less than
+%  \cs{pagegoal}.\end{itemize}
+%  If these conditions are satisfied, \cs{pagegoal} is diminished
+%  by the effective size of the insertion item, that is,
+%  by the height plus depth, multiplied by \cs{count}$n/1000$.
+\begin{enumerate}
+\item When the first insertion of a certain class $n$ occurs
+  on the current page \TeX\ has to account for the quantity
+  \cs{skip}$\,n$. This step is executed only if no earlier
+  insertion item of this class occurs on the vertical list
+  \ldash this includes insertions that were split \rdash  but \cs{box}$\,n$
+  need not be empty at this time.
+  
+  If \cs{box}$\,n$ is not empty, its height plus depth is multiplied
+  by \cs{count}$\,n/1000$ and the result is subtracted
+  from \cs{pagegoal}. Then the \cs{pagegoal} is diminished
+  by the natural component of \cs{skip}$\,n$. Any stretch and
+  shrink of \cs{skip}$\,n$ are incorporated in \cs{pagestretch}
+  and \cs{pageshrink} respectively.
+\item If there is a split insertion of class $n$ on the page
+  \ldash this case and the previous step in the algorithm are
+  mutually exclusive \rdash  the \csidx{floatingpenalty} is added to
+  \csidx{insertpenalties}. A~split insertion is an insertion item
+  for which a breakpoint has been calculated as it will not
+  fit on the current page in its entirety. Thus the insertion
+  currently under consideration will certainly not wind up 
+  on the current page.
+\item After the preliminary action of the two previous points
+  \TeX\ will place the actual insertion item on the main vertical
+  list, at the end of the current contributions.
+  First it will check whether the item will fit without being split.
+  
+  There are two conditions to be checked:
+\begin{itemize}\item
+  adding the insertion item (plus all previous insertions of that class)
+  to \cs{box}$\,n$ should not let
+  the height plus depth of that box exceed \cs{dimen}$\,n$, and
+  \item either the effective height of the insertion is negative, or
+  \cs{pagetotal} plus \cs{pagedepth} minus \cs{pageshrink}
+  plus the effective size of the insertion should be less than
+  \cs{pagegoal}.\end{itemize}
+  If these conditions are satisfied, \cs{pagegoal} is diminished
+  by the effective size of the insertion item, that is,
+  by the height plus depth, multiplied by \cs{count}$n/1000$.
+
+%\item Insertions that fail on one of the two conditions in the
+%  previous step of the algorithm will be considered for splitting.
+%  \TeX\ will calculate the size of the maximal portion to 
+%  be split off the insertion item, such that
+%  
+%\begin{enumerate}\item adding this portion
+%  together with earlier insertions of this class to \cs{box}$\,n$
+%  will not let the size of the box exceed \cs{dimen}$\,n$,
+%  and \item the effective size of this portion,
+%  added to \cs{pagetotal} plus \cs{pagedepth}, will not
+%  exceed \cs{pagegoal}. Note that \cs{pageshrink} is not taken
+%  into account this time, as it was in the previous step.
+%  \end{enumerate}
+%  
+%  Once this maximal size to be split off has been determined,
+%  \TeX\ locates the least-cost breakpoint in the current 
+%  insertion item that will result in a box with a  height
+%  that is equal to this maximal size. The penalty associated
+%  with this breakpoint is added to \cs{insertpenalties},
+%  and \cs{pagegoal} is diminished by the effective height plus
+%  depth of the box to be split off the insertion item.
+\item Insertions that fail on one of the two conditions in the
+  previous step of the algorithm will be considered for splitting.
+  \TeX\ will calculate the size of the maximal portion to 
+  be split off the insertion item, such that
+  
+\begin{enumerate}\item adding this portion
+  together with earlier insertions of this class to \cs{box}$\,n$
+  will not let the size of the box exceed \cs{dimen}$\,n$,
+  and \item the effective size of this portion,
+  added to \cs{pagetotal} plus \cs{pagedepth}, will not
+  exceed \cs{pagegoal}. Note that \cs{pageshrink} is not taken
+  into account this time, as it was in the previous step.
+  \end{enumerate}
+  
+  Once this maximal size to be split off has been determined,
+  \TeX\ locates the least-cost breakpoint in the current 
+  insertion item that will result in a box with a  height
+  that is equal to this maximal size. The penalty associated
+  with this breakpoint is added to \cs{insertpenalties},
+  and \cs{pagegoal} is diminished by the effective height plus
+  depth of the box to be split off the insertion item.
+
+%\end{enumerate}
+\end{enumerate}
+
+
+
+%%\point Insertions in the output routine
+%\section{Insertions in the output routine}
+%\point Insertions in the output routine
+\section{Insertions in the output routine}
+
+%When the output routine comes into action \ldash more precisely:
+%when \TeX\ starts processing the tokens in the \cs{output}
+%token list \rdash  all insertions that should be placed on the
+%current page have been put in their boxes, and
+%it is the responsibility of the output routine
+%to put them somewhere in the box that is going to be shipped out.
+When the output routine comes into action \ldash more precisely:
+when \TeX\ starts processing the tokens in the \cs{output}
+token list \rdash  all insertions that should be placed on the
+current page have been put in their boxes, and
+it is the responsibility of the output routine
+to put them somewhere in the box that is going to be shipped out.
+
+%\begin{example} The plain \TeX\ output routine
+%handles top inserts and footnotes by packaging the following
+%sequence:
+%\begin{verbatim}
+%\ifvoid\topins \else \unvbox\topins \fi
+%\pagebody
+%\ifvoid\footins \else \unvbox\footins \fi
+%\end{verbatim}
+%Unboxing the insertion boxes makes the glue on various parts
+%of the page stretch or shrink in a uniform manner.
+%\end{example}
+\begin{example} The plain \TeX\ output routine
+handles top inserts and footnotes by packaging the following
+sequence:
+\begin{verbatim}
+\ifvoid\topins \else \unvbox\topins \fi
+\pagebody
+\ifvoid\footins \else \unvbox\footins \fi
+\end{verbatim}
+Unboxing the insertion boxes makes the glue on various parts
+of the page stretch or shrink in a uniform manner.
+\end{example}
+
+%With \TeX3 the insertion mechanism has been extended slightly:
+%\handbreak \cstoidx holdinginserts\par
+%\thecstoidxsub{TeX}{version 3}
+%the parameter \cs{holdinginserts} can be used to specify that
+%insertions should not yet be placed in their boxes.
+%This is very useful if the output routine wants to
+%recalculate the \cs{vsize}, or if the output routine
+%is called to do other intermediate calculations instead of
+%ejecting a page.
+With \TeX3 the insertion mechanism has been extended slightly:
+\handbreak \cstoidx holdinginserts\par
+\thecstoidxsub{TeX}{version 3}
+the parameter \cs{holdinginserts} can be used to specify that
+insertions should not yet be placed in their boxes.
+This is very useful if the output routine wants to
+recalculate the \cs{vsize}, or if the output routine
+is called to do other intermediate calculations instead of
+ejecting a page.
+
+%During the output routine the parameter
+%\csidx{insertpenalties} holds the number of insertion items that
+%are being held over for the next page.
+%In the plain \TeX\ output routine this is used after the
+%last page:
+%\begin{verbatim}
+%\def\dosupereject{\ifnum\insertpenalties>0 
+%    % something is being held over
+%  \line{}\kern-\topskip\nobreak\vfill\supereject\fi}
+%\end{verbatim}
+During the output routine the parameter
+\csidx{insertpenalties} holds the number of insertion items that
+are being held over for the next page.
+In the plain \TeX\ output routine this is used after the
+last page:
+\begin{verbatim}
+\def\dosupereject{\ifnum\insertpenalties>0 
+    % something is being held over
+  \line{}\kern-\topskip\nobreak\vfill\supereject\fi}
+\end{verbatim}
+
+%%\point Plain \TeX\ insertions
+%\section{Plain \TeX\ insertions}
+%\point Plain \TeX\ insertions
+\section{Plain \TeX\ insertions}
+
+%The plain \TeX\ format has only two insertion classes:
+%the footnotes and the top inserts.
+%The macro \csidx{pageinsert} generates
+%top inserts that are stretched to be exactly \cs{vsize} high.
+%The \csidx{midinsert} macro tests whether the vertical material
+%specified by the user fits on the page; if so, it is placed
+%there; if not, it is converted to a top insert.
+The plain \TeX\ format has only two insertion classes:
+the footnotes and the top inserts.
+The macro \csidx{pageinsert} generates
+top inserts that are stretched to be exactly \cs{vsize} high.
+The \csidx{midinsert} macro tests whether the vertical material
+specified by the user fits on the page; if so, it is placed
+there; if not, it is converted to a top insert.
+
+%Footnotes are allowed to be split, but once one has been
+%split no further footnotes should appear on the current
+%page. This effect is attained by setting 
+%\begin{verbatim}
+%\floatingpenalty=20000
+%\end{verbatim} 
+%The \cs{floatingpenalty} is added to \cs{insertpenalties}
+%if an insertion follows a split insertion of the same 
+%class. However, \cs{floatingpenalty}${}>10\,000$ has infinite
+%cost, so \TeX\ will take an earlier breakpoint for
+%splitting off the page from the vertical list.
+Footnotes are allowed to be split, but once one has been
+split no further footnotes should appear on the current
+page. This effect is attained by setting 
+\begin{verbatim}
+\floatingpenalty=20000
+\end{verbatim} 
+The \cs{floatingpenalty} is added to \cs{insertpenalties}
+if an insertion follows a split insertion of the same 
+class. However, \cs{floatingpenalty}${}>10\,000$ has infinite
+cost, so \TeX\ will take an earlier breakpoint for
+splitting off the page from the vertical list.
+
+%Top inserts essentially contain only a vertical box
+%which holds whatever the user specified. Thus such an insert
+%cannot be split. However, the \csidx{endinsert} macro
+%puts a \cs{penalty100} on top of the box, so the
+%insertion can be split with an empty part before the split.
+%The effect is that the whole insertion is carried over to
+%the next page. As the \cs{floatingpenalty} for top inserts
+%is zero, arbitrarily many of these inserts can be moved forward
+%until there is a page with sufficient space.
+Top inserts essentially contain only a vertical box
+which holds whatever the user specified. Thus such an insert
+cannot be split. However, the \csidx{endinsert} macro
+puts a \cs{penalty100} on top of the box, so the
+insertion can be split with an empty part before the split.
+The effect is that the whole insertion is carried over to
+the next page. As the \cs{floatingpenalty} for top inserts
+is zero, arbitrarily many of these inserts can be moved forward
+until there is a page with sufficient space.
+
+%Further examples of insertion macros can be found
+%in~\cite{Sal3}.
+Further examples of insertion macros can be found
+in~\cite{Sal3}.
+
+%%\message{Maybe spaceleft example?}
+%\message{Maybe spaceleft example?}
+
+
+%\endofchapter
+%%%%% end of input file [page]
+\endofchapter
+%%%% end of input file [page]
+
+\end{document}

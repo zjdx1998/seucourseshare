@@ -1,0 +1,1517 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{22}
+
+\begin{document}
+
+%\chapter{Mathematics Typesetting}\label{math}
+\chapter{Mathematics Typesetting}\label{math}
+
+%\TeX\ has two math modes, display and non-display, and
+%four styles, display, text, script, and scriptscript style, and
+%\altt
+%every object in math mode belongs to one of eight classes.
+%This chapter treats these concepts.
+\TeX\ has two math modes, display and non-display, and
+four styles, display, text, script, and scriptscript style, and
+\altt
+every object in math mode belongs to one of eight classes.
+This chapter treats these concepts.
+
+
+%\label{cschap:everymath}\label{cschap:displaystyle}\label{cschap:textstyle}\label{cschap:scriptstyle}\label{cschap:scriptscriptstyle}\label{cschap:mathchoice}\label{cschap:mathord}\label{cschap:mathop}\label{cschap:mathbin}\label{cschap:mathrel}\label{cschap:mathopen}\label{cschap:mathclose}\label{cschap:mathpunct}\label{cschap:mathinner}\label{cschap:mathaccent2}\label{cschap:vcenter}\label{cschap:limits}\label{cschap:nolimits}\label{cschap:displaylimits}\label{cschap:scriptspace}\label{cschap:nonscript}\label{cschap:mkern}\label{cschap:mskip}\label{cschap:muskip}\label{cschap:muskipdef}\label{cschap:newmuskip}\label{cschap:thinmuskip}\label{cschap:medmuskip}\label{cschap:thickmuskip}\label{cschap:mathsurround}\label{cschap:over}\label{cschap:atop}\label{cschap:above}\label{cschap:overwithdelims}\label{cschap:atopwithdelims}\label{cschap:abovewithdelims}\label{cschap:underline}\label{cschap:overline}\label{cschap:relpenalty}\label{cschap:binoppenalty}
+%\begin{inventory}
+%\item [\cs{everymath}] 
+%      Token list inserted at the start of a non-display formula.
+\label{cschap:everymath}\label{cschap:displaystyle}\label{cschap:textstyle}\label{cschap:scriptstyle}\label{cschap:scriptscriptstyle}\label{cschap:mathchoice}\label{cschap:mathord}\label{cschap:mathop}\label{cschap:mathbin}\label{cschap:mathrel}\label{cschap:mathopen}\label{cschap:mathclose}\label{cschap:mathpunct}\label{cschap:mathinner}\label{cschap:mathaccent2}\label{cschap:vcenter}\label{cschap:limits}\label{cschap:nolimits}\label{cschap:displaylimits}\label{cschap:scriptspace}\label{cschap:nonscript}\label{cschap:mkern}\label{cschap:mskip}\label{cschap:muskip}\label{cschap:muskipdef}\label{cschap:newmuskip}\label{cschap:thinmuskip}\label{cschap:medmuskip}\label{cschap:thickmuskip}\label{cschap:mathsurround}\label{cschap:over}\label{cschap:atop}\label{cschap:above}\label{cschap:overwithdelims}\label{cschap:atopwithdelims}\label{cschap:abovewithdelims}\label{cschap:underline}\label{cschap:overline}\label{cschap:relpenalty}\label{cschap:binoppenalty}
+\begin{inventory}
+\item [\cs{everymath}] 
+      Token list inserted at the start of a non-display formula.
+
+%\item [\cs{everydisplay}]
+%      Token list inserted at the start of a display formula.
+\item [\cs{everydisplay}]
+      Token list inserted at the start of a display formula.
+
+%\item [\cs{displaystyle}] 
+%      Select the display style of mathematics typesetting.
+\item [\cs{displaystyle}] 
+      Select the display style of mathematics typesetting.
+
+%\item [\cs{textstyle}] 
+%      Select the text style of mathematics typesetting.
+\item [\cs{textstyle}] 
+      Select the text style of mathematics typesetting.
+
+%\item [\cs{scriptstyle}] 
+%      Select the script style of mathematics typesetting.
+\item [\cs{scriptstyle}] 
+      Select the script style of mathematics typesetting.
+
+%\item [\cs{scriptscriptstyle}] 
+%      Select the scriptscript style of mathematics typesetting.
+\item [\cs{scriptscriptstyle}] 
+      Select the scriptscript style of mathematics typesetting.
+
+%\item [\cs{mathchoice}] 
+%      Give four variants of a formula for the four styles
+%      of mathematics typesetting.
+\item [\cs{mathchoice}] 
+      Give four variants of a formula for the four styles
+      of mathematics typesetting.
+
+%\item [\cs{mathord}] 
+%      Let the following character or subformula function 
+%      as an ordinary object.
+\item [\cs{mathord}] 
+      Let the following character or subformula function 
+      as an ordinary object.
+
+%\item [\cs{mathop}] 
+%      Let the following character or subformula function 
+%      as a large operator.
+\item [\cs{mathop}] 
+      Let the following character or subformula function 
+      as a large operator.
+
+%\item [\cs{mathbin}] 
+%      Let the following character or subformula function 
+%      as a binary operation.
+\item [\cs{mathbin}] 
+      Let the following character or subformula function 
+      as a binary operation.
+
+%\item [\cs{mathrel}] 
+%      Let the following character or subformula function as a relation.
+\item [\cs{mathrel}] 
+      Let the following character or subformula function as a relation.
+
+%\item [\cs{mathopen}] 
+%      Let the following character or subformula function 
+%      as a opening symbol.
+\item [\cs{mathopen}] 
+      Let the following character or subformula function 
+      as a opening symbol.
+
+%\item [\cs{mathclose}] 
+%      Let the following character or subformula function
+%      as a closing symbol.
+\item [\cs{mathclose}] 
+      Let the following character or subformula function
+      as a closing symbol.
+
+%\item [\cs{mathpunct}] 
+%      Let the following character or subformula function 
+%      as a punctuation symbol.
+\item [\cs{mathpunct}] 
+      Let the following character or subformula function 
+      as a punctuation symbol.
+
+%\item [\cs{mathinner}] 
+%      Let the following character or subformula function 
+%      as an inner formula.
+\item [\cs{mathinner}] 
+      Let the following character or subformula function 
+      as an inner formula.
+
+%\item [\cs{mathaccent}] 
+%      Place an accent in math mode.
+\item [\cs{mathaccent}] 
+      Place an accent in math mode.
+
+%\item [\cs{vcenter}] 
+%      Construct a vertical box, vertically centred
+%      on the math axis.
+\item [\cs{vcenter}] 
+      Construct a vertical box, vertically centred
+      on the math axis.
+
+%\item [\cs{limits}] 
+%      Place limits over and under a large operator.
+\item [\cs{limits}] 
+      Place limits over and under a large operator.
+
+%\item [\cs{nolimits}] 
+%      Place limits of a large operator as subscript and 
+%      superscript expressions.
+\item [\cs{nolimits}] 
+      Place limits of a large operator as subscript and 
+      superscript expressions.
+
+%\item [\cs{displaylimits}] 
+%      Restore default placement for limits.
+\item [\cs{displaylimits}] 
+      Restore default placement for limits.
+
+%\item [\cs{scriptspace}] 
+%      Extra space after subscripts and superscripts.
+%      Plain \TeX\ default:~\n{0.5pt}
+\item [\cs{scriptspace}] 
+      Extra space after subscripts and superscripts.
+      Plain \TeX\ default:~\n{0.5pt}
+
+%\item [\cs{nonscript}] 
+%      Cancel the next glue item if it occurs in 
+%      scriptstyle or scriptscriptstyle.
+\item [\cs{nonscript}] 
+      Cancel the next glue item if it occurs in 
+      scriptstyle or scriptscriptstyle.
+
+%\item [\cs{mkern}] 
+%      Insert a kern measured in mu units.
+\item [\cs{mkern}] 
+      Insert a kern measured in mu units.
+
+%\item [\cs{mskip}] 
+%      Insert glue measured in mu units.
+\item [\cs{mskip}] 
+      Insert glue measured in mu units.
+
+%\item [\cs{muskip}] 
+%      Prefix for skips measured in mu units. 
+\item [\cs{muskip}] 
+      Prefix for skips measured in mu units. 
+
+%\item [\cs{muskipdef}] 
+%      Define a control sequence to be a synonym for
+%      a~\cs{muskip} register.
+\item [\cs{muskipdef}] 
+      Define a control sequence to be a synonym for
+      a~\cs{muskip} register.
+
+%\item [\cs{newmuskip}] 
+%      Allocate a new muskip register.
+\item [\cs{newmuskip}] 
+      Allocate a new muskip register.
+
+%\item [\cs{thinmuskip}] 
+%      Small amount of mu glue.
+\item [\cs{thinmuskip}] 
+      Small amount of mu glue.
+
+%\item [\cs{medmuskip}] 
+%      Medium amount of mu glue.
+\item [\cs{medmuskip}] 
+      Medium amount of mu glue.
+
+%\item [\cs{thickmuskip}] 
+%      Large amount of mu glue. 
+\item [\cs{thickmuskip}] 
+      Large amount of mu glue. 
+
+%\item [\cs{mathsurround}] 
+%      Kern amount placed before and after in-line formulas.
+\item [\cs{mathsurround}] 
+      Kern amount placed before and after in-line formulas.
+
+%\item [\cs{over}]
+%      Fraction.
+\item [\cs{over}]
+      Fraction.
+
+%\item [\cs{atop}]
+%      Place objects over one another.
+\item [\cs{atop}]
+      Place objects over one another.
+
+%\item [\cs{above}]
+%      Fraction with specified bar width. 
+\item [\cs{above}]
+      Fraction with specified bar width. 
+
+%\item [\cs{overwithdelims}]
+%      Fraction with delimiters.
+\item [\cs{overwithdelims}]
+      Fraction with delimiters.
+
+%\item [\cs{atopwithdelims}]
+%      Place objects over one another with delimiters.
+\item [\cs{atopwithdelims}]
+      Place objects over one another with delimiters.
+
+%\item [\cs{abovewithdelims}]
+%      Generalized fraction with delimiters.
+\item [\cs{abovewithdelims}]
+      Generalized fraction with delimiters.
+
+%\item [\cs{underline}] 
+%      Underline the following \gr{math symbol} or group.
+\item [\cs{underline}] 
+      Underline the following \gr{math symbol} or group.
+
+%\item [\cs{overline}] 
+%      Overline the following \gr{math symbol} or group.
+\item [\cs{overline}] 
+      Overline the following \gr{math symbol} or group.
+
+
+%\item [\cs{relpenalty}] 
+%      Penalty for breaking after a binary relation
+%      not enclosed in a subformula.
+%      Plain \TeX\ default:~\n{500}
+\item [\cs{relpenalty}] 
+      Penalty for breaking after a binary relation
+      not enclosed in a subformula.
+      Plain \TeX\ default:~\n{500}
+
+%\item [\cs{binoppenalty}] 
+%      Penalty for breaking after a binary operator not enclosed in
+%      a subformula.
+%      Plain \TeX\ default:~\n{700}
+\item [\cs{binoppenalty}] 
+      Penalty for breaking after a binary operator not enclosed in
+      a subformula.
+      Plain \TeX\ default:~\n{700}
+
+%\item [\cs{allowbreak}] 
+%      Macro for creating a breakpoint.
+\item [\cs{allowbreak}] 
+      Macro for creating a breakpoint.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point[math:modes] Math modes
+%\section{Math modes}
+%\label{math:modes}
+%\point[math:modes] Math modes
+\section{Math modes}
+\label{math:modes}
+
+%\TeX\ changes to \indexterm{math mode} when it encounters a
+%\indexterm{math shift character}, category~3\index{category!3},
+%in the input. After such
+%an opening math shift it investigates (without expansion) the next
+%token to see whether this is another math shift.  In the latter case
+%\TeX\ starts processing in \indextermbus{display}{math mode} until a
+%closing double math shift is encountered:
+%\begin{disp}\verb> .. $$ >{\italic displayed formula}\verb> $$ ..>\end{disp}
+%Otherwise it starts processing an in-line formula in
+%\indextermbus{non-display}{math mode}:
+%\begin{disp}\verb> .. $ >{\italic in-line formula}\verb> $ ..>\end{disp}
+%The single math shift character is a \gr{horizontal command}.
+\TeX\ changes to \indexterm{math mode} when it encounters a
+\indexterm{math shift character}, category~3\index{category!3},
+in the input. After such
+an opening math shift it investigates (without expansion) the next
+token to see whether this is another math shift.  In the latter case
+\TeX\ starts processing in \indextermbus{display}{math mode} until a
+closing double math shift is encountered:
+\begin{disp}\verb> .. $$ >{\italic displayed formula}\verb> $$ ..>\end{disp}
+Otherwise it starts processing an in-line formula in
+\indextermbus{non-display}{math mode}:
+\begin{disp}\verb> .. $ >{\italic in-line formula}\verb> $ ..>\end{disp}
+The single math shift character is a \gr{horizontal command}.
+
+%Exception: displays are not possible in restricted horizontal
+%mode, so inside an \cs{hbox} the sequence
+%\verb>$$> is an empty math formula and
+%not the start of a displayed formula.
+Exception: displays are not possible in restricted horizontal
+mode, so inside an \cs{hbox} the sequence
+\verb>$$> is an empty math formula and
+not the start of a displayed formula.
+
+%Associated with the two math modes are two \gr{token parameter}
+%registers (see also Chapter~\ref{token}):
+%at the start of an in-line formula the \csidx{everymath} tokens
+%are inserted; at the start of a displayed formula the
+%\cs{everydisplay} tokens are inserted.
+%Display math is treated further in the next chapter.
+Associated with the two math modes are two \gr{token parameter}
+registers (see also Chapter~\ref{token}):
+at the start of an in-line formula the \csidx{everymath} tokens
+are inserted; at the start of a displayed formula the
+\cs{everydisplay} tokens are inserted.
+Display math is treated further in the next chapter.
+
+%Math modes can be tested for: \cs{ifmmode} is true
+%in display and non-display math mode, and \cs{ifinner}
+%is true in non-display mode, but not in display mode.
+Math modes can be tested for: \cs{ifmmode} is true
+in display and non-display math mode, and \cs{ifinner}
+is true in non-display mode, but not in display mode.
+
+%%\point[math:styles] Styles in math mode
+%\section{Styles in math mode}
+%\label{math:styles}
+%\point[math:styles] Styles in math mode
+\section{Styles in math mode}
+\label{math:styles}
+
+%Math formulas are set in any of eight 
+%\indexterm{math styles}:
+%\begin{description} 
+%\item [D] display style,
+%\item [T] text style,
+%\item [S] script style,
+%\item [SS] scriptscript style,
+%\end{description}
+%and the four \emph{cramped}\indexterm{cramped styles}
+%variants $D'$, $T'$, $S'$, $SS'$ of
+%these. The cramped styles differ mainly in the
+%fact that superscripts are not raised as far as in
+%the original styles.
+Math formulas are set in any of eight 
+\indexterm{math styles}:
+\begin{description} 
+\item [D] display style,
+\item [T] text style,
+\item [S] script style,
+\item [SS] scriptscript style,
+\end{description}
+and the four \emph{cramped}\indexterm{cramped styles}
+variants $D'$, $T'$, $S'$, $SS'$ of
+these. The cramped styles differ mainly in the
+fact that superscripts are not raised as far as in
+the original styles.
+
+%%\spoint Superscripts and subscripts
+%\subsection{Superscripts and subscripts}
+%\index{superscript|(}\index{subscript|(}
+%\spoint Superscripts and subscripts
+\subsection{Superscripts and subscripts}
+\index{superscript|(}\index{subscript|(}
+
+%\TeX\ can typeset a symbol or group
+%as a superscript (or subscript) to the preceding
+%symbol or group, if that preceding item
+%does not already have a superscript
+%(subscript). Superscripts (subscripts) are specified by
+%the syntax
+%\begin{disp}\gr{superscript}\gr{math field}\end{disp}
+%or 
+%\begin{disp}\gr{subscript}\gr{math field}\end{disp}
+%where a \gr{superscript} (\gr{subscript}) is either a character
+%of category~7\index{category!7} (8\index{category!8}),
+%or a control sequence \cs{let} to such
+%a character.
+%The plain format has the control
+%\cstoidx\char94\par\cstoidx\char95\par
+%sequences
+%\begin{verbatim}
+%\let\sp=^ \let\sb=_
+%\end{verbatim}
+%as implicit superscript
+%and subscript characters.
+\TeX\ can typeset a symbol or group
+as a superscript (or subscript) to the preceding
+symbol or group, if that preceding item
+does not already have a superscript
+(subscript). Superscripts (subscripts) are specified by
+the syntax
+\begin{disp}\gr{superscript}\gr{math field}\end{disp}
+or 
+\begin{disp}\gr{subscript}\gr{math field}\end{disp}
+where a \gr{superscript} (\gr{subscript}) is either a character
+of category~7\index{category!7} (8\index{category!8}),
+or a control sequence \cs{let} to such
+a character.
+The plain format has the control
+\cstoidx\char94\par\cstoidx\char95\par
+sequences
+\begin{verbatim}
+\let\sp=^ \let\sb=_
+\end{verbatim}
+as implicit superscript
+and subscript characters.
+
+%Specifying a superscript (subscript) expression as the first
+%item in an empty math list is equivalent to specifying
+%it as the superscript (subscript) of an empty expression.
+%For instance, 
+%\begin{disp}
+%\verb>$^{...}>\quad is equivalent to\quad \verb>${}^{...}>\end{disp}
+Specifying a superscript (subscript) expression as the first
+item in an empty math list is equivalent to specifying
+it as the superscript (subscript) of an empty expression.
+For instance, 
+\begin{disp}
+\verb>$^{...}>\quad is equivalent to\quad \verb>${}^{...}>\end{disp}
+
+%For \TeX's internal calculations, superscript and subscript
+%expressions are made wider by \csidx{scriptspace};
+%the value of this in plain \TeX\ is~\n{0.5pt}.
+For \TeX's internal calculations, superscript and subscript
+expressions are made wider by \csidx{scriptspace};
+the value of this in plain \TeX\ is~\n{0.5pt}.
+
+%\index{superscript|)}\index{subscript|)}
+\index{superscript|)}\index{subscript|)}
+
+%\subsection{Choice of styles}
+\subsection{Choice of styles}
+
+%Ordering the four styles $D$, $T$, $S$, and~$SS$, and
+%considering the other four as mere variants, the
+%style rules for math mode are as follows:
+%\begin{itemize}\item In any style superscripts and subscripts
+%are taken from the next smaller style. Exception:
+%in display style they are taken in script style.
+%\item Subscripts are always in the cramped variant of
+%the style; superscripts are only cramped if the original
+%style was cramped.
+%\item In an \verb-{..\over..}- formula in any style
+%the numerator and denominator are taken from the next
+%smaller style.
+%\item The denominator is always in cramped style;
+%the numerator is only in cramped style if the original
+%style was cramped.
+%\item Formulas under a \cs{sqrt} or \cs{overline}
+%are in cramped style.\end{itemize}
+Ordering the four styles $D$, $T$, $S$, and~$SS$, and
+considering the other four as mere variants, the
+style rules for math mode are as follows:
+\begin{itemize}\item In any style superscripts and subscripts
+are taken from the next smaller style. Exception:
+in display style they are taken in script style.
+\item Subscripts are always in the cramped variant of
+the style; superscripts are only cramped if the original
+style was cramped.
+\item In an \verb-{..\over..}- formula in any style
+the numerator and denominator are taken from the next
+smaller style.
+\item The denominator is always in cramped style;
+the numerator is only in cramped style if the original
+style was cramped.
+\item Formulas under a \cs{sqrt} or \cs{overline}
+are in cramped style.\end{itemize}
+
+%Styles can be forced by the explicit commands
+%\alt
+%\cstoidx displaystyle\par\cstoidx textstyle\par
+%\cstoidx scriptstyle\par\cstoidx scriptscriptstyle\par
+%\cs{displaystyle}, \cs{textstyle}, \cs{scriptstyle},
+%and \cs{scriptscriptstyle}.
+Styles can be forced by the explicit commands
+\alt
+\cstoidx displaystyle\par\cstoidx textstyle\par
+\cstoidx scriptstyle\par\cstoidx scriptscriptstyle\par
+\cs{displaystyle}, \cs{textstyle}, \cs{scriptstyle},
+and \cs{scriptscriptstyle}.
+
+
+%In display style and text style the \cs{textfont} of the
+%current family is used, 
+%in scriptstyle the \cs{scriptfont} is used, and in
+%\alt
+%scriptscriptstyle the \cs{scriptscriptfont} is used.
+In display style and text style the \cs{textfont} of the
+current family is used, 
+in scriptstyle the \cs{scriptfont} is used, and in
+\alt
+scriptscriptstyle the \cs{scriptscriptfont} is used.
+
+%The primitive command
+%\cstoidx mathchoice\par
+%\begin{disp}\cs{mathchoice}\lb {\it D\/\rb\lb T\/\rb\lb S\/\rb\lb SS\/}\rb
+%\end{disp}
+%lets the user specify four variants of a formula for the
+%four styles. 
+%\TeX\ constructs all four and inserts the appropriate one.
+The primitive command
+\cstoidx mathchoice\par
+\begin{disp}\cs{mathchoice}\lb {\it D\/\rb\lb T\/\rb\lb S\/\rb\lb SS\/}\rb
+\end{disp}
+lets the user specify four variants of a formula for the
+four styles. 
+\TeX\ constructs all four and inserts the appropriate one.
+
+%%\point[math:class] Classes of mathematical objects
+%\section{Classes of mathematical objects}
+%\label{math:class}
+%\point[math:class] Classes of mathematical objects
+\section{Classes of mathematical objects}
+\label{math:class}
+
+%Objects in math mode belong to one of eight \indexterm{math
+%  classes}. Depending on the class the object may be surrounded by
+%some amount of white space, or treated specially in some way. Commands
+%exist to force symbols, or sequences of symbols, to act as belonging
+%to a certain class.  In the hexadecimal representation \verb>"xyzz>
+%the class is the \gr{3-bit number}~\n x.
+Objects in math mode belong to one of eight \indexterm{math
+  classes}. Depending on the class the object may be surrounded by
+some amount of white space, or treated specially in some way. Commands
+exist to force symbols, or sequences of symbols, to act as belonging
+to a certain class.  In the hexadecimal representation \verb>"xyzz>
+the class is the \gr{3-bit number}~\n x.
+
+%This is the list of classes and commands that force those
+%classes. The examples are from the plain format 
+%(see the tables starting at page~\pageref{math:sym:tables}).
+%\begin{enumerate} \message{set a counter here!}%\SetCounter:item=-1
+%\item {\em ordinary\/}: lowercase Greek characters and those symbols
+%      that are `just symbols'; 
+%      the command \csidx{mathord} forces this class.
+%\item {\em large operator\/}: integral and sum signs,
+%      and `big' objects such as \cs{bigcap} or\handbreak \cs{bigotimes};
+%      the command \csidx{mathop} forces this class.
+%      Characters that are
+%      large operators are centred vertically, and they
+%      may behave differently in display style from in the
+%      other styles; see below.
+%\item {\em binary operation\/}: plus and minus,
+%      and things such as \cs{cap} or \cs{otimes};
+%      the command \csidx{mathbin} forces this class.
+%\item {\em relation\/} (also called {\em binary relation\/}): 
+%      equals, less than, and greater than signs, subset and
+%      superset, perpendicular, parallel;
+%      the command \csidx{mathrel} forces this class.
+%\item {\em opening symbol\/}: opening brace, bracket, parenthesis, angle,
+% \altt
+%      floor, ceiling;
+%      the command \csidx{mathopen} forces this class.
+%\item {\em closing symbol\/}: closing brace, bracket, parenthesis, angle,
+% \altt
+%      floor, ceiling;
+%      the command \csidx{mathclose} forces this class.
+%\item {\em punctuation\/}: most punctuation marks, but
+%      \n:~is a relation, the \cs{colon} is a punctuation colon;
+%      the command \csidx{mathpunct} forces this class.
+%\item {\em variable family\/}: symbols in this class change font
+%      with the \cs{fam} parameter; in plain \TeX\ uppercase
+%      Greek letters and ordinary letters and digits are
+%      in this class.
+%\end{enumerate}
+This is the list of classes and commands that force those
+classes. The examples are from the plain format 
+(see the tables starting at page~\pageref{math:sym:tables}).
+\begin{enumerate} \message{set a counter here!}%\SetCounter:item=-1
+\item {\em ordinary\/}: lowercase Greek characters and those symbols
+      that are `just symbols'; 
+      the command \csidx{mathord} forces this class.
+\item {\em large operator\/}: integral and sum signs,
+      and `big' objects such as \cs{bigcap} or\handbreak \cs{bigotimes};
+      the command \csidx{mathop} forces this class.
+      Characters that are
+      large operators are centred vertically, and they
+      may behave differently in display style from in the
+      other styles; see below.
+\item {\em binary operation\/}: plus and minus,
+      and things such as \cs{cap} or \cs{otimes};
+      the command \csidx{mathbin} forces this class.
+\item {\em relation\/} (also called {\em binary relation\/}): 
+      equals, less than, and greater than signs, subset and
+      superset, perpendicular, parallel;
+      the command \csidx{mathrel} forces this class.
+\item {\em opening symbol\/}: opening brace, bracket, parenthesis, angle,
+ \altt
+      floor, ceiling;
+      the command \csidx{mathopen} forces this class.
+\item {\em closing symbol\/}: closing brace, bracket, parenthesis, angle,
+ \altt
+      floor, ceiling;
+      the command \csidx{mathclose} forces this class.
+\item {\em punctuation\/}: most punctuation marks, but
+      \n:~is a relation, the \cs{colon} is a punctuation colon;
+      the command \csidx{mathpunct} forces this class.
+\item {\em variable family\/}: symbols in this class change font
+      with the \cs{fam} parameter; in plain \TeX\ uppercase
+      Greek letters and ordinary letters and digits are
+      in this class.
+\end{enumerate}
+
+%There is one further class: the {\em inner\/} subformulas.
+%No characters can be assigned to this class, but characters and
+%subformulas can be forced into it by \csidx{mathinner}.
+%The \gr{generalized fraction}s and \verb-\left...\right- groups
+%are inner formulas. Inner formulas are surrounded
+%by some white space; see the table below.
+There is one further class: the {\em inner\/} subformulas.
+No characters can be assigned to this class, but characters and
+subformulas can be forced into it by \csidx{mathinner}.
+The \gr{generalized fraction}s and \verb-\left...\right- groups
+are inner formulas. Inner formulas are surrounded
+by some white space; see the table below.
+
+%Other subformulas than those that are inner are treated as
+%ordinary symbols. In particular, subformulas enclosed in
+%braces are ordinary: \verb-$a+b$- looks like `$a\mathop+b$', but
+%\message{Check a+b look}%
+%\verb-$a{+}b$- looks like~`$a{+}b$'. Note, however, that
+%in \verb-${a+b}$- the whole subformula is treated as an
+%ordinary symbol, not its components; 
+%therefore the result is~`${a+b}$'.
+Other subformulas than those that are inner are treated as
+ordinary symbols. In particular, subformulas enclosed in
+braces are ordinary: \verb-$a+b$- looks like `$a\mathop+b$', but
+\message{Check a+b look}%
+\verb-$a{+}b$- looks like~`$a{+}b$'. Note, however, that
+in \verb-${a+b}$- the whole subformula is treated as an
+ordinary symbol, not its components; 
+therefore the result is~`${a+b}$'.
+
+%%\point Large operators and their limits
+%\section{Large operators and their limits}
+%\point Large operators and their limits
+\section{Large operators and their limits}
+
+%The large operators in the Computer Modern fonts come in
+%two sizes: one for text style and one for display style.
+%Control sequences such as \cs{sum} are simply defined by
+%\cs{mathchardef} to correspond to a position in a font:
+%\begin{verbatim}
+%\mathchardef\sum="1350
+%\end{verbatim}
+%but if the
+%current style is display style, \TeX\ looks to see whether
+%that character has a successor in the font.
+The large operators in the Computer Modern fonts come in
+two sizes: one for text style and one for display style.
+Control sequences such as \cs{sum} are simply defined by
+\cs{mathchardef} to correspond to a position in a font:
+\begin{verbatim}
+\mathchardef\sum="1350
+\end{verbatim}
+but if the
+current style is display style, \TeX\ looks to see whether
+that character has a successor in the font.
+
+%Large operators in text style behave as if they are followed
+%\cstoidx limits\par\cstoidx nolimits\par
+%by \cs{nolimits}, which places the limits as sub/superscript
+%expressions after the
+%operator:
+%\begin{disp}$\sum_{k=1}^\infty$\end{disp}
+%In display style they behave as if they are followed by
+%\cs{limits}, which places the limits over and under
+%the operator:
+%\begin{disp}$\displaystyle\sum_{k=1}^\infty$\end{disp}
+%The successor mechanism (see page~\pageref{successor})
+%\alt
+%lets \TeX\ take a larger variant
+%of the delimiter here.
+Large operators in text style behave as if they are followed
+\cstoidx limits\par\cstoidx nolimits\par
+by \cs{nolimits}, which places the limits as sub/superscript
+expressions after the
+operator:
+\begin{disp}$\sum_{k=1}^\infty$\end{disp}
+In display style they behave as if they are followed by
+\cs{limits}, which places the limits over and under
+the operator:
+\begin{disp}$\displaystyle\sum_{k=1}^\infty$\end{disp}
+The successor mechanism (see page~\pageref{successor})
+\alt
+lets \TeX\ take a larger variant
+of the delimiter here.
+
+%The integral sign has been defined in plain \TeX\ as
+%\begin{verbatim}
+%\mathchardef\intop="1352 \def\int{\intop\nolimits}
+%\end{verbatim}
+%which places the limits after the operator, even in display style:
+%\begin{disp}$\displaystyle\int_0^\infty e^{-x^2}\,dx=\sqrt{\pi}/2$
+%\end{disp}
+The integral sign has been defined in plain \TeX\ as
+\begin{verbatim}
+\mathchardef\intop="1352 \def\int{\intop\nolimits}
+\end{verbatim}
+which places the limits after the operator, even in display style:
+\begin{disp}$\displaystyle\int_0^\infty e^{-x^2}\,dx=\sqrt{\pi}/2$
+\end{disp}
+
+%With \verb-\limits\nolimits- or \verb-\nolimits\limits- the
+%last specification has precedence; the default placement
+%can be restored by \csidx{displaylimits}. For instance,
+%\begin{verbatim}
+%$ ... \sum\limits\displaylimits ... $
+%\end{verbatim}
+%is equivalent to
+%\begin{verbatim}
+%$ ... \sum ... $
+%\end{verbatim}
+%and 
+%\begin{verbatim}
+%$$ ... \sum\nolimits\displaylimits ... $$
+%\end{verbatim}
+%is equivalent to
+%\begin{verbatim}
+%$$ ... \sum ... $$
+%\end{verbatim}
+With \verb-\limits\nolimits- or \verb-\nolimits\limits- the
+last specification has precedence; the default placement
+can be restored by \csidx{displaylimits}. For instance,
+\begin{verbatim}
+$ ... \sum\limits\displaylimits ... $
+\end{verbatim}
+is equivalent to
+\begin{verbatim}
+$ ... \sum ... $
+\end{verbatim}
+and 
+\begin{verbatim}
+$$ ... \sum\nolimits\displaylimits ... $$
+\end{verbatim}
+is equivalent to
+\begin{verbatim}
+$$ ... \sum ... $$
+\end{verbatim}
+
+%%\point Vertical centering: \cs{vcenter}
+%\section{Vertical centring: \protect\cs{vcenter}}
+%\point Vertical centering: \cs{vcenter}
+\section{Vertical centring: \protect\cs{vcenter}}
+
+%Each formula has an \emph{axis}\index{formula!axis
+%  of}\index{formula!centring of}, which is for an in-line formula
+%about half the x-height of the surrounding text; the exact value is
+%the \cs{fontdimen22} of the font in family~2, the symbol font, in the
+%current style.
+Each formula has an \emph{axis}\index{formula!axis
+  of}\index{formula!centring of}, which is for an in-line formula
+about half the x-height of the surrounding text; the exact value is
+the \cs{fontdimen22} of the font in family~2, the symbol font, in the
+current style.
+
+%The bar line in fractions is placed on the axis; large
+%operators, delimiters and \cs{vcenter} boxes are centred on it.
+The bar line in fractions is placed on the axis; large
+operators, delimiters and \cs{vcenter} boxes are centred on it.
+
+%A \csidx{vcenter}\label{vcenter}
+%box is a vertical box that is arranged
+%so that it is centred on the math axis.
+%It is possible to give a \n{spread} or \n{to}
+%specification with a \cs{vcenter} box.
+A \csidx{vcenter}\label{vcenter}
+box is a vertical box that is arranged
+so that it is centred on the math axis.
+It is possible to give a \n{spread} or \n{to}
+specification with a \cs{vcenter} box.
+
+%The \cs{vcenter} box is allowed only in math mode, and
+%it does not behave like other boxes; for instance, it can
+%not be stored in a box register. It does not qualify as
+%a~\gr{box}. See page~\pageref{tvcenter} for a macro that
+%repairs this.
+The \cs{vcenter} box is allowed only in math mode, and
+it does not behave like other boxes; for instance, it can
+not be stored in a box register. It does not qualify as
+a~\gr{box}. See page~\pageref{tvcenter} for a macro that
+repairs this.
+
+%%\point[muglue] Mathematical spacing: \n{mu} glue
+%\section{Mathematical spacing: \n{mu} glue}
+%\label{muglue}
+%\index{math spacing|(}
+%\point[muglue] Mathematical spacing: \n{mu} glue
+\section{Mathematical spacing: \n{mu} glue}
+\label{muglue}
+\index{math spacing|(}
+
+%Spacing around mathematical objects is measured in \indexterm{math units}:
+%multiples of a~\n{mu}. A~\n{mu} is $1/18$th part of \cs{fontdimen6} of
+%the font in family~2 in the current style, the \indexterm{quad} value of the
+%symbol font.
+Spacing around mathematical objects is measured in \indexterm{math units}:
+multiples of a~\n{mu}. A~\n{mu} is $1/18$th part of \cs{fontdimen6} of
+the font in family~2 in the current style, the \indexterm{quad} value of the
+symbol font.
+
+%%\spoint Classification of \n{mu} glue
+%\subsection{Classification of \n{mu} glue}
+%\spoint Classification of \n{mu} glue
+\subsection{Classification of \n{mu} glue}
+
+%The user can specify \n{mu} spacing by \cs{mkern} or~\cs{mskip},
+%\cstoidx mkern\par\cstoidx mskip\par
+%but most \indexterm{mu glue} is inserted automatically by \TeX,
+%based on the classes to which objects belong (see above).
+%First, here are some rules of thumb describing the global 
+%behaviour.
+The user can specify \n{mu} spacing by \cs{mkern} or~\cs{mskip},
+\cstoidx mkern\par\cstoidx mskip\par
+but most \indexterm{mu glue} is inserted automatically by \TeX,
+based on the classes to which objects belong (see above).
+First, here are some rules of thumb describing the global 
+behaviour.
+
+%\begin{itemize} \item A \cs{thickmuskip} (default value in plain
+%\TeX: \n{5mu plus 5mu})
+%\cstoidx thickmuskip\par
+%is inserted around (binary) relations, except where these are
+%preceded or followed by other relations or punctuation, and
+%except if they follow an open, or precede a close symbol.
+%\item A \csidx{medmuskip} (default value in plain
+%\TeX: \n{4mu plus 2mu minus 4mu}) 
+%is put around binary operators.
+%\item A \csidx{thinmuskip} 
+%(default value in plain \TeX: \n{3mu}) follows after
+%punctuation, and is put around inner objects, except where these
+%are followed by a close or preceded by an open symbol, and
+%except if the other object is a large operator or a
+%binary relation.
+%\item No \n{mu} glue is inserted after an open or before a close
+%symbol except where the latter is preceded by punctuation;
+%no \n{mu} glue is inserted also before punctuation, except where
+%the preceding object is punctuation or an inner object.
+%\end{itemize} 
+\begin{itemize} \item A \cs{thickmuskip} (default value in plain
+\TeX: \n{5mu plus 5mu})
+\cstoidx thickmuskip\par
+is inserted around (binary) relations, except where these are
+preceded or followed by other relations or punctuation, and
+except if they follow an open, or precede a close symbol.
+\item A \csidx{medmuskip} (default value in plain
+\TeX: \n{4mu plus 2mu minus 4mu}) 
+is put around binary operators.
+\item A \csidx{thinmuskip} 
+(default value in plain \TeX: \n{3mu}) follows after
+punctuation, and is put around inner objects, except where these
+are followed by a close or preceded by an open symbol, and
+except if the other object is a large operator or a
+binary relation.
+\item No \n{mu} glue is inserted after an open or before a close
+symbol except where the latter is preceded by punctuation;
+no \n{mu} glue is inserted also before punctuation, except where
+the preceding object is punctuation or an inner object.
+\end{itemize} 
+
+%The following table gives the complete definition of mu glue
+%between math objects.
+%\begin{disp}\leavevmode
+%\vbox{\offinterlineskip
+%    \halign{#\enspace\hfil&#\enspace\hfil\vrule
+%           &&\hfil\enspace#\hfil\strut\cr
+%    \omit\hfil&\omit\hfil& 0:& 1:& 2:& 3:& 4:& 5:& 6:\cr
+%    \omit\hfil&\omit\hfil&\hfill Ord&\hfill Op&\hfill Bin&\hfill Rel&
+%                  \hfill Open&\hfill Close&\hfill Punct&\hfill Inner\cr
+%    \omit\hfil&\omit\hfil&\multispan8\hrulefill\cr
+%    0:&Ord&    0&  1&(2)&(3)&  0&  0&  0&(1)\cr
+%    1:&Op&     1&  1&  *&(3)&  0&  0&  0&(1)\cr
+%    2:&Bin&  (2)&(2)&  *&  *&(2)&  *&  *&(2)\cr
+%    3:&Rel&  (3)&(3)&  *&  0&(2)&  *&  *&(2)\cr
+%    4:&Open&   0&  0&  *&  0&  0&  0&  0&  0\cr
+%    5:&Close&  0&  1&(2)&(3)&  0&  0&  0&(1)\cr
+%    6:&Punct&(1)&(1)&  *&(1)&(1)&(1)&(1)&(1)\cr
+%      &Inner&(1)&  1&(2)&(3)&(1)&  0&(1)&(1)\cr
+%%    \omit\hfil&\omit\hfil&\multispan8\hrulefil\cr
+%}}
+%\end{disp}
+The following table gives the complete definition of mu glue
+between math objects.
+\begin{disp}\leavevmode
+\vbox{\offinterlineskip
+    \halign{#\enspace\hfil&#\enspace\hfil\vrule
+           &&\hfil\enspace#\hfil\strut\cr
+    \omit\hfil&\omit\hfil& 0:& 1:& 2:& 3:& 4:& 5:& 6:\cr
+    \omit\hfil&\omit\hfil&\hfill Ord&\hfill Op&\hfill Bin&\hfill Rel&
+                  \hfill Open&\hfill Close&\hfill Punct&\hfill Inner\cr
+    \omit\hfil&\omit\hfil&\multispan8\hrulefill\cr
+    0:&Ord&    0&  1&(2)&(3)&  0&  0&  0&(1)\cr
+    1:&Op&     1&  1&  *&(3)&  0&  0&  0&(1)\cr
+    2:&Bin&  (2)&(2)&  *&  *&(2)&  *&  *&(2)\cr
+    3:&Rel&  (3)&(3)&  *&  0&(2)&  *&  *&(2)\cr
+    4:&Open&   0&  0&  *&  0&  0&  0&  0&  0\cr
+    5:&Close&  0&  1&(2)&(3)&  0&  0&  0&(1)\cr
+    6:&Punct&(1)&(1)&  *&(1)&(1)&(1)&(1)&(1)\cr
+      &Inner&(1)&  1&(2)&(3)&(1)&  0&(1)&(1)\cr
+%    \omit\hfil&\omit\hfil&\multispan8\hrulefil\cr
+}}
+\end{disp}
+
+%where the symbols have the following meanings:
+%\begin{itemize}\item 0, no space; 1, thin space; 2, medium space;
+%     3, thick space;
+%\item $(\cdot)$, insert only in text and display
+%     mode, not in script or scriptscript mode;
+%\item    cases * cannot occur, because a Bin object is converted
+%    to Ord if it is the first in the list, preceded by
+%    Bin, Op, Open, Punct, Rel, or followed by Close,
+%    Punct, and Rel; also, a Rel is converted to Ord when
+%    \alt
+%    it is followed by Close or Punct.
+%\end{itemize}
+where the symbols have the following meanings:
+\begin{itemize}\item 0, no space; 1, thin space; 2, medium space;
+     3, thick space;
+\item $(\cdot)$, insert only in text and display
+     mode, not in script or scriptscript mode;
+\item    cases * cannot occur, because a Bin object is converted
+    to Ord if it is the first in the list, preceded by
+    Bin, Op, Open, Punct, Rel, or followed by Close,
+    Punct, and Rel; also, a Rel is converted to Ord when
+    \alt
+    it is followed by Close or Punct.
+\end{itemize}
+
+%Stretchable \n{mu} glue is set according to the same rules that
+%govern ordinary glue. However, only \n{mu} glue on the outer
+%level can be stretched or shrunk; any \n{mu} glue enclosed
+%in  a~group is set at natural width.
+Stretchable \n{mu} glue is set according to the same rules that
+govern ordinary glue. However, only \n{mu} glue on the outer
+level can be stretched or shrunk; any \n{mu} glue enclosed
+in  a~group is set at natural width.
+
+%%\spoint Muskip registers
+%\subsection{Muskip registers}
+%\spoint Muskip registers
+\subsection{Muskip registers}
+
+%Like ordinary glue, \n{mu} glue can be stored in registers,
+%\cstoidx muskip\par\cstoidx muskipdef\par\cstoidx newmuskip\par
+%the \cs{muskip} registers,
+%of which there are 256 in \TeX. 
+%The registers are denoted by
+%\begin{disp}\cs{muskip}\gr{8-bit number}\end{disp}
+%and they can be assigned to a control sequence by
+%\begin{disp}\cs{muskipdef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+%\end{disp}
+%and there is a macro that allocates unused registers:
+%\begin{disp}\cs{newmuskip}\gr{control sequence}\end{disp}
+%Arithmetic for mu glue exists as for glue; see
+%Chapter~\ref{glue}.
+Like ordinary glue, \n{mu} glue can be stored in registers,
+\cstoidx muskip\par\cstoidx muskipdef\par\cstoidx newmuskip\par
+the \cs{muskip} registers,
+of which there are 256 in \TeX. 
+The registers are denoted by
+\begin{disp}\cs{muskip}\gr{8-bit number}\end{disp}
+and they can be assigned to a control sequence by
+\begin{disp}\cs{muskipdef}\gr{control sequence}\gr{equals}\gr{8-bit number}
+\end{disp}
+and there is a macro that allocates unused registers:
+\begin{disp}\cs{newmuskip}\gr{control sequence}\end{disp}
+Arithmetic for mu glue exists as for glue; see
+Chapter~\ref{glue}.
+
+%%\spoint Other spaces in math mode
+%\subsection{Other spaces in math mode}
+%\spoint Other spaces in math mode
+\subsection{Other spaces in math mode}
+
+%In math mode space tokens are ignored; however,
+%the math code of the space character is \verb-"8000-
+%in plain \TeX,
+%so if its category is made `letter' or `other character', it
+%will behave like an active character in math mode.
+%See also page~\pageref{mcode:8000}.
+In math mode space tokens are ignored; however,
+the math code of the space character is \verb-"8000-
+in plain \TeX,
+so if its category is made `letter' or `other character', it
+will behave like an active character in math mode.
+See also page~\pageref{mcode:8000}.
+
+%Admissible glue in math mode is of type~\gr{mathematical skip},
+%which is either a \gr{horizontal skip} (see Chapter~\ref{hvmode}) 
+%or~\cs{mskip}\gr{muglue}. Leaders in math mode can be specified
+%with a \gr{mathematical skip}.
+Admissible glue in math mode is of type~\gr{mathematical skip},
+which is either a \gr{horizontal skip} (see Chapter~\ref{hvmode}) 
+or~\cs{mskip}\gr{muglue}. Leaders in math mode can be specified
+with a \gr{mathematical skip}.
+
+%A glue item preceded by \csidx{nonscript}
+%is cancelled if it occurs in scriptstyle or scriptscriptstyle.
+A glue item preceded by \csidx{nonscript}
+is cancelled if it occurs in scriptstyle or scriptscriptstyle.
+
+%Control space functions in math mode
+%\alt
+%as it does in horizontal mode.
+Control space functions in math mode
+\alt
+as it does in horizontal mode.
+
+%In-line formulas are surrounded by kerns of size
+%\csidx{mathsurround}, the so-called `math-on' and
+%`math-off' items. Line breaking can occur at the front of
+%the math-off kern if it is followed by glue.
+In-line formulas are surrounded by kerns of size
+\csidx{mathsurround}, the so-called `math-on' and
+`math-off' items. Line breaking can occur at the front of
+the math-off kern if it is followed by glue.
+
+%\index{math spacing|)}
+\index{math spacing|)}
+
+%\section{Generalized fractions}
+\section{Generalized fractions}
+
+%Fraction-like objects can be set with six primitive commands
+%of type \gr{generalized fraction}.
+%Each of these \indexterm{generalized fractions}
+%takes the preceding and the following subformulas
+%and puts them over one another, if necessary with a fraction
+%bar and with delimiters.
+%\begin{description} \item [\csidx{over}]
+%   is the ordinary fraction; the bar thickness is \cs{fontdimen8}
+%   of the extension font: 
+%   
+%\begin{disp}\verb>$\pi\over2$>\quad gives\quad `$\pi\over2$'\message{pi over 2}\end{disp}
+%\item [\csidx{atop}]
+%   is equivalent to a fraction with zero bar thickness:
+%   
+%\begin{disp}\verb>$\pi\atop2$>\quad gives\quad `$\pi\atop2$'\end{disp}
+%\item [\csidx{above}\gr{dimen}]
+%   specifies the thickness
+%   of the bar line explicitly:
+%   
+%\begin{disp}\verb>$\pi\above 1pt 2$>\quad gives\quad `$\pi\above 1pt 2$'\end{disp}
+%\end{description} 
+Fraction-like objects can be set with six primitive commands
+of type \gr{generalized fraction}.
+Each of these \indexterm{generalized fractions}
+takes the preceding and the following subformulas
+and puts them over one another, if necessary with a fraction
+bar and with delimiters.
+\begin{description} \item [\csidx{over}]
+   is the ordinary fraction; the bar thickness is \cs{fontdimen8}
+   of the extension font: 
+   
+\begin{disp}\verb>$\pi\over2$>\quad gives\quad `$\pi\over2$'\message{pi over 2}\end{disp}
+\item [\csidx{atop}]
+   is equivalent to a fraction with zero bar thickness:
+   
+\begin{disp}\verb>$\pi\atop2$>\quad gives\quad `$\pi\atop2$'\end{disp}
+\item [\csidx{above}\gr{dimen}]
+   specifies the thickness
+   of the bar line explicitly:
+   
+\begin{disp}\verb>$\pi\above 1pt 2$>\quad gives\quad `$\pi\above 1pt 2$'\end{disp}
+\end{description} 
+
+%To each of these three there corresponds a \cs{...withdelims} variant
+%\cstoidx overwithdelims\par\cstoidx atopwithdelims\par
+%\cstoidx abovewithdelims\par
+%that lets the user specify delimiters for the expression.
+%For example, the most general command, in terms of which
+%all five others could have been defined, is
+%\begin{disp}\cs{abovewithdelims}\gr{delim$_1$}\gr{delim$_2$}\gr{dimen}.
+%\end{disp}
+%Delimiters in these generalized fractions do not grow with the
+%enclosed expression: in display mode a delimiter is taken
+%which is at least \cs{fontdimen20} high, otherwise
+%\alt
+%it has to be
+%at least \cs{fontdimen21} high.
+%These dimensions are taken
+%from the font in family~2, the symbol font, in the current style.
+To each of these three there corresponds a \cs{...withdelims} variant
+\cstoidx overwithdelims\par\cstoidx atopwithdelims\par
+\cstoidx abovewithdelims\par
+that lets the user specify delimiters for the expression.
+For example, the most general command, in terms of which
+all five others could have been defined, is
+\begin{disp}\cs{abovewithdelims}\gr{delim$_1$}\gr{delim$_2$}\gr{dimen}.
+\end{disp}
+Delimiters in these generalized fractions do not grow with the
+enclosed expression: in display mode a delimiter is taken
+which is at least \cs{fontdimen20} high, otherwise
+\alt
+it has to be
+at least \cs{fontdimen21} high.
+These dimensions are taken
+from the font in family~2, the symbol font, in the current style.
+
+%The control sequences \cs{over}, \cs{atop}, and \cs{above}
+%are primitives, although they could have been defined
+%as \cs{...withdelims..}, that is, with two null delimiters.
+%Because of these implied surrounding null delimiters,
+%there is a kern of size \cs{nulldelimiterspace} before and after
+%these simple generalized fractions. 
+The control sequences \cs{over}, \cs{atop}, and \cs{above}
+are primitives, although they could have been defined
+as \cs{...withdelims..}, that is, with two null delimiters.
+Because of these implied surrounding null delimiters,
+there is a kern of size \cs{nulldelimiterspace} before and after
+these simple generalized fractions. 
+
+%%\point Underlining, overlining
+%\section{Underlining, overlining}
+%\point Underlining, overlining
+\section{Underlining, overlining}
+
+%The primitive commands \csidx{underline} and \csidx{overline} take a 
+%\gr{math field} argument, that is, a \gr{math symbol} or
+%a group, and draw a line under or over it.
+%The result is an `Under' or `Over' atom, which
+%is appended to the current math list.
+%The line thickness is font dimension~8 of the extension font,
+%which also determines the clearance between the line and
+%the \gr{math field}.
+The primitive commands \csidx{underline} and \csidx{overline} take a 
+\gr{math field} argument, that is, a \gr{math symbol} or
+a group, and draw a line under or over it.
+The result is an `Under' or `Over' atom, which
+is appended to the current math list.
+The line thickness is font dimension~8 of the extension font,
+which also determines the clearance between the line and
+the \gr{math field}.
+
+%Various other \cs{over...} and \cs{under...} commands exist
+%in plain \TeX;
+%these are all macros
+%that use the \TeX\ \cs{halign} command.
+Various other \cs{over...} and \cs{under...} commands exist
+in plain \TeX;
+these are all macros
+that use the \TeX\ \cs{halign} command.
+
+%%\point Line breaking in math formulas
+%\section{Line breaking in math formulas}
+%\point Line breaking in math formulas
+\section{Line breaking in math formulas}
+
+%In-line formulas can be broken after relations and binary operators.
+%\cstoidx relpenalty\par\cstoidx binoppenaly\par
+%The respective \emph{penalties}\index{penalties in math mode}
+%are the \cs{relpenalty} 
+%and the~\cs{binoppenalty}. However, \TeX\ will only break
+%after such symbols if they are not enclosed in braces.
+%Other \emph{breakpoints}\index{breakpoints in math lists}
+%can be created with~\cs{allowbreak},
+%\cstoidx allowbreak\par
+%which is an abbreviation for~\cs{penalty0}.
+In-line formulas can be broken after relations and binary operators.
+\cstoidx relpenalty\par\cstoidx binoppenaly\par
+The respective \emph{penalties}\index{penalties in math mode}
+are the \cs{relpenalty} 
+and the~\cs{binoppenalty}. However, \TeX\ will only break
+after such symbols if they are not enclosed in braces.
+Other \emph{breakpoints}\index{breakpoints in math lists}
+can be created with~\cs{allowbreak},
+\cstoidx allowbreak\par
+which is an abbreviation for~\cs{penalty0}.
+
+%Unlike in horizontal or vertical mode where putting two penalties
+%in a row is equivalent to just placing the smallest one,
+%in math mode a penalty placed at a break point \ldash that is,
+%after a relation or binary operator \rdash  will effectively
+%replace the old penalty by the new one.
+Unlike in horizontal or vertical mode where putting two penalties
+in a row is equivalent to just placing the smallest one,
+in math mode a penalty placed at a break point \ldash that is,
+after a relation or binary operator \rdash  will effectively
+replace the old penalty by the new one.
+
+%%\point[fam23:fontdims] Font dimensions of families 2 and 3
+%\section{Font dimensions of families 2 and 3}
+%\label{fam23:fontdims}
+%\point[fam23:fontdims] Font dimensions of families 2 and 3
+\section{Font dimensions of families 2 and 3}
+\label{fam23:fontdims}
+
+%If a font is used in text mode, \TeX\ will look at its
+%first 7 \cs{fontdimen} parameters
+%(see page~\pageref{font:dims}), for instance to
+%control spacing.
+%In math, however, more font dimensions are needed.
+%\TeX\ will look at the first 22 parameters of the
+%fonts in family~2, and the first 13 of the fonts in
+%family~3, to control various
+%aspects of math typesetting. The next two subsections
+%have been quoted loosely from~\cite{BB:ISO}.
+If a font is used in text mode, \TeX\ will look at its
+first 7 \cs{fontdimen} parameters
+(see page~\pageref{font:dims}), for instance to
+control spacing.
+In math, however, more font dimensions are needed.
+\TeX\ will look at the first 22 parameters of the
+fonts in family~2, and the first 13 of the fonts in
+family~3, to control various
+aspects of math typesetting. The next two subsections
+have been quoted loosely from~\cite{BB:ISO}.
+
+%%\spoint Symbol font attributes
+%\subsection{Symbol font attributes}
+%\index{symbol font|(}
+%\spoint Symbol font attributes
+\subsection{Symbol font attributes}
+\index{symbol font|(}
+
+%Attributes of the font in family~2, the \emph{symbol font},
+%mainly specify the
+%initial vertical positioning
+%of parts of fractions, subscripts, superscripts, et cetera.
+%The position determined by applying these
+%attributes may be further modified because of other
+%conditions, for example the presence of a fraction bar.
+Attributes of the font in family~2, the \emph{symbol font},
+mainly specify the
+initial vertical positioning
+of parts of fractions, subscripts, superscripts, et cetera.
+The position determined by applying these
+attributes may be further modified because of other
+conditions, for example the presence of a fraction bar.
+
+%One text font dimension, number~6,
+%the quad, determines the size of mu glue;
+%see above.
+One text font dimension, number~6,
+the quad, determines the size of mu glue;
+see above.
+
+%Fraction numerator attributes: minimum shift up, from
+%the main baseline, of the baseline of the numerator
+%of a generalized fraction,
+%\begin{enumerate} \setcounter{enumi}{7} %\message{set a counter here!}%\SetCounter:item=7
+%\item num1:
+% for display style,
+%\item num2:
+% for text style or smaller if a fraction bar is present,
+%\item num3:
+% for text style or smaller if no fraction bar is present.
+%\end{enumerate}
+Fraction numerator attributes: minimum shift up, from
+the main baseline, of the baseline of the numerator
+of a generalized fraction,
+\begin{enumerate} \setcounter{enumi}{7} %\message{set a counter here!}%\SetCounter:item=7
+\item num1:
+ for display style,
+\item num2:
+ for text style or smaller if a fraction bar is present,
+\item num3:
+ for text style or smaller if no fraction bar is present.
+\end{enumerate}
+
+%Fraction denominator attributes: minimum shift down, from
+%the main baseline, of the baseline of the denominator
+%of a generalized fraction,
+%\begin{enumerate} \setcounter{enumi}{10} %\message{set a counter here!}%\SetCounter:item=10
+%\item denom1:
+%for display style,
+%\item denom2:
+%for text style or smaller.
+%\end{enumerate}
+Fraction denominator attributes: minimum shift down, from
+the main baseline, of the baseline of the denominator
+of a generalized fraction,
+\begin{enumerate} \setcounter{enumi}{10} %\message{set a counter here!}%\SetCounter:item=10
+\item denom1:
+for display style,
+\item denom2:
+for text style or smaller.
+\end{enumerate}
+
+%Superscript attributes: minimum shift up, from the main baseline,
+%of the baseline of a superscript,
+%\begin{enumerate} \setcounter{enumi}{12} %\message{set a counter here!}%\SetCounter:item=12
+%\item sup1:
+%for display style,
+%\item sup2:
+%for text style or smaller, non-cramped,
+%\item sup3:
+%for text style or smaller, cramped.
+%\end{enumerate}
+Superscript attributes: minimum shift up, from the main baseline,
+of the baseline of a superscript,
+\begin{enumerate} \setcounter{enumi}{12} %\message{set a counter here!}%\SetCounter:item=12
+\item sup1:
+for display style,
+\item sup2:
+for text style or smaller, non-cramped,
+\item sup3:
+for text style or smaller, cramped.
+\end{enumerate}
+
+%Subscript attributes: minimum shift down, from the main baseline,
+%of the baseline of a subscript,
+%\begin{enumerate} \setcounter{enumi}{15} %\message{set a counter here!}%\SetCounter:item=15
+%\item sub1:
+%when no superscript is present,
+%\item sub2:
+%when a superscript is present.
+%\end{enumerate}
+Subscript attributes: minimum shift down, from the main baseline,
+of the baseline of a subscript,
+\begin{enumerate} \setcounter{enumi}{15} %\message{set a counter here!}%\SetCounter:item=15
+\item sub1:
+when no superscript is present,
+\item sub2:
+when a superscript is present.
+\end{enumerate}
+
+%Script adjustment attributes: for use only with non-glyph,
+%that is, composite, objects.
+%\begin{enumerate} \setcounter{enumi}{17} %\message{set a counter here!}%\SetCounter:item=17
+%\item sup\_drop:
+%maximum distance of superscript baseline below top of nucleus
+%\item sub\_drop:
+%minimum distance of subscript baseline below bottom of nucleus.
+%\end{enumerate}
+Script adjustment attributes: for use only with non-glyph,
+that is, composite, objects.
+\begin{enumerate} \setcounter{enumi}{17} %\message{set a counter here!}%\SetCounter:item=17
+\item sup\_drop:
+maximum distance of superscript baseline below top of nucleus
+\item sub\_drop:
+minimum distance of subscript baseline below bottom of nucleus.
+\end{enumerate}
+
+%Delimiter span attributes: height plus depth of delimiter enclosing
+%a generalized fraction,
+%\begin{enumerate} \setcounter{enumi}{19} %\message{set a counter here!}%\SetCounter:item=19
+%\item delim1:
+%in display style,
+%\item delim2:
+%in text style or smaller.
+%\end{enumerate}
+Delimiter span attributes: height plus depth of delimiter enclosing
+a generalized fraction,
+\begin{enumerate} \setcounter{enumi}{19} %\message{set a counter here!}%\SetCounter:item=19
+\item delim1:
+in display style,
+\item delim2:
+in text style or smaller.
+\end{enumerate}
+
+%A parameter with many uses, the height of the math axis,
+%\begin{enumerate} \setcounter{enumi}{21} %\message{set a counter here!}%\SetCounter:item=21
+%\item axis\_height:
+%the height above the baseline
+%of the fraction bar, and the centre of large delimiters
+%and most operators and relations. This position is
+%used in vertical centring operations.
+%\end{enumerate}
+A parameter with many uses, the height of the math axis,
+\begin{enumerate} \setcounter{enumi}{21} %\message{set a counter here!}%\SetCounter:item=21
+\item axis\_height:
+the height above the baseline
+of the fraction bar, and the centre of large delimiters
+and most operators and relations. This position is
+used in vertical centring operations.
+\end{enumerate}
+
+%\index{symbol font|)}
+\index{symbol font|)}
+
+%\subsection{Extension font attributes}
+\subsection{Extension font attributes}
+
+%\index{extension font|(}
+\index{extension font|(}
+
+%Attributes of the font in family~3, the \emph{extension font},
+%mostly specify
+%the way the limits of large operators are set.
+Attributes of the font in family~3, the \emph{extension font},
+mostly specify
+the way the limits of large operators are set.
+
+%The first parameter, number 8, default\_rule\_thickness,
+%serves many purposes. It
+%is the thickness of the rule used for overlines,
+%underlines, radical extenders (square root), 
+%and fraction bars. Various clearances are  also specified
+%in terms of this dimension: between the fraction bar and
+%the numerator and denominator, between an object and
+%the rule drawn by an underline, overline, or radical,
+%and between the bottom of superscripts and top of subscripts.
+The first parameter, number 8, default\_rule\_thickness,
+serves many purposes. It
+is the thickness of the rule used for overlines,
+underlines, radical extenders (square root), 
+and fraction bars. Various clearances are  also specified
+in terms of this dimension: between the fraction bar and
+the numerator and denominator, between an object and
+the rule drawn by an underline, overline, or radical,
+and between the bottom of superscripts and top of subscripts.
+
+%Minimum clearances around large operators are as follows:
+%\begin{enumerate} \setcounter{enumi}{8} %\message{set a counter here!}%\SetCounter:item=8
+%\item big\_op\_spacing1:
+%minimum clearance between baseline of upper limit and top
+%of large operator; see below.
+%\item big\_op\_spacing2:
+%minimum clearance between bottom of large operator and top of 
+%lower limit.
+%\item big\_op\_spacing3:
+%minimum clearance between baseline of
+%upper limit and top of large operator,
+%taking into account depth of upper limit; see below.
+%\item big\_op\_spacing4:
+%minimum clearance between bottom of large operator and top of lower
+%limit, taking into account height of lower limit; see below.
+%\item big\_op\_spacing5:
+%clearance above upper limit or below lower limit of a large operator.
+%\end{enumerate}
+%The resulting clearance above an operator is the maximum
+%of parameter~7, and parameter~11 minus the depth of the
+%upper limit.
+%The resulting clearance below an operator is the maximum
+%of parameter~10, and parameter~12 minus the height of the
+%lower limit.
+Minimum clearances around large operators are as follows:
+\begin{enumerate} \setcounter{enumi}{8} %\message{set a counter here!}%\SetCounter:item=8
+\item big\_op\_spacing1:
+minimum clearance between baseline of upper limit and top
+of large operator; see below.
+\item big\_op\_spacing2:
+minimum clearance between bottom of large operator and top of 
+lower limit.
+\item big\_op\_spacing3:
+minimum clearance between baseline of
+upper limit and top of large operator,
+taking into account depth of upper limit; see below.
+\item big\_op\_spacing4:
+minimum clearance between bottom of large operator and top of lower
+limit, taking into account height of lower limit; see below.
+\item big\_op\_spacing5:
+clearance above upper limit or below lower limit of a large operator.
+\end{enumerate}
+The resulting clearance above an operator is the maximum
+of parameter~7, and parameter~11 minus the depth of the
+upper limit.
+The resulting clearance below an operator is the maximum
+of parameter~10, and parameter~12 minus the height of the
+lower limit.
+
+%\index{extension font|)}
+\index{extension font|)}
+
+%\subsection{Example: subscript lowering}
+\subsection{Example: subscript lowering}
+
+%The location of a subscript depends on whether there
+%\alt
+%\howto Adjust subscript lowering\par
+%is a superscript; for instance
+%\begin{disp} $X_1+Y^2_1=1$\end{disp}
+%If you would rather have that look like
+%\begin{disp} $\global\tempdima=\fontdimen16\textfont2\relax
+%       \global\tempdimb=\fontdimen17\textfont2\relax
+%       \fontdimen16\textfont2=3pt \fontdimen17\textfont2=3pt
+%       X_1+Y^2_1=1$,$\fontdimen16\textfont2=\tempdima\relax
+%                     \fontdimen17\textfont2=\tempdimb\relax$
+%\end{disp}
+%\message{check lowering}
+%it suffices to specify
+%\begin{verbatim}
+%\fontdimen16\textfont2=3pt \fontdimen17\textfont2=3pt
+%\end{verbatim}
+%which makes the subscript drop equal in both cases.
+%Since font dimension assignments are global, you 
+%have to specify this only once in your document.
+The location of a subscript depends on whether there
+\alt
+\howto Adjust subscript lowering\par
+is a superscript; for instance
+\begin{disp} $X_1+Y^2_1=1$\end{disp}
+If you would rather have that look like
+\begin{disp} $\global\tempdima=\fontdimen16\textfont2\relax
+       \global\tempdimb=\fontdimen17\textfont2\relax
+       \fontdimen16\textfont2=3pt \fontdimen17\textfont2=3pt
+       X_1+Y^2_1=1$,$\fontdimen16\textfont2=\tempdima\relax
+                     \fontdimen17\textfont2=\tempdimb\relax$
+\end{disp}
+\message{check lowering}
+it suffices to specify
+\begin{verbatim}
+\fontdimen16\textfont2=3pt \fontdimen17\textfont2=3pt
+\end{verbatim}
+which makes the subscript drop equal in both cases.
+Since font dimension assignments are global, you 
+have to specify this only once in your document.
+
+
+%\endofchapter
+\endofchapter
+
+\end{document}

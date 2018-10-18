@@ -1,0 +1,319 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{31}
+
+\begin{document}
+
+%\chapter{Running \TeX}\label{run}
+\chapter{Running \TeX}\label{run}
+
+%This chapter treats the run modes of \TeX, and some
+%other commands associated with the job being processed.
+This chapter treats the run modes of \TeX, and some
+other commands associated with the job being processed.
+
+%\label{cschap:everyjob}\label{cschap:jobname}\label{cschap:end}\label{cschap:bye}\label{cschap:pausing}\label{cschap:errorstopmode}\label{cschap:scrollmode}\label{cschap:nonstopmode}\label{cschap:batchmode}
+%\begin{inventory}
+%\item [\cs{everyjob}] 
+%      Token list that is inserted at the start of each new job.
+\label{cschap:everyjob}\label{cschap:jobname}\label{cschap:end}\label{cschap:bye}\label{cschap:pausing}\label{cschap:errorstopmode}\label{cschap:scrollmode}\label{cschap:nonstopmode}\label{cschap:batchmode}
+\begin{inventory}
+\item [\cs{everyjob}] 
+      Token list that is inserted at the start of each new job.
+
+%\item [\cs{jobname}] 
+%      Name of the main \TeX\ file being processed.
+\item [\cs{jobname}] 
+      Name of the main \TeX\ file being processed.
+
+%\item [\cs{end}] 
+%      Command to finish off a run of \TeX.
+\item [\cs{end}] 
+      Command to finish off a run of \TeX.
+
+%\item [\cs{bye}]
+%      Plain \TeX\ macro to force the final output.
+\item [\cs{bye}]
+      Plain \TeX\ macro to force the final output.
+
+%\item [\cs{pausing}] 
+%      Specify that \TeX\ should pause after each line that is 
+%      read from a file.
+\item [\cs{pausing}] 
+      Specify that \TeX\ should pause after each line that is 
+      read from a file.
+
+%\item [\cs{errorstopmode}]
+%      \TeX\ will ask for user input on the occurrence of an error.
+\item [\cs{errorstopmode}]
+      \TeX\ will ask for user input on the occurrence of an error.
+
+%\item [\cs{scrollmode}] 
+%      \TeX\ fixes errors itself,
+%      but will ask the user for missing files.
+\item [\cs{scrollmode}] 
+      \TeX\ fixes errors itself,
+      but will ask the user for missing files.
+
+%\item [\cs{nonstopmode}] 
+%      \TeX\ fixes errors itself, 
+%      and performs an emergency stop on serious errors 
+%      such as missing input files.
+\item [\cs{nonstopmode}] 
+      \TeX\ fixes errors itself, 
+      and performs an emergency stop on serious errors 
+      such as missing input files.
+
+%\item [\cs{batchmode}] 
+%      \TeX\ fixes errors itself 
+%      and performs an emergency stop on serious errors 
+%      such as missing input files,
+%      but no terminal output is generated.
+\item [\cs{batchmode}] 
+      \TeX\ fixes errors itself 
+      and performs an emergency stop on serious errors 
+      such as missing input files,
+      but no terminal output is generated.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point Jobs
+%\section{Jobs}
+%\index{job|(}
+%\point Jobs
+\section{Jobs}
+\index{job|(}
+
+%\TeX\ associates with each run a name for the file
+%being processed: the \csidx{jobname}. If \TeX\ is run
+%interactively
+%\ldash meaning that it has been invoked without a file argument,
+%and the user types commands \rdash
+%the jobname is \n{texput}.
+\TeX\ associates with each run a name for the file
+being processed: the \csidx{jobname}. If \TeX\ is run
+interactively
+\ldash meaning that it has been invoked without a file argument,
+and the user types commands \rdash
+the jobname is \n{texput}.
+
+%The \cs{jobname} can be used to generate
+%the names of auxiliary files to be read or
+%written during the run. For instance, for a file \n{story.tex}
+%the \cs{jobname} is \n{story}, and writing
+%\begin{verbatim}
+%\openout\Auxiliary=\jobname.aux
+%\openout\TableOfContents=\jobname.toc
+%\end{verbatim}
+%will create the files \n{story.aux} and \n{story.toc}.
+The \cs{jobname} can be used to generate
+the names of auxiliary files to be read or
+written during the run. For instance, for a file \n{story.tex}
+the \cs{jobname} is \n{story}, and writing
+\begin{verbatim}
+\openout\Auxiliary=\jobname.aux
+\openout\TableOfContents=\jobname.toc
+\end{verbatim}
+will create the files \n{story.aux} and \n{story.toc}.
+
+%%\spoint Start of the job
+%\subsection{Start of the job}
+%\spoint Start of the job
+\subsection{Start of the job}
+
+%\TeX\ starts each job by inserting the \csidx{everyjob} token
+%list into the command stream.
+%Setting this variable during a run of \TeX\ has no use,
+%but a format can use it to identify itself to the user.
+%If a
+%format fills the token list, the commands therein are automatically
+%executed when \TeX\ is run using that format.
+\TeX\ starts each job by inserting the \csidx{everyjob} token
+list into the command stream.
+Setting this variable during a run of \TeX\ has no use,
+but a format can use it to identify itself to the user.
+If a
+format fills the token list, the commands therein are automatically
+executed when \TeX\ is run using that format.
+
+%%\spoint End of the job
+%\subsection{End of the job}
+%\spoint End of the job
+\subsection{End of the job}
+
+%A \TeX\ job is terminated by the \csidx{end} command. This
+%may involve first forcing the output routine to process any
+%remaining material (see Chapter~\ref{page:break}).
+%If the end of job occurs inside a group
+%\TeX\ will give a diagnostic
+%message. The \cs{end} command is not allowed in internal
+%vertical mode, because this would be inside a vertical box.
+A \TeX\ job is terminated by the \csidx{end} command. This
+may involve first forcing the output routine to process any
+remaining material (see Chapter~\ref{page:break}).
+If the end of job occurs inside a group
+\TeX\ will give a diagnostic
+message. The \cs{end} command is not allowed in internal
+vertical mode, because this would be inside a vertical box.
+
+%Usually some sugar coating of the \cs{end} command is necessary.
+%For instance the plain \TeX\ macro \csidx{bye} is defined
+%as
+%\begin{verbatim}
+%\def\bye{\par\vfill\supereject\end}
+%\end{verbatim}
+%where the \cs{supereject} takes care of any leftover insertions.
+Usually some sugar coating of the \cs{end} command is necessary.
+For instance the plain \TeX\ macro \csidx{bye} is defined
+as
+\begin{verbatim}
+\def\bye{\par\vfill\supereject\end}
+\end{verbatim}
+where the \cs{supereject} takes care of any leftover insertions.
+
+%%\spoint The log file
+%\subsection{The log file}
+%\spoint The log file
+\subsection{The log file}
+
+%For each run \TeX\ creates a \indexterm{log file}. Usually this will be
+%a file with as name the value of \cs{jobname}, and the
+%extension \n{.log}. Other extensions such as \n{.lis}
+%are used by some implementations.
+%This log file contains all information that
+%is displayed on the screen during the run of \TeX, but
+%it will display some information more elaborately, and it
+%can contain statistics that are usually not displayed on
+%the screen. If the parameter \cs{tracingonline}
+%has a positive value, all the log file information will be
+%shown on the screen.
+For each run \TeX\ creates a \indexterm{log file}. Usually this will be
+a file with as name the value of \cs{jobname}, and the
+extension \n{.log}. Other extensions such as \n{.lis}
+are used by some implementations.
+This log file contains all information that
+is displayed on the screen during the run of \TeX, but
+it will display some information more elaborately, and it
+can contain statistics that are usually not displayed on
+the screen. If the parameter \cs{tracingonline}
+has a positive value, all the log file information will be
+shown on the screen.
+
+%Overfull and underfull boxes are reported on the terminal
+%screen, and they are dumped using the parameters
+%\cs{showboxdepth} and \cs{showboxbreadth} in the log file
+%(see Chapter~\ref{trace}). These parameters are also used
+%for box dumps caused by the \cs{showbox} command, and
+%for the dump of boxes written by \cs{shipout} 
+%if \cs{tracingoutput} is set to a positive value.
+Overfull and underfull boxes are reported on the terminal
+screen, and they are dumped using the parameters
+\cs{showboxdepth} and \cs{showboxbreadth} in the log file
+(see Chapter~\ref{trace}). These parameters are also used
+for box dumps caused by the \cs{showbox} command, and
+for the dump of boxes written by \cs{shipout} 
+if \cs{tracingoutput} is set to a positive value.
+
+%Statistics generated by commands such as \cs{tracingparagraphs}
+%will be written to the log file; if \cs{tracingonline} is positive
+%they will also be shown on the screen.
+Statistics generated by commands such as \cs{tracingparagraphs}
+will be written to the log file; if \cs{tracingonline} is positive
+they will also be shown on the screen.
+
+%Output operations to a stream that is not open, or to a
+%stream with a number that is not in the range 0--15,
+%go to the log file. If the stream number is positive,
+%they also go to the terminal.
+Output operations to a stream that is not open, or to a
+stream with a number that is not in the range 0--15,
+go to the log file. If the stream number is positive,
+they also go to the terminal.
+
+%\index{job|)}
+\index{job|)}
+
+%\section{Run modes}
+%\index{run modes|(}
+\section{Run modes}
+\index{run modes|(}
+
+%By default, \TeX\ goes into \cs{errorstopmode} if an error occurs:
+%\cstoidx errorstopmode\par
+%it stops and asks for input from the user. Some implementations 
+% have a way of forcing \TeX\ into errorstopmode
+%when the user interrupts \TeX, so that
+%the internal state of \TeX\ can be inspected (and altered). 
+%See page~\pageref{interaction} for ways to switch the run
+%mode when \TeX\ has been interrupted.
+By default, \TeX\ goes into \cs{errorstopmode} if an error occurs:
+\cstoidx errorstopmode\par
+it stops and asks for input from the user. Some implementations 
+ have a way of forcing \TeX\ into errorstopmode
+when the user interrupts \TeX, so that
+the internal state of \TeX\ can be inspected (and altered). 
+See page~\pageref{interaction} for ways to switch the run
+mode when \TeX\ has been interrupted.
+
+%Often, \TeX\ can
+%fix an error itself if the user asks \TeX\ just to continue
+%(usually by hitting the return key),
+%but sometimes (for instance in alignments)
+%it may take a while before \TeX\ is on the
+%right track again (and sometimes it never is).
+%In such cases the user may want to
+%turn on \csidx{scrollmode},
+%which instructs \TeX\ to fix as best it can any
+%occurring error without confirmation from the user.
+%This is usually done by typing `s' when \TeX\ asks
+%for input.
+Often, \TeX\ can
+fix an error itself if the user asks \TeX\ just to continue
+(usually by hitting the return key),
+but sometimes (for instance in alignments)
+it may take a while before \TeX\ is on the
+right track again (and sometimes it never is).
+In such cases the user may want to
+turn on \csidx{scrollmode},
+which instructs \TeX\ to fix as best it can any
+occurring error without confirmation from the user.
+This is usually done by typing `s' when \TeX\ asks
+for input.
+
+%In \cs{scrollmode}, \TeX\ also does not ask for input
+%after \cs{show...} commands.
+%\alt
+%However, some errors, such as a file that could not be
+%found for \cs{input}, are not so easily remedied, so
+%the user will still be asked for input.
+In \cs{scrollmode}, \TeX\ also does not ask for input
+after \cs{show...} commands.
+\alt
+However, some errors, such as a file that could not be
+found for \cs{input}, are not so easily remedied, so
+the user will still be asked for input.
+
+%With \csidx{nonstopmode} \TeX\ will scroll through errors and,
+%in the case of the kind of error that cannot be recovered from,
+%it will make an emergency stop, aborting the run.
+%Also \TeX\ will abort the run if a \cs{read} is attempted
+%from the terminal.
+%The \csidx{batchmode} differs only from nonstopmode in that
+%it gives messages only to the log file, not to the terminal.
+With \csidx{nonstopmode} \TeX\ will scroll through errors and,
+in the case of the kind of error that cannot be recovered from,
+it will make an emergency stop, aborting the run.
+Also \TeX\ will abort the run if a \cs{read} is attempted
+from the terminal.
+The \csidx{batchmode} differs only from nonstopmode in that
+it gives messages only to the log file, not to the terminal.
+
+%\index{run modes|)}
+%\endofchapter
+\index{run modes|)}
+\endofchapter
+
+\end{document}

@@ -1,0 +1,22 @@
+% -*- coding: utf-8 -*-
+\documentclass[openany]{book}
+
+\input{preamble}
+\makeatletter
+\renewcommand\printindex{\@input@{TeXbyTopic.ind}}
+\makeatother
+
+\begin{document}
+
+%\chapter{Index}
+%%\addcontentsline{toc}{section}{Index}
+%\printindex
+%%\input \jobname.ind
+%%\endofchapter % this winds up on a page of its own.
+%\clearpage
+\renewcommand{\indexname}{索引}
+\phantomsection
+\addcontentsline{toc}{chapter}{索引}
+\printindex
+
+\end{document}

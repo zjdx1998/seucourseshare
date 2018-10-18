@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Selectors' target in the 'Selectors' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

@@ -1,0 +1,234 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8483F08C15491D1C0066DE72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8483F08B15491D1C0066DE72 /* Foundation.framework */; };
+		8483F08F15491D1C0066DE72 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8483F08E15491D1C0066DE72 /* main.m */; };
+		8483F09315491D1C0066DE72 /* FileWalkerPro.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8483F09215491D1C0066DE72 /* FileWalkerPro.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8483F08515491D1C0066DE72 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8483F09315491D1C0066DE72 /* FileWalkerPro.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8483F08715491D1C0066DE72 /* FileWalkerPro */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FileWalkerPro; sourceTree = BUILT_PRODUCTS_DIR; };
+		8483F08B15491D1C0066DE72 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		8483F08E15491D1C0066DE72 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8483F09115491D1C0066DE72 /* FileWalkerPro-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FileWalkerPro-Prefix.pch"; sourceTree = "<group>"; };
+		8483F09215491D1C0066DE72 /* FileWalkerPro.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = FileWalkerPro.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8483F08415491D1C0066DE72 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8483F08C15491D1C0066DE72 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8483F07C15491D1C0066DE72 = {
+			isa = PBXGroup;
+			children = (
+				8483F08D15491D1C0066DE72 /* FileWalkerPro */,
+				8483F08A15491D1C0066DE72 /* Frameworks */,
+				8483F08815491D1C0066DE72 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8483F08815491D1C0066DE72 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8483F08715491D1C0066DE72 /* FileWalkerPro */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8483F08A15491D1C0066DE72 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8483F08B15491D1C0066DE72 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8483F08D15491D1C0066DE72 /* FileWalkerPro */ = {
+			isa = PBXGroup;
+			children = (
+				8483F08E15491D1C0066DE72 /* main.m */,
+				8483F09215491D1C0066DE72 /* FileWalkerPro.1 */,
+				8483F09015491D1C0066DE72 /* Supporting Files */,
+			);
+			path = FileWalkerPro;
+			sourceTree = "<group>";
+		};
+		8483F09015491D1C0066DE72 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8483F09115491D1C0066DE72 /* FileWalkerPro-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8483F08615491D1C0066DE72 /* FileWalkerPro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8483F09615491D1C0066DE72 /* Build configuration list for PBXNativeTarget "FileWalkerPro" */;
+			buildPhases = (
+				8483F08315491D1C0066DE72 /* Sources */,
+				8483F08415491D1C0066DE72 /* Frameworks */,
+				8483F08515491D1C0066DE72 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FileWalkerPro;
+			productName = FileWalkerPro;
+			productReference = 8483F08715491D1C0066DE72 /* FileWalkerPro */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8483F07E15491D1C0066DE72 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 8483F08115491D1C0066DE72 /* Build configuration list for PBXProject "FileWalkerPro" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 8483F07C15491D1C0066DE72;
+			productRefGroup = 8483F08815491D1C0066DE72 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8483F08615491D1C0066DE72 /* FileWalkerPro */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8483F08315491D1C0066DE72 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8483F08F15491D1C0066DE72 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8483F09415491D1C0066DE72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		8483F09515491D1C0066DE72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		8483F09715491D1C0066DE72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FileWalkerPro/FileWalkerPro-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8483F09815491D1C0066DE72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FileWalkerPro/FileWalkerPro-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8483F08115491D1C0066DE72 /* Build configuration list for PBXProject "FileWalkerPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8483F09415491D1C0066DE72 /* Debug */,
+				8483F09515491D1C0066DE72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8483F09615491D1C0066DE72 /* Build configuration list for PBXNativeTarget "FileWalkerPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8483F09715491D1C0066DE72 /* Debug */,
+				8483F09815491D1C0066DE72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8483F07E15491D1C0066DE72 /* Project object */;
+}

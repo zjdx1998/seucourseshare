@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Objective Blocks' target in the 'Objective Blocks' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

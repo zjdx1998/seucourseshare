@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'CarParts-Copy' target in the 'CarParts-Copy' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

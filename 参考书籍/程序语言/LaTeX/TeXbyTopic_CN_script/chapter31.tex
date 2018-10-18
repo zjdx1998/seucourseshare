@@ -1,0 +1,332 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{30}
+
+\begin{document}
+
+%\chapter{Allocation}\label{alloc}
+\chapter{Allocation}\label{alloc}
+
+%\TeX\ has registers of a number of types. For some of these,
+%explicit commands exist to define a synonym for a certain register;
+%for all of them macros exist in the plain format
+%to allocate an unused register. This chapter treats
+%the synonym and allocation commands, and discusses
+%some guidelines for macro writers regarding allocation.
+\TeX\ has registers of a number of types. For some of these,
+explicit commands exist to define a synonym for a certain register;
+for all of them macros exist in the plain format
+to allocate an unused register. This chapter treats
+the synonym and allocation commands, and discusses
+some guidelines for macro writers regarding allocation.
+
+%\begin{inventory}
+%\item [\cs{countdef}] 
+%      Define a synonym for a \cs{count} register.
+%\item [\cs{dimendef}]
+%      Define a synonym for a \cs{dimen} register.
+%\item [\cs{muskipdef}]
+%      Define a synonym for a \cs{muskip} register.
+%\item [\cs{skipdef}] 
+%      Define a synonym for a \cs{skip} register.
+%\item [\cs{toksdef}] 
+%      Define a synonym for a \cs{toks} register.
+%\item [\cs{newbox}]
+%      Allocate an unused \cs{box} register.
+%\item [\cs{newcount}]
+%      Allocate an unused \cs{count} register.
+%\item [\cs{newdimen}]
+%      Allocate an unused \cs{dimen} register.
+%\item [\cs{newfam}]
+%      Allocate an unused math family.
+%\item [\cs{newinsert}]
+%      Allocate an unused insertion class.
+%\item [\cs{newlanguage}]
+%      (\TeX3 only)
+%      Allocate a new language number.
+%\item [\cs{newmuskip}]
+%      Allocate an unused \cs{muskip} register.
+%\item [\cs{newskip}]
+%      Allocate an unused \cs{skip} register.
+%\item [\cs{newtoks}]
+%      Allocate an unused \cs{toks} register.
+%\item [\cs{newread}]
+%      Allocate an unused input stream.
+%\item [\cs{newwrite}]
+%      Allocate an unused output stream.
+%\end{inventory}
+\begin{inventory}
+\item [\cs{countdef}] 
+      Define a synonym for a \cs{count} register.
+\item [\cs{dimendef}]
+      Define a synonym for a \cs{dimen} register.
+\item [\cs{muskipdef}]
+      Define a synonym for a \cs{muskip} register.
+\item [\cs{skipdef}] 
+      Define a synonym for a \cs{skip} register.
+\item [\cs{toksdef}] 
+      Define a synonym for a \cs{toks} register.
+\item [\cs{newbox}]
+      Allocate an unused \cs{box} register.
+\item [\cs{newcount}]
+      Allocate an unused \cs{count} register.
+\item [\cs{newdimen}]
+      Allocate an unused \cs{dimen} register.
+\item [\cs{newfam}]
+      Allocate an unused math family.
+\item [\cs{newinsert}]
+      Allocate an unused insertion class.
+\item [\cs{newlanguage}]
+      (\TeX3 only)
+      Allocate a new language number.
+\item [\cs{newmuskip}]
+      Allocate an unused \cs{muskip} register.
+\item [\cs{newskip}]
+      Allocate an unused \cs{skip} register.
+\item [\cs{newtoks}]
+      Allocate an unused \cs{toks} register.
+\item [\cs{newread}]
+      Allocate an unused input stream.
+\item [\cs{newwrite}]
+      Allocate an unused output stream.
+\end{inventory}
+
+%%\point Allocation commands
+%\section{Allocation commands}
+%\index{registers!allocation of|(}
+%\point Allocation commands
+\section{Allocation commands}
+\index{registers!allocation of|(}
+
+%In plain \TeX, \cs{new...} macros are defined for
+%allocation of registers.
+%The registers of \TeX\ fall into two classes that are 
+%allocated in different ways. This is treated below.
+In plain \TeX, \cs{new...} macros are defined for
+allocation of registers.
+The registers of \TeX\ fall into two classes that are 
+allocated in different ways. This is treated below.
+
+%The \csidx{newlanguage} macro of plain \TeX\ 
+%does not allocate any register. Instead it merely assigns
+%a number, starting from~0.
+%\TeX\ (version~3) can have at most 256 different
+%sets of hyphenation patterns.
+The \csidx{newlanguage} macro of plain \TeX\ 
+does not allocate any register. Instead it merely assigns
+a number, starting from~0.
+\TeX\ (version~3) can have at most 256 different
+sets of hyphenation patterns.
+
+%The \cs{new...} macros of plain \TeX\ are defined to be
+%\cs{outer} (see Chapter~\ref{macro} for a precise explanation),
+%which precludes use of the allocation macros in other macros.
+%Therefore the \LaTeX\ format redefines these macros
+%without the \cs{outer} prefix.
+The \cs{new...} macros of plain \TeX\ are defined to be
+\cs{outer} (see Chapter~\ref{macro} for a precise explanation),
+which precludes use of the allocation macros in other macros.
+Therefore the \LaTeX\ format redefines these macros
+without the \cs{outer} prefix.
+
+%%\spoint \cs{count}, \cs{dimen}, \cs{skip}, \cs{muskip}, \cs{toks}
+%\subsection{\cs{count}, \cs{dimen}, \cs{skip}, \cs{muskip}, \cs{toks}}
+%\spoint \cs{count}, \cs{dimen}, \cs{skip}, \cs{muskip}, \cs{toks}
+\subsection{\cs{count}, \cs{dimen}, \cs{skip}, \cs{muskip}, \cs{toks}}
+
+%For these registers there exists a \gr{registerdef} command,
+%for instance \cs{countdef}, to couple a specific register
+%to a control sequence:
+%\begin{Disp}\gr{registerdef}\gr{control 
+%    sequence}\gr{equals}\gr{8-bit number}\end{Disp}
+For these registers there exists a \gr{registerdef} command,
+for instance \cs{countdef}, to couple a specific register
+to a control sequence:
+\begin{Disp}\gr{registerdef}\gr{control 
+    sequence}\gr{equals}\gr{8-bit number}\end{Disp}
+
+%After the definition
+%\begin{verbatim}
+%\countdef\MyCount=42
+%\end{verbatim}
+%the allocated register can be used as
+%\begin{verbatim}
+%\MyCount=314
+%\end{verbatim}
+%or
+%\begin{verbatim}
+%\vskip\MyCount\baselineskip
+%\end{verbatim}
+After the definition
+\begin{verbatim}
+\countdef\MyCount=42
+\end{verbatim}
+the allocated register can be used as
+\begin{verbatim}
+\MyCount=314
+\end{verbatim}
+or
+\begin{verbatim}
+\vskip\MyCount\baselineskip
+\end{verbatim}
+
+%The \gr{registerdef} commands are used in plain \TeX\ macros
+%\cs{newcount} et cetera that allocate an unused register;
+%after
+%\begin{verbatim}
+%\newcount\MyCount
+%\end{verbatim}
+%\cs{MyCount} can be used
+%exactly as in the above two examples.
+The \gr{registerdef} commands are used in plain \TeX\ macros
+\cs{newcount} et cetera that allocate an unused register;
+after
+\begin{verbatim}
+\newcount\MyCount
+\end{verbatim}
+\cs{MyCount} can be used
+exactly as in the above two examples.
+
+%%\spoint \cs{box}, \cs{fam}, \cs{write}, \cs{read}, \cs{insert}
+%\subsection{\cs{box}, \cs{fam}, \cs{write}, \cs{read}, \cs{insert}}
+%\spoint \cs{box}, \cs{fam}, \cs{write}, \cs{read}, \cs{insert}
+\subsection{\cs{box}, \cs{fam}, \cs{write}, \cs{read}, \cs{insert}}
+
+%For these registers there exists no  \gr{registerdef} command in \TeX,
+%so \cs{chardef} is used to allocate box registers
+%in the corresponding plain \TeX\ macros \cs{newbox}, for instance.
+For these registers there exists no  \gr{registerdef} command in \TeX,
+so \cs{chardef} is used to allocate box registers
+in the corresponding plain \TeX\ macros \cs{newbox}, for instance.
+
+%The fact that \cs{chardef} is used implies that the
+%defined control sequence does not stand for the register itself,
+%but only for its number. Thus after
+%\begin{verbatim}
+%\newbox\MyBox
+%\end{verbatim}
+%it is necessary to write
+%\begin{verbatim}
+%\box\MyBox
+%\end{verbatim} 
+%Leaving out the \cs{box} means that the character
+%in the current font with number
+%\cs{MyBox} is typeset. The \cs{chardef} command
+%is treated further in Chapter~\ref{char}.
+The fact that \cs{chardef} is used implies that the
+defined control sequence does not stand for the register itself,
+but only for its number. Thus after
+\begin{verbatim}
+\newbox\MyBox
+\end{verbatim}
+it is necessary to write
+\begin{verbatim}
+\box\MyBox
+\end{verbatim} 
+Leaving out the \cs{box} means that the character
+in the current font with number
+\cs{MyBox} is typeset. The \cs{chardef} command
+is treated further in Chapter~\ref{char}.
+
+%\index{registers!allocation of|)}
+\index{registers!allocation of|)}
+
+%\section{Ground rules for macro writers}
+\section{Ground rules for macro writers}
+
+%The \cs{new...} macros of plain \TeX\ have been designed
+%to form a foundation for macro packages, such that
+%several of such packages can operate without collisions
+%in the same run of \TeX. In appendix~B of \TeXbook\
+%Knuth formulates some ground rules that macro writers should
+%adhere to.
+%\begin{enumerate}
+%\item The \cs{new...} macros do not allocate registers
+%with numbers~0--9. These can therefore be used as `scratch'
+%registers. However, as any macro family can use them,
+%no assumption can be made about the permanency of their
+%contents. Results that are to be passed from one call to
+%another should reside in specifically allocated registers.
+The \cs{new...} macros of plain \TeX\ have been designed
+to form a foundation for macro packages, such that
+several of such packages can operate without collisions
+in the same run of \TeX. In appendix~B of \TeXbook\
+Knuth formulates some ground rules that macro writers should
+adhere to.
+\begin{enumerate}
+\item The \cs{new...} macros do not allocate registers
+with numbers~0--9. These can therefore be used as `scratch'
+registers. However, as any macro family can use them,
+no assumption can be made about the permanency of their
+contents. Results that are to be passed from one call to
+another should reside in specifically allocated registers.
+
+%Note that count registers 0--9 are used for page identification
+%in the \n{dvi} file (see Chapter~\ref{TeXcomm}), so no global assignments
+%to these should be made.
+Note that count registers 0--9 are used for page identification
+in the \n{dvi} file (see Chapter~\ref{TeXcomm}), so no global assignments
+to these should be made.
+
+%\item \cs{count255}, \cs{dimen255}, and \cs{skip255} are
+%also available. This is because inserts are
+%allocated from 254 downward  and, together with an insertion box,
+%a count, dimen, and skip register, 
+%all with the same number, are allocated.
+%Since \cs{box255} is used by the output routine 
+%(see Chapter~\ref{output}),
+%the count, dimen, and skip with number~255 are freely available.
+\item \cs{count255}, \cs{dimen255}, and \cs{skip255} are
+also available. This is because inserts are
+allocated from 254 downward  and, together with an insertion box,
+a count, dimen, and skip register, 
+all with the same number, are allocated.
+Since \cs{box255} is used by the output routine 
+(see Chapter~\ref{output}),
+the count, dimen, and skip with number~255 are freely available.
+
+%\item Assignments to scratch registers~0, 2, 4, 6, 8, and~255
+%should be local; assignments to registers~1, 3, 5, 7,~9
+%should be \cs{global} (with the exception of the \cs{count}
+%registers). This guideline prevents `save
+%stack build-up' (see Chapter~\ref{error}).
+\item Assignments to scratch registers~0, 2, 4, 6, 8, and~255
+should be local; assignments to registers~1, 3, 5, 7,~9
+should be \cs{global} (with the exception of the \cs{count}
+registers). This guideline prevents `save
+stack build-up' (see Chapter~\ref{error}).
+
+%\item Any register can be used inside a group, as \TeX's
+%grouping mechanism will restore its value outside
+%the group. There are two conditions on this use of
+%a register:
+%no global assignments should be made to it, and 
+%it must not be possible that other macros may be
+%activated in that group that perform global assignments
+%to that register.
+\item Any register can be used inside a group, as \TeX's
+grouping mechanism will restore its value outside
+the group. There are two conditions on this use of
+a register:
+no global assignments should be made to it, and 
+it must not be possible that other macros may be
+activated in that group that perform global assignments
+to that register.
+
+%\item Registers that are used over longer periods of time,
+%or that have to survive in between calls of different
+%macros, should be allocated by \cs{new...}.
+%\end{enumerate}
+\item Registers that are used over longer periods of time,
+or that have to survive in between calls of different
+macros, should be allocated by \cs{new...}.
+\end{enumerate}
+
+%\endofchapter
+%%%%% end of input file [alloc]
+\endofchapter
+%%%% end of input file [alloc]
+
+\end{document}

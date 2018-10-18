@@ -1,0 +1,77 @@
+\def\figfont{\footnotesize\sl}
+\dh=\fbh
+{\setbox0\hbox{$\downarrow$}
+ \global\lh\ht0 \global\advance\lh by -\fontdimen22\textfont2 %MathSYx
+ \setbox0\hbox{\quad0+11,11, \dots}
+ \global\dw\wd0 \global\advance\dw by 10pt }
+
+\def\doosje#1{\hbox
+   {\vrule width\lw
+    \vbox to \dh{\hsize\dh
+        \hrule height\lw \
+        \vfil \hbox to \hsize{\hfil#1\hfil} \vfil
+        \hrule height\lw}%
+    \vrule width\lw
+   }}
+\def\mr{\moveright.5\dh}
+\def\hdoosje#1#2#3{\vtop
+   {\vbox{\hbox to \dh{\hfil$\swarrow$ \raise5pt\hbox{#1} $\nwarrow$\hfil}
+          \doosje{#2}\kern0pt}
+    \hbox to \dh{\hfil
+      \vtop{\kern0pt 
+       \downvector{12pt}
+       \kern3pt
+       \setbox0\hbox to 0pt{\hss14\setbox2\hbox{5}\hskip-.2\wd0}
+       \dp0=0pt \box0
+       \kern3pt
+       \downvector{12pt}}
+      \kern5pt 
+      \vtop{\kern0pt 
+       \downvector{12pt}
+       \kern3pt
+       \setbox0\hbox to 0pt{#3\hss}
+       \dp0=0pt \box0
+       \kern3pt
+       \downvector{12pt}}
+      \hfil}
+    \kern7pt
+    \hbox to \dh{\hfil stop\hfil}}\ignorespaces
+   }
+
+\font\linefnt=line10
+\newdimen\lfw \lfw=\fontdimen8\linefnt
+\def\downvector#1{\hbox{\hbox to 0pt
+    {\vrule width\lfw height0pt depth #1\hss}%
+    \lower#1\hbox to 0pt{\linefnt\char'77\hss}}}
+
+\def\tbox#1{\setbox0\hbox{\quad#1\quad}\dimen0=\wd0 \box0\relax}
+\def\abox{\hbox to \hsize{\rightarrowfill}}
+
+\def\tarrow#1{\raise.5\dh\vbox{\tbox{#1}\hsize\dimen0\relax
+    \abox}\ignorespaces}
+\def\threearrow{%
+    \vbox{\hsize\dw
+          \vbox{\tbox{10}\abox
+                \kern2pt
+                \tbox{0+11,11, \dots}\abox}
+          \kern2pt
+          \tbox{0+10}
+          \abox
+          \kern2pt
+          \vtop{\kern0pt
+                \hbox to \dw
+                   {$\nwarrow$\hfil\lower 5pt\hbox{other}%
+                    \hfil$\swarrow$}}
+          }}
+
+\def\figmouth{\hbox{\leftskip=0pt \parindent=0pt \offinterlineskip
+    \figfont %\SansSerif \PointSize:8 \Style:roman
+    \tarrow{start}%
+    \hdoosje{10}N{5: insert \cs{par}}
+    \tarrow{other}
+    \hdoosje{other}M{5: insert space}
+    \threearrow
+    \hdoosje{10}S{5}
+    }}
+
+\endinput

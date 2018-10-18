@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'More Typedefs' target in the 'More Typedefs' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

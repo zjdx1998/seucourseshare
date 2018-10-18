@@ -1,0 +1,208 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		849D715715326E0B00A03D3C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 849D715615326E0B00A03D3C /* main.c */; };
+		849D715915326E0B00A03D3C /* Mutable_Variables.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 849D715815326E0B00A03D3C /* Mutable_Variables.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		849D715015326E0B00A03D3C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				849D715915326E0B00A03D3C /* Mutable_Variables.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		849D715215326E0B00A03D3C /* Mutable Variables */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Mutable Variables"; sourceTree = BUILT_PRODUCTS_DIR; };
+		849D715615326E0B00A03D3C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		849D715815326E0B00A03D3C /* Mutable_Variables.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Mutable_Variables.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		849D714F15326E0B00A03D3C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		849D714715326E0B00A03D3C = {
+			isa = PBXGroup;
+			children = (
+				849D715515326E0B00A03D3C /* Mutable Variables */,
+				849D715315326E0B00A03D3C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		849D715315326E0B00A03D3C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				849D715215326E0B00A03D3C /* Mutable Variables */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		849D715515326E0B00A03D3C /* Mutable Variables */ = {
+			isa = PBXGroup;
+			children = (
+				849D715615326E0B00A03D3C /* main.c */,
+				849D715815326E0B00A03D3C /* Mutable_Variables.1 */,
+			);
+			path = "Mutable Variables";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		849D715115326E0B00A03D3C /* Mutable Variables */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 849D715C15326E0B00A03D3C /* Build configuration list for PBXNativeTarget "Mutable Variables" */;
+			buildPhases = (
+				849D714E15326E0B00A03D3C /* Sources */,
+				849D714F15326E0B00A03D3C /* Frameworks */,
+				849D715015326E0B00A03D3C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Mutable Variables";
+			productName = "Mutable Variables";
+			productReference = 849D715215326E0B00A03D3C /* Mutable Variables */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		849D714915326E0B00A03D3C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 849D714C15326E0B00A03D3C /* Build configuration list for PBXProject "Mutable Variables" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 849D714715326E0B00A03D3C;
+			productRefGroup = 849D715315326E0B00A03D3C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				849D715115326E0B00A03D3C /* Mutable Variables */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		849D714E15326E0B00A03D3C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				849D715715326E0B00A03D3C /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		849D715A15326E0B00A03D3C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		849D715B15326E0B00A03D3C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		849D715D15326E0B00A03D3C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		849D715E15326E0B00A03D3C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		849D714C15326E0B00A03D3C /* Build configuration list for PBXProject "Mutable Variables" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				849D715A15326E0B00A03D3C /* Debug */,
+				849D715B15326E0B00A03D3C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		849D715C15326E0B00A03D3C /* Build configuration list for PBXNativeTarget "Mutable Variables" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				849D715D15326E0B00A03D3C /* Debug */,
+				849D715E15326E0B00A03D3C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 849D714915326E0B00A03D3C /* Project object */;
+}

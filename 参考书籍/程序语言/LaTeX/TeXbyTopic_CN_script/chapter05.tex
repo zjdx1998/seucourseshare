@@ -1,0 +1,2223 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{4}
+
+\begin{document}
+
+%\chapter{Boxes}\label{boxes}\index{boxes|(}
+\chapter{Boxes}\label{boxes}\index{boxes|(}
+
+%The horizontal and vertical boxes of \TeX\ are containers for
+%pieces of horizontal and vertical lists.
+%Boxes can be stored in box registers. 
+%This chapter treats box registers and such
+%aspects of boxes as their dimensions, and the way their components
+%are placed relative to each other.
+The horizontal and vertical boxes of \TeX\ are containers for
+pieces of horizontal and vertical lists.
+Boxes can be stored in box registers. 
+This chapter treats box registers and such
+aspects of boxes as their dimensions, and the way their components
+are placed relative to each other.
+
+%\label{cschap:hbox}\label{cschap:vbox}\label{cschap:vtop}\label{cschap:vsplit}\label{cschap:box}\label{cschap:setbox}\label{cschap:copy}\label{cschap:ifhbox}\label{cschap:ifvbox}\label{cschap:ifvoid2}\label{cschap:newbox}\label{cschap:unhbox}\label{cschap:unvbox}\label{cschap:unhcopy}\label{cschap:unvcopy}\label{cschap:ht}\label{cschap:dp}\label{cschap:wd}\label{cschap:boxmaxdepth}\label{cschap:splitmaxdepth}\label{cschap:badness}\label{cschap:hfuzz}\label{cschap:vfuzz}\label{cschap:hbadness}\label{cschap:vbadness}\label{cschap:overfullrule}\label{cschap:hsize}\label{cschap:vsize}\label{cschap:lastbox}\label{cschap:raise}\label{cschap:lower}\label{cschap:moveleft}\label{cschap:moveright}\label{cschap:everyhbox}\label{cschap:everyvbox}
+%\begin{inventory}
+%\item [\cs{hbox}] 
+%      Construct a horizontal box.
+%\item [\cs{vbox}] 
+%      Construct a vertical box with reference point of the last item.
+%\item [\cs{vtop}] 
+%      Construct a vertical box with reference point of the first item.
+%\item [\cs{vcenter}] 
+%      Construct a vertical box vertically centred
+%      on the math axis; this command can only be used in math mode.
+\label{cschap:hbox}\label{cschap:vbox}\label{cschap:vtop}\label{cschap:vsplit}\label{cschap:box}\label{cschap:setbox}\label{cschap:copy}\label{cschap:ifhbox}\label{cschap:ifvbox}\label{cschap:ifvoid2}\label{cschap:newbox}\label{cschap:unhbox}\label{cschap:unvbox}\label{cschap:unhcopy}\label{cschap:unvcopy}\label{cschap:ht}\label{cschap:dp}\label{cschap:wd}\label{cschap:boxmaxdepth}\label{cschap:splitmaxdepth}\label{cschap:badness}\label{cschap:hfuzz}\label{cschap:vfuzz}\label{cschap:hbadness}\label{cschap:vbadness}\label{cschap:overfullrule}\label{cschap:hsize}\label{cschap:vsize}\label{cschap:lastbox}\label{cschap:raise}\label{cschap:lower}\label{cschap:moveleft}\label{cschap:moveright}\label{cschap:everyhbox}\label{cschap:everyvbox}
+\begin{inventory}
+\item [\cs{hbox}] 
+      Construct a horizontal box.
+\item [\cs{vbox}] 
+      Construct a vertical box with reference point of the last item.
+\item [\cs{vtop}] 
+      Construct a vertical box with reference point of the first item.
+\item [\cs{vcenter}] 
+      Construct a vertical box vertically centred
+      on the math axis; this command can only be used in math mode.
+
+%\item [\cs{vsplit}] 
+%      Split off the top part of a vertical box. 
+\item [\cs{vsplit}] 
+      Split off the top part of a vertical box. 
+
+%\item [\cs{box}] 
+%      Use a box register, emptying it. 
+\item [\cs{box}] 
+      Use a box register, emptying it. 
+
+%\item [\cs{setbox}] 
+%      Assign a box to a box register.
+\item [\cs{setbox}] 
+      Assign a box to a box register.
+
+%\item [\cs{copy}] 
+%      Use a box register, but retain the contents. 
+\item [\cs{copy}] 
+      Use a box register, but retain the contents. 
+
+%\item [\cs{ifhbox \cs{ifvbox}}]
+%\mdqon
+%      Test whether a box register contains a horizontal/""vertical box.
+%\mdqoff
+\item [\cs{ifhbox \cs{ifvbox}}]
+\mdqon
+      Test whether a box register contains a horizontal/""vertical box.
+\mdqoff
+
+%\item [\cs{ifvoid}] 
+%      Test whether a box register is empty.
+\item [\cs{ifvoid}] 
+      Test whether a box register is empty.
+
+
+%\item [\cs{newbox}] 
+%      Allocate a new box register. 
+\item [\cs{newbox}] 
+      Allocate a new box register. 
+
+%\item [\cs{unhbox \cs{unvbox}}]
+%      Unpack a box register containing a horizontal/vertical box,
+%      adding the contents to the current horizontal/vertical list,
+%      and emptying the register. 
+\item [\cs{unhbox \cs{unvbox}}]
+      Unpack a box register containing a horizontal/vertical box,
+      adding the contents to the current horizontal/vertical list,
+      and emptying the register. 
+
+%\item [\cs{unhcopy \cs{unvcopy}}]
+%      The same as \cs{unhbox}$\,$/$\,$\cs{unvbox},
+%      but do not empty the register. 
+\item [\cs{unhcopy \cs{unvcopy}}]
+      The same as \cs{unhbox}$\,$/$\,$\cs{unvbox},
+      but do not empty the register. 
+
+%\item [\cs{ht \cs{dp} \cs{wd}}]
+%      Height/depth/width of the box in a box register. 
+\item [\cs{ht \cs{dp} \cs{wd}}]
+      Height/depth/width of the box in a box register. 
+
+%\item [\cs{boxmaxdepth}] 
+%      Maximum allowed depth of boxes.
+%      Plain \TeX\ default:~\cs{maxdimen}.
+\item [\cs{boxmaxdepth}] 
+      Maximum allowed depth of boxes.
+      Plain \TeX\ default:~\cs{maxdimen}.
+
+%\item [\cs{splitmaxdepth}]
+%      Maximum allowed depth of boxes generated by \cs{vsplit}.
+\item [\cs{splitmaxdepth}]
+      Maximum allowed depth of boxes generated by \cs{vsplit}.
+
+%\item [\cs{badness}] 
+%      Badness of the most recently constructed box.
+\item [\cs{badness}] 
+      Badness of the most recently constructed box.
+
+%\item [\cs{hfuzz \cs{vfuzz}}]
+%      Excess size that \TeX\ tolerates before it considers  
+%\mdqon
+%      a horizontal/""vertical box overfull.
+%\mdqoff
+\item [\cs{hfuzz \cs{vfuzz}}]
+      Excess size that \TeX\ tolerates before it considers  
+\mdqon
+      a horizontal/""vertical box overfull.
+\mdqoff
+
+%\item [\cs{hbadness \cs{vbadness}}]
+%      Amount of tolerance before \TeX\ reports an underfull 
+%\mdqon
+%      or overfull  horizontal/""vertical box.
+%\mdqoff
+\item [\cs{hbadness \cs{vbadness}}]
+      Amount of tolerance before \TeX\ reports an underfull 
+\mdqon
+      or overfull  horizontal/""vertical box.
+\mdqoff
+
+%\item [\cs{overfullrule}] 
+%      Width of the rule that is printed to indicate 
+%      overfull horizontal boxes.
+\item [\cs{overfullrule}] 
+      Width of the rule that is printed to indicate 
+      overfull horizontal boxes.
+
+% 
+%\item [\cs{hsize}] 
+%      Line width used for text typesetting inside a vertical box.
+ 
+\item [\cs{hsize}] 
+      Line width used for text typesetting inside a vertical box.
+
+%\item [\cs{vsize}] 
+%      Height of the page box.
+\item [\cs{vsize}] 
+      Height of the page box.
+
+
+%\item [\cs{lastbox}] 
+%      Register containing the last item added to the current list, 
+%      if this was a box.
+\item [\cs{lastbox}] 
+      Register containing the last item added to the current list, 
+      if this was a box.
+
+%\item [\cs{raise \cs{lower}}]
+%      Adjust vertical positioning of a box in horizontal mode. 
+\item [\cs{raise \cs{lower}}]
+      Adjust vertical positioning of a box in horizontal mode. 
+
+%\item [\cs{moveleft \cs{moveright}}]
+%      Adjust horizontal positioning of a box in vertical mode. 
+\item [\cs{moveleft \cs{moveright}}]
+      Adjust horizontal positioning of a box in vertical mode. 
+
+%\item [\cs{everyhbox \cs{everyvbox}}]
+%\mdqon
+%      Token list inserted at the start of a horizontal/""vertical box.
+%\mdqoff
+\item [\cs{everyhbox \cs{everyvbox}}]
+\mdqon
+      Token list inserted at the start of a horizontal/""vertical box.
+\mdqoff
+
+%\end{inventory}
+\end{inventory}
+
+%\section{Boxes}
+\section{Boxes}
+
+%In this chapter we shall look at boxes. Boxes are containers
+%for pieces of horizontal or vertical lists.
+%Boxes that are needed more than once can be stored in box registers.
+In this chapter we shall look at boxes. Boxes are containers
+for pieces of horizontal or vertical lists.
+Boxes that are needed more than once can be stored in box registers.
+
+%When \TeX\ expects a \gr{box}, any of the following forms
+%is admissible:
+%\begin{itemize}
+%\item \cs{hbox}\gr{box specification}\lb\gr{horizontal material}\rb
+%\item \cs{vbox}\gr{box specification}\lb\gr{vertical material}\rb
+%\item \cs{vtop}\gr{box specification}\lb\gr{vertical material}\rb
+%\item \cs{box}\gr{8-bit number}
+%\item \cs{copy}\gr{8-bit number}
+%\item \cs{vsplit}\gr{8-bit number}\n{to}\gr{dimen}
+%\item \cs{lastbox}
+%\end{itemize}
+%A \gr{box specification} is defined as\label{box:spec}
+%\begin{disp}\gr{box specification} $\longrightarrow$ \gr{filler}
+%\nl\indent$|$ \n{to} \gr{dimen}\gr{filler} 
+%          $|$ \n{spread} \gr{dimen}\gr{filler}
+%\end{disp}
+%An \gr{8-bit number} is a number in the range~0--255.
+When \TeX\ expects a \gr{box}, any of the following forms
+is admissible:
+\begin{itemize}
+\item \cs{hbox}\gr{box specification}\lb\gr{horizontal material}\rb
+\item \cs{vbox}\gr{box specification}\lb\gr{vertical material}\rb
+\item \cs{vtop}\gr{box specification}\lb\gr{vertical material}\rb
+\item \cs{box}\gr{8-bit number}
+\item \cs{copy}\gr{8-bit number}
+\item \cs{vsplit}\gr{8-bit number}\n{to}\gr{dimen}
+\item \cs{lastbox}
+\end{itemize}
+A \gr{box specification} is defined as\label{box:spec}
+\begin{disp}\gr{box specification} $\longrightarrow$ \gr{filler}
+\nl\indent$|$ \n{to} \gr{dimen}\gr{filler} 
+          $|$ \n{spread} \gr{dimen}\gr{filler}
+\end{disp}
+An \gr{8-bit number} is a number in the range~0--255.
+
+%The braces surrounding box material define a group;
+%they can be explicit characters
+%of categories 1 and~2 respectively,
+%or control sequences \cs{let} to such characters;
+%see also below.
+The braces surrounding box material define a group;
+they can be explicit characters
+of categories 1 and~2 respectively,
+or control sequences \cs{let} to such characters;
+see also below.
+
+
+%A \gr{box} can in general be used in horizontal, vertical,
+%and math mode, but see below for the \cs{lastbox}.
+%The connection between
+%boxes and modes is explored further in Chapter~\ref{hvmode}.
+A \gr{box} can in general be used in horizontal, vertical,
+and math mode, but see below for the \cs{lastbox}.
+The connection between
+boxes and modes is explored further in Chapter~\ref{hvmode}.
+
+%The box produced by \cs{vcenter} \ldash a command that is allowed only in
+%math mode \rdash  is not a \gr{box}. For instance,
+%it can not be assigned with \verb=\setbox=; see further
+%Chapter~\ref{math}.
+The box produced by \cs{vcenter} \ldash a command that is allowed only in
+math mode \rdash  is not a \gr{box}. For instance,
+it can not be assigned with \verb=\setbox=; see further
+Chapter~\ref{math}.
+
+%The \cs{vsplit} operation is treated in Chapter~\ref{page:break}.
+The \cs{vsplit} operation is treated in Chapter~\ref{page:break}.
+
+%\section{Box registers}
+\section{Box registers}
+
+%There are 256 box registers, numbered 0--255. 
+%Either a box register is  empty (`void'), or it contains a horizontal
+%or vertical box.
+%This section discusses specifically box {\em registers};
+%the sizes of boxes, and the way material is arranged inside them,
+%is treated below.
+There are 256 box registers, numbered 0--255. 
+Either a box register is  empty (`void'), or it contains a horizontal
+or vertical box.
+This section discusses specifically box {\em registers};
+the sizes of boxes, and the way material is arranged inside them,
+is treated below.
+
+%%\spoint Allocation: \cs{newbox}
+%\subsection{Allocation: \cs{newbox}}
+%\spoint Allocation: \cs{newbox}
+\subsection{Allocation: \cs{newbox}}
+
+%The plain \TeX\ \csidx{newbox} macro allocates an unused
+%box register:
+%\begin{verbatim}
+%\newbox\MyBox 
+%\end{verbatim}
+%after which one can say
+%\begin{verbatim}
+%\setbox\MyBox=...
+%\end{verbatim}
+%or
+%\begin{verbatim}
+%\box\MyBox
+%\end{verbatim}
+%and so on.
+%Subsequent calls to this macro give subsequent box numbers;
+%this way macro collections can allocate their own boxes
+%without fear of collision with other macros.
+The plain \TeX\ \csidx{newbox} macro allocates an unused
+box register:
+\begin{verbatim}
+\newbox\MyBox 
+\end{verbatim}
+after which one can say
+\begin{verbatim}
+\setbox\MyBox=...
+\end{verbatim}
+or
+\begin{verbatim}
+\box\MyBox
+\end{verbatim}
+and so on.
+Subsequent calls to this macro give subsequent box numbers;
+this way macro collections can allocate their own boxes
+without fear of collision with other macros.
+
+%The number of the box is assigned by \cs{chardef}
+%(see Chapter~\ref{alloc}). 
+%This implies that \cs{MyBox} is equivalent to,
+%and can be used as, a~\gr{number}.
+%The control sequence
+%\altt
+%\cs{newbox} is an \cs{outer} macro.
+%Newly allocated box registers are initially empty.
+The number of the box is assigned by \cs{chardef}
+(see Chapter~\ref{alloc}). 
+This implies that \cs{MyBox} is equivalent to,
+and can be used as, a~\gr{number}.
+The control sequence
+\altt
+\cs{newbox} is an \cs{outer} macro.
+Newly allocated box registers are initially empty.
+
+
+%\subsection{Usage: \cs{setbox}, \cs{box}, \cs{copy}}
+\subsection{Usage: \cs{setbox}, \cs{box}, \cs{copy}}
+
+%A~register is filled by assigning a \gr{box}
+%\cstoidx setbox\par
+%to it:
+%\begin{Disp}\verb>\setbox>\gr{number}\gr{equals}\gr{box}\end{Disp}
+%For example, the \gr{box} can be explicit
+%\begin{Disp}\verb>\setbox37=\hbox{...}>\quad or\quad \verb>\setbox37=\vbox{...}>
+%\end{Disp}
+%or it can be a box register:
+%\begin{verbatim}
+%\setbox37=\box38
+%\end{verbatim}
+%Usually, box numbers will have been assigned by a \cs{newbox}
+%command.
+A~register is filled by assigning a \gr{box}
+\cstoidx setbox\par
+to it:
+\begin{Disp}\verb>\setbox>\gr{number}\gr{equals}\gr{box}\end{Disp}
+For example, the \gr{box} can be explicit
+\begin{Disp}\verb>\setbox37=\hbox{...}>\quad or\quad \verb>\setbox37=\vbox{...}>
+\end{Disp}
+or it can be a box register:
+\begin{verbatim}
+\setbox37=\box38
+\end{verbatim}
+Usually, box numbers will have been assigned by a \cs{newbox}
+command.
+
+%The box in a box register is appended
+%by the commands \cs{box} and~\cs{copy}
+%to whatever list \TeX\ is building: the call
+%\begin{verbatim}
+%\box38
+%\end{verbatim}
+%appends box~38.
+%To save memory space, box registers become empty by using them:
+%\TeX\ assumes that after you have inserted a box by
+%calling \csidx{box}$nn$ in some mode, you do not need the
+%contents of that register any more and empties it.
+%In case you {\em do\/} need the contents of
+%a box register more than once, 
+%you can \csidx{copy} it. Calling \cs{copy}$nn$ is
+%equivalent to \cs{box}$nn$ in all respects except that
+%the register is not cleared.
+The box in a box register is appended
+by the commands \cs{box} and~\cs{copy}
+to whatever list \TeX\ is building: the call
+\begin{verbatim}
+\box38
+\end{verbatim}
+appends box~38.
+To save memory space, box registers become empty by using them:
+\TeX\ assumes that after you have inserted a box by
+calling \csidx{box}$nn$ in some mode, you do not need the
+contents of that register any more and empties it.
+In case you {\em do\/} need the contents of
+a box register more than once, 
+you can \csidx{copy} it. Calling \cs{copy}$nn$ is
+equivalent to \cs{box}$nn$ in all respects except that
+the register is not cleared.
+
+%It is possible to unwrap the contents of a box register
+%by `unboxing' it using the commands \cs{unhbox} and \cs{unvbox},
+%and their copying versions \cs{unhcopy} and \cs{unvcopy}.
+%Whereas a box can be used in any mode, the
+%unboxing operations can only be used in the appropriate mode,
+%since in effect they contribute a partial
+%horizontal or vertical list (see also Chapter~\ref{hvmode}).
+%See below for more information on unboxing registers.
+It is possible to unwrap the contents of a box register
+by `unboxing' it using the commands \cs{unhbox} and \cs{unvbox},
+and their copying versions \cs{unhcopy} and \cs{unvcopy}.
+Whereas a box can be used in any mode, the
+unboxing operations can only be used in the appropriate mode,
+since in effect they contribute a partial
+horizontal or vertical list (see also Chapter~\ref{hvmode}).
+See below for more information on unboxing registers.
+
+%%\spoint Testing: \cs{ifvoid}, \cs{ifhbox}, \cs{ifvbox}
+%\subsection{Testing: \cs{ifvoid}, \cs{ifhbox}, \cs{ifvbox}}
+%\spoint Testing: \cs{ifvoid}, \cs{ifhbox}, \cs{ifvbox}
+\subsection{Testing: \cs{ifvoid}, \cs{ifhbox}, \cs{ifvbox}}
+
+%Box
+%registers can be tested for their contents:
+%\begin{disp}\cs{ifvoid}\gr{number}\end{disp}
+%is true if the box register is empty.
+%Note that an empty, or `void',
+%box register is not the same as a register containing an empty box.
+%An empty box is still either a horizontal or a vertical box;
+%a~void register can be used as both.
+Box
+registers can be tested for their contents:
+\begin{disp}\cs{ifvoid}\gr{number}\end{disp}
+is true if the box register is empty.
+Note that an empty, or `void',
+box register is not the same as a register containing an empty box.
+An empty box is still either a horizontal or a vertical box;
+a~void register can be used as both.
+
+%The test
+%\begin{disp}\cs{ifhbox}\gr{number}\end{disp}
+%is true if the box register contains a horizontal box;
+%\begin{disp}\cs{ifvbox}\gr{number}\end{disp}
+%is true if the box register contains a vertical box.
+%Both tests are false for void registers.
+The test
+\begin{disp}\cs{ifhbox}\gr{number}\end{disp}
+is true if the box register contains a horizontal box;
+\begin{disp}\cs{ifvbox}\gr{number}\end{disp}
+is true if the box register contains a vertical box.
+Both tests are false for void registers.
+
+%%\spoint[lastbox] The \cs{lastbox}
+%\subsection{The \cs{lastbox}}
+%\label{lastbox}
+%\spoint[lastbox] The \cs{lastbox}
+\subsection{The \cs{lastbox}}
+\label{lastbox}
+
+%When \TeX\ has built a partial list, the last box in this
+%list is accessible as the \csidx{lastbox}. This behaves
+%like a box register, so you can remove the last box from  the
+%list by assigning the \cs{lastbox} to some  box register. 
+%If the last item on the current list is not a box,
+%the \cs{lastbox} acts like a void box register.
+%It is not possible to get hold of the last box
+%in the case of the main vertical list.
+%The \cs{lastbox} is then always void.
+When \TeX\ has built a partial list, the last box in this
+list is accessible as the \csidx{lastbox}. This behaves
+like a box register, so you can remove the last box from  the
+list by assigning the \cs{lastbox} to some  box register. 
+If the last item on the current list is not a box,
+the \cs{lastbox} acts like a void box register.
+It is not possible to get hold of the last box
+in the case of the main vertical list.
+The \cs{lastbox} is then always void.
+
+%As an example, the statement
+%\begin{verbatim}
+%{\setbox0=\lastbox}
+%\end{verbatim}
+%removes
+%the last box from the current list, assigning it to box
+%register~0. Since this assignment occurs inside a group,
+%the register is cleared at the end of the group.
+%At the start of a paragraph this can be used to remove the
+%indentation box (see Chapter~\ref{par:start}).
+%Another example of \cs{lastbox} can be found on page~\pageref{varioset}.
+As an example, the statement
+\begin{verbatim}
+{\setbox0=\lastbox}
+\end{verbatim}
+removes
+the last box from the current list, assigning it to box
+register~0. Since this assignment occurs inside a group,
+the register is cleared at the end of the group.
+At the start of a paragraph this can be used to remove the
+indentation box (see Chapter~\ref{par:start}).
+Another example of \cs{lastbox} can be found on page~\pageref{varioset}.
+
+%Because the \verb-\lastbox- is always empty in external vertical mode,
+%it is not possible to get hold of boxes that have been 
+%added to the page. However, it is possible to dissect
+%the page once it is in \cs{box255}, for instance doing
+%\begin{verbatim}
+%\vbox{\unvbox255{\setbox0=\lastbox}}
+%\end{verbatim}
+%inside the output routine.
+Because the \verb-\lastbox- is always empty in external vertical mode,
+it is not possible to get hold of boxes that have been 
+added to the page. However, it is possible to dissect
+the page once it is in \cs{box255}, for instance doing
+\begin{verbatim}
+\vbox{\unvbox255{\setbox0=\lastbox}}
+\end{verbatim}
+inside the output routine.
+
+%If boxes in vertical mode have been shifted by \cs{moveright}
+%or \cs{moveleft}, or if boxes in horizontal mode  have
+%been raised by \cs{raise} or lowered by \cs{lower}, 
+%any information about this
+%displacement due to such a command is lost when
+%the \cs{lastbox} is taken from the list.
+If boxes in vertical mode have been shifted by \cs{moveright}
+or \cs{moveleft}, or if boxes in horizontal mode  have
+been raised by \cs{raise} or lowered by \cs{lower}, 
+any information about this
+displacement due to such a command is lost when
+the \cs{lastbox} is taken from the list.
+
+%%\point Natural dimensions of boxes
+%\section{Natural dimensions of boxes}
+%\point Natural dimensions of boxes
+\section{Natural dimensions of boxes}
+
+%%\spoint Dimensions of created horizontal boxes
+%\subsection{Dimensions of created horizontal boxes}
+%\spoint Dimensions of created horizontal boxes
+\subsection{Dimensions of created horizontal boxes}
+
+%Inside an \csidx{hbox} all constituents are lined up next to each other,
+%with their reference points on the baseline of the box,
+%unless they are moved explicitly in the vertical direction
+%by \cs{lower} or~\cs{raise}.
+Inside an \csidx{hbox} all constituents are lined up next to each other,
+with their reference points on the baseline of the box,
+unless they are moved explicitly in the vertical direction
+by \cs{lower} or~\cs{raise}.
+
+%The resulting width of the box is the sum of the widths
+%of the components. Thus the width of
+%\begin{verbatim}
+%\hbox{\hskip1cm}
+%\end{verbatim}
+%is positive, and the width of
+%\begin{verbatim}
+%\hbox{\hskip-1cm}
+%\end{verbatim}
+%is negative. By way of example,
+%\begin{disp}\verb>a\hbox{\kern-1em b}-->\end{disp}
+%gives as output
+%\begin{disp}\leavevmode\hphantom{b}a\hbox{\kern-1em b}--\end{disp}
+%\message{check align input/output}
+%which shows that a horizontal box can have negative
+%width.
+The resulting width of the box is the sum of the widths
+of the components. Thus the width of
+\begin{verbatim}
+\hbox{\hskip1cm}
+\end{verbatim}
+is positive, and the width of
+\begin{verbatim}
+\hbox{\hskip-1cm}
+\end{verbatim}
+is negative. By way of example,
+\begin{disp}\verb>a\hbox{\kern-1em b}-->\end{disp}
+gives as output
+\begin{disp}\leavevmode\hphantom{b}a\hbox{\kern-1em b}--\end{disp}
+\message{check align input/output}
+which shows that a horizontal box can have negative
+width.
+
+%The height and depth of an \cs{hbox} are the
+%maximum amount that constituent boxes project above and
+%below the baseline of the box. They are non-negative when the
+%box is created.
+The height and depth of an \cs{hbox} are the
+maximum amount that constituent boxes project above and
+below the baseline of the box. They are non-negative when the
+box is created.
+
+%The commands \cs{lower} and \cs{raise} are the only possibilities
+%for vertical movement inside an \cs{hbox} (other than
+%including a \cs{vbox} inside the \cs{hbox}, of course);
+%a~\gr{vertical command} \ldash such as \cs{vskip} \rdash 
+%is not allowed in a horizontal box, and
+%\cs{par}, although allowed,
+%does not do anything inside a horizontal box.
+The commands \cs{lower} and \cs{raise} are the only possibilities
+for vertical movement inside an \cs{hbox} (other than
+including a \cs{vbox} inside the \cs{hbox}, of course);
+a~\gr{vertical command} \ldash such as \cs{vskip} \rdash 
+is not allowed in a horizontal box, and
+\cs{par}, although allowed,
+does not do anything inside a horizontal box.
+
+%%\spoint Dimensions of created vertical boxes
+%\subsection{Dimensions of created vertical boxes}
+%\spoint Dimensions of created vertical boxes
+\subsection{Dimensions of created vertical boxes}
+
+%Inside a \csidx{vbox} vertical material is lined up with the
+%\cstoidx vtop\par
+%reference points on the vertical line through the reference
+%point of the box,
+%unless components are moved explicitly in the horizontal direction
+%by \csidx{moveleft} or~\csidx{moveright}.
+Inside a \csidx{vbox} vertical material is lined up with the
+\cstoidx vtop\par
+reference points on the vertical line through the reference
+point of the box,
+unless components are moved explicitly in the horizontal direction
+by \csidx{moveleft} or~\csidx{moveright}.
+
+%The  reference point of a vertical box
+%is always located at the left boundary of the box.
+%The width of a vertical box
+%is then the maximal amount that any material in the
+%box sticks to the right of the reference point.
+%Material to the left of the reference point is
+%not taken into account in the width.
+%Thus the result of
+%\begin{disp}\verb>a\vbox{\hbox{\kern-1em b}}-->\end{disp}
+%is
+%\begin{disp}\leavevmode\hphantom{b}a\vbox{\hbox{\kern-1em b}}--\end{disp}
+%This should be contrasted with the above example.
+The  reference point of a vertical box
+is always located at the left boundary of the box.
+The width of a vertical box
+is then the maximal amount that any material in the
+box sticks to the right of the reference point.
+Material to the left of the reference point is
+not taken into account in the width.
+Thus the result of
+\begin{disp}\verb>a\vbox{\hbox{\kern-1em b}}-->\end{disp}
+is
+\begin{disp}\leavevmode\hphantom{b}a\vbox{\hbox{\kern-1em b}}--\end{disp}
+This should be contrasted with the above example.
+
+
+%The calculation of height and depth is different
+%for vertical boxes constructed by \cs{vbox} and \cs{vtop}.
+%The ground rule is that
+%a \cs{vbox} has a reference point that lies on
+%the baseline of its last component,
+%and a \cs{vtop} has its reference point on the baseline of the
+%first component.
+%In general, the depth (height) of a \cs{vbox} (\cs{vtop})
+%\alt
+%can be non-zero if the last (first) item is a box or rule.
+The calculation of height and depth is different
+for vertical boxes constructed by \cs{vbox} and \cs{vtop}.
+The ground rule is that
+a \cs{vbox} has a reference point that lies on
+the baseline of its last component,
+and a \cs{vtop} has its reference point on the baseline of the
+first component.
+In general, the depth (height) of a \cs{vbox} (\cs{vtop})
+\alt
+can be non-zero if the last (first) item is a box or rule.
+
+%The height of a \cs{vbox} is then the sum of the heights and
+%depths of all components except the last, plus the height
+%of that last component; the depth of the \cs{vbox} is the
+%depth of its last component.
+%The depth of a \cs{vtop}
+%is the sum of the depth of the first component and the heights
+%and depths of all subsequent material; its height is the
+%height of the first component.
+The height of a \cs{vbox} is then the sum of the heights and
+depths of all components except the last, plus the height
+of that last component; the depth of the \cs{vbox} is the
+depth of its last component.
+The depth of a \cs{vtop}
+is the sum of the depth of the first component and the heights
+and depths of all subsequent material; its height is the
+height of the first component.
+
+%However, the actual rules are a bit
+%more complicated when the first component of a \cs{vtop}
+%or the last component of a \cs{vbox} is not a box or rule.
+%If the last component of a \cs{vbox} is a kern or a glue,
+%the depth of that box is zero; a \cs{vtop}'s 
+%height is zero
+%unless its first component is a box or rule.
+%\altt
+%(Note the asymmetry in these definitions; see below for
+%an example illustrating this.)
+%The depth of a \cs{vtop}, then, is equal to the total
+%height plus depth of all enclosed material minus
+%the height of the \cs{vtop}.
+However, the actual rules are a bit
+more complicated when the first component of a \cs{vtop}
+or the last component of a \cs{vbox} is not a box or rule.
+If the last component of a \cs{vbox} is a kern or a glue,
+the depth of that box is zero; a \cs{vtop}'s 
+height is zero
+unless its first component is a box or rule.
+\altt
+(Note the asymmetry in these definitions; see below for
+an example illustrating this.)
+The depth of a \cs{vtop}, then, is equal to the total
+height plus depth of all enclosed material minus
+the height of the \cs{vtop}.
+
+%There is a limit on the depth of vertical boxes:
+%if the depth of a \cs{vbox} or \cs{vtop}
+%calculated by the above rules would exceed
+%\cstoidx boxmaxdepth\par,
+%the reference point of the box
+%is moved down by the excess amount. 
+%More precisely, the excess depth is added to the 
+%natural height of the box. If the box had a \n{to} or
+%\n{spread} specification, any glue is set anew to take
+%the new height into account.
+There is a limit on the depth of vertical boxes:
+if the depth of a \cs{vbox} or \cs{vtop}
+calculated by the above rules would exceed
+\cstoidx boxmaxdepth\par,
+the reference point of the box
+is moved down by the excess amount. 
+More precisely, the excess depth is added to the 
+natural height of the box. If the box had a \n{to} or
+\n{spread} specification, any glue is set anew to take
+the new height into account.
+
+%Ordinarily,
+%\cs{boxmaxdepth} is set to the maximum dimension
+%possible in \TeX. It is for instance reduced during some of
+%the calculations  in the plain \TeX\ output routine;
+%see Chapter~\ref{output}.
+Ordinarily,
+\cs{boxmaxdepth} is set to the maximum dimension
+possible in \TeX. It is for instance reduced during some of
+the calculations  in the plain \TeX\ output routine;
+see Chapter~\ref{output}.
+
+%\subsection{Examples}
+\subsection{Examples}
+
+%Horizontal boxes are relatively straightforward. Their width is the
+%distance between the `beginning' and the `end' of the
+%box, 
+%and consequently the width is not necessarily positive.
+%With
+%\begin{verbatim}
+%\setbox0=\hbox{aa} \setbox1=\hbox{\copy0 \hskip-\wd0}
+%\end{verbatim}
+%the \cs{box1} has width zero;
+%\begin{Disp} \verb-/\box1/-\quad gives\quad
+%`{\setbox0=\hbox{aa}\setbox1=\hbox{\copy0 \hskip-\wd0}/\box1/}\kern.75em'
+%\end{Disp}
+%The height and depth of a horizontal box cannot be negative: in
+%\begin{verbatim}
+%\setbox0=\hbox{\vrule height 5pt depth 5pt}
+%\setbox1=\hbox{\raise 10pt \box0}
+%\end{verbatim}
+%the \cs{box1} has depth \n{0pt} and height~\n{15pt}
+Horizontal boxes are relatively straightforward. Their width is the
+distance between the `beginning' and the `end' of the
+box, 
+and consequently the width is not necessarily positive.
+With
+\begin{verbatim}
+\setbox0=\hbox{aa} \setbox1=\hbox{\copy0 \hskip-\wd0}
+\end{verbatim}
+the \cs{box1} has width zero;
+\begin{Disp} \verb-/\box1/-\quad gives\quad
+`{\setbox0=\hbox{aa}\setbox1=\hbox{\copy0 \hskip-\wd0}/\box1/}\kern.75em'
+\end{Disp}
+The height and depth of a horizontal box cannot be negative: in
+\begin{verbatim}
+\setbox0=\hbox{\vrule height 5pt depth 5pt}
+\setbox1=\hbox{\raise 10pt \box0}
+\end{verbatim}
+the \cs{box1} has depth \n{0pt} and height~\n{15pt}
+
+%Vertical boxes are more troublesome than horizontal boxes.
+%Let us first treat their width.
+%After
+%\begin{verbatim}
+%\setbox0=\hbox{\hskip 10pt}
+%\end{verbatim}
+%the box in the
+%\cs{box0} register has a width of \n{10pt}. Defining
+%\begin{verbatim}
+%\setbox1=\vbox{\moveleft 5pt \copy0}
+%\end{verbatim}
+%the \cs{box1} will have width \n{5pt}; material to the
+%left of the reference point is not accounted for in the
+%width of a vertical box. With
+%\begin{verbatim}
+%\setbox2=\vbox{\moveright 5pt \copy0}
+%\end{verbatim}
+%the \cs{box2} will have width \n{15pt}.
+Vertical boxes are more troublesome than horizontal boxes.
+Let us first treat their width.
+After
+\begin{verbatim}
+\setbox0=\hbox{\hskip 10pt}
+\end{verbatim}
+the box in the
+\cs{box0} register has a width of \n{10pt}. Defining
+\begin{verbatim}
+\setbox1=\vbox{\moveleft 5pt \copy0}
+\end{verbatim}
+the \cs{box1} will have width \n{5pt}; material to the
+left of the reference point is not accounted for in the
+width of a vertical box. With
+\begin{verbatim}
+\setbox2=\vbox{\moveright 5pt \copy0}
+\end{verbatim}
+the \cs{box2} will have width \n{15pt}.
+
+%The depth of a \cs{vbox} is the depth of the last item if
+%that is a box, so
+%\begin{verbatim}
+%\vbox{\vskip 5pt \hbox{\vrule height 5pt depth 5pt}}
+%\end{verbatim}
+%has height \n{10pt} and depth \n{5pt}, 
+%and
+%\begin{verbatim}
+%\vbox{\vskip -5pt \hbox{\vrule height 5pt depth 5pt}}
+%\end{verbatim}
+%has height \n{0pt} and depth~\n{5pt}.
+%With a glue or kern as the last item in the box, the resulting depth
+%is zero, so 
+%\begin{verbatim}
+%\vbox{\hbox{\vrule height 5pt depth 5pt}\vskip 5pt}
+%\end{verbatim}
+%has height \n{15pt} and depth~\n{0pt};
+%\begin{verbatim}
+%\vbox{\hbox{\vrule height 5pt depth 5pt}\vskip -5pt}
+%\end{verbatim}
+%has height \n{5pt} and depth~\n{0pt}.
+The depth of a \cs{vbox} is the depth of the last item if
+that is a box, so
+\begin{verbatim}
+\vbox{\vskip 5pt \hbox{\vrule height 5pt depth 5pt}}
+\end{verbatim}
+has height \n{10pt} and depth \n{5pt}, 
+and
+\begin{verbatim}
+\vbox{\vskip -5pt \hbox{\vrule height 5pt depth 5pt}}
+\end{verbatim}
+has height \n{0pt} and depth~\n{5pt}.
+With a glue or kern as the last item in the box, the resulting depth
+is zero, so 
+\begin{verbatim}
+\vbox{\hbox{\vrule height 5pt depth 5pt}\vskip 5pt}
+\end{verbatim}
+has height \n{15pt} and depth~\n{0pt};
+\begin{verbatim}
+\vbox{\hbox{\vrule height 5pt depth 5pt}\vskip -5pt}
+\end{verbatim}
+has height \n{5pt} and depth~\n{0pt}.
+
+%The height of a \cs{vtop} behaves (almost) the same with respect to
+%the first item of the box, as the depth of a \cs{vbox} does
+%with respect to the last item. Repeating the above examples with
+%a \cs{vtop} gives the following:
+%\begin{verbatim}
+%\vtop{\vskip 5pt \hbox{\vrule height 5pt depth 5pt}}
+%\end{verbatim}
+%has height \n{0pt} and depth \n{15pt}, 
+%and
+%\begin{verbatim}
+%\vtop{\vskip -5pt \hbox{\vrule height 5pt depth 5pt}}
+%\end{verbatim}
+%has height \n{0pt} and depth~\n{5pt};
+%\begin{verbatim}
+%\vtop{\hbox{\vrule height 5pt depth 5pt} \vskip 5pt}
+%\end{verbatim}
+%has height \n{5pt} and depth~\n{10pt}, and
+%\begin{verbatim}
+%\vtop{\hbox{\vrule height 5pt depth 5pt} \vskip -5pt}
+%\end{verbatim}
+%has height \n{5pt} and depth~\n{0pt}.
+The height of a \cs{vtop} behaves (almost) the same with respect to
+the first item of the box, as the depth of a \cs{vbox} does
+with respect to the last item. Repeating the above examples with
+a \cs{vtop} gives the following:
+\begin{verbatim}
+\vtop{\vskip 5pt \hbox{\vrule height 5pt depth 5pt}}
+\end{verbatim}
+has height \n{0pt} and depth \n{15pt}, 
+and
+\begin{verbatim}
+\vtop{\vskip -5pt \hbox{\vrule height 5pt depth 5pt}}
+\end{verbatim}
+has height \n{0pt} and depth~\n{5pt};
+\begin{verbatim}
+\vtop{\hbox{\vrule height 5pt depth 5pt} \vskip 5pt}
+\end{verbatim}
+has height \n{5pt} and depth~\n{10pt}, and
+\begin{verbatim}
+\vtop{\hbox{\vrule height 5pt depth 5pt} \vskip -5pt}
+\end{verbatim}
+has height \n{5pt} and depth~\n{0pt}.
+
+%%\point More about box dimensions
+%\section{More about box dimensions}
+%\point More about box dimensions
+\section{More about box dimensions}
+
+%%\spoint Predetermined dimensions
+%\subsection{Predetermined dimensions}
+%\spoint Predetermined dimensions
+\subsection{Predetermined dimensions}
+
+%The size of a box can be specified in advance
+%with a \gr{box specification}; see above for the syntax.
+%Any glue
+%in the box is then set in order to reach the required size.
+%Prescribing the size of the box is done by
+%\begin{disp}\cs{hbox} \n{to} \gr{dimen} \n{\lb...\rb},
+%     \cs{vbox} \n{to} \gr{dimen} \n{\lb...\rb}\end{disp}
+%If stretchable or shrinkable glue is present in the box,
+%it is stretched or shrunk in order to give the box the
+%specified size. Associated with this glue setting is a badness value
+%(see Chapter~\ref{glue}). If no stretch or shrink \ldash whichever
+%is necessary \rdash  is present, the resulting box will be underfull
+%or overfull respectively. Error reporting for over/underfull
+%boxes is treated below.
+The size of a box can be specified in advance
+with a \gr{box specification}; see above for the syntax.
+Any glue
+in the box is then set in order to reach the required size.
+Prescribing the size of the box is done by
+\begin{disp}\cs{hbox} \n{to} \gr{dimen} \n{\lb...\rb},
+     \cs{vbox} \n{to} \gr{dimen} \n{\lb...\rb}\end{disp}
+If stretchable or shrinkable glue is present in the box,
+it is stretched or shrunk in order to give the box the
+specified size. Associated with this glue setting is a badness value
+(see Chapter~\ref{glue}). If no stretch or shrink \ldash whichever
+is necessary \rdash  is present, the resulting box will be underfull
+or overfull respectively. Error reporting for over/underfull
+boxes is treated below.
+
+%Another command to let a box have a size other than
+%the natural size is
+%\begin{disp}\cs{hbox} \n{spread} \gr{dimen} \n{\lb...\rb},
+%     \cs{vbox} \n{spread} \gr{dimen} \n{\lb...\rb}\end{disp}
+%which tells \TeX\ to set the glue in such a way that
+%the size of the box is a  specified amount more than the 
+%natural size.
+Another command to let a box have a size other than
+the natural size is
+\begin{disp}\cs{hbox} \n{spread} \gr{dimen} \n{\lb...\rb},
+     \cs{vbox} \n{spread} \gr{dimen} \n{\lb...\rb}\end{disp}
+which tells \TeX\ to set the glue in such a way that
+the size of the box is a  specified amount more than the 
+natural size.
+
+%Box specifications for \cs{vtop} vertical boxes are
+%somewhat difficult to interpret. \TeX\ constructs a \cs{vtop}
+%by first making a \cs{vbox}, including 
+%glue settings induced by a \gr{box specification};
+%then it computes the height and depth by the above rules.
+%Glue setting is described in Chapter~\ref{glue}.
+Box specifications for \cs{vtop} vertical boxes are
+somewhat difficult to interpret. \TeX\ constructs a \cs{vtop}
+by first making a \cs{vbox}, including 
+glue settings induced by a \gr{box specification};
+then it computes the height and depth by the above rules.
+Glue setting is described in Chapter~\ref{glue}.
+
+%%\spoint Changes to box dimensions
+%\subsection{Changes to box dimensions}
+%\spoint Changes to box dimensions
+\subsection{Changes to box dimensions}
+
+%The dimensions of a box register are accessible by the
+%commands \csidx{ht}, \csidx{dp}, and~\csidx{wd};
+%for instance \cs{dp13} gives the depth of box~13.
+%However, not only can boxes be measured this way;
+%by assigning values to these
+%dimensions \TeX\ can even be fooled into thinking that
+%a box has a  size different from its actual.
+%However, changing the dimensions of a box does not change
+%anything about the contents; in particular it does not
+%change the way the glue is set.
+The dimensions of a box register are accessible by the
+commands \csidx{ht}, \csidx{dp}, and~\csidx{wd};
+for instance \cs{dp13} gives the depth of box~13.
+However, not only can boxes be measured this way;
+by assigning values to these
+dimensions \TeX\ can even be fooled into thinking that
+a box has a  size different from its actual.
+However, changing the dimensions of a box does not change
+anything about the contents; in particular it does not
+change the way the glue is set.
+
+
+%Various formats use this in `smash' macros: the macro defined by
+%\cstoidx smash\par
+%\begin{verbatim}
+%\def\smash#1{{\setbox0=\hbox{#1}\dp0=0pt \ht0=0pt \box0\relax}}
+%\end{verbatim}
+%places its argument but annihilates its height and depth;
+%\altt
+%that is, the output does show the whole box, but further calculations
+%by \TeX\ act as if the height and depth were zero.
+Various formats use this in `smash' macros: the macro defined by
+\cstoidx smash\par
+\begin{verbatim}
+\def\smash#1{{\setbox0=\hbox{#1}\dp0=0pt \ht0=0pt \box0\relax}}
+\end{verbatim}
+places its argument but annihilates its height and depth;
+\altt
+that is, the output does show the whole box, but further calculations
+by \TeX\ act as if the height and depth were zero.
+
+%Box dimensions can be changed only by setting them.
+%They are \gr{box dimen}s, which can only be set
+%in a \gr{box size assignment}, and not, for instance
+%changed with \cs{advance}.
+Box dimensions can be changed only by setting them.
+They are \gr{box dimen}s, which can only be set
+in a \gr{box size assignment}, and not, for instance
+changed with \cs{advance}.
+
+%Note that a \gr{box size assignment}\index{assignment!box size} is a
+%\gr{global assignment}\index{assignment!global} its effect transcends
+%  any groups in which it occurs (see Chapter~\ref{group}).  Thus the
+%  output of
+%\begin{verbatim}
+%\setbox0=\hbox{---} {\wd0=0pt} a\box0b
+%\end{verbatim}
+%is `{\setbox0=\hbox{---}{\wd0=0pt}a\box0b}\kern.5em'.
+Note that a \gr{box size assignment}\index{assignment!box size} is a
+\gr{global assignment}\index{assignment!global} its effect transcends
+  any groups in which it occurs (see Chapter~\ref{group}).  Thus the
+  output of
+\begin{verbatim}
+\setbox0=\hbox{---} {\wd0=0pt} a\box0b
+\end{verbatim}
+is `{\setbox0=\hbox{---}{\wd0=0pt}a\box0b}\kern.5em'.
+
+%The limits that hold on the dimensions with which a 
+%box can be created (see above) do not hold for explicit changes to the
+%\mdqon
+%size of a box: the assignment \cs{dp0=}""\n{-2pt} for a 
+%\mdqoff
+%horizontal box is perfectly admissible.
+The limits that hold on the dimensions with which a 
+box can be created (see above) do not hold for explicit changes to the
+\mdqon
+size of a box: the assignment \cs{dp0=}""\n{-2pt} for a 
+\mdqoff
+horizontal box is perfectly admissible.
+
+%\subsection{Moving boxes around}
+\subsection{Moving boxes around}
+
+%In a horizontal box all constituent elements are lined up
+%\cstoidx raise\par\cstoidx lower\par
+%with their reference points at the same height as the 
+%reference point of the box. Any box inside a horizontal
+%box can be lifted or dropped using the macros
+%\cs{raise} and~\cs{lower}.
+In a horizontal box all constituent elements are lined up
+\cstoidx raise\par\cstoidx lower\par
+with their reference points at the same height as the 
+reference point of the box. Any box inside a horizontal
+box can be lifted or dropped using the macros
+\cs{raise} and~\cs{lower}.
+
+%Similarly, in a vertical box all constituent elements
+%are lined up with their reference points underneath one another,
+%in line with the reference point of the box.
+%Boxes can now be moved sideways by the macros 
+%\csidx{moveleft} and~\csidx{moveright}.
+Similarly, in a vertical box all constituent elements
+are lined up with their reference points underneath one another,
+in line with the reference point of the box.
+Boxes can now be moved sideways by the macros 
+\csidx{moveleft} and~\csidx{moveright}.
+
+%Only boxes can be shifted thus; these operations cannot 
+%be applied to, for instance, characters or rules.
+Only boxes can be shifted thus; these operations cannot 
+be applied to, for instance, characters or rules.
+
+%\subsection{Box dimensions and box placement}
+\subsection{Box dimensions and box placement}
+
+%\TeX\ places the components of horizontal and
+%vertical lists by maintaining a reference line and a
+%current position on that line. For horizontal lists
+%the reference line is the baseline of the surrounding
+%\cs{hbox}; for vertical lists it is the vertical line
+%through the reference point of the surrounding \cs{vbox}.
+\TeX\ places the components of horizontal and
+vertical lists by maintaining a reference line and a
+current position on that line. For horizontal lists
+the reference line is the baseline of the surrounding
+\cs{hbox}; for vertical lists it is the vertical line
+through the reference point of the surrounding \cs{vbox}.
+
+%In horizontal mode a component is placed as follows.
+%The current position coincides initially
+%with the reference point of the surrounding box. After that,
+%the following actions are carried out.
+%\begin{enumerate} \item If the component has been shifted by
+%\cs{raise} or \cs{lower}, shift the current
+%position correspondingly.
+%\item If the component is a horizontal box, use
+%this algorithm recursively for its contents; 
+%if it is a vertical box, go up  by the height of this box,
+%putting  a new current position for the enclosed vertical list there,
+%and place its components using the algorithm for vertical
+%lists below.
+%\item Move the current position (on the reference line)
+%to the right by the width of the component.
+%\end{enumerate}
+In horizontal mode a component is placed as follows.
+The current position coincides initially
+with the reference point of the surrounding box. After that,
+the following actions are carried out.
+\begin{enumerate} \item If the component has been shifted by
+\cs{raise} or \cs{lower}, shift the current
+position correspondingly.
+\item If the component is a horizontal box, use
+this algorithm recursively for its contents; 
+if it is a vertical box, go up  by the height of this box,
+putting  a new current position for the enclosed vertical list there,
+and place its components using the algorithm for vertical
+lists below.
+\item Move the current position (on the reference line)
+to the right by the width of the component.
+\end{enumerate}
+
+%For the list in a vertical box \TeX's  current position is
+%initially at the upper left corner of that box, as explained above,
+%and the reference line is the vertical line through that point;
+%it also runs through the reference point of the box.
+%Enclosed components are then placed as follows.
+%\begin{enumerate} \item If a component has been shifted using
+%\cs{moveleft} or \cs{moveright}, shift the current position
+%accordingly.
+%\item Put the component with its upper left corner at the
+%current position.
+%\item If the component is a vertical box, use this algorithm
+%recursively for its contents; if it is a horizontal box,
+%its reference point can be found below  the current position
+%by the height of the box. Put the current position for that
+%box there, and use the above algorithm for horizontal lists.
+%\item Go down by the height plus depth of the box
+%(that is, starting at the upper left corner of the box)
+%on the  reference line,
+%and continue processing vertically.
+%\end{enumerate}
+%Note that the above processes do not describe the construction
+%of boxes. That would (for instance)
+%involve for vertical boxes the insertion
+%of baselineskip glue. Rather, it describes the way the components
+%of a finished box are arranged in the output.
+For the list in a vertical box \TeX's  current position is
+initially at the upper left corner of that box, as explained above,
+and the reference line is the vertical line through that point;
+it also runs through the reference point of the box.
+Enclosed components are then placed as follows.
+\begin{enumerate} \item If a component has been shifted using
+\cs{moveleft} or \cs{moveright}, shift the current position
+accordingly.
+\item Put the component with its upper left corner at the
+current position.
+\item If the component is a vertical box, use this algorithm
+recursively for its contents; if it is a horizontal box,
+its reference point can be found below  the current position
+by the height of the box. Put the current position for that
+box there, and use the above algorithm for horizontal lists.
+\item Go down by the height plus depth of the box
+(that is, starting at the upper left corner of the box)
+on the  reference line,
+and continue processing vertically.
+\end{enumerate}
+Note that the above processes do not describe the construction
+of boxes. That would (for instance)
+involve for vertical boxes the insertion
+of baselineskip glue. Rather, it describes the way the components
+of a finished box are arranged in the output.
+
+%\subsection{Boxes and negative glue}
+\subsection{Boxes and negative glue}
+
+%Sometimes it is useful to have boxes overlapping instead of
+%line up. An easy way to do this is to use negative glue.
+%In horizontal mode
+%\begin{verbatim}
+%{\dimen0=\wd8 \box8 \kern-\dimen0}
+%\end{verbatim}
+%places box 8 without moving the current location.
+Sometimes it is useful to have boxes overlapping instead of
+line up. An easy way to do this is to use negative glue.
+In horizontal mode
+\begin{verbatim}
+{\dimen0=\wd8 \box8 \kern-\dimen0}
+\end{verbatim}
+places box 8 without moving the current location.
+
+%More versatile are the macros \csidx{llap} and \csidx{rlap}\label{rlap},
+%defined as
+%\begin{verbatim}
+%\def\llap#1{\hbox to 0pt{\hss #1}}
+%\end{verbatim}
+%and
+%\begin{verbatim}
+%\def\rlap#1{\hbox to 0pt{#1\hss}}
+%\end{verbatim}
+%that allow material to protrude left or right from the
+%current location.
+%The \cs{hss} glue is equivalent to \verb>\hskip 0pt plus 1fil minus 1fil>, 
+%which absorbs any positive or negative width
+%of the argument of \cs{llap} or \cs{rlap}.
+More versatile are the macros \csidx{llap} and \csidx{rlap}\label{rlap},
+defined as
+\begin{verbatim}
+\def\llap#1{\hbox to 0pt{\hss #1}}
+\end{verbatim}
+and
+\begin{verbatim}
+\def\rlap#1{\hbox to 0pt{#1\hss}}
+\end{verbatim}
+that allow material to protrude left or right from the
+current location.
+The \cs{hss} glue is equivalent to \verb>\hskip 0pt plus 1fil minus 1fil>, 
+which absorbs any positive or negative width
+of the argument of \cs{llap} or \cs{rlap}.
+
+%\begin{example} The sequence
+%\begin{verbatim}
+%\llap{\hbox to 10pt{a\hfil}}
+%\end{verbatim}
+%is effectively the same as
+%\begin{verbatim}
+%\hbox{\hskip-10pt \hbox to 10pt{a\hfil}}
+%\end{verbatim}
+%which has a total width of~\n{0pt}.
+%\end{example}
+\begin{example} The sequence
+\begin{verbatim}
+\llap{\hbox to 10pt{a\hfil}}
+\end{verbatim}
+is effectively the same as
+\begin{verbatim}
+\hbox{\hskip-10pt \hbox to 10pt{a\hfil}}
+\end{verbatim}
+which has a total width of~\n{0pt}.
+\end{example}
+
+%\section{Overfull and underfull boxes}
+%\label{over/underfull}
+\section{Overfull and underfull boxes}
+\label{over/underfull}
+
+%If a box has a  size specification \TeX\ will
+%stretch or shrink glue in the box. For glue with
+%only finite stretch or shrink components the {\em badness\/}
+%(see Chapter~\ref{line:break}) of stretching or shrinking
+%is computed.
+%In \TeX\ version~3 the badness
+%\cstoidx badness\par
+%\thecstoidxsub{TeX}{version 3}
+%of the box most recently
+%constructed is available for inspection
+%by the user through the \cs{badness} parameter. Values for
+%badness range 0--$10\,000$, but if the box is overfull
+%it is~$1\,000\,000$.
+If a box has a  size specification \TeX\ will
+stretch or shrink glue in the box. For glue with
+only finite stretch or shrink components the {\em badness\/}
+(see Chapter~\ref{line:break}) of stretching or shrinking
+is computed.
+In \TeX\ version~3 the badness
+\cstoidx badness\par
+\thecstoidxsub{TeX}{version 3}
+of the box most recently
+constructed is available for inspection
+by the user through the \cs{badness} parameter. Values for
+badness range 0--$10\,000$, but if the box is overfull
+it is~$1\,000\,000$.
+
+%When \TeX\ considers the badness too large,
+%it gives a diagnostic message. Let us first consider error reporting
+%for horizontal boxes.
+When \TeX\ considers the badness too large,
+it gives a diagnostic message. Let us first consider error reporting
+for horizontal boxes.
+
+%Horizontal boxes of which the glue has to stretch are never reported if
+%\cstoidx hbadness\par\cstoidx vbadness\par
+%\cs{hbadness}${}\geq10\,000$; otherwise \TeX\ reports them
+%as `underfull' if their badness is more than \cs{hbadness}.
+Horizontal boxes of which the glue has to stretch are never reported if
+\cstoidx hbadness\par\cstoidx vbadness\par
+\cs{hbadness}${}\geq10\,000$; otherwise \TeX\ reports them
+as `underfull' if their badness is more than \cs{hbadness}.
+
+%Glue shrinking can lead to `overfull' boxes: a box is called
+%\cstoidx hfuzz\par\cstoidx vfuzz\par
+%overfull if the available shrink is less than the shrink
+%necessary to meet the box specification. An overfull box
+%is only reported if the difference in shrink is more than
+%\cs{hfuzz}, or if \cs{hbadness}${}<100$ (and it turns out that
+%using all available shrinkability has badness~$100$).
+Glue shrinking can lead to `overfull' boxes: a box is called
+\cstoidx hfuzz\par\cstoidx vfuzz\par
+overfull if the available shrink is less than the shrink
+necessary to meet the box specification. An overfull box
+is only reported if the difference in shrink is more than
+\cs{hfuzz}, or if \cs{hbadness}${}<100$ (and it turns out that
+using all available shrinkability has badness~$100$).
+
+%\begin{example} Setting \verb>\hfuzz=1pt> will let \TeX\ ignore
+%boxes that can not shrink enough if they lack less than~\n{1pt}.
+%In
+%\begin{verbatim}
+%\hbox to 1pt{\hskip3pt minus .5pt}
+%\end{verbatim}
+%\begin{verbatim}
+%\hbox to 1pt{\hskip3pt minus 1.5pt}
+%\end{verbatim}
+%only the first box will give an error message:
+%it is \n{1.5pt} too big, whereas the second lacks
+%\n{.5pt} which is less than \cs{hfuzz}.
+%\end{example}
+\begin{example} Setting \verb>\hfuzz=1pt> will let \TeX\ ignore
+boxes that can not shrink enough if they lack less than~\n{1pt}.
+In
+\begin{verbatim}
+\hbox to 1pt{\hskip3pt minus .5pt}
+\end{verbatim}
+\begin{verbatim}
+\hbox to 1pt{\hskip3pt minus 1.5pt}
+\end{verbatim}
+only the first box will give an error message:
+it is \n{1.5pt} too big, whereas the second lacks
+\n{.5pt} which is less than \cs{hfuzz}.
+\end{example}
+
+%Also, boxes that shrink but that are not overfull can be reported:
+%if a box is `tight', that is, if it uses at least half its
+%shrinkability, \TeX\ reports this fact if the
+%computed badness (which is between 13 and~100) is more than
+%\cs{hbadness}.
+Also, boxes that shrink but that are not overfull can be reported:
+if a box is `tight', that is, if it uses at least half its
+shrinkability, \TeX\ reports this fact if the
+computed badness (which is between 13 and~100) is more than
+\cs{hbadness}.
+
+%For horizontal and vertical boxes this error reporting is almost
+%\cstoidx overfullrule\par
+%the same, with parameters \cs{vbadness} and \cs{vfuzz}.
+%The difference is that for horizontal overfull boxes
+%\TeX\ will draw a rule to the right of the box that has the
+%same height as the box, and width \cs{overfullrule}.
+%No overfull rule ensues if 
+%the \cs{tabskip} glue in an \cs{halign} cannot be
+%shrunk enough.
+For horizontal and vertical boxes this error reporting is almost
+\cstoidx overfullrule\par
+the same, with parameters \cs{vbadness} and \cs{vfuzz}.
+The difference is that for horizontal overfull boxes
+\TeX\ will draw a rule to the right of the box that has the
+same height as the box, and width \cs{overfullrule}.
+No overfull rule ensues if 
+the \cs{tabskip} glue in an \cs{halign} cannot be
+shrunk enough.
+
+%\section{Opening and closing boxes}
+\section{Opening and closing boxes}
+
+%The opening and closing braces of a box can be either explicit, that
+%is, character tokens of category 1\index{category!1}
+%and~2\index{category!2}, or implicit, a control sequence \verb=\let=
+%to such a character.  After the opening brace the \csidx{everyhbox} or
+%\csidx{everyvbox} tokens are inserted.  If this box appeared in a
+%\csidx{setbox} assignment any \csidx{afterassignment} token is
+%inserted even before the `everybox' tokens.
+The opening and closing braces of a box can be either explicit, that
+is, character tokens of category 1\index{category!1}
+and~2\index{category!2}, or implicit, a control sequence \verb=\let=
+to such a character.  After the opening brace the \csidx{everyhbox} or
+\csidx{everyvbox} tokens are inserted.  If this box appeared in a
+\csidx{setbox} assignment any \csidx{afterassignment} token is
+inserted even before the `everybox' tokens.
+
+%\begin{example} \label{every:box:assign}
+%\begin{verbatim}
+%\everyhbox{b}
+%\afterassignment a
+%\setbox0=\hbox{c}
+%\showbox0
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%> \box0=
+%\hbox(6.94444+0.0)x15.27782
+%.\tenrm a
+%.\tenrm b
+%.\kern0.27779
+%.\tenrm c
+%\end{verbatim}
+%\end{example}
+\begin{example} \label{every:box:assign}
+\begin{verbatim}
+\everyhbox{b}
+\afterassignment a
+\setbox0=\hbox{c}
+\showbox0
+\end{verbatim}
+gives
+\begin{verbatim}
+> \box0=
+\hbox(6.94444+0.0)x15.27782
+.\tenrm a
+.\tenrm b
+.\kern0.27779
+.\tenrm c
+\end{verbatim}
+\end{example}
+
+%Implicit braces can be used to let a box be opened or closed
+%by a macro, for example:
+%\begin{verbatim}
+%\def\openbox#1{\setbox#1=\hbox\bgroup}
+%\def\closebox#1{\egroup\DoSomethingWithBox#1}
+%\openbox0 ... \closebox0
+%\end{verbatim}
+%This mechanism can be used to scoop up paragraphs:
+%\begin{verbatim}
+%\everypar{\setbox\parbox=
+%    \vbox\bgroup
+%         \everypar{}
+%         \def\par{\egroup\UseBox\parbox}}
+%\end{verbatim}
+%Here the \cs{everypar} opens the box and lets the text be
+%set in the box: starting for instance
+%\begin{verbatim}
+%Begin a text ...
+%\end{verbatim}
+%gives the equivalent of
+%\begin{verbatim}
+%\setbox\parbox=\vbox{Begin a text ...
+%\end{verbatim}
+%Inside the box \cs{par} has been redefined, so
+%\begin{verbatim}
+%... a text ends.\par
+%\end{verbatim}
+%is equivalent to
+%\begin{verbatim}
+%... a text ends.}\Usebox\parbox
+%\end{verbatim}
+Implicit braces can be used to let a box be opened or closed
+by a macro, for example:
+\begin{verbatim}
+\def\openbox#1{\setbox#1=\hbox\bgroup}
+\def\closebox#1{\egroup\DoSomethingWithBox#1}
+\openbox0 ... \closebox0
+\end{verbatim}
+This mechanism can be used to scoop up paragraphs:
+\begin{verbatim}
+\everypar{\setbox\parbox=
+    \vbox\bgroup
+         \everypar{}
+         \def\par{\egroup\UseBox\parbox}}
+\end{verbatim}
+Here the \cs{everypar} opens the box and lets the text be
+set in the box: starting for instance
+\begin{verbatim}
+Begin a text ...
+\end{verbatim}
+gives the equivalent of
+\begin{verbatim}
+\setbox\parbox=\vbox{Begin a text ...
+\end{verbatim}
+Inside the box \cs{par} has been redefined, so
+\begin{verbatim}
+... a text ends.\par
+\end{verbatim}
+is equivalent to
+\begin{verbatim}
+... a text ends.}\Usebox\parbox
+\end{verbatim}
+
+%In this example, the \cs{UseBox} command can only treat the
+%box as a whole; if the elements of the box should somehow
+%be treated separately another approach is necessary.
+%In 
+%\begin{verbatim}
+%\everypar{\setbox\parbox=
+%  \vbox\bgroup\everypar{}%
+%       \def\par{\endgraf\HandleLines
+%                \egroup\box\parbox}}
+%\def\HandleLines{ ... \lastbox ... }
+%\end{verbatim}
+%the macro \cs{HandleLines} can have access to successive
+%elements from the vertical list of the paragraph.
+%See also the example on page~\pageref{varioset}.
+In this example, the \cs{UseBox} command can only treat the
+box as a whole; if the elements of the box should somehow
+be treated separately another approach is necessary.
+In 
+\begin{verbatim}
+\everypar{\setbox\parbox=
+  \vbox\bgroup\everypar{}%
+       \def\par{\endgraf\HandleLines
+                \egroup\box\parbox}}
+\def\HandleLines{ ... \lastbox ... }
+\end{verbatim}
+the macro \cs{HandleLines} can have access to successive
+elements from the vertical list of the paragraph.
+See also the example on page~\pageref{varioset}.
+
+%%\point Unboxing
+%\section{Unboxing}
+%\point Unboxing
+\section{Unboxing}
+
+%Boxes can be unwrapped by the commands \csidx{unhbox} and
+%\csidx{unvbox}, and by their copying versions 
+%\csidx{unhcopy} and \csidx{unvcopy}. 
+%These are horizontal and vertical commands
+%(see Chapter~\ref{hvmode}), considering that in effect
+%they contribute a partial horizontal or vertical list.
+%It is not possible to \cs{unhbox} a register
+%containing a \cs{vbox} or vice versa,
+%but a void box register can both be \cs{unhbox}ed and
+%\cs{unvbox}ed.
+Boxes can be unwrapped by the commands \csidx{unhbox} and
+\csidx{unvbox}, and by their copying versions 
+\csidx{unhcopy} and \csidx{unvcopy}. 
+These are horizontal and vertical commands
+(see Chapter~\ref{hvmode}), considering that in effect
+they contribute a partial horizontal or vertical list.
+It is not possible to \cs{unhbox} a register
+containing a \cs{vbox} or vice versa,
+but a void box register can both be \cs{unhbox}ed and
+\cs{unvbox}ed.
+
+%Unboxing takes the contents of a box in a box register and appends
+%them to the surrounding list; any glue can then 
+%be set anew. Thus
+%\begin{verbatim}
+%\setbox0=\hbox to 1cm{\hfil} \hbox to 2cm{\unhbox0}
+%\end{verbatim}
+%is completely equivalent to 
+%\begin{verbatim}
+%\hbox to 2cm{\hfil}
+%\end{verbatim}
+%and not to
+%\begin{verbatim}
+%\hbox to 2cm{\kern1cm}
+%\end{verbatim}
+Unboxing takes the contents of a box in a box register and appends
+them to the surrounding list; any glue can then 
+be set anew. Thus
+\begin{verbatim}
+\setbox0=\hbox to 1cm{\hfil} \hbox to 2cm{\unhbox0}
+\end{verbatim}
+is completely equivalent to 
+\begin{verbatim}
+\hbox to 2cm{\hfil}
+\end{verbatim}
+and not to
+\begin{verbatim}
+\hbox to 2cm{\kern1cm}
+\end{verbatim}
+
+%The intrinsically horizontal nature of \cs{unhbox} is
+%\cstoidx leavevmode\par
+%used to define
+%\begin{verbatim}
+%\def\leavevmode{\unhbox\voidb@x}
+%\end{verbatim}
+%This command switches from vertical mode to horizontal without
+%adding anything to the horizontal list. 
+%However, the subsequent \cs{indent} caused by this transition
+%adds an indentation box.
+%In horizontal mode the \cs{leavevmode} command has no effect.
+%Note that here it is not necessary to use \cs{unhcopy},
+%because the register is empty anyhow. 
+The intrinsically horizontal nature of \cs{unhbox} is
+\cstoidx leavevmode\par
+used to define
+\begin{verbatim}
+\def\leavevmode{\unhbox\voidb@x}
+\end{verbatim}
+This command switches from vertical mode to horizontal without
+adding anything to the horizontal list. 
+However, the subsequent \cs{indent} caused by this transition
+adds an indentation box.
+In horizontal mode the \cs{leavevmode} command has no effect.
+Note that here it is not necessary to use \cs{unhcopy},
+because the register is empty anyhow. 
+
+%Beware of the following subtlety: unboxing in vertical
+%mode does not add interline glue between the box contents and
+%any preceding item. 
+%Also, the value of \cs{prevdepth} is not
+%changed, so glue between the box contents and any following
+%item will  occur only if there was something preceding the box;
+%interline glue will be based on the depth of that preceding item.
+%Similarly, unboxing in horizontal mode does not influence
+%the \cs{spacefactor}.
+Beware of the following subtlety: unboxing in vertical
+mode does not add interline glue between the box contents and
+any preceding item. 
+Also, the value of \cs{prevdepth} is not
+changed, so glue between the box contents and any following
+item will  occur only if there was something preceding the box;
+interline glue will be based on the depth of that preceding item.
+Similarly, unboxing in horizontal mode does not influence
+the \cs{spacefactor}.
+
+%%\point Text in boxes
+%\section{Text in boxes}
+%\point Text in boxes
+\section{Text in boxes}
+
+%Both horizontal and vertical boxes can contain text. However,
+%\index{boxes !text in}
+%the way text is treated differs. 
+%In horizontal boxes
+%the text is placed in one straight line, and the width of
+%the box is in principle the natural width of the text 
+%(and other items) contained in it. No \gram{vertical command}s
+%are allowed inside a horizontal box, and \cs{par} does
+%nothing in this case.
+Both horizontal and vertical boxes can contain text. However,
+\index{boxes !text in}
+the way text is treated differs. 
+In horizontal boxes
+the text is placed in one straight line, and the width of
+the box is in principle the natural width of the text 
+(and other items) contained in it. No \gram{vertical command}s
+are allowed inside a horizontal box, and \cs{par} does
+nothing in this case.
+
+%For vertical boxes the situation is radically different.
+%As soon as a character, or any other \gram{horizontal command}
+%(see page~\pageref{h:com:list}),
+%is encountered in a vertical box, \TeX\ starts building a paragraph
+%in unrestricted horizontal mode, that is, just as if the paragraph
+%were directly part of the page.
+%At the occurrence of a \gram{vertical command}
+%(see page~\pageref{v:com:list}), or at the end
+%of the box, the paragraph is broken into lines using the
+%current values of parameters such as~\cs{hsize}.
+For vertical boxes the situation is radically different.
+As soon as a character, or any other \gram{horizontal command}
+(see page~\pageref{h:com:list}),
+is encountered in a vertical box, \TeX\ starts building a paragraph
+in unrestricted horizontal mode, that is, just as if the paragraph
+were directly part of the page.
+At the occurrence of a \gram{vertical command}
+(see page~\pageref{v:com:list}), or at the end
+of the box, the paragraph is broken into lines using the
+current values of parameters such as~\cs{hsize}.
+
+%Thus
+%\begin{verbatim}
+%\hbox to 3cm{\vbox{some reasonably long text}}
+%\end{verbatim}
+%will {\sl not\/} give a paragraph of width 3 centimetres 
+%(it gives an overfull horizontal box if \cs{hsize}${}>{}$\n{3cm}).
+%However,
+%\begin{verbatim}
+%\vbox{\hsize=3cm some reasonably long text}
+%\end{verbatim}
+%will be 3 centimetres wide.
+Thus
+\begin{verbatim}
+\hbox to 3cm{\vbox{some reasonably long text}}
+\end{verbatim}
+will {\sl not\/} give a paragraph of width 3 centimetres 
+(it gives an overfull horizontal box if \cs{hsize}${}>{}$\n{3cm}).
+However,
+\begin{verbatim}
+\vbox{\hsize=3cm some reasonably long text}
+\end{verbatim}
+will be 3 centimetres wide.
+
+%A paragraph of text inside a vertical box is broken into
+%lines, which are packed in horizontal boxes.
+%These boxes  are then stacked
+%in internal vertical mode, possibly with
+%\cs{baselineskip} and \cs{lineskip} separating them
+%(this is treated in Chapter~\ref{baseline}).
+%This process is also used for text on the page; the boxes
+%are then stacked in outer vertical mode.
+A paragraph of text inside a vertical box is broken into
+lines, which are packed in horizontal boxes.
+These boxes  are then stacked
+in internal vertical mode, possibly with
+\cs{baselineskip} and \cs{lineskip} separating them
+(this is treated in Chapter~\ref{baseline}).
+This process is also used for text on the page; the boxes
+are then stacked in outer vertical mode.
+
+%If the internal vertical list is empty, no \cs{parskip}
+%glue is added at the start of a paragraph.
+If the internal vertical list is empty, no \cs{parskip}
+glue is added at the start of a paragraph.
+
+%Because text in a horizontal box is not
+%\label{wide:vbox}%
+%broken into lines, there is a further
+%difference between text in restricted and unrestricted
+%horizontal mode. In restricted horizontal mode no
+%discretionary nodes and whatsit items changing the
+%value of the current language are inserted.
+%This may give problems if the text is subsequently
+%unboxed to form part of a paragraph.
+Because text in a horizontal box is not
+\label{wide:vbox}%
+broken into lines, there is a further
+difference between text in restricted and unrestricted
+horizontal mode. In restricted horizontal mode no
+discretionary nodes and whatsit items changing the
+value of the current language are inserted.
+This may give problems if the text is subsequently
+unboxed to form part of a paragraph.
+
+%See Chapter~\ref{line:break} for an explanation of these
+%items, and \cite{Downs} for a way around this problem.
+See Chapter~\ref{line:break} for an explanation of these
+items, and \cite{Downs} for a way around this problem.
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{Assorted remarks}
+
+%%\spoint Forgetting the \cs{box}
+%\subsection{Forgetting the \cs{box}}
+%\spoint Forgetting the \cs{box}
+\subsection{Forgetting the \cs{box}}
+
+%After \verb.\newcount\foo., one can use \cs{foo} on its own
+%to get the \cs{foo} counter.
+%For  boxes, however, one has to use \verb.\box\foo. to get
+%the \cs{foo} box.
+%The reason for this is that there exists
+%no separate \cs{boxdef} command, so \cs{chardef} is
+%used (see Chapter~\ref{alloc}). 
+After \verb.\newcount\foo., one can use \cs{foo} on its own
+to get the \cs{foo} counter.
+For  boxes, however, one has to use \verb.\box\foo. to get
+the \cs{foo} box.
+The reason for this is that there exists
+no separate \cs{boxdef} command, so \cs{chardef} is
+used (see Chapter~\ref{alloc}). 
+
+%\begin{example}
+%Suppose \verb.\newbox\foo. allocates box register~25; then
+%typing \cs{foo} is equivalent  to typing
+%\verb.\char25..
+%\end{example}
+\begin{example}
+Suppose \verb.\newbox\foo. allocates box register~25; then
+typing \cs{foo} is equivalent  to typing
+\verb.\char25..
+\end{example}
+
+%%\spoint Special-purpose boxes
+%\subsection{Special-purpose boxes}
+%\spoint Special-purpose boxes
+\subsection{Special-purpose boxes}
+
+%Some   box registers 
+%have a special
+%purpose:
+%\begin{itemize}
+%\item \cs{box255} is by used \TeX\ internally 
+% to give the page to the output routine.
+%\item \cs{voidb@x} is the number of 
+% a box register allocated in 
+% \n{plain.tex}; it is supposed to be empty always.
+% It is used in the macro \cs{leavevmode} and others.
+%\item when a new \cs{insert} is created with the plain \TeX\
+% \cs{newinsert} macro, a \cs{count},
+% \cs{dimen}, \cs{skip}, and \cs{box} all with the same number
+% are reserved for that insert.
+% The numbers for these registers count down from~254.
+%\end{itemize}
+Some   box registers 
+have a special
+purpose:
+\begin{itemize}
+\item \cs{box255} is by used \TeX\ internally 
+ to give the page to the output routine.
+\item \cs{voidb@x} is the number of 
+ a box register allocated in 
+ \n{plain.tex}; it is supposed to be empty always.
+ It is used in the macro \cs{leavevmode} and others.
+\item when a new \cs{insert} is created with the plain \TeX\
+ \cs{newinsert} macro, a \cs{count},
+ \cs{dimen}, \cs{skip}, and \cs{box} all with the same number
+ are reserved for that insert.
+ The numbers for these registers count down from~254.
+\end{itemize}
+
+
+%%\spoint The height of a vertical box in horizontal mode
+%\subsection{The height of a vertical box in horizontal mode}
+%\spoint The height of a vertical box in horizontal mode
+\subsection{The height of a vertical box in horizontal mode}
+
+%In horizontal mode a vertical box is placed with its
+%reference point aligned vertically with the reference
+%point of the surrounding box. 
+%\TeX\ then traverses its contents starting at the left
+%upper corner; that is, the point that lies above the reference
+%point by a distance of the height of the box.
+%Changing the height of the box  implies then that the
+%contents of the box are placed at a different height.
+In horizontal mode a vertical box is placed with its
+reference point aligned vertically with the reference
+point of the surrounding box. 
+\TeX\ then traverses its contents starting at the left
+upper corner; that is, the point that lies above the reference
+point by a distance of the height of the box.
+Changing the height of the box  implies then that the
+contents of the box are placed at a different height.
+
+%Consider as an example
+%\begin{verbatim}
+%\hbox{a\setbox0=\vbox{\hbox{b}}\box0 c}
+%\end{verbatim}
+%which gives
+%\begin{disp}\leavevmode\hbox{a\setbox0=\vbox{\hbox{b}}\box0 c}\end{disp}
+%and
+%\begin{verbatim}
+%\hbox{a\setbox0=\vbox{\hbox{b}}\ht0=0cm \box0 c}
+%\end{verbatim}
+%which gives
+%\begin{disp}\leavevmode\hbox{a\setbox0=\vbox{\hbox{b}}\ht0=0cm \box0 c}\end{disp}
+Consider as an example
+\begin{verbatim}
+\hbox{a\setbox0=\vbox{\hbox{b}}\box0 c}
+\end{verbatim}
+which gives
+\begin{disp}\leavevmode\hbox{a\setbox0=\vbox{\hbox{b}}\box0 c}\end{disp}
+and
+\begin{verbatim}
+\hbox{a\setbox0=\vbox{\hbox{b}}\ht0=0cm \box0 c}
+\end{verbatim}
+which gives
+\begin{disp}\leavevmode\hbox{a\setbox0=\vbox{\hbox{b}}\ht0=0cm \box0 c}\end{disp}
+
+%By contrast, changing the width of a box placed in vertical
+%mode has no effect on its placement.
+By contrast, changing the width of a box placed in vertical
+mode has no effect on its placement.
+
+%%\spoint More subtleties with vertical boxes
+%\subsection{More subtleties with vertical boxes}
+%\spoint More subtleties with vertical boxes
+\subsection{More subtleties with vertical boxes}
+
+%Since there are two kinds of vertical boxes, the \cs{vbox} and
+%the \cs{vtop}, using these two kinds nested may lead to
+%confusing results. For instance,
+%\begin{verbatim}
+%\vtop{\vbox{...}}
+%\end{verbatim}
+%is completely equivalent to just
+%\begin{verbatim}
+%\vbox{...}
+%\end{verbatim}
+Since there are two kinds of vertical boxes, the \cs{vbox} and
+the \cs{vtop}, using these two kinds nested may lead to
+confusing results. For instance,
+\begin{verbatim}
+\vtop{\vbox{...}}
+\end{verbatim}
+is completely equivalent to just
+\begin{verbatim}
+\vbox{...}
+\end{verbatim}
+
+%It was stated above that
+%the depth of a \cs{vbox} is zero if the last item
+%is a kern or  glue, and the height of a \cs{vtop} is
+%zero unless the first item in it is a box.
+%The above examples used a kern for that first or last item, 
+%but if, in the case of a \cs{vtop}, 
+%this item is not a glue or kern, one is apt to
+%overlook the effect that it has on the surrounding box.
+%For instance,
+%\begin{verbatim}
+%\vtop{\write16{...}...}
+%\end{verbatim}
+%has zero height,
+%because the write instruction
+%is packed into a `whatsit' item that is placed on the current,
+%that is, the vertical, list. 
+%The remedy here is
+%\begin{verbatim}
+%\vtop{\leavevmode\write16{...}...}
+%\end{verbatim}
+%which puts the whatsit in the beginning of the paragraph,
+%instead of above it.
+It was stated above that
+the depth of a \cs{vbox} is zero if the last item
+is a kern or  glue, and the height of a \cs{vtop} is
+zero unless the first item in it is a box.
+The above examples used a kern for that first or last item, 
+but if, in the case of a \cs{vtop}, 
+this item is not a glue or kern, one is apt to
+overlook the effect that it has on the surrounding box.
+For instance,
+\begin{verbatim}
+\vtop{\write16{...}...}
+\end{verbatim}
+has zero height,
+because the write instruction
+is packed into a `whatsit' item that is placed on the current,
+that is, the vertical, list. 
+The remedy here is
+\begin{verbatim}
+\vtop{\leavevmode\write16{...}...}
+\end{verbatim}
+which puts the whatsit in the beginning of the paragraph,
+instead of above it.
+
+%Placement of items in a vertical list is sometimes
+%a bit tricky. There is for instance a difference between
+%how vertical and horizontal boxes are treated in a
+%vertical list. Consider the following examples.
+%After \cs{offinterlineskip} the first example\begin{verbatim}
+%\vbox{\hbox{a}
+%      \setbox0=\vbox{\hbox{(}}
+%      \ht0=0pt \dp0=0pt \box0
+%      \hbox{ b}}
+%\end{verbatim}
+%gives \begin{disp}\offinterlineskip\leavevmode\vbox{\hbox{a}
+%      \setbox0=\vbox{\hbox{(}}
+%      \ht0=0pt \dp0=0pt \box0
+%      \hbox{ b}}
+%\end{disp}
+%while a slight variant\begin{verbatim}
+%\vbox{\hbox{a}
+%      \setbox0=\hbox{(}
+%      \ht0=0pt \dp0=0pt \box0
+%      \hbox{ b}}
+%\end{verbatim}
+%gives
+%\begin{disp}\offinterlineskip\leavevmode\vbox{\hbox{a}
+%      \setbox0=\hbox{(}
+%      \ht0=0pt \dp0=0pt
+%      \box0
+%      \hbox{ b}}
+%\end{disp}
+%The difference is caused by the fact that horizontal boxes
+%are placed with respect to their reference point, but vertical
+%boxes with respect to their upper left corner.
+Placement of items in a vertical list is sometimes
+a bit tricky. There is for instance a difference between
+how vertical and horizontal boxes are treated in a
+vertical list. Consider the following examples.
+After \cs{offinterlineskip} the first example\begin{verbatim}
+\vbox{\hbox{a}
+      \setbox0=\vbox{\hbox{(}}
+      \ht0=0pt \dp0=0pt \box0
+      \hbox{ b}}
+\end{verbatim}
+gives \begin{disp}\offinterlineskip\leavevmode\vbox{\hbox{a}
+      \setbox0=\vbox{\hbox{(}}
+      \ht0=0pt \dp0=0pt \box0
+      \hbox{ b}}
+\end{disp}
+while a slight variant\begin{verbatim}
+\vbox{\hbox{a}
+      \setbox0=\hbox{(}
+      \ht0=0pt \dp0=0pt \box0
+      \hbox{ b}}
+\end{verbatim}
+gives
+\begin{disp}\offinterlineskip\leavevmode\vbox{\hbox{a}
+      \setbox0=\hbox{(}
+      \ht0=0pt \dp0=0pt
+      \box0
+      \hbox{ b}}
+\end{disp}
+The difference is caused by the fact that horizontal boxes
+are placed with respect to their reference point, but vertical
+boxes with respect to their upper left corner.
+
+%%\spoint Hanging the \cs{lastbox} back in the list
+%\subsection{Hanging the \cs{lastbox} back in the list}
+%\spoint Hanging the \cs{lastbox} back in the list
+\subsection{Hanging the \cs{lastbox} back in the list}
+
+%You can pick the last box off a vertical list that has been
+%compiled in (internal) vertical mode.
+%However, if you try to hang it back in the list the vertical
+%spacing may go haywire. If you just hang it back, 
+%\begin{verbatim}
+%\setbox\tmpbox=\lastbox
+%\usethetmpbox \box\tmpbox
+%\end{verbatim}
+%baselineskip glue is added a second time. If you `unskip' prior
+%to hanging the box back, 
+%\begin{verbatim}
+%\setbox\tmpbox=\lastbox \unskip
+%\usethetmpbox \box\tmpbox
+%\end{verbatim}
+%things go wrong in a more subtle way.
+%The \gram{internal dimen} \cs{prevdepth} 
+%(which controls interline glue; see Chapter~\ref{baseline})
+%will have a
+%value based on the last box, but what you need for the proper
+%interline glue is a depth based on one box earlier.
+%The solution is not to unskip, 
+%but to specify \cs{nointerlineskip}:
+%\begin{verbatim}
+%\setbox\tmpbox=\lastbox
+%\usethetmpbox \nointerlineskip \box\tmpbox
+%\end{verbatim}
+You can pick the last box off a vertical list that has been
+compiled in (internal) vertical mode.
+However, if you try to hang it back in the list the vertical
+spacing may go haywire. If you just hang it back, 
+\begin{verbatim}
+\setbox\tmpbox=\lastbox
+\usethetmpbox \box\tmpbox
+\end{verbatim}
+baselineskip glue is added a second time. If you `unskip' prior
+to hanging the box back, 
+\begin{verbatim}
+\setbox\tmpbox=\lastbox \unskip
+\usethetmpbox \box\tmpbox
+\end{verbatim}
+things go wrong in a more subtle way.
+The \gram{internal dimen} \cs{prevdepth} 
+(which controls interline glue; see Chapter~\ref{baseline})
+will have a
+value based on the last box, but what you need for the proper
+interline glue is a depth based on one box earlier.
+The solution is not to unskip, 
+but to specify \cs{nointerlineskip}:
+\begin{verbatim}
+\setbox\tmpbox=\lastbox
+\usethetmpbox \nointerlineskip \box\tmpbox
+\end{verbatim}
+
+
+%%\spoint[varioset] Dissecting paragraphs with \cs{lastbox}
+%\subsection{Dissecting paragraphs with \cs{lastbox}}
+%\label{varioset}
+%\spoint[varioset] Dissecting paragraphs with \cs{lastbox}
+\subsection{Dissecting paragraphs with \cs{lastbox}}
+\label{varioset}
+
+%Repeatedly applying \cs{last...} and \cs{un...} macros
+%\howto Take a paragraph apart\par
+%can be used to take a paragraph apart.
+%Here is an example of that.
+Repeatedly applying \cs{last...} and \cs{un...} macros
+\howto Take a paragraph apart\par
+can be used to take a paragraph apart.
+Here is an example of that.
+
+%\indent\vbox{\message{Check vario look!}
+%\hyphenpenalty10000 \exhyphenpenalty10000 \parindent 10pt\relax
+%\advance\hsize by -2\parindent \rightskip 0pt\relax
+%\newif\ifsnap \spaceskip=\fontdimen2\font plus 2\fontdimen2\font
+%\def\eatlines{
+%    \setbox2\lastbox    % check the last line
+%    \ifvoid2\global\snaptrue
+%    \else                      % if it's not empty
+%    \unskip\unpenalty          % take whatever is
+%    {\eatlines}                % above it;
+%    \setbox4\hbox{\unhcopy2}   % collapse this line
+%\message{^^Jsnap \the\wd4 vs \the\wd2^^J}
+%%\hbox{\copy4 .4} \hbox{\copy 2 .2}
+%    \ifdim\wd4<.97\wd2 % if the difference is too large, maybe snap
+%        \ifsnap \message{^^JNot snapping just now ^^J}
+%          \hbox to \hsize{\unhbox2} \global\snapfalse % we just snapped: not again
+%        \else   \message{^^JSnapping!^^J}
+%          \box4 \global\snaptrue    % safe to snap; remember snap
+%        \fi
+%    \else \message{^^Jfull length, no snap^^J}
+%      \box2 \global\snapfalse
+%    \fi
+%    \fi}
+%\advance\hsize by -.8in \advance \leftskip by .5 in\relax
+%\noindent In typesetting advertisement copy, a way of justifying
+%paragraphs has become popular in recent years
+%that is somewhere between flushright and raggedright
+%setting.
+%Lines that would stretch beyond certain limits
+%are set with their glue at natural width. This single paragraph
+%is but an example of this procedure; the macros are given
+% next.\par\eatlines}\par
+\indent\vbox{\message{Check vario look!}
+\hyphenpenalty10000 \exhyphenpenalty10000 \parindent 10pt\relax
+\advance\hsize by -2\parindent \rightskip 0pt\relax
+\newif\ifsnap \spaceskip=\fontdimen2\font plus 2\fontdimen2\font
+\def\eatlines{
+    \setbox2\lastbox    % check the last line
+    \ifvoid2\global\snaptrue
+    \else                      % if it's not empty
+    \unskip\unpenalty          % take whatever is
+    {\eatlines}                % above it;
+    \setbox4\hbox{\unhcopy2}   % collapse this line
+\message{^^Jsnap \the\wd4 vs \the\wd2^^J}
+%\hbox{\copy4 .4} \hbox{\copy 2 .2}
+    \ifdim\wd4<.97\wd2 % if the difference is too large, maybe snap
+        \ifsnap \message{^^JNot snapping just now ^^J}
+          \hbox to \hsize{\unhbox2} \global\snapfalse % we just snapped: not again
+        \else   \message{^^JSnapping!^^J}
+          \box4 \global\snaptrue    % safe to snap; remember snap
+        \fi
+    \else \message{^^Jfull length, no snap^^J}
+      \box2 \global\snapfalse
+    \fi
+    \fi}
+\advance\hsize by -.8in \advance \leftskip by .5 in\relax
+\noindent In typesetting advertisement copy, a way of justifying
+paragraphs has become popular in recent years
+that is somewhere between flushright and raggedright
+setting.
+Lines that would stretch beyond certain limits
+are set with their glue at natural width. This single paragraph
+is but an example of this procedure; the macros are given
+ next.\par\eatlines}\par
+
+%\begin{verbatim}
+%\newbox\linebox \newbox\snapbox
+%\def\eatlines{
+%    \setbox\linebox\lastbox    % check the last line
+%    \ifvoid\linebox
+%    \else                      % if it's not empty
+%    \unskip\unpenalty          % take whatever is
+%    {\eatlines}                % above it;
+%                               % collapse the line
+%    \setbox\snapbox\hbox{\unhcopy\linebox} 
+%                       % depending on the difference
+%    \ifdim\wd\snapbox<.98\wd\linebox
+%          \box\snapbox % take the one or the other,
+%    \else \box\linebox \fi
+%    \fi}
+%\end{verbatim}
+%This macro can be called as
+%\begin{verbatim}
+%\vbox{ ... some text ... \par\eatlines}
+%\end{verbatim}
+%or it can be inserted automatically
+%with \cs{everypar}; see~\cite{E1}.
+\begin{verbatim}
+\newbox\linebox \newbox\snapbox
+\def\eatlines{
+    \setbox\linebox\lastbox    % check the last line
+    \ifvoid\linebox
+    \else                      % if it's not empty
+    \unskip\unpenalty          % take whatever is
+    {\eatlines}                % above it;
+                               % collapse the line
+    \setbox\snapbox\hbox{\unhcopy\linebox} 
+                       % depending on the difference
+    \ifdim\wd\snapbox<.98\wd\linebox
+          \box\snapbox % take the one or the other,
+    \else \box\linebox \fi
+    \fi}
+\end{verbatim}
+This macro can be called as
+\begin{verbatim}
+\vbox{ ... some text ... \par\eatlines}
+\end{verbatim}
+or it can be inserted automatically
+with \cs{everypar}; see~\cite{E1}.
+
+%In the macro \cs{eatlines}, the \cs{lastbox} is taken
+%from a vertical list. If the list is empty
+%the last box will test true on \cs{ifvoid}.
+%These boxes containing lines from a paragraph
+%are actually horizontal boxes: the test
+%\cs{ifhbox} applied to them would give a true
+%result.
+In the macro \cs{eatlines}, the \cs{lastbox} is taken
+from a vertical list. If the list is empty
+the last box will test true on \cs{ifvoid}.
+These boxes containing lines from a paragraph
+are actually horizontal boxes: the test
+\cs{ifhbox} applied to them would give a true
+result.
+
+%\index{boxes|)}
+%\endofchapter
+%%%%% end of input file [boxes]
+\index{boxes|)}
+\endofchapter
+%%%% end of input file [boxes]
+
+\end{document}

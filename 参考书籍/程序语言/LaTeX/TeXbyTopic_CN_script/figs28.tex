@@ -1,0 +1,32 @@
+% this has been inlined in section 27.4.3 ``breakpoint computation''
+\input figs
+
+\def\tbox#1{\hbox{\quad\quad #1\vrule height 10pt depth3pt width0cm }}
+
+\figure{\hbox
+   {\vrule width\lw \kern-\lw
+    \vbox{\hsize=5cm
+          \hrule height\lw \ \vskip0cm
+           \kern50pt
+           \tbox{underfull page}
+           \tbox{$b=10\,000$}
+           \kern50pt
+          \hrule height\lw
+           \kern10pt
+           \tbox{feasible breakpoints}
+           \tbox{$b<10\,000$}
+           \kern10pt
+          \hrule height\lw
+           \kern12pt
+           \tbox{overfull page}
+           \tbox{$b=\infty$}
+           \kern5pt
+           \tbox{.\vrule height5pt depth5pt width0cm}
+           \tbox{.\vrule height5pt depth5pt width0cm}
+           \tbox{.\vrule height5pt depth5pt width0cm}
+           \kern12pt
+     }%
+    \kern-\lw \vrule width\lw}}
+
+\end
+

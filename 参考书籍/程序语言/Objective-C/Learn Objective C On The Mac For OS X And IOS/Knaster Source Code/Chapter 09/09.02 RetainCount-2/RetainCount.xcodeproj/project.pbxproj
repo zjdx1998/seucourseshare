@@ -1,0 +1,234 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		84CB6B681526B79B002F74E1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CB6B671526B79B002F74E1 /* Foundation.framework */; };
+		84CB6B6B1526B79B002F74E1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CB6B6A1526B79B002F74E1 /* main.m */; };
+		84CB6B6F1526B79B002F74E1 /* RetainCount.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 84CB6B6E1526B79B002F74E1 /* RetainCount.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		84CB6B611526B79B002F74E1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				84CB6B6F1526B79B002F74E1 /* RetainCount.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		84CB6B631526B79B002F74E1 /* RetainCount */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RetainCount; sourceTree = BUILT_PRODUCTS_DIR; };
+		84CB6B671526B79B002F74E1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		84CB6B6A1526B79B002F74E1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		84CB6B6D1526B79B002F74E1 /* RetainCount-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RetainCount-Prefix.pch"; sourceTree = "<group>"; };
+		84CB6B6E1526B79B002F74E1 /* RetainCount.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = RetainCount.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		84CB6B601526B79B002F74E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84CB6B681526B79B002F74E1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		84CB6B581526B79B002F74E1 = {
+			isa = PBXGroup;
+			children = (
+				84CB6B691526B79B002F74E1 /* RetainCount */,
+				84CB6B661526B79B002F74E1 /* Frameworks */,
+				84CB6B641526B79B002F74E1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		84CB6B641526B79B002F74E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84CB6B631526B79B002F74E1 /* RetainCount */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		84CB6B661526B79B002F74E1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				84CB6B671526B79B002F74E1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		84CB6B691526B79B002F74E1 /* RetainCount */ = {
+			isa = PBXGroup;
+			children = (
+				84CB6B6A1526B79B002F74E1 /* main.m */,
+				84CB6B6E1526B79B002F74E1 /* RetainCount.1 */,
+				84CB6B6C1526B79B002F74E1 /* Supporting Files */,
+			);
+			path = RetainCount;
+			sourceTree = "<group>";
+		};
+		84CB6B6C1526B79B002F74E1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				84CB6B6D1526B79B002F74E1 /* RetainCount-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		84CB6B621526B79B002F74E1 /* RetainCount */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84CB6B721526B79B002F74E1 /* Build configuration list for PBXNativeTarget "RetainCount" */;
+			buildPhases = (
+				84CB6B5F1526B79B002F74E1 /* Sources */,
+				84CB6B601526B79B002F74E1 /* Frameworks */,
+				84CB6B611526B79B002F74E1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RetainCount;
+			productName = RetainCount;
+			productReference = 84CB6B631526B79B002F74E1 /* RetainCount */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		84CB6B5A1526B79B002F74E1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 84CB6B5D1526B79B002F74E1 /* Build configuration list for PBXProject "RetainCount" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 84CB6B581526B79B002F74E1;
+			productRefGroup = 84CB6B641526B79B002F74E1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				84CB6B621526B79B002F74E1 /* RetainCount */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		84CB6B5F1526B79B002F74E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84CB6B6B1526B79B002F74E1 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		84CB6B701526B79B002F74E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		84CB6B711526B79B002F74E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		84CB6B731526B79B002F74E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RetainCount/RetainCount-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		84CB6B741526B79B002F74E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RetainCount/RetainCount-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		84CB6B5D1526B79B002F74E1 /* Build configuration list for PBXProject "RetainCount" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84CB6B701526B79B002F74E1 /* Debug */,
+				84CB6B711526B79B002F74E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84CB6B721526B79B002F74E1 /* Build configuration list for PBXNativeTarget "RetainCount" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84CB6B731526B79B002F74E1 /* Debug */,
+				84CB6B741526B79B002F74E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 84CB6B5A1526B79B002F74E1 /* Project object */;
+}

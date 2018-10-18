@@ -1,0 +1,3472 @@
+
+%% This file is part of TeX by Topic
+%% Copyright 2007 Victor
+%% see file TeXbyTopic.tex for copying conditions
+% This file is part of TeX by Topic
+% Copyright 2007 Victor
+% see file TeXbyTopic.tex for copying conditions
+
+%This chapter gives the list of all primitives of
+%\TeX. After each control sequence
+%the grammatical category of the command or parameter
+%is given, plus a short description. For some  commands
+%the syntax of their use is given.
+This chapter gives the list of all primitives of
+\TeX. After each control sequence
+the grammatical category of the command or parameter
+is given, plus a short description. For some  commands
+the syntax of their use is given.
+
+%For parameters the class to which they belong is given.
+%Commands that have no grammatical category
+%in \TeXbook\ are denoted either
+%`\gr{expandable command}' or
+%`\gr{primitive command}' in this list.
+For parameters the class to which they belong is given.
+Commands that have no grammatical category
+in \TeXbook\ are denoted either
+`\gr{expandable command}' or
+`\gr{primitive command}' in this list.
+
+%Grammatical terms such as \gr{equals} and \gr{optional space}
+%are explained in Chapter~\ref{gramm}.
+Grammatical terms such as \gr{equals} and \gr{optional space}
+are explained in Chapter~\ref{gramm}.
+
+%\begin{glossinventory}
+\begin{glossinventory}
+
+%\item [\cs{-}]
+%      \gr{horizontal command} 
+%      Discretionary hyphen; this is
+%      equivalent to \cs{discretionary}""\verb|{-}{}{}|.
+%      Can be used to indicate hyphenatable points in a word. 
+%Chapter~\ref{cschap:-}.
+\item [\cs{-}]
+      \gr{horizontal command} 
+      Discretionary hyphen; this is
+      equivalent to \cs{discretionary}""\verb|{-}{}{}|.
+      Can be used to indicate hyphenatable points in a word. 
+Chapter~\ref{cschap:-}.
+
+%\item [\cs{char32}]
+%      \gr{horizontal command} 
+%      Control space.
+%      Insert the same amount of space as a space token would
+% \alt
+%      if \cs{spacefactor}${}=1000$.
+%Chapter~\ref{cschap:char32},\ref{cschap:char322}.
+\item [\cs{char32}]
+      \gr{horizontal command} 
+      Control space.
+      Insert the same amount of space as a space token would
+ \alt
+      if \cs{spacefactor}${}=1000$.
+Chapter~\ref{cschap:char32},\ref{cschap:char322}.
+
+%\item [\cs{char47}]
+%      \gr{primitive command} 
+%      Italic correction: insert a kern specified by the
+%      preceding character.
+%      Each character has an italic correction, possibly zero,
+%      specified in the \n{tfm} file.
+%      For slanted fonts this compensates for overhang.
+%Chapter~\ref{cschap:char47}.
+\item [\cs{char47}]
+      \gr{primitive command} 
+      Italic correction: insert a kern specified by the
+      preceding character.
+      Each character has an italic correction, possibly zero,
+      specified in the \n{tfm} file.
+      For slanted fonts this compensates for overhang.
+Chapter~\ref{cschap:char47}.
+
+%\item [\cs{above\gr{dimen}}]
+%      \gr{generalized fraction command} 
+%      Fraction with specified bar width. 
+%Chapter~\ref{cschap:above}.
+\item [\cs{above\gr{dimen}}]
+      \gr{generalized fraction command} 
+      Fraction with specified bar width. 
+Chapter~\ref{cschap:above}.
+
+%\item [\cs{abovedisplayshortskip}]
+%      \gr{glue parameter}
+%      Glue above a display if the line preceding the display was short.
+%Chapter~\ref{cschap:abovedisplayshortskip}.
+\item [\cs{abovedisplayshortskip}]
+      \gr{glue parameter}
+      Glue above a display if the line preceding the display was short.
+Chapter~\ref{cschap:abovedisplayshortskip}.
+
+%\item [\cs{abovedisplayskip}]
+%      \gr{glue parameter}
+%      Glue above a display.
+%Chapter~\ref{cschap:abovedisplayskip}.
+\item [\cs{abovedisplayskip}]
+      \gr{glue parameter}
+      Glue above a display.
+Chapter~\ref{cschap:abovedisplayskip}.
+
+%\item [\cs{abovewithdelims\gr{delim$_1$}\gr{delim$_2$}\gr{dimen}}]
+%      \gr{generalized fraction command}
+%      Generalized fraction with delimiters.
+%Chapter~\ref{cschap:abovewithdelims}.
+\item [\cs{abovewithdelims\gr{delim$_1$}\gr{delim$_2$}\gr{dimen}}]
+      \gr{generalized fraction command}
+      Generalized fraction with delimiters.
+Chapter~\ref{cschap:abovewithdelims}.
+
+%\item [\cs{accent\gr{8-bit number}\gr{optional assignments}\gr{character}}]
+%      \gr{horizontal command}
+%      Command to place accents on characters.\alt
+%Chapter~\ref{cschap:accent}.
+\item [\cs{accent\gr{8-bit number}\gr{optional assignments}\gr{character}}]
+      \gr{horizontal command}
+      Command to place accents on characters.\alt
+Chapter~\ref{cschap:accent}.
+
+%\item [\cs{adjdemerits}]
+%      \gr{integer parameter}
+%      Penalty for adjacent not visually compatible lines. 
+%      Default~\n{10$\,$000} in plain \TeX.
+%Chapter~\ref{cschap:adjdemerits}.
+\item [\cs{adjdemerits}]
+      \gr{integer parameter}
+      Penalty for adjacent not visually compatible lines. 
+      Default~\n{10$\,$000} in plain \TeX.
+Chapter~\ref{cschap:adjdemerits}.
+
+%\item [\cs{advance\gr{numeric variable}\gr{optional \n{by}}\gr{number}}]
+%      \gr{arithmetic assignment}
+%      Arithmetic command to increase or decrease a 
+%      \gr{numeric variable}, that is,
+% \alt
+%      a \gr{count variable}, \gr{dimen variable}, \gr{glue variable}, 
+%      or \gr{muglue variable}.
+%Chapter~\ref{cschap:advance},\ref{cschap:advance2}.
+\item [\cs{advance\gr{numeric variable}\gr{optional \n{by}}\gr{number}}]
+      \gr{arithmetic assignment}
+      Arithmetic command to increase or decrease a 
+      \gr{numeric variable}, that is,
+ \alt
+      a \gr{count variable}, \gr{dimen variable}, \gr{glue variable}, 
+      or \gr{muglue variable}.
+Chapter~\ref{cschap:advance},\ref{cschap:advance2}.
+
+%\item [\cs{afterassignment\gr{token}}]
+%      \gr{primitive command}
+%      Save the next token for execution after the next assignment.
+%      Only one token can be saved this way.
+%Chapter~\ref{cschap:afterassignment}.
+\item [\cs{afterassignment\gr{token}}]
+      \gr{primitive command}
+      Save the next token for execution after the next assignment.
+      Only one token can be saved this way.
+Chapter~\ref{cschap:afterassignment}.
+
+%\item [\cs{aftergroup\gr{token}}]
+%      \gr{primitive command}
+%      Save the next token for insertion after the current group.
+%      Several tokens can be saved this way.
+%Chapter~\ref{cschap:aftergroup}.
+\item [\cs{aftergroup\gr{token}}]
+      \gr{primitive command}
+      Save the next token for insertion after the current group.
+      Several tokens can be saved this way.
+Chapter~\ref{cschap:aftergroup}.
+
+%\item [\cs{atop\gr{dimen}}]
+%      \gr{generalized fraction command}
+%      Place objects over one another.
+%Chapter~\ref{cschap:atop}.
+\item [\cs{atop\gr{dimen}}]
+      \gr{generalized fraction command}
+      Place objects over one another.
+Chapter~\ref{cschap:atop}.
+
+%\item [\cs{atopwithdelims\gr{delim$_1$}\gr{delim$_2$}}]
+%      \gr{generalized fraction command}
+%      Place objects over one another with delimiters.
+%Chapter~\ref{cschap:atopwithdelims}.
+\item [\cs{atopwithdelims\gr{delim$_1$}\gr{delim$_2$}}]
+      \gr{generalized fraction command}
+      Place objects over one another with delimiters.
+Chapter~\ref{cschap:atopwithdelims}.
+
+%\item [\cs{badness}]
+%      \gr{internal integer} 
+%      (\TeX3 only) 
+%      Badness of the most recently constructed box.
+%Chapter~\ref{cschap:badness}.
+\item [\cs{badness}]
+      \gr{internal integer} 
+      (\TeX3 only) 
+      Badness of the most recently constructed box.
+Chapter~\ref{cschap:badness}.
+
+%\item [\cs{baselineskip}]
+%      \gr{glue parameter} 
+%      The `ideal' baseline distance between neighbouring 
+%      boxes on a vertical list;  \n{12pt} in plain \TeX.
+%Chapter~\ref{cschap:baselineskip}.
+\item [\cs{baselineskip}]
+      \gr{glue parameter} 
+      The `ideal' baseline distance between neighbouring 
+      boxes on a vertical list;  \n{12pt} in plain \TeX.
+Chapter~\ref{cschap:baselineskip}.
+
+%\item [\cs{batchmode}]
+%      \gr{interaction mode assignment}
+%      \TeX\ patches errors itself 
+% \alt
+%      and performs an emergency stop on serious errors 
+%      such as missing input files,
+%      but no terminal output is generated.
+%Chapter~\ref{cschap:batchmode}.
+\item [\cs{batchmode}]
+      \gr{interaction mode assignment}
+      \TeX\ patches errors itself 
+ \alt
+      and performs an emergency stop on serious errors 
+      such as missing input files,
+      but no terminal output is generated.
+Chapter~\ref{cschap:batchmode}.
+
+%\item [\cs{begingroup}]
+%      \gr{primitive command}
+%      Open a group that must be closed with \verb-\endgroup-.
+%Chapter~\ref{cschap:begingroup}.
+\item [\cs{begingroup}]
+      \gr{primitive command}
+      Open a group that must be closed with \verb-\endgroup-.
+Chapter~\ref{cschap:begingroup}.
+
+%\item [\cs{belowdisplayshortskip}]
+%      \gr{glue parameter}
+%      Glue below a display if the line preceding the display was short.
+%Chapter~\ref{cschap:belowdisplayshortskip}.
+\item [\cs{belowdisplayshortskip}]
+      \gr{glue parameter}
+      Glue below a display if the line preceding the display was short.
+Chapter~\ref{cschap:belowdisplayshortskip}.
+
+%\item [\cs{belowdisplayskip}]
+%      \gr{glue parameter}
+%      Glue below a display.
+%Chapter~\ref{cschap:belowdisplayskip}.
+\item [\cs{belowdisplayskip}]
+      \gr{glue parameter}
+      Glue below a display.
+Chapter~\ref{cschap:belowdisplayskip}.
+
+%\item [\cs{binoppenalty}]
+%      \gr{integer parameter}
+%      Penalty for breaking after a binary operator not enclosed in
+%      a subformula.
+%      Plain \TeX\ default:~\n{700}.
+%Chapter~\ref{cschap:binoppenalty}.
+\item [\cs{binoppenalty}]
+      \gr{integer parameter}
+      Penalty for breaking after a binary operator not enclosed in
+      a subformula.
+      Plain \TeX\ default:~\n{700}.
+Chapter~\ref{cschap:binoppenalty}.
+
+%\item [\cs{botmark}]
+%      \gr{expandable command}
+%      The last mark on the current page.
+%Chapter~\ref{cschap:botmark}.
+\item [\cs{botmark}]
+      \gr{expandable command}
+      The last mark on the current page.
+Chapter~\ref{cschap:botmark}.
+
+%\item [\cs{box\gr{8-bit number}}]
+%      \gr{box}
+%      Use a box register, emptying it. 
+%Chapter~\ref{cschap:box}.
+\item [\cs{box\gr{8-bit number}}]
+      \gr{box}
+      Use a box register, emptying it. 
+Chapter~\ref{cschap:box}.
+
+%\item [\cs{boxmaxdepth}]
+%      \gr{dimen parameter}
+%      Maximum allowed depth of boxes.
+%      Default~\cs{maxdimen} in plain \TeX.
+%Chapter~\ref{cschap:boxmaxdepth}.
+\item [\cs{boxmaxdepth}]
+      \gr{dimen parameter}
+      Maximum allowed depth of boxes.
+      Default~\cs{maxdimen} in plain \TeX.
+Chapter~\ref{cschap:boxmaxdepth}.
+
+%\item [\cs{brokenpenalty}]
+%      \gr{integer parameter}
+%      Additional penalty for breaking a page after a hyphenated line. 
+%      Default~\n{100} in plain \TeX.
+%Chapter~\ref{cschap:brokenpenalty}.
+\item [\cs{brokenpenalty}]
+      \gr{integer parameter}
+      Additional penalty for breaking a page after a hyphenated line. 
+      Default~\n{100} in plain \TeX.
+Chapter~\ref{cschap:brokenpenalty}.
+
+%\item [\cs{catcode\gr{8-bit number}}]
+%      \gr{internal integer}; the control sequence itself
+%      is a~\gr{codename}.
+%      Access category codes.
+%Chapter~\ref{cschap:catcode}.
+\item [\cs{catcode\gr{8-bit number}}]
+      \gr{internal integer}; the control sequence itself
+      is a~\gr{codename}.
+      Access category codes.
+Chapter~\ref{cschap:catcode}.
+
+%\item [\cs{char\gr{number}}]
+%      \gr{character}
+%      Explicit denotation of a character to be typeset. 
+%Chapter~\ref{cschap:char}.
+\item [\cs{char\gr{number}}]
+      \gr{character}
+      Explicit denotation of a character to be typeset. 
+Chapter~\ref{cschap:char}.
+
+%\item [\cs{chardef\gr{control sequence}\gr{equals}\gr{number}}]
+%      \gr{shorthand definition}
+%      Define a control sequence to be a synonym for
+%      a~character code.
+%Chapter~\ref{cschap:chardef}.
+\item [\cs{chardef\gr{control sequence}\gr{equals}\gr{number}}]
+      \gr{shorthand definition}
+      Define a control sequence to be a synonym for
+      a~character code.
+Chapter~\ref{cschap:chardef}.
+
+%\item [\cs{cleaders}]
+%      \gr{leaders}
+%      As \verb=\leaders=, but with box leaders 
+%      any excess space is split into equal glue items
+% \alt
+%      before and after the leaders.
+%Chapter~\ref{cschap:cleaders}.
+\item [\cs{cleaders}]
+      \gr{leaders}
+      As \verb=\leaders=, but with box leaders 
+      any excess space is split into equal glue items
+ \alt
+      before and after the leaders.
+Chapter~\ref{cschap:cleaders}.
+
+%\item [\cs{closein\gr{4-bit number}}]
+%      \gr{primitive command}
+%      Close an input stream.
+%Chapter~\ref{cschap:closein}.
+\item [\cs{closein\gr{4-bit number}}]
+      \gr{primitive command}
+      Close an input stream.
+Chapter~\ref{cschap:closein}.
+
+%\item [\cs{closeout\gr{4-bit number}}]
+%      \gr{primitive command}
+%      Close an output stream.
+%Chapter~\ref{cschap:closeout}.
+\item [\cs{closeout\gr{4-bit number}}]
+      \gr{primitive command}
+      Close an output stream.
+Chapter~\ref{cschap:closeout}.
+
+%\item [\cs{clubpenalty}]
+%      \gr{integer parameter}
+%      Additional penalty for breaking a page after the first line of a paragraph. 
+%      Default~\n{150} in plain \TeX.
+%Chapter~\ref{cschap:clubpenalty}.
+\item [\cs{clubpenalty}]
+      \gr{integer parameter}
+      Additional penalty for breaking a page after the first line of a paragraph. 
+      Default~\n{150} in plain \TeX.
+Chapter~\ref{cschap:clubpenalty}.
+
+%\item [\cs{copy\gr{8-bit number}}]
+%      \gr{box}
+%      Use a box register and retain the contents. 
+%Chapter~\ref{cschap:copy}.
+\item [\cs{copy\gr{8-bit number}}]
+      \gr{box}
+      Use a box register and retain the contents. 
+Chapter~\ref{cschap:copy}.
+
+%\item [\cs{count\gr{8-bit number}}]
+%      \gr{internal integer}; the control sequence itself
+%      is a~\gr{register prefix}.
+%      Access count registers. 
+%Chapter~\ref{cschap:count}.
+\item [\cs{count\gr{8-bit number}}]
+      \gr{internal integer}; the control sequence itself
+      is a~\gr{register prefix}.
+      Access count registers. 
+Chapter~\ref{cschap:count}.
+
+%\item [\cs{countdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+%      \gr{shorthand definition}; the control sequence
+%      itself is a~\gr{registerdef}.
+%      Define a control sequence to be a synonym for
+%      a~\cs{count} register.
+%Chapter~\ref{cschap:countdef}.
+\item [\cs{countdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+      \gr{shorthand definition}; the control sequence
+      itself is a~\gr{registerdef}.
+      Define a control sequence to be a synonym for
+      a~\cs{count} register.
+Chapter~\ref{cschap:countdef}.
+
+%\item [\cs{cr}]
+%      \gr{primitive command}
+%      Terminate an alignment line.
+%Chapter~\ref{cschap:cr}.
+\item [\cs{cr}]
+      \gr{primitive command}
+      Terminate an alignment line.
+Chapter~\ref{cschap:cr}.
+
+%\item [\cs{crcr}]
+%      \gr{primitive command}
+%      Terminate an alignment line if it has 
+%      not already been terminated by~\cs{cr}.
+%Chapter~\ref{cschap:crcr}.
+\item [\cs{crcr}]
+      \gr{primitive command}
+      Terminate an alignment line if it has 
+      not already been terminated by~\cs{cr}.
+Chapter~\ref{cschap:crcr}.
+
+%\item [\cs{csname}]
+%      \gr{expandable command}
+%      Start forming the name of a control sequence.
+%      Has to be balanced with \cs{endcsname}.
+%Chapter~\ref{cschap:csname}.
+\item [\cs{csname}]
+      \gr{expandable command}
+      Start forming the name of a control sequence.
+      Has to be balanced with \cs{endcsname}.
+Chapter~\ref{cschap:csname}.
+
+%\item [\cs{day}]
+%      \gr{integer parameter}
+%      The day of the current job.
+%Chapter~\ref{cschap:day}.
+\item [\cs{day}]
+      \gr{integer parameter}
+      The day of the current job.
+Chapter~\ref{cschap:day}.
+
+%\item [\cs{deadcycles}]
+%      \gr{special integer}
+%      Counter that keeps track of how many times 
+%      the output routine has been called without a \cs{shipout} 
+%      taking place. 
+%      If this number reaches \cs{maxdeadcycles} \TeX\
+%      gives an error message. Plain \TeX\ default:~\n{25}.
+%Chapter~\ref{cschap:deadcycles}.
+\item [\cs{deadcycles}]
+      \gr{special integer}
+      Counter that keeps track of how many times 
+      the output routine has been called without a \cs{shipout} 
+      taking place. 
+      If this number reaches \cs{maxdeadcycles} \TeX\
+      gives an error message. Plain \TeX\ default:~\n{25}.
+Chapter~\ref{cschap:deadcycles}.
+
+%\item [\cs{def}]
+%      \gr{def} Start a macro definition.
+%Chapter~\ref{cschap:def}.
+\item [\cs{def}]
+      \gr{def} Start a macro definition.
+Chapter~\ref{cschap:def}.
+
+%\item [\cs{defaulthyphenchar}]
+%      \gr{integer parameter}
+%      Value of \cs{hyphenchar} when a font is loaded.
+%      Default value in plain \TeX\ is~\verb>`\->.
+%Chapter~\ref{cschap:defaulthyphenchar},\ref{cschap:defaulthyphenchar2}.
+\item [\cs{defaulthyphenchar}]
+      \gr{integer parameter}
+      Value of \cs{hyphenchar} when a font is loaded.
+      Default value in plain \TeX\ is~\verb>`\->.
+Chapter~\ref{cschap:defaulthyphenchar},\ref{cschap:defaulthyphenchar2}.
+
+%\item [\cs{defaultskewchar}]
+%      \gr{integer parameter}
+%      Value of \cs{skewchar} when a font is loaded.
+%      Default value in plain \TeX\ is~\n{-1}.
+%Chapter~\ref{cschap:defaultskewchar}.
+\item [\cs{defaultskewchar}]
+      \gr{integer parameter}
+      Value of \cs{skewchar} when a font is loaded.
+      Default value in plain \TeX\ is~\n{-1}.
+Chapter~\ref{cschap:defaultskewchar}.
+
+%\item [\cs{delcode\gr{8-bit number}}]
+%      \gr{internal integer}; the control sequence itself
+%      is a~\gr{codename}.
+%      Access the
+%      code specifying how a character should be used as delimiter 
+%      after \cs{left} or \cs{right}.
+%Chapter~\ref{cschap:delcode}.
+\item [\cs{delcode\gr{8-bit number}}]
+      \gr{internal integer}; the control sequence itself
+      is a~\gr{codename}.
+      Access the
+      code specifying how a character should be used as delimiter 
+      after \cs{left} or \cs{right}.
+Chapter~\ref{cschap:delcode}.
+
+%\item [\cs{delimiter\gr{27-bit number}}]
+%      \gr{math character}
+%      Explicit denotation of a delimiter.
+%Chapter~\ref{cschap:delimiter}.
+\item [\cs{delimiter\gr{27-bit number}}]
+      \gr{math character}
+      Explicit denotation of a delimiter.
+Chapter~\ref{cschap:delimiter}.
+
+%\item [\cs{delimiterfactor}]
+%      \gr{integer parameter}
+%      1000 times the part of a delimited formula that should be
+%      covered by a delimiter.
+%      Plain \TeX\ default:~\n{901}.
+%Chapter~\ref{cschap:delimiterfactor}.
+\item [\cs{delimiterfactor}]
+      \gr{integer parameter}
+      1000 times the part of a delimited formula that should be
+      covered by a delimiter.
+      Plain \TeX\ default:~\n{901}.
+Chapter~\ref{cschap:delimiterfactor}.
+
+%\item [\cs{delimitershortfall}]
+%      \gr{integer parameter}
+%      Size of the part of a delimited formula that is allowed 
+%      to go uncovered by a delimiter.
+%      Plain \TeX\ default:~\n{5pt}.
+%Chapter~\ref{cschap:delimitershortfall}.
+\item [\cs{delimitershortfall}]
+      \gr{integer parameter}
+      Size of the part of a delimited formula that is allowed 
+      to go uncovered by a delimiter.
+      Plain \TeX\ default:~\n{5pt}.
+Chapter~\ref{cschap:delimitershortfall}.
+
+%\item [\cs{dimen\gr{8-bit number}}]
+%      \gr{internal dimen}; the control sequence itself
+%      is a~\gr{register prefix}.
+%      Access dimen registers.
+%Chapter~\ref{cschap:dimen}.
+\item [\cs{dimen\gr{8-bit number}}]
+      \gr{internal dimen}; the control sequence itself
+      is a~\gr{register prefix}.
+      Access dimen registers.
+Chapter~\ref{cschap:dimen}.
+
+%\item [\cs{dimendef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+%      \gr{shorthand definition}; the control sequence
+%      itself is a~\gr{registerdef}.
+%      Define a control sequence to be a synonym for
+%      a~\cs{dimen} register.
+%Chapter~\ref{cschap:dimendef}.
+\item [\cs{dimendef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+      \gr{shorthand definition}; the control sequence
+      itself is a~\gr{registerdef}.
+      Define a control sequence to be a synonym for
+      a~\cs{dimen} register.
+Chapter~\ref{cschap:dimendef}.
+
+%\item [\cs{discretionary\SerifFont\italic\lb pre-break\rb\lb post-break\rb\lb no-break\rb{}}]
+%      \gr{horizontal command}
+%      Specify the way a character sequence is split up at a line break.
+%Chapter~\ref{cschap:discretionary}.
+\item [\cs{discretionary\SerifFont\italic\lb pre-break\rb\lb post-break\rb\lb no-break\rb{}}]
+      \gr{horizontal command}
+      Specify the way a character sequence is split up at a line break.
+Chapter~\ref{cschap:discretionary}.
+
+%\item [\cs{displayindent}]
+%      \gr{dimen parameter}
+%      Distance by which the box, in which the display 
+%      is centred, is indented owing to hanging indentation.
+%      This value is set automatically for each display.
+%Chapter~\ref{cschap:displayindent}.
+\item [\cs{displayindent}]
+      \gr{dimen parameter}
+      Distance by which the box, in which the display 
+      is centred, is indented owing to hanging indentation.
+      This value is set automatically for each display.
+Chapter~\ref{cschap:displayindent}.
+
+%\item [\cs{displaylimits}]
+%      \gr{primitive command}
+%      Restore default placement for limits.
+%Chapter~\ref{cschap:displaylimits}.
+\item [\cs{displaylimits}]
+      \gr{primitive command}
+      Restore default placement for limits.
+Chapter~\ref{cschap:displaylimits}.
+
+%\item [\cs{displaystyle}]
+%      \gr{primitive command}
+%      Select the display style of math typesetting.
+%Chapter~\ref{cschap:displaystyle}.
+\item [\cs{displaystyle}]
+      \gr{primitive command}
+      Select the display style of math typesetting.
+Chapter~\ref{cschap:displaystyle}.
+
+%\item [\cs{displaywidowpenalty}]
+%      \gr{integer parameter}
+%      Additional penalty for breaking a page before the last line 
+%      above a display formula. 
+%      Default~\n{50} in plain \TeX.
+%Chapter~\ref{cschap:displaywidowpenalty}.
+\item [\cs{displaywidowpenalty}]
+      \gr{integer parameter}
+      Additional penalty for breaking a page before the last line 
+      above a display formula. 
+      Default~\n{50} in plain \TeX.
+Chapter~\ref{cschap:displaywidowpenalty}.
+
+%\item [\cs{displaywidth}]
+%      \gr{dimen parameter}
+%      Width of the box in which the display is centred.
+%      This value is set automatically for each display.
+%Chapter~\ref{cschap:displaywidth}.
+\item [\cs{displaywidth}]
+      \gr{dimen parameter}
+      Width of the box in which the display is centred.
+      This value is set automatically for each display.
+Chapter~\ref{cschap:displaywidth}.
+
+%\item [\cs{divide\gr{numeric variable}\gr{optional \n{by}}\gr{number}}]
+%      \gr{arithmetic assignment}
+%      Arithmetic command to divide a \gr{numeric variable}
+%      (see \cs{advance}).
+%Chapter~\ref{cschap:divide}.
+\item [\cs{divide\gr{numeric variable}\gr{optional \n{by}}\gr{number}}]
+      \gr{arithmetic assignment}
+      Arithmetic command to divide a \gr{numeric variable}
+      (see \cs{advance}).
+Chapter~\ref{cschap:divide}.
+
+%\item [\cs{doublehyphendemerits}]
+%      \gr{integer parameter}
+%      Penalty for consecutive lines ending with a hyphen. 
+%      Default~\n{10$\,$000} in plain \TeX.
+%Chapter~\ref{cschap:doublehyphendemerits}.
+\item [\cs{doublehyphendemerits}]
+      \gr{integer parameter}
+      Penalty for consecutive lines ending with a hyphen. 
+      Default~\n{10$\,$000} in plain \TeX.
+Chapter~\ref{cschap:doublehyphendemerits}.
+
+%\item [\cs{dp\gr{8-bit number}}]
+%      \gr{internal dimen}; the control sequence itself
+%      is a~\gr{box dimension}.
+%      Depth of the box in a box register. 
+%Chapter~\ref{cschap:dp}.
+\item [\cs{dp\gr{8-bit number}}]
+      \gr{internal dimen}; the control sequence itself
+      is a~\gr{box dimension}.
+      Depth of the box in a box register. 
+Chapter~\ref{cschap:dp}.
+
+%\item [\cs{dump}]
+%      \gr{vertical command}
+%      Dump a format file; possible only in \IniTeX, 
+%      not allowed inside a group.
+\item [\cs{dump}]
+      \gr{vertical command}
+      Dump a format file; possible only in \IniTeX, 
+      not allowed inside a group.
+
+%Chapter~\ref{cschap:dump}.
+Chapter~\ref{cschap:dump}.
+
+%\item [\cs{edef}]
+%      \gr{def}
+%      Start a macro definition; 
+%      the replacement text is expanded at definition time.
+%Chapter~\ref{cschap:edef}.
+\item [\cs{edef}]
+      \gr{def}
+      Start a macro definition; 
+      the replacement text is expanded at definition time.
+Chapter~\ref{cschap:edef}.
+
+%\item [\cs{else}]
+%      \gr{expandable command}
+%      Select
+%      \gr{false text} of a conditional 
+%      or default case of \cs{ifcase}.
+%Chapter~\ref{cschap:else}.
+\item [\cs{else}]
+      \gr{expandable command}
+      Select
+      \gr{false text} of a conditional 
+      or default case of \cs{ifcase}.
+Chapter~\ref{cschap:else}.
+
+%\item [\cs{emergencystretch}]
+%      \gr{dimen parameter} 
+%      (\TeX3 only) 
+%      Assumed extra stretchability in lines of a paragraph
+%      in third pass of the line-breaking algorithm.
+%Chapter~\ref{cschap:emergencystretch}.
+\item [\cs{emergencystretch}]
+      \gr{dimen parameter} 
+      (\TeX3 only) 
+      Assumed extra stretchability in lines of a paragraph
+      in third pass of the line-breaking algorithm.
+Chapter~\ref{cschap:emergencystretch}.
+
+%\item [\cs{end}]
+%      \gr{vertical command}
+%      End this run.
+%Chapter~\ref{cschap:end}.
+\item [\cs{end}]
+      \gr{vertical command}
+      End this run.
+Chapter~\ref{cschap:end}.
+
+%\item [\cs{endcsname}]
+%      \gr{expandable command}
+%      Delimit the name of a control sequence that was begun
+%      with \cs{csname}.
+%Chapter~\ref{cschap:endcsname}.
+\item [\cs{endcsname}]
+      \gr{expandable command}
+      Delimit the name of a control sequence that was begun
+      with \cs{csname}.
+Chapter~\ref{cschap:endcsname}.
+
+%\item [\cs{endgroup}]
+%      \gr{primitive command}
+%      End a group that was opened with \verb-\begingroup-.
+%Chapter~\ref{cschap:endgroup}.
+\item [\cs{endgroup}]
+      \gr{primitive command}
+      End a group that was opened with \verb-\begingroup-.
+Chapter~\ref{cschap:endgroup}.
+
+%\item [\cs{endinput}]
+%      \gr{expandable command}
+%      Terminate inputting the current file after the current line.
+%Chapter~\ref{cschap:endinput}.
+\item [\cs{endinput}]
+      \gr{expandable command}
+      Terminate inputting the current file after the current line.
+Chapter~\ref{cschap:endinput}.
+
+%\item [\cs{endlinechar}] 
+%      \gr{integer parameter}
+%      The character code of the end-of-line character 
+%      appended to input lines.
+%      \IniTeX\ default:~\n{13}.
+%Chapter~\ref{cschap:endlinechar}.
+\item [\cs{endlinechar}] 
+      \gr{integer parameter}
+      The character code of the end-of-line character 
+      appended to input lines.
+      \IniTeX\ default:~\n{13}.
+Chapter~\ref{cschap:endlinechar}.
+
+%\item [\cs{eqno\gr{math mode material}\n{\char36\char36}}]
+%      \gr{eqno}
+%      Place a right equation number in a display formula.
+%Chapter~\ref{cschap:eqno}.
+\item [\cs{eqno\gr{math mode material}\n{\char36\char36}}]
+      \gr{eqno}
+      Place a right equation number in a display formula.
+Chapter~\ref{cschap:eqno}.
+
+%\item [\cs{errhelp}]
+%      \gr{token parameter}
+%      Tokens that will be displayed if the user 
+%      asks for help after an \cs{err\-message}.
+%Chapter~\ref{cschap:errhelp}.
+\item [\cs{errhelp}]
+      \gr{token parameter}
+      Tokens that will be displayed if the user 
+      asks for help after an \cs{err\-message}.
+Chapter~\ref{cschap:errhelp}.
+
+%\item [\cs{errmessage\gr{general text}}]
+%      \gr{primitive command}
+%      Report an error and give the user opportunity to act.
+%Chapter~\ref{cschap:errmessage}.
+\item [\cs{errmessage\gr{general text}}]
+      \gr{primitive command}
+      Report an error and give the user opportunity to act.
+Chapter~\ref{cschap:errmessage}.
+
+%\item [\cs{errorcontextlines}]
+%      \gr{integer parameter} 
+%      (\TeX3 only)
+%      Number of additional context lines shown in error messages.
+%Chapter~\ref{cschap:errorcontextlines}.
+\item [\cs{errorcontextlines}]
+      \gr{integer parameter} 
+      (\TeX3 only)
+      Number of additional context lines shown in error messages.
+Chapter~\ref{cschap:errorcontextlines}.
+
+%\item [\cs{errorstopmode}]
+%      \gr{interaction mode assignment}  
+%      Ask for user input on the occurrence of an error.
+%Chapter~\ref{cschap:errorstopmode}.
+\item [\cs{errorstopmode}]
+      \gr{interaction mode assignment}  
+      Ask for user input on the occurrence of an error.
+Chapter~\ref{cschap:errorstopmode}.
+
+%\item [\cs{escapechar}] 
+%      \gr{integer parameter}
+%      Number of the character that is  used 
+%      when control sequences are being converted
+%      into character tokens.
+%      \IniTeX\ default:~\n{92}.
+%Chapter~\ref{cschap:escapechar}.
+\item [\cs{escapechar}] 
+      \gr{integer parameter}
+      Number of the character that is  used 
+      when control sequences are being converted
+      into character tokens.
+      \IniTeX\ default:~\n{92}.
+Chapter~\ref{cschap:escapechar}.
+
+%\item [\cs{everycr}]
+%      \gr{token parameter}
+%      Token list inserted after every \cs{cr} or non-redundant \cs{crcr}.
+%Chapter~\ref{cschap:everycr}.
+\item [\cs{everycr}]
+      \gr{token parameter}
+      Token list inserted after every \cs{cr} or non-redundant \cs{crcr}.
+Chapter~\ref{cschap:everycr}.
+
+%\item [\cs{everydisplay}]
+%      \gr{token parameter}
+%      Token list inserted at the start of a display.
+%Chapter~\ref{cschap:everydisplay}.
+\item [\cs{everydisplay}]
+      \gr{token parameter}
+      Token list inserted at the start of a display.
+Chapter~\ref{cschap:everydisplay}.
+
+%\item [\cs{everyhbox}]
+%      \gr{token parameter}
+%      Token list inserted at the start of a horizontal box.
+%Chapter~\ref{cschap:everyhbox}.
+\item [\cs{everyhbox}]
+      \gr{token parameter}
+      Token list inserted at the start of a horizontal box.
+Chapter~\ref{cschap:everyhbox}.
+
+%\item [\cs{everyjob}]
+%      \gr{token parameter}
+%      Token list inserted at the start of each job.
+%Chapter~\ref{cschap:everyjob}.
+\item [\cs{everyjob}]
+      \gr{token parameter}
+      Token list inserted at the start of each job.
+Chapter~\ref{cschap:everyjob}.
+
+%\item [\cs{everymath}]
+%      \gr{token parameter}
+%      Token list inserted at the start of non-display math.
+%Chapter~\ref{cschap:everymath}.
+\item [\cs{everymath}]
+      \gr{token parameter}
+      Token list inserted at the start of non-display math.
+Chapter~\ref{cschap:everymath}.
+
+%\item [\cs{everypar}]
+%      \gr{token parameter}
+%      Token list inserted in front of paragraph text.
+%Chapter~\ref{cschap:everypar}.
+\item [\cs{everypar}]
+      \gr{token parameter}
+      Token list inserted in front of paragraph text.
+Chapter~\ref{cschap:everypar}.
+
+%\item [\cs{everyvbox}]
+%      \gr{token parameter}
+%      Token list inserted at the start of a vertical box.
+%Chapter~\ref{cschap:everyvbox}.
+\item [\cs{everyvbox}]
+      \gr{token parameter}
+      Token list inserted at the start of a vertical box.
+Chapter~\ref{cschap:everyvbox}.
+
+%\item [\cs{exhyphenpenalty}]
+%      \gr{integer parameter}
+%      Penalty for breaking a horizontal line at a discretionary
+%      in the special case where the prebreak text is empty. 
+%      Default~\n{50} in plain \TeX.
+%Chapter~\ref{cschap:exhyphenpenalty}.
+\item [\cs{exhyphenpenalty}]
+      \gr{integer parameter}
+      Penalty for breaking a horizontal line at a discretionary
+      in the special case where the prebreak text is empty. 
+      Default~\n{50} in plain \TeX.
+Chapter~\ref{cschap:exhyphenpenalty}.
+
+%\item [\cs{expandafter}] 
+%      \gr{expandable command}
+%      Take the next two tokens and place the 
+%      expansion  of the second after the first.
+%Chapter~\ref{cschap:expandafter}.
+\item [\cs{expandafter}] 
+      \gr{expandable command}
+      Take the next two tokens and place the 
+      expansion  of the second after the first.
+Chapter~\ref{cschap:expandafter}.
+
+%\item [\cs{fam}]
+%      \gr{integer parameter}
+%      The number of the current font family.
+%Chapter~\ref{cschap:fam}.
+\item [\cs{fam}]
+      \gr{integer parameter}
+      The number of the current font family.
+Chapter~\ref{cschap:fam}.
+
+%\item [\cs{fi}]
+%      \gr{expandable command}
+%      Closing delimiter for all conditionals.
+%Chapter~\ref{cschap:fi}.
+\item [\cs{fi}]
+      \gr{expandable command}
+      Closing delimiter for all conditionals.
+Chapter~\ref{cschap:fi}.
+
+%\item [\cs{finalhyphendemerits}]
+%      \gr{integer parameter}
+%      Penalty added when the penultimate line of a 
+%      paragraph ends with a hyphen. 
+%      Plain \TeX\ default~\n{5000}.
+%Chapter~\ref{cschap:finalhyphendemerits}.
+\item [\cs{finalhyphendemerits}]
+      \gr{integer parameter}
+      Penalty added when the penultimate line of a 
+      paragraph ends with a hyphen. 
+      Plain \TeX\ default~\n{5000}.
+Chapter~\ref{cschap:finalhyphendemerits}.
+
+%\item [\cs{firstmark}]
+%      \gr{expandable command}
+%      The first mark on the current page.
+%Chapter~\ref{cschap:firstmark}.
+\item [\cs{firstmark}]
+      \gr{expandable command}
+      The first mark on the current page.
+Chapter~\ref{cschap:firstmark}.
+
+%\item [\cs{floatingpenalty}]
+%      \gr{integer parameter}
+%      Penalty amount added to \cs{insertpenalties}
+% \alt
+%      when an insertion is split.
+%Chapter~\ref{cschap:floatingpenalty}.
+\item [\cs{floatingpenalty}]
+      \gr{integer parameter}
+      Penalty amount added to \cs{insertpenalties}
+ \alt
+      when an insertion is split.
+Chapter~\ref{cschap:floatingpenalty}.
+
+%\item [\cs{font\gr{control sequence}\gr{equals}\gr{file name}\gr{at clause}}]
+%      \gr{simple assignment}
+%      Associate a control sequence with a \n{tfm} file.
+%      When used on its own, this control sequence is a \gr{font},
+%      denoting the current font.
+%Chapter~\ref{cschap:font}.
+\item [\cs{font\gr{control sequence}\gr{equals}\gr{file name}\gr{at clause}}]
+      \gr{simple assignment}
+      Associate a control sequence with a \n{tfm} file.
+      When used on its own, this control sequence is a \gr{font},
+      denoting the current font.
+Chapter~\ref{cschap:font}.
+
+%\item [\cs{fontdimen\gr{number}\gr{font}}]
+%      \gr{internal dimen}
+%      Access various parameters of fonts.
+%Chapter~\ref{cschap:fontdimen}.
+\item [\cs{fontdimen\gr{number}\gr{font}}]
+      \gr{internal dimen}
+      Access various parameters of fonts.
+Chapter~\ref{cschap:fontdimen}.
+
+%\item [\cs{fontname\gr{font}}]
+%      \gr{primitive command}
+%      The external name of a font.
+%Chapter~\ref{cschap:fontname}.
+\item [\cs{fontname\gr{font}}]
+      \gr{primitive command}
+      The external name of a font.
+Chapter~\ref{cschap:fontname}.
+
+%\item [\cs{futurelet\gr{control sequence}\gr{token$_1$}\gr{token$_2$}}]
+%      \gr{let assignment}
+%      Assign the meaning of \gr{token$_2$} to the
+%      \gr{control sequence}.
+%Chapter~\ref{cschap:futurelet}.
+\item [\cs{futurelet\gr{control sequence}\gr{token$_1$}\gr{token$_2$}}]
+      \gr{let assignment}
+      Assign the meaning of \gr{token$_2$} to the
+      \gr{control sequence}.
+Chapter~\ref{cschap:futurelet}.
+
+%\item [\cs{gdef}]
+%      \gr{def}
+%      Synonym for \verb-\global\def-.
+%Chapter~\ref{cschap:gdef}.
+\item [\cs{gdef}]
+      \gr{def}
+      Synonym for \verb-\global\def-.
+Chapter~\ref{cschap:gdef}.
+
+%\item [\cs{global}]
+%      \gr{prefix}
+%      Make the next definition, arithmetic statement,
+%      or assignment global.
+%Chapter~\ref{cschap:global},\ref{cschap:global2}.
+\item [\cs{global}]
+      \gr{prefix}
+      Make the next definition, arithmetic statement,
+      or assignment global.
+Chapter~\ref{cschap:global},\ref{cschap:global2}.
+
+%\item [\cs{globaldefs}]
+%      \gr{integer parameter}
+%      Override \cs{global} specifications: a positive value of this
+%      parameter makes all assignments global, a negative value
+%      makes them local.
+%Chapter~\ref{cschap:globaldefs}.
+\item [\cs{globaldefs}]
+      \gr{integer parameter}
+      Override \cs{global} specifications: a positive value of this
+      parameter makes all assignments global, a negative value
+      makes them local.
+Chapter~\ref{cschap:globaldefs}.
+
+%\item [\cs{halign\gr{box specification}\lb\gr{alignment material}\rb{}}]
+%      \gr{vertical command}
+%      Horizontal alignment.
+%      Display alignment:
+%      \begin{disp}\n{\$\$}\cs{halign}\gr{box specification}\lb\n{...}\rb
+%      \gr{optional assignments}\n{\$\$}\end{disp}
+%Chapter~\ref{cschap:halign}.
+\item [\cs{halign\gr{box specification}\lb\gr{alignment material}\rb{}}]
+      \gr{vertical command}
+      Horizontal alignment.
+      Display alignment:
+      \begin{disp}\n{\$\$}\cs{halign}\gr{box specification}\lb\n{...}\rb
+      \gr{optional assignments}\n{\$\$}\end{disp}
+Chapter~\ref{cschap:halign}.
+
+%\item [\cs{hangafter}]
+%      \gr{integer parameter}
+%      If positive, this denotes the number of lines 
+%      before indenting starts; 
+%      if negative, its absolute value is the number 
+%      of indented lines starting with the first line of the paragraph. 
+%      The default value of~1 is restored after every paragraph.
+%Chapter~\ref{cschap:hangafter}.
+\item [\cs{hangafter}]
+      \gr{integer parameter}
+      If positive, this denotes the number of lines 
+      before indenting starts; 
+      if negative, its absolute value is the number 
+      of indented lines starting with the first line of the paragraph. 
+      The default value of~1 is restored after every paragraph.
+Chapter~\ref{cschap:hangafter}.
+
+%\item [\cs{hangindent}]
+%      \gr{dimen parameter}
+%      If positive, this indicates indentation from the left margin; 
+%      if negative, this is the negative of the indentation 
+%      from the right margin. 
+%      The default value of~\n{0pt} is restored after every paragraph.
+%Chapter~\ref{cschap:hangindent}.
+\item [\cs{hangindent}]
+      \gr{dimen parameter}
+      If positive, this indicates indentation from the left margin; 
+      if negative, this is the negative of the indentation 
+      from the right margin. 
+      The default value of~\n{0pt} is restored after every paragraph.
+Chapter~\ref{cschap:hangindent}.
+
+%\item [\cs{hbadness}]
+%      \gr{integer parameter}
+%      Threshold below which \TeX\ does not report an underfull 
+%      or overfull  horizontal box.
+%      Plain \TeX\ default:~\n{1000}.
+%Chapter~\ref{cschap:hbadness}.
+\item [\cs{hbadness}]
+      \gr{integer parameter}
+      Threshold below which \TeX\ does not report an underfull 
+      or overfull  horizontal box.
+      Plain \TeX\ default:~\n{1000}.
+Chapter~\ref{cschap:hbadness}.
+
+%\item [\cs{hbox\gr{box specification}\lb\gr{horizontal material}\rb}]
+%      \gr{box}
+%      Construct a horizontal box. 
+%Chapter~\ref{cschap:hbox}.
+\item [\cs{hbox\gr{box specification}\lb\gr{horizontal material}\rb}]
+      \gr{box}
+      Construct a horizontal box. 
+Chapter~\ref{cschap:hbox}.
+
+%\item [\cs{hfil}]
+%      \gr{horizontal command}
+%      Horizontal skip equivalent to \verb-\hskip 0cm plus 1fil-.
+%Chapter~\ref{cschap:hfil}.
+\item [\cs{hfil}]
+      \gr{horizontal command}
+      Horizontal skip equivalent to \verb-\hskip 0cm plus 1fil-.
+Chapter~\ref{cschap:hfil}.
+
+%\item [\cs{hfill}]
+%      \gr{horizontal command}
+%      Horizontal skip equivalent to \verb-\hskip 0cm plus 1fill-.
+%Chapter~\ref{cschap:hfill}.
+\item [\cs{hfill}]
+      \gr{horizontal command}
+      Horizontal skip equivalent to \verb-\hskip 0cm plus 1fill-.
+Chapter~\ref{cschap:hfill}.
+
+%\item [\cs{hfilneg}]
+%      \gr{horizontal command}
+%      Horizontal skip equivalent to \verb-\hskip 0cm minus 1fil-.
+%Chapter~\ref{cschap:hfilneg}.
+\item [\cs{hfilneg}]
+      \gr{horizontal command}
+      Horizontal skip equivalent to \verb-\hskip 0cm minus 1fil-.
+Chapter~\ref{cschap:hfilneg}.
+
+%\item [\cs{hfuzz}]
+%      \gr{dimen parameter}
+%      Excess size that \TeX\ tolerates before it considers  
+%      a horizontal box overfull.
+%      Plain \TeX\ default:~\n{0.1pt}.
+%Chapter~\ref{cschap:hfuzz}.
+\item [\cs{hfuzz}]
+      \gr{dimen parameter}
+      Excess size that \TeX\ tolerates before it considers  
+      a horizontal box overfull.
+      Plain \TeX\ default:~\n{0.1pt}.
+Chapter~\ref{cschap:hfuzz}.
+
+%\item [\cs{hoffset}]
+%      \gr{dimen parameter}
+%      Distance by which the page is shifted to the right 
+%      of the reference point which is at one inch from
+%      the left margin.
+%Chapter~\ref{cschap:hoffset}.
+\item [\cs{hoffset}]
+      \gr{dimen parameter}
+      Distance by which the page is shifted to the right 
+      of the reference point which is at one inch from
+      the left margin.
+Chapter~\ref{cschap:hoffset}.
+
+%\item [\cs{holdinginserts}]
+%      \gr{integer parameter} 
+%      (only \TeX3) 
+%      If this is positive, insertions are not placed in their boxes 
+%      when the \cs{output} tokens are inserted.
+%Chapter~\ref{cschap:holdinginserts}.
+\item [\cs{holdinginserts}]
+      \gr{integer parameter} 
+      (only \TeX3) 
+      If this is positive, insertions are not placed in their boxes 
+      when the \cs{output} tokens are inserted.
+Chapter~\ref{cschap:holdinginserts}.
+
+%\item [\cs{hrule}]
+%      \gr{vertical command}
+%      Rule that spreads in horizontal direction.
+%Chapter~\ref{cschap:hrule}.
+\item [\cs{hrule}]
+      \gr{vertical command}
+      Rule that spreads in horizontal direction.
+Chapter~\ref{cschap:hrule}.
+
+%\item [\cs{hsize}]
+%      \gr{dimen parameter}
+%      Line width used for text typesetting inside a vertical box.
+%Chapter~\ref{cschap:hsize},\ref{cschap:hsize2}.
+\item [\cs{hsize}]
+      \gr{dimen parameter}
+      Line width used for text typesetting inside a vertical box.
+Chapter~\ref{cschap:hsize},\ref{cschap:hsize2}.
+
+%\item [\cs{hskip\gr{glue}}] 
+%      \gr{horizontal command}
+%      Insert in horizontal mode a glue item.
+%Chapter~\ref{cschap:hskip}.
+\item [\cs{hskip\gr{glue}}] 
+      \gr{horizontal command}
+      Insert in horizontal mode a glue item.
+Chapter~\ref{cschap:hskip}.
+
+%\item [\cs{hss}]
+%      \gr{horizontal command}
+%      Horizontal skip equivalent to \verb-\hskip 0cm plus 1fil minus 1fil-.
+%Chapter~\ref{cschap:hss}.
+\item [\cs{hss}]
+      \gr{horizontal command}
+      Horizontal skip equivalent to \verb-\hskip 0cm plus 1fil minus 1fil-.
+Chapter~\ref{cschap:hss}.
+
+%\item [\cs{ht\gr{8-bit number}}]
+%      \gr{internal dimen}; the control sequence itself
+%      is a~\gr{box dimension}.
+%      Height of the box in a box register. 
+%Chapter~\ref{cschap:ht}.
+\item [\cs{ht\gr{8-bit number}}]
+      \gr{internal dimen}; the control sequence itself
+      is a~\gr{box dimension}.
+      Height of the box in a box register. 
+Chapter~\ref{cschap:ht}.
+
+%\item [\cs{hyphenation\gr{general text}}]
+%      \gr{hyphenation assignment}
+%      Define hyphenation exceptions for the current value of \cs{language}.
+%Chapter~\ref{cschap:hyphenation}.
+\item [\cs{hyphenation\gr{general text}}]
+      \gr{hyphenation assignment}
+      Define hyphenation exceptions for the current value of \cs{language}.
+Chapter~\ref{cschap:hyphenation}.
+
+%\item [\cs{hyphenchar\gr{font}}]
+%      \gr{internal integer}
+%      Number of the character  behind which a 
+%      \verb-\discretionary{}{}{}- is inserted.
+%Chapter~\ref{cschap:hyphenchar},\ref{cschap:hyphenchar2}.
+\item [\cs{hyphenchar\gr{font}}]
+      \gr{internal integer}
+      Number of the character  behind which a 
+      \verb-\discretionary{}{}{}- is inserted.
+Chapter~\ref{cschap:hyphenchar},\ref{cschap:hyphenchar2}.
+
+%\item [\cs{hyphenpenalty}]
+%      \gr{integer parameter}
+%      Penalty associated with break at a discretionary in the general case. 
+%      Default~\n{50} in plain \TeX.
+%Chapter~\ref{cschap:hyphenpenalty}.
+\item [\cs{hyphenpenalty}]
+      \gr{integer parameter}
+      Penalty associated with break at a discretionary in the general case. 
+      Default~\n{50} in plain \TeX.
+Chapter~\ref{cschap:hyphenpenalty}.
+
+%\item [\cs{if\gr{token$_1$}\gr{token$_2$}}]
+%      \gr{expandable command}
+%      Test equality of character codes. 
+%Chapter~\ref{cschap:if}.
+\item [\cs{if\gr{token$_1$}\gr{token$_2$}}]
+      \gr{expandable command}
+      Test equality of character codes. 
+Chapter~\ref{cschap:if}.
+
+%\item [\cs{ifcase\gr{number}\gr{case$_0$}\cs{or}\n{...}\cs{or}\gr{case$_n$}\cs{else}\gr{other cases}\cs{fi}}]
+%      \gr{expandable command}
+%      Enumerated case statement.
+%Chapter~\ref{cschap:ifcase}.
+\item [\cs{ifcase\gr{number}\gr{case$_0$}\cs{or}\n{...}\cs{or}\gr{case$_n$}\cs{else}\gr{other cases}\cs{fi}}]
+      \gr{expandable command}
+      Enumerated case statement.
+Chapter~\ref{cschap:ifcase}.
+
+%\item [\cs{ifcat\gr{token$_1$}\gr{token$_2$}}]
+%      \gr{expandable command}
+%      Test whether two characters have the same category code.
+%Chapter~\ref{cschap:ifcat}.
+\item [\cs{ifcat\gr{token$_1$}\gr{token$_2$}}]
+      \gr{expandable command}
+      Test whether two characters have the same category code.
+Chapter~\ref{cschap:ifcat}.
+
+%\item [\cs{ifdim\gr{dimen$_1$}\gr{relation}\gr{dimen$_2$}}]
+%      \gr{expandable command}
+%      Compare two dimensions. 
+%Chapter~\ref{cschap:ifdim}.
+\item [\cs{ifdim\gr{dimen$_1$}\gr{relation}\gr{dimen$_2$}}]
+      \gr{expandable command}
+      Compare two dimensions. 
+Chapter~\ref{cschap:ifdim}.
+
+%\item [\cs{ifeof\gr{4-bit number}}]
+%      \gr{expandable command}
+%      Test whether a file has been fully read, or does not exist.
+%Chapter~\ref{cschap:ifeof}.
+\item [\cs{ifeof\gr{4-bit number}}]
+      \gr{expandable command}
+      Test whether a file has been fully read, or does not exist.
+Chapter~\ref{cschap:ifeof}.
+
+%\item [\cs{iffalse}]
+%      \gr{expandable command}
+%      This test is always false.
+%Chapter~\ref{cschap:iffalse}.
+\item [\cs{iffalse}]
+      \gr{expandable command}
+      This test is always false.
+Chapter~\ref{cschap:iffalse}.
+
+%\item [\cs{ifhbox\gr{8-bit number}}]
+%      \gr{expandable command}
+%      Test whether a box register contains a horizontal box.
+%Chapter~\ref{cschap:ifhbox}.
+\item [\cs{ifhbox\gr{8-bit number}}]
+      \gr{expandable command}
+      Test whether a box register contains a horizontal box.
+Chapter~\ref{cschap:ifhbox}.
+
+%\item [\cs{ifhmode}]
+%      \gr{expandable command}
+%      Test whether the current mode is (possibly restricted) horizontal mode.
+%Chapter~\ref{cschap:ifhmode}.
+\item [\cs{ifhmode}]
+      \gr{expandable command}
+      Test whether the current mode is (possibly restricted) horizontal mode.
+Chapter~\ref{cschap:ifhmode}.
+
+%\item [\cs{ifinner}]
+%      \gr{expandable command}
+%      Test whether the current mode is an internal mode.
+%Chapter~\ref{cschap:ifinner}.
+\item [\cs{ifinner}]
+      \gr{expandable command}
+      Test whether the current mode is an internal mode.
+Chapter~\ref{cschap:ifinner}.
+
+%\item [\cs{ifmmode}]
+%      \gr{expandable command}
+%      Test whether the current mode is (possibly display) math mode.
+%Chapter~\ref{cschap:ifmmode}.
+\item [\cs{ifmmode}]
+      \gr{expandable command}
+      Test whether the current mode is (possibly display) math mode.
+Chapter~\ref{cschap:ifmmode}.
+
+%\item [\cs{ifnum\gr{number$_1$}\gr{relation}\gr{number$_2$}}]
+%      \gr{expandable command}
+%      Test relations between numbers.
+%Chapter~\ref{cschap:ifnum}.
+\item [\cs{ifnum\gr{number$_1$}\gr{relation}\gr{number$_2$}}]
+      \gr{expandable command}
+      Test relations between numbers.
+Chapter~\ref{cschap:ifnum}.
+
+%\item [\cs{ifodd\gr{number}}]
+%      \gr{expandable command}
+%      Test whether a number is odd.
+%Chapter~\ref{cschap:ifodd}.
+\item [\cs{ifodd\gr{number}}]
+      \gr{expandable command}
+      Test whether a number is odd.
+Chapter~\ref{cschap:ifodd}.
+
+%\item [\cs{iftrue}]
+%      \gr{expandable command}
+%      This test is always true.
+%Chapter~\ref{cschap:iftrue}.
+\item [\cs{iftrue}]
+      \gr{expandable command}
+      This test is always true.
+Chapter~\ref{cschap:iftrue}.
+
+%\item [\cs{ifvbox\gr{8-bit number}}]
+%      \gr{expandable command}
+%      Test whether a box register contains a vertical box. 
+%Chapter~\ref{cschap:ifvbox}.
+\item [\cs{ifvbox\gr{8-bit number}}]
+      \gr{expandable command}
+      Test whether a box register contains a vertical box. 
+Chapter~\ref{cschap:ifvbox}.
+
+%\item [\cs{ifvmode}]
+%      \gr{expandable command}
+%      Test whether the current mode is (possibly internal) vertical mode.
+%Chapter~\ref{cschap:ifvmode}.
+\item [\cs{ifvmode}]
+      \gr{expandable command}
+      Test whether the current mode is (possibly internal) vertical mode.
+Chapter~\ref{cschap:ifvmode}.
+
+%\item [\cs{ifvoid\gr{8-bit number}}]
+%      \gr{expandable command}
+%      Test whether a box register is empty.
+%Chapter~\ref{cschap:ifvoid},\ref{cschap:ifvoid2}.
+\item [\cs{ifvoid\gr{8-bit number}}]
+      \gr{expandable command}
+      Test whether a box register is empty.
+Chapter~\ref{cschap:ifvoid},\ref{cschap:ifvoid2}.
+
+%\item [\cs{ifx\gr{token$_1$}\gr{token$_2$}}]
+%      \gr{expandable command}
+%      Test equality of macro expansion, or equality of character code and
+%      category code.
+%Chapter~\ref{cschap:ifx}.
+\item [\cs{ifx\gr{token$_1$}\gr{token$_2$}}]
+      \gr{expandable command}
+      Test equality of macro expansion, or equality of character code and
+      category code.
+Chapter~\ref{cschap:ifx}.
+
+%\item [\cs{ignorespaces}]  
+%      \gr{primitive command}
+%      Expands following tokens until something other
+%      than a~\gr{space token} is found.
+%Chapter~\ref{cschap:ignorespaces}.
+\item [\cs{ignorespaces}]  
+      \gr{primitive command}
+      Expands following tokens until something other
+      than a~\gr{space token} is found.
+Chapter~\ref{cschap:ignorespaces}.
+
+%\item [\cs{immediate}] 
+%      \gr{primitive command}
+%      Prefix to have output operations executed right away.
+%Chapter~\ref{cschap:immediate}.
+\item [\cs{immediate}] 
+      \gr{primitive command}
+      Prefix to have output operations executed right away.
+Chapter~\ref{cschap:immediate}.
+
+%\item [\cs{indent}]
+%      \gr{primitive command}
+%      Switch to horizontal mode and insert box with width \cs{parindent}.
+%      This command is automatically inserted before a
+%      \gr{horizontal 
+%      command} in vertical mode.
+%Chapter~\ref{cschap:indent}.
+\item [\cs{indent}]
+      \gr{primitive command}
+      Switch to horizontal mode and insert box with width \cs{parindent}.
+      This command is automatically inserted before a
+      \gr{horizontal 
+      command} in vertical mode.
+Chapter~\ref{cschap:indent}.
+
+%\item [\cs{input\gr{file name}}]
+%      \gr{expandable command}
+%      Read a specified file as \TeX\ input. 
+%Chapter~\ref{cschap:input}.
+\item [\cs{input\gr{file name}}]
+      \gr{expandable command}
+      Read a specified file as \TeX\ input. 
+Chapter~\ref{cschap:input}.
+
+%\item [\cs{inputlineno}]
+%      \gr{internal integer}
+%      (\TeX3 only) 
+%      Number of the current input line.
+%Chapter~\ref{cschap:inputlineno}.
+\item [\cs{inputlineno}]
+      \gr{internal integer}
+      (\TeX3 only) 
+      Number of the current input line.
+Chapter~\ref{cschap:inputlineno}.
+
+%\item [\cs{insert\gr{8-bit number}\lb\gr{vertical mode material}\rb}]
+%      \gr{primitive command}
+%      Start an insertion item.
+%Chapter~\ref{cschap:insert}.
+\item [\cs{insert\gr{8-bit number}\lb\gr{vertical mode material}\rb}]
+      \gr{primitive command}
+      Start an insertion item.
+Chapter~\ref{cschap:insert}.
+
+%\item [\cs{insertpenalties}]
+%      \gr{special integer}
+%      Total of penalties for split insertions.
+%      Inside the output routine the number of held-over insertions.
+%Chapter~\ref{cschap:insertpenalties}.
+\item [\cs{insertpenalties}]
+      \gr{special integer}
+      Total of penalties for split insertions.
+      Inside the output routine the number of held-over insertions.
+Chapter~\ref{cschap:insertpenalties}.
+
+%\item [\cs{interlinepenalty}]
+%      \gr{integer parameter}
+%      Penalty for breaking a page between lines of a paragraph. 
+%      Default~\n{0} in plain \TeX.
+%Chapter~\ref{cschap:interlinepenalty}.
+\item [\cs{interlinepenalty}]
+      \gr{integer parameter}
+      Penalty for breaking a page between lines of a paragraph. 
+      Default~\n{0} in plain \TeX.
+Chapter~\ref{cschap:interlinepenalty}.
+
+%\item [\cs{jobname}]
+%      \gr{expandable command}
+%      Name of the main \TeX\ file being processed.
+%Chapter~\ref{cschap:jobname}.
+\item [\cs{jobname}]
+      \gr{expandable command}
+      Name of the main \TeX\ file being processed.
+Chapter~\ref{cschap:jobname}.
+
+%\item [\cs{kern\gr{dimen}}]
+%      \gr{kern}
+%      Add a kern item of the specified
+%      \gr{dimen} to the list;
+%      this can be used both in horizontal and vertical mode.
+%Chapter~\ref{cschap:kern}.
+\item [\cs{kern\gr{dimen}}]
+      \gr{kern}
+      Add a kern item of the specified
+      \gr{dimen} to the list;
+      this can be used both in horizontal and vertical mode.
+Chapter~\ref{cschap:kern}.
+
+%\item [\cs{language}]
+%      \gr{integer parameter} 
+%      (\TeX3 only)
+%      Choose a set of hyphenation patterns and exceptions.
+%Chapter~\ref{cschap:language}.
+\item [\cs{language}]
+      \gr{integer parameter} 
+      (\TeX3 only)
+      Choose a set of hyphenation patterns and exceptions.
+Chapter~\ref{cschap:language}.
+
+%\item [\cs{lastbox}]
+%      \gr{box}
+%      Register containing the last element  added to the current list, 
+%      if this was a box.
+%Chapter~\ref{cschap:lastbox}.
+\item [\cs{lastbox}]
+      \gr{box}
+      Register containing the last element  added to the current list, 
+      if this was a box.
+Chapter~\ref{cschap:lastbox}.
+
+%\item [\cs{lastkern}]
+%      \gr{internal dimen}
+%      If the last item on the list was a kern, the size of this.
+%Chapter~\ref{cschap:lastkern}.
+\item [\cs{lastkern}]
+      \gr{internal dimen}
+      If the last item on the list was a kern, the size of this.
+Chapter~\ref{cschap:lastkern}.
+
+%\item [\cs{lastpenalty}]
+%      \gr{internal integer}
+%      If the last item on the list was a penalty, the value of this.
+%Chapter~\ref{cschap:lastpenalty}.
+\item [\cs{lastpenalty}]
+      \gr{internal integer}
+      If the last item on the list was a penalty, the value of this.
+Chapter~\ref{cschap:lastpenalty}.
+
+%\item [\cs{lastskip}]
+%      \gr{internal glue} or \gr{internal muglue}.
+%      If the last item on the list was a skip, the size of this.
+%Chapter~\ref{cschap:lastskip}.
+\item [\cs{lastskip}]
+      \gr{internal glue} or \gr{internal muglue}.
+      If the last item on the list was a skip, the size of this.
+Chapter~\ref{cschap:lastskip}.
+
+%\item [\cs{lccode\gr{8-bit number}}]
+%      \gr{internal integer}; the control sequence itself
+%      is a~\gr{codename}.
+%      Access the
+%      character code that is the lowercase variant of a given code.
+%Chapter~\ref{cschap:lccode}.
+\item [\cs{lccode\gr{8-bit number}}]
+      \gr{internal integer}; the control sequence itself
+      is a~\gr{codename}.
+      Access the
+      character code that is the lowercase variant of a given code.
+Chapter~\ref{cschap:lccode}.
+
+%\item [\cs{leaders\gr{box or rule}\gr{vertical/horizontal/mathematical skip}}]
+%      \gr{leaders}
+%      Fill a specified amount of space with a rule or copies of box.
+%Chapter~\ref{cschap:leaders}.
+\item [\cs{leaders\gr{box or rule}\gr{vertical/horizontal/mathematical skip}}]
+      \gr{leaders}
+      Fill a specified amount of space with a rule or copies of box.
+Chapter~\ref{cschap:leaders}.
+
+%\item [\cs{left}]
+%      \gr{primitive command}
+%      Use the following character as an open delimiter.
+%Chapter~\ref{cschap:left}.
+\item [\cs{left}]
+      \gr{primitive command}
+      Use the following character as an open delimiter.
+Chapter~\ref{cschap:left}.
+
+%\item [\cs{lefthyphenmin}]
+%      \gr{integer parameter} 
+%      (\TeX3 only)
+%      Minimum number of characters before a hyphenation.
+%Chapter~\ref{cschap:lefthyphenmin}.
+\item [\cs{lefthyphenmin}]
+      \gr{integer parameter} 
+      (\TeX3 only)
+      Minimum number of characters before a hyphenation.
+Chapter~\ref{cschap:lefthyphenmin}.
+
+%\item [\cs{leftskip}]
+%      \gr{glue parameter}
+%      Glue that is placed to the left of all lines.
+%Chapter~\ref{cschap:leftskip}.
+\item [\cs{leftskip}]
+      \gr{glue parameter}
+      Glue that is placed to the left of all lines.
+Chapter~\ref{cschap:leftskip}.
+
+%\item [\cs{leqno\gr{math mode material}\n{\char36\char36}}]
+%      \gr{eqno}
+%      Place a left equation number in a display formula.
+%Chapter~\ref{cschap:leqno}.
+\item [\cs{leqno\gr{math mode material}\n{\char36\char36}}]
+      \gr{eqno}
+      Place a left equation number in a display formula.
+Chapter~\ref{cschap:leqno}.
+
+%\item [\cs{let\gr{control sequence}\gr{equals}\gr{token}}]
+%      \gr{let assignment}
+%      Define a control sequence to a token, assign its meaning
+%      if the token is a command or macro. 
+%Chapter~\ref{cschap:let}.
+\item [\cs{let\gr{control sequence}\gr{equals}\gr{token}}]
+      \gr{let assignment}
+      Define a control sequence to a token, assign its meaning
+      if the token is a command or macro. 
+Chapter~\ref{cschap:let}.
+
+%\item [\cs{limits}]
+%      \gr{primitive command}
+%      Place limits over and under a large operator.
+%      This is the default position in display style.
+%Chapter~\ref{cschap:limits}.
+\item [\cs{limits}]
+      \gr{primitive command}
+      Place limits over and under a large operator.
+      This is the default position in display style.
+Chapter~\ref{cschap:limits}.
+
+%\item [\cs{linepenalty}]
+%      \gr{integer parameter}
+%      Penalty value associated with each line break. 
+%      Default~\n{10} in plain \TeX.
+%Chapter~\ref{cschap:linepenalty}.
+\item [\cs{linepenalty}]
+      \gr{integer parameter}
+      Penalty value associated with each line break. 
+      Default~\n{10} in plain \TeX.
+Chapter~\ref{cschap:linepenalty}.
+
+%\item [\cs{lineskip}] 
+%      \gr{glue parameter}
+%      Glue added if distance between bottom and top of neighbouring boxes 
+%      is less than \cs{lineskiplimit}.
+%      Default~\n{1pt} in plain \TeX.
+%Chapter~\ref{cschap:lineskip}.
+\item [\cs{lineskip}] 
+      \gr{glue parameter}
+      Glue added if distance between bottom and top of neighbouring boxes 
+      is less than \cs{lineskiplimit}.
+      Default~\n{1pt} in plain \TeX.
+Chapter~\ref{cschap:lineskip}.
+
+%\item [\cs{lineskiplimit}]
+%      \gr{dimen parameter}
+%      Distance to be maintained between the bottom and top of 
+%      neighbouring boxes on a vertical list.
+%      Default~\n{0pt} in plain \TeX.
+%Chapter~\ref{cschap:lineskiplimit}.
+\item [\cs{lineskiplimit}]
+      \gr{dimen parameter}
+      Distance to be maintained between the bottom and top of 
+      neighbouring boxes on a vertical list.
+      Default~\n{0pt} in plain \TeX.
+Chapter~\ref{cschap:lineskiplimit}.
+
+%\item [\cs{long}]
+%      \gr{prefix}
+%      Indicate that the arguments of the macro to be defined  
+%      are allowed to contain \cs{par} tokens.
+%Chapter~\ref{cschap:long}.
+\item [\cs{long}]
+      \gr{prefix}
+      Indicate that the arguments of the macro to be defined  
+      are allowed to contain \cs{par} tokens.
+Chapter~\ref{cschap:long}.
+
+%\item [\cs{looseness}] 
+%      \gr{integer parameter}
+%      Number of lines by which this paragraph has to be made longer 
+%      (or, if negative, shorter) than it would be ideally.
+%Chapter~\ref{cschap:looseness}.
+\item [\cs{looseness}] 
+      \gr{integer parameter}
+      Number of lines by which this paragraph has to be made longer 
+      (or, if negative, shorter) than it would be ideally.
+Chapter~\ref{cschap:looseness}.
+
+%\item [\cs{lower\gr{dimen}\gr{box}}]
+%      \gr{primitive command}
+%      Adjust vertical positioning of a box in horizontal mode. 
+%Chapter~\ref{cschap:lower}.
+\item [\cs{lower\gr{dimen}\gr{box}}]
+      \gr{primitive command}
+      Adjust vertical positioning of a box in horizontal mode. 
+Chapter~\ref{cschap:lower}.
+
+%\item [\cs{lowercase\gr{general text}}]
+%      \gr{primitive command}
+%      Convert the argument to its lowercase form.
+%Chapter~\ref{cschap:lowercase}.
+\item [\cs{lowercase\gr{general text}}]
+      \gr{primitive command}
+      Convert the argument to its lowercase form.
+Chapter~\ref{cschap:lowercase}.
+
+%\item [\cs{mag}]
+%      \gr{integer parameter}
+%      1000 times the magnification of the document.
+%      Default \n{1000} in \IniTeX.
+%Chapter~\ref{cschap:mag}.
+\item [\cs{mag}]
+      \gr{integer parameter}
+      1000 times the magnification of the document.
+      Default \n{1000} in \IniTeX.
+Chapter~\ref{cschap:mag}.
+
+%\item [\cs{mark\gr{general text}}]
+%      \gr{primitive command}
+%      Specify a mark text.
+%Chapter~\ref{cschap:mark}.
+\item [\cs{mark\gr{general text}}]
+      \gr{primitive command}
+      Specify a mark text.
+Chapter~\ref{cschap:mark}.
+
+%\item [\cs{mathaccent\gr{15-bit number}\gr{math field}}]
+%      \gr{primitive command}
+%      Place an accent in math mode.
+%Chapter~\ref{cschap:mathaccent},\ref{cschap:mathaccent2}.
+\item [\cs{mathaccent\gr{15-bit number}\gr{math field}}]
+      \gr{primitive command}
+      Place an accent in math mode.
+Chapter~\ref{cschap:mathaccent},\ref{cschap:mathaccent2}.
+
+%\item [\cs{mathbin\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function 
+%      as a binary operation.
+%Chapter~\ref{cschap:mathbin}.
+\item [\cs{mathbin\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function 
+      as a binary operation.
+Chapter~\ref{cschap:mathbin}.
+
+%\item [\cs{mathchar\gr{15-bit number}}]
+%      \gr{primitive command}
+%      Explicit denotation of a mathematical character.
+%Chapter~\ref{cschap:mathchar}.
+\item [\cs{mathchar\gr{15-bit number}}]
+      \gr{primitive command}
+      Explicit denotation of a mathematical character.
+Chapter~\ref{cschap:mathchar}.
+
+%\item [\cs{mathchardef\gr{control sequence}\gr{equals}\gr{15-bit number}}]
+%      \gr{shorthand definition}
+%      Define a control sequence to be a synonym for
+%      a~math character code.
+%Chapter~\ref{cschap:mathchardef}.
+\item [\cs{mathchardef\gr{control sequence}\gr{equals}\gr{15-bit number}}]
+      \gr{shorthand definition}
+      Define a control sequence to be a synonym for
+      a~math character code.
+Chapter~\ref{cschap:mathchardef}.
+
+%\item [\cs{mathchoice\lb\SerifFont {\it D\/\rb\lb T\/\rb\lb S\/\rb\lb SS\/}\rb}]
+%      \gr{primitive command}
+%      Give four variants of a formula for the four styles
+%      of math typesetting.
+%     Chapter~\ref{cschap:mathchoice}.
+% 
+%\item [\cs{mathclose\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function
+%      as a closing symbol.
+%Chapter~\ref{cschap:mathclose}.
+\item [\cs{mathchoice\lb\SerifFont {\it D\/\rb\lb T\/\rb\lb S\/\rb\lb SS\/}\rb}]
+      \gr{primitive command}
+      Give four variants of a formula for the four styles
+      of math typesetting.
+     Chapter~\ref{cschap:mathchoice}.
+ 
+\item [\cs{mathclose\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function
+      as a closing symbol.
+Chapter~\ref{cschap:mathclose}.
+
+%\item [\cs{mathcode\gr{8-bit number}}]
+%      \gr{internal integer}; the control sequence itself
+%      is a~\gr{codename}.
+%      Code of a character determining its treatment in math mode.
+%Chapter~\ref{cschap:mathcode}.
+\item [\cs{mathcode\gr{8-bit number}}]
+      \gr{internal integer}; the control sequence itself
+      is a~\gr{codename}.
+      Code of a character determining its treatment in math mode.
+Chapter~\ref{cschap:mathcode}.
+
+%\item [\cs{mathinner\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function 
+%      as an inner formula.
+%Chapter~\ref{cschap:mathinner}.
+\item [\cs{mathinner\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function 
+      as an inner formula.
+Chapter~\ref{cschap:mathinner}.
+
+%\item [\cs{mathop\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function 
+%      as a large operator.
+%Chapter~\ref{cschap:mathop}.
+\item [\cs{mathop\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function 
+      as a large operator.
+Chapter~\ref{cschap:mathop}.
+
+%\item [\cs{mathopen\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function 
+%      as an opening symbol.
+%Chapter~\ref{cschap:mathopen}.
+\item [\cs{mathopen\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function 
+      as an opening symbol.
+Chapter~\ref{cschap:mathopen}.
+
+%\item [\cs{mathord\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function 
+%      as an ordinary object.
+%Chapter~\ref{cschap:mathord}.
+\item [\cs{mathord\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function 
+      as an ordinary object.
+Chapter~\ref{cschap:mathord}.
+
+%\item [\cs{mathpunct\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function 
+%      as a punctuation symbol.
+%Chapter~\ref{cschap:mathpunct}.
+\item [\cs{mathpunct\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function 
+      as a punctuation symbol.
+Chapter~\ref{cschap:mathpunct}.
+
+%\item [\cs{mathrel\gr{math field}}]
+%      \gr{math atom}
+%      Let the following \gr{math field} function as a relation.
+%Chapter~\ref{cschap:mathrel}.
+\item [\cs{mathrel\gr{math field}}]
+      \gr{math atom}
+      Let the following \gr{math field} function as a relation.
+Chapter~\ref{cschap:mathrel}.
+
+%\item [\cs{mathsurround}]
+%      \gr{dimen parameter}
+%      Kern amount placed before and after in-line formulas.
+%Chapter~\ref{cschap:mathsurround}.
+\item [\cs{mathsurround}]
+      \gr{dimen parameter}
+      Kern amount placed before and after in-line formulas.
+Chapter~\ref{cschap:mathsurround}.
+
+%\item [\cs{maxdeadcycles}]
+%      \gr{integer parameter}
+%      The maximum number of times that the output routine is allowed to
+%      be called without a \cs{shipout} occurring.
+%      \IniTeX\ default:~\n{25}.
+%Chapter~\ref{cschap:maxdeadcycles}.
+\item [\cs{maxdeadcycles}]
+      \gr{integer parameter}
+      The maximum number of times that the output routine is allowed to
+      be called without a \cs{shipout} occurring.
+      \IniTeX\ default:~\n{25}.
+Chapter~\ref{cschap:maxdeadcycles}.
+
+%\item [\cs{maxdepth}]
+%      \gr{dimen parameter}
+%      Maximum depth of the page box.
+%      Default~\n{4pt} in plain \TeX.
+%Chapter~\ref{cschap:maxdepth}.
+\item [\cs{maxdepth}]
+      \gr{dimen parameter}
+      Maximum depth of the page box.
+      Default~\n{4pt} in plain \TeX.
+Chapter~\ref{cschap:maxdepth}.
+
+%\item [\cs{meaning}]
+%      \gr{expandable command}
+%      Give the meaning of a control sequence as a string of characters.
+%Chapter~\ref{cschap:meaning}.
+\item [\cs{meaning}]
+      \gr{expandable command}
+      Give the meaning of a control sequence as a string of characters.
+Chapter~\ref{cschap:meaning}.
+
+%\item [\cs{medmuskip}]
+%      \gr{muglue parameter}
+%      Medium amount of mu glue.
+%      Default value in plain \TeX: \n{4mu plus 2mu minus 4mu}
+%Chapter~\ref{cschap:medmuskip}.
+\item [\cs{medmuskip}]
+      \gr{muglue parameter}
+      Medium amount of mu glue.
+      Default value in plain \TeX: \n{4mu plus 2mu minus 4mu}
+Chapter~\ref{cschap:medmuskip}.
+
+%\item [\cs{message\gr{general text}}]
+%      \gr{primitive command}
+%      Write a message to the terminal.
+%     Chapter~\ref{cschap:message}.
+% 
+%\item [\cs{mkern}]
+%      \gr{primitive command}
+%      Insert a kern measured in mu units.
+%Chapter~\ref{cschap:mkern}.
+\item [\cs{message\gr{general text}}]
+      \gr{primitive command}
+      Write a message to the terminal.
+     Chapter~\ref{cschap:message}.
+ 
+\item [\cs{mkern}]
+      \gr{primitive command}
+      Insert a kern measured in mu units.
+Chapter~\ref{cschap:mkern}.
+
+%\item [\cs{month}]
+%      \gr{integer parameter}
+%      The month of the current job.
+%Chapter~\ref{cschap:month}.
+\item [\cs{month}]
+      \gr{integer parameter}
+      The month of the current job.
+Chapter~\ref{cschap:month}.
+
+%\item [\cs{moveleft\gr{dimen}\gr{box}}]
+%      \gr{primitive command}
+%      Adjust horizontal positioning of a box in vertical mode. 
+%Chapter~\ref{cschap:moveleft}.
+\item [\cs{moveleft\gr{dimen}\gr{box}}]
+      \gr{primitive command}
+      Adjust horizontal positioning of a box in vertical mode. 
+Chapter~\ref{cschap:moveleft}.
+
+%\item [\cs{moveright\gr{dimen}\gr{box}}]
+%      \gr{primitive command}
+%      Adjust horizontal positioning of a box in vertical mode. 
+%Chapter~\ref{cschap:moveright}.
+\item [\cs{moveright\gr{dimen}\gr{box}}]
+      \gr{primitive command}
+      Adjust horizontal positioning of a box in vertical mode. 
+Chapter~\ref{cschap:moveright}.
+
+%\item [\cs{mskip}]
+%      \gr{mathematical skip}
+%      Insert glue measured in mu units.
+%Chapter~\ref{cschap:mskip}.
+\item [\cs{mskip}]
+      \gr{mathematical skip}
+      Insert glue measured in mu units.
+Chapter~\ref{cschap:mskip}.
+
+%\item [\cs{multiply\gr{numeric variable}\gr{optional \n{by}}\gr{number}}]
+%      \gr{arithmetic assignment}
+%      Arithmetic command to multiply a
+%      \gr{numeric variable} (see \cs{advance}).
+%Chapter~\ref{cschap:multiply}.
+\item [\cs{multiply\gr{numeric variable}\gr{optional \n{by}}\gr{number}}]
+      \gr{arithmetic assignment}
+      Arithmetic command to multiply a
+      \gr{numeric variable} (see \cs{advance}).
+Chapter~\ref{cschap:multiply}.
+
+%\item [\cs{muskip\gr{8-bit number}}]
+%      \gr{internal muglue}; the control sequence itself
+%      is a~\gr{register prefix}.
+%      Access skips measured in mu units. 
+%Chapter~\ref{cschap:muskip}.
+\item [\cs{muskip\gr{8-bit number}}]
+      \gr{internal muglue}; the control sequence itself
+      is a~\gr{register prefix}.
+      Access skips measured in mu units. 
+Chapter~\ref{cschap:muskip}.
+
+%\item [\cs{muskipdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+%      \gr{shorthand definition}; the control sequence
+%      itself is a~\gr{registerdef}.
+%      Define a control sequence to be a synonym for
+%      a~\cs{muskip} register.
+%Chapter~\ref{cschap:muskipdef}.
+\item [\cs{muskipdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+      \gr{shorthand definition}; the control sequence
+      itself is a~\gr{registerdef}.
+      Define a control sequence to be a synonym for
+      a~\cs{muskip} register.
+Chapter~\ref{cschap:muskipdef}.
+
+%\item [\cs{newlinechar}]
+%      \gr{integer parameter}
+%      Number of the character that triggers a new line in
+%      \cs{write} and \cs{message} statements.
+%      Plain \TeX\ default~$-1$; \LaTeX\ default~$10$.
+%     Chapter~\ref{cschap:newlinechar}.
+% 
+%\item [\cs{noalign\gr{filler}\lb\gr{vertical (horizontal) mode material}\rb}]
+%    \gr{primitive command}
+%      Specify  vertical (horizontal)
+%      material   to be placed in between rows (columns) of
+%      an \cs{halign} (\cs{valign}).
+%Chapter~\ref{cschap:noalign}.
+\item [\cs{newlinechar}]
+      \gr{integer parameter}
+      Number of the character that triggers a new line in
+      \cs{write} and \cs{message} statements.
+      Plain \TeX\ default~$-1$; \LaTeX\ default~$10$.
+     Chapter~\ref{cschap:newlinechar}.
+ 
+\item [\cs{noalign\gr{filler}\lb\gr{vertical (horizontal) mode material}\rb}]
+    \gr{primitive command}
+      Specify  vertical (horizontal)
+      material   to be placed in between rows (columns) of
+      an \cs{halign} (\cs{valign}).
+Chapter~\ref{cschap:noalign}.
+
+%\item [\cs{noboundary}]
+%      \gr{horizontal command}
+%      (\TeX3 only)
+%      Omit implicit boundary character.
+%Chapter~\ref{cschap:noboundary}.
+\item [\cs{noboundary}]
+      \gr{horizontal command}
+      (\TeX3 only)
+      Omit implicit boundary character.
+Chapter~\ref{cschap:noboundary}.
+
+%\item [\cs{noexpand\gr{token}}]
+%      \gr{expandable command}
+%      Do not expand the next token.
+%Chapter~\ref{cschap:noexpand}.
+\item [\cs{noexpand\gr{token}}]
+      \gr{expandable command}
+      Do not expand the next token.
+Chapter~\ref{cschap:noexpand}.
+
+%\item [\cs{noindent}] 
+%      \gr{primitive command}
+%      Switch to horizontal mode with an empty horizontal list.
+%Chapter~\ref{cschap:noindent}.
+\item [\cs{noindent}] 
+      \gr{primitive command}
+      Switch to horizontal mode with an empty horizontal list.
+Chapter~\ref{cschap:noindent}.
+
+%\item [\cs{nolimits}]
+%      \gr{primitive command}
+%      Place limits of a large operator as subscript and 
+%      superscript expressions.
+%      This is the default position in text style.
+%Chapter~\ref{cschap:nolimits}.
+\item [\cs{nolimits}]
+      \gr{primitive command}
+      Place limits of a large operator as subscript and 
+      superscript expressions.
+      This is the default position in text style.
+Chapter~\ref{cschap:nolimits}.
+
+%\item [\cs{nonscript}]
+%      \gr{primitive command}
+%      Cancel the next glue item if it occurs in 
+%      scriptstyle or scriptscriptstyle.
+%Chapter~\ref{cschap:nonscript}.
+\item [\cs{nonscript}]
+      \gr{primitive command}
+      Cancel the next glue item if it occurs in 
+      scriptstyle or scriptscriptstyle.
+Chapter~\ref{cschap:nonscript}.
+
+%\item [\cs{nonstopmode}]
+%      \gr{interaction mode assignment}
+%      \TeX\ fixes errors as best it can,
+%      and performs an emergency stop
+%      when user interaction is needed.
+%Chapter~\ref{cschap:nonstopmode}.
+\item [\cs{nonstopmode}]
+      \gr{interaction mode assignment}
+      \TeX\ fixes errors as best it can,
+      and performs an emergency stop
+      when user interaction is needed.
+Chapter~\ref{cschap:nonstopmode}.
+
+%\item [\cs{nulldelimiterspace}]
+%      \gr{dimen parameter}
+%      Width taken for empty delimiters. 
+%      Default~\n{1.2pt} in plain \TeX.
+%Chapter~\ref{cschap:nulldelimiterspace}.
+\item [\cs{nulldelimiterspace}]
+      \gr{dimen parameter}
+      Width taken for empty delimiters. 
+      Default~\n{1.2pt} in plain \TeX.
+Chapter~\ref{cschap:nulldelimiterspace}.
+
+%\item [\cs{nullfont}]
+%      \gr{fontdef token}
+%      Name of an empty font that \TeX\ uses in emergencies.
+%Chapter~\ref{cschap:nullfont}.
+\item [\cs{nullfont}]
+      \gr{fontdef token}
+      Name of an empty font that \TeX\ uses in emergencies.
+Chapter~\ref{cschap:nullfont}.
+
+%\item [\cs{number\gr{number}}]
+%      \gr{expandable command}
+%      Convert a
+%      \gr{number} to decimal representation. 
+%Chapter~\ref{cschap:number}.
+\item [\cs{number\gr{number}}]
+      \gr{expandable command}
+      Convert a
+      \gr{number} to decimal representation. 
+Chapter~\ref{cschap:number}.
+
+%\item [\cs{omit}]
+%      \gr{primitive command}
+%      Omit the template for one alignment entry.
+%Chapter~\ref{cschap:omit}.
+\item [\cs{omit}]
+      \gr{primitive command}
+      Omit the template for one alignment entry.
+Chapter~\ref{cschap:omit}.
+
+%\item [\cs{openin\gr{4-bit number}\gr{equals}\gr{filename}}]
+%      \gr{primitive command}
+%      Open a stream for input.
+%Chapter~\ref{cschap:openin}.
+\item [\cs{openin\gr{4-bit number}\gr{equals}\gr{filename}}]
+      \gr{primitive command}
+      Open a stream for input.
+Chapter~\ref{cschap:openin}.
+
+%\item [\cs{openout\gr{4-bit number}\gr{equals}\gr{filename}}]
+%      \gr{primitive command}
+%      Open a stream for output.
+%Chapter~\ref{cschap:openout}.
+\item [\cs{openout\gr{4-bit number}\gr{equals}\gr{filename}}]
+      \gr{primitive command}
+      Open a stream for output.
+Chapter~\ref{cschap:openout}.
+
+%\item [\cs{or}]
+%      \gr{primitive command}
+%      Separator for entries of an \cs{ifcase}.
+%Chapter~\ref{cschap:or}.
+\item [\cs{or}]
+      \gr{primitive command}
+      Separator for entries of an \cs{ifcase}.
+Chapter~\ref{cschap:or}.
+
+%\item [\cs{outer}]
+%      \gr{prefix}
+%      Indicate that the macro being defined 
+%      should occur on the outer level only.
+%Chapter~\ref{cschap:outer}.
+\item [\cs{outer}]
+      \gr{prefix}
+      Indicate that the macro being defined 
+      should occur on the outer level only.
+Chapter~\ref{cschap:outer}.
+
+%\item [\cs{output}]
+%      \gr{token parameter}
+%      Token list with instructions for shipping out pages.
+%Chapter~\ref{cschap:output}.
+\item [\cs{output}]
+      \gr{token parameter}
+      Token list with instructions for shipping out pages.
+Chapter~\ref{cschap:output}.
+
+%\item [\cs{outputpenalty}]  
+%      \gr{integer parameter}
+%      Value of the penalty at the current page break,
+%      or $10\,000$ if the break was not at a penalty.
+%Chapter~\ref{cschap:outputpenalty},\ref{cschap:outputpenalty2}.
+\item [\cs{outputpenalty}]  
+      \gr{integer parameter}
+      Value of the penalty at the current page break,
+      or $10\,000$ if the break was not at a penalty.
+Chapter~\ref{cschap:outputpenalty},\ref{cschap:outputpenalty2}.
+
+%\item [\cs{over}]
+%      \gr{generalized fraction command}
+%      Fraction.
+%Chapter~\ref{cschap:over}.
+\item [\cs{over}]
+      \gr{generalized fraction command}
+      Fraction.
+Chapter~\ref{cschap:over}.
+
+%\item [\cs{overfullrule}]
+%      \gr{dimen parameter}
+%      Width of the rule that is printed to indicate 
+%      overfull horizontal boxes.
+%      Plain \TeX\ default:~\n{5pt}.
+%Chapter~\ref{cschap:overfullrule}.
+\item [\cs{overfullrule}]
+      \gr{dimen parameter}
+      Width of the rule that is printed to indicate 
+      overfull horizontal boxes.
+      Plain \TeX\ default:~\n{5pt}.
+Chapter~\ref{cschap:overfullrule}.
+
+%\item [\cs{overline\gr{math field}}]
+%      \gr{math atom}
+%      Overline the following \gr{math field}.
+%Chapter~\ref{cschap:overline}.
+\item [\cs{overline\gr{math field}}]
+      \gr{math atom}
+      Overline the following \gr{math field}.
+Chapter~\ref{cschap:overline}.
+
+%\item [\cs{overwithdelims\gr{delim$_1$}\gr{delim$_2$}}]
+%      \gr{generalized fraction command}
+%      Fraction with delimiters.
+%Chapter~\ref{cschap:overwithdelims}.
+\item [\cs{overwithdelims\gr{delim$_1$}\gr{delim$_2$}}]
+      \gr{generalized fraction command}
+      Fraction with delimiters.
+Chapter~\ref{cschap:overwithdelims}.
+
+%\item [\cs{pagedepth}]
+%      \gr{special dimen}
+%      Depth of the current page.
+%Chapter~\ref{cschap:pagedepth}.
+\item [\cs{pagedepth}]
+      \gr{special dimen}
+      Depth of the current page.
+Chapter~\ref{cschap:pagedepth}.
+
+%\item [\cs{pagefilllstretch}]
+%      \gr{special dimen}
+%      Accumulated third-order stretch of the current page.
+%Chapter~\ref{cschap:pagefilllstretch}.
+\item [\cs{pagefilllstretch}]
+      \gr{special dimen}
+      Accumulated third-order stretch of the current page.
+Chapter~\ref{cschap:pagefilllstretch}.
+
+%\item [\cs{pagefillstretch}]
+%      \gr{special dimen}
+%      Accumulated second-order stretch of the current page.
+%Chapter~\ref{cschap:pagefillstretch}.
+\item [\cs{pagefillstretch}]
+      \gr{special dimen}
+      Accumulated second-order stretch of the current page.
+Chapter~\ref{cschap:pagefillstretch}.
+
+%\item [\cs{pagefilstretch}]
+%      \gr{special dimen}
+%      Accumulated first-order stretch of the current page.
+%Chapter~\ref{cschap:pagefilstretch}.
+\item [\cs{pagefilstretch}]
+      \gr{special dimen}
+      Accumulated first-order stretch of the current page.
+Chapter~\ref{cschap:pagefilstretch}.
+
+%\item [\cs{pagegoal}]
+%      \gr{special dimen}
+%      Goal height of the page box. This starts at \cs{vsize},
+%      and is diminished by heights of insertion items.
+%Chapter~\ref{cschap:pagegoal}.
+\item [\cs{pagegoal}]
+      \gr{special dimen}
+      Goal height of the page box. This starts at \cs{vsize},
+      and is diminished by heights of insertion items.
+Chapter~\ref{cschap:pagegoal}.
+
+%\item [\cs{pageshrink}]
+%      \gr{special dimen}
+%      Accumulated shrink of the current page.
+%Chapter~\ref{cschap:pageshrink}.
+\item [\cs{pageshrink}]
+      \gr{special dimen}
+      Accumulated shrink of the current page.
+Chapter~\ref{cschap:pageshrink}.
+
+%\item [\cs{pagestretch}]
+%      \gr{special dimen}
+%      Accumulated zeroth-order stretch of the current page.
+%Chapter~\ref{cschap:pagestretch}.
+\item [\cs{pagestretch}]
+      \gr{special dimen}
+      Accumulated zeroth-order stretch of the current page.
+Chapter~\ref{cschap:pagestretch}.
+
+%\item [\cs{pagetotal}]
+%      \gr{special dimen}
+%      Accumulated natural height of the current page.
+%Chapter~\ref{cschap:pagetotal}.
+\item [\cs{pagetotal}]
+      \gr{special dimen}
+      Accumulated natural height of the current page.
+Chapter~\ref{cschap:pagetotal}.
+
+%\item [\cs{par}]
+%      \gr{primitive command}
+%      Close off a paragraph and go into vertical mode.
+%Chapter~\ref{cschap:par}.
+\item [\cs{par}]
+      \gr{primitive command}
+      Close off a paragraph and go into vertical mode.
+Chapter~\ref{cschap:par}.
+
+%\item [\cs{parfillskip}]
+%      \gr{glue parameter}
+%      Glue that is placed between the last          
+%      element of the paragraph and the line end.
+%      Plain \TeX\ default:~\n{0pt plus 1fil}.
+%Chapter~\ref{cschap:parfillskip}.
+\item [\cs{parfillskip}]
+      \gr{glue parameter}
+      Glue that is placed between the last          
+      element of the paragraph and the line end.
+      Plain \TeX\ default:~\n{0pt plus 1fil}.
+Chapter~\ref{cschap:parfillskip}.
+
+%\item [\cs{parindent}]
+%      \gr{dimen parameter}
+%      Size of the indentation box added in front of a paragraph.
+%Chapter~\ref{cschap:parindent},\ref{cschap:parindent2}.
+\item [\cs{parindent}]
+      \gr{dimen parameter}
+      Size of the indentation box added in front of a paragraph.
+Chapter~\ref{cschap:parindent},\ref{cschap:parindent2}.
+
+%\item [\cs{parshape}]
+%      \gr{internal integer}
+%      Command for general paragraph shapes: 
+%      \begin{disp}\cs{parshape}\gr{equals}$n$ $i_1$ $\ell_1$ $\ldots$
+%                $i_n$ $\ell_n$\end{disp}
+%      specifies a~number
+%      of lines~$n$, and $n$~pairs of an indentation and
+%      line length.
+%Chapter~\ref{cschap:parshape}.
+\item [\cs{parshape}]
+      \gr{internal integer}
+      Command for general paragraph shapes: 
+      \begin{disp}\cs{parshape}\gr{equals}$n$ $i_1$ $\ell_1$ $\ldots$
+                $i_n$ $\ell_n$\end{disp}
+      specifies a~number
+      of lines~$n$, and $n$~pairs of an indentation and
+      line length.
+Chapter~\ref{cschap:parshape}.
+
+%\item [\cs{parskip}]
+%      \gr{glue parameter}
+%      Amount of glue added to vertical list when a paragraph starts; 
+%      default value \verb.0pt plus 1pt. in plain \TeX.
+%Chapter~\ref{cschap:parskip}.
+\item [\cs{parskip}]
+      \gr{glue parameter}
+      Amount of glue added to vertical list when a paragraph starts; 
+      default value \verb.0pt plus 1pt. in plain \TeX.
+Chapter~\ref{cschap:parskip}.
+
+%\item [\cs{patterns\gr{general text}}]
+%      \gr{hyphenation assignment}
+%      Define a list of hyphenation patterns for the current
+%      value of \cs{language};  allowed only in \IniTeX.
+%Chapter~\ref{cschap:patterns}.
+\item [\cs{patterns\gr{general text}}]
+      \gr{hyphenation assignment}
+      Define a list of hyphenation patterns for the current
+      value of \cs{language};  allowed only in \IniTeX.
+Chapter~\ref{cschap:patterns}.
+
+%\item [\cs{pausing}]
+%      \gr{integer parameter}
+%      Specify that \TeX\ should pause after each line that is 
+%      read from a file.
+%Chapter~\ref{cschap:pausing}.
+\item [\cs{pausing}]
+      \gr{integer parameter}
+      Specify that \TeX\ should pause after each line that is 
+      read from a file.
+Chapter~\ref{cschap:pausing}.
+
+%\item [\cs{penalty}]
+%      \gr{primitive command}
+%      Specify desirability of not breaking at this point.
+%Chapter~\ref{cschap:penalty},\ref{cschap:penalty2}.
+\item [\cs{penalty}]
+      \gr{primitive command}
+      Specify desirability of not breaking at this point.
+Chapter~\ref{cschap:penalty},\ref{cschap:penalty2}.
+
+%\item [\cs{postdisplaypenalty}]
+%      \gr{integer parameter}
+%      Penalty placed in the vertical list below a display.
+%Chapter~\ref{cschap:postdisplaypenalty}.
+\item [\cs{postdisplaypenalty}]
+      \gr{integer parameter}
+      Penalty placed in the vertical list below a display.
+Chapter~\ref{cschap:postdisplaypenalty}.
+
+%\item [\cs{predisplaypenalty}]
+%      \gr{integer parameter}
+%      Penalty placed in the vertical list above a display.
+%      Plain \TeX\ default:~\n{10$\,$000}.
+%Chapter~\ref{cschap:predisplaypenalty}.
+\item [\cs{predisplaypenalty}]
+      \gr{integer parameter}
+      Penalty placed in the vertical list above a display.
+      Plain \TeX\ default:~\n{10$\,$000}.
+Chapter~\ref{cschap:predisplaypenalty}.
+
+%\item [\cs{predisplaysize}]
+%      \gr{dimen parameter}
+%      Effective width of the line preceding the display.
+%Chapter~\ref{cschap:predisplaysize}.
+\item [\cs{predisplaysize}]
+      \gr{dimen parameter}
+      Effective width of the line preceding the display.
+Chapter~\ref{cschap:predisplaysize}.
+
+%\item [\cs{pretolerance}]
+%      \gr{integer parameter}
+%      Tolerance value for a paragraph that uses no hyphenation. 
+%      Default~\n{100} in plain \TeX.
+%Chapter~\ref{cschap:pretolerance}.
+\item [\cs{pretolerance}]
+      \gr{integer parameter}
+      Tolerance value for a paragraph that uses no hyphenation. 
+      Default~\n{100} in plain \TeX.
+Chapter~\ref{cschap:pretolerance}.
+
+%\item [\cs{prevdepth}] 
+%      \gr{special dimen}
+%      Depth of the last box added to a vertical list as it is 
+%      perceived by \TeX.
+%Chapter~\ref{cschap:prevdepth}.
+\item [\cs{prevdepth}] 
+      \gr{special dimen}
+      Depth of the last box added to a vertical list as it is 
+      perceived by \TeX.
+Chapter~\ref{cschap:prevdepth}.
+
+%\item [\cs{prevgraf}] 
+%      \gr{special integer}
+%      The number of lines in the paragraph last
+%      added to the vertical list.
+%Chapter~\ref{cschap:prevgraf}.
+\item [\cs{prevgraf}] 
+      \gr{special integer}
+      The number of lines in the paragraph last
+      added to the vertical list.
+Chapter~\ref{cschap:prevgraf}.
+
+%\item [\cs{radical\gr{24-bit number}}]
+%      \gr{primitive command}
+%      Command for setting things such as root signs.
+%Chapter~\ref{cschap:radical}.
+\item [\cs{radical\gr{24-bit number}}]
+      \gr{primitive command}
+      Command for setting things such as root signs.
+Chapter~\ref{cschap:radical}.
+
+%\item [\cs{raise\gr{dimen}\gr{box}}]
+%      \gr{primitive command}
+%      Adjust vertical positioning of a box in horizontal mode. 
+%Chapter~\ref{cschap:raise}.
+\item [\cs{raise\gr{dimen}\gr{box}}]
+      \gr{primitive command}
+      Adjust vertical positioning of a box in horizontal mode. 
+Chapter~\ref{cschap:raise}.
+
+%\item [\cs{read\gr{number}\n{to}\gr{control sequence}}]
+%      \gr{simple assignment}
+%      Read a line from a stream into a control sequence.
+%Chapter~\ref{cschap:read}.
+\item [\cs{read\gr{number}\n{to}\gr{control sequence}}]
+      \gr{simple assignment}
+      Read a line from a stream into a control sequence.
+Chapter~\ref{cschap:read}.
+
+%\item [\cs{relax}]
+%      \gr{primitive command}
+%      Do nothing.
+%Chapter~\ref{cschap:relax}.
+\item [\cs{relax}]
+      \gr{primitive command}
+      Do nothing.
+Chapter~\ref{cschap:relax}.
+
+%\item [\cs{relpenalty}]
+%      \gr{integer parameter}
+%      Penalty for breaking after a binary relation, not enclosed
+%      in a subformula.
+%      Plain \TeX\ default:~\n{500}.
+%Chapter~\ref{cschap:relpenalty}.
+\item [\cs{relpenalty}]
+      \gr{integer parameter}
+      Penalty for breaking after a binary relation, not enclosed
+      in a subformula.
+      Plain \TeX\ default:~\n{500}.
+Chapter~\ref{cschap:relpenalty}.
+
+%\item [\cs{right}]
+%      \gr{primitive command}
+%      Use the following character as a closing delimiter.
+%Chapter~\ref{cschap:right}.
+\item [\cs{right}]
+      \gr{primitive command}
+      Use the following character as a closing delimiter.
+Chapter~\ref{cschap:right}.
+
+%\item [\cs{righthyphenmin}]
+%      \gr{integer parameter} 
+%      (\TeX3 only) 
+%      Minimum number of characters after a hyphenation.
+%Chapter~\ref{cschap:righthyphenmin}.
+\item [\cs{righthyphenmin}]
+      \gr{integer parameter} 
+      (\TeX3 only) 
+      Minimum number of characters after a hyphenation.
+Chapter~\ref{cschap:righthyphenmin}.
+
+%\item [\cs{rightskip}]
+%      \gr{glue parameter}
+%      Glue that is placed to the right of all lines.
+%Chapter~\ref{cschap:rightskip}.
+\item [\cs{rightskip}]
+      \gr{glue parameter}
+      Glue that is placed to the right of all lines.
+Chapter~\ref{cschap:rightskip}.
+
+%\item [\cs{romannumeral\gr{number}}]
+%      \gr{expandable command}
+%      Convert a positive
+%      \gr{number} to lowercase roman representation.
+%Chapter~\ref{cschap:romannumeral}.
+\item [\cs{romannumeral\gr{number}}]
+      \gr{expandable command}
+      Convert a positive
+      \gr{number} to lowercase roman representation.
+Chapter~\ref{cschap:romannumeral}.
+
+%\item [\cs{scriptfont\gr{4-bit number}}]
+%      \gr{family member}; the control sequence itself
+%      is a~\gr{font range}.
+%      Access the scriptfont of a family.
+%Chapter~\ref{cschap:scriptfont}.
+\item [\cs{scriptfont\gr{4-bit number}}]
+      \gr{family member}; the control sequence itself
+      is a~\gr{font range}.
+      Access the scriptfont of a family.
+Chapter~\ref{cschap:scriptfont}.
+
+%\item [\cs{scriptscriptfont\gr{4-bit number}}]
+%      \gr{family member}; the control sequence itself
+%      is a~\gr{font range}.
+%      Access the scriptscriptfont of a family.
+%Chapter~\ref{cschap:scriptscriptfont}.
+\item [\cs{scriptscriptfont\gr{4-bit number}}]
+      \gr{family member}; the control sequence itself
+      is a~\gr{font range}.
+      Access the scriptscriptfont of a family.
+Chapter~\ref{cschap:scriptscriptfont}.
+
+%\item [\cs{scriptscriptstyle}]
+%      \gr{primitive command}
+%      Select the scriptscript style of math typesetting.
+%Chapter~\ref{cschap:scriptscriptstyle}.
+\item [\cs{scriptscriptstyle}]
+      \gr{primitive command}
+      Select the scriptscript style of math typesetting.
+Chapter~\ref{cschap:scriptscriptstyle}.
+
+%\item [\cs{scriptspace}]
+%      \gr{dimen parameter}
+%      Extra space after subscripts and superscripts.
+%      Default~\n{.5pt}      in plain \TeX.
+%Chapter~\ref{cschap:scriptspace}.
+\item [\cs{scriptspace}]
+      \gr{dimen parameter}
+      Extra space after subscripts and superscripts.
+      Default~\n{.5pt}      in plain \TeX.
+Chapter~\ref{cschap:scriptspace}.
+
+%\item [\cs{scriptstyle}]
+%      \gr{primitive command}
+%      Select the script style of math typesetting.
+%Chapter~\ref{cschap:scriptstyle}.
+\item [\cs{scriptstyle}]
+      \gr{primitive command}
+      Select the script style of math typesetting.
+Chapter~\ref{cschap:scriptstyle}.
+
+%\item [\cs{scrollmode}]
+%      \gr{interaction mode assignment}  
+%      \TeX\ patches errors itself, but will ask the user for missing files.
+%Chapter~\ref{cschap:scrollmode}.
+\item [\cs{scrollmode}]
+      \gr{interaction mode assignment}  
+      \TeX\ patches errors itself, but will ask the user for missing files.
+Chapter~\ref{cschap:scrollmode}.
+
+%\item [\cs{setbox\gr{8-bit number}\gr{equals}\gr{box}}]
+%      \gr{simple assignment}
+%      Assign a box to a box register.
+%Chapter~\ref{cschap:setbox}.
+\item [\cs{setbox\gr{8-bit number}\gr{equals}\gr{box}}]
+      \gr{simple assignment}
+      Assign a box to a box register.
+Chapter~\ref{cschap:setbox}.
+
+%\item [\cs{setlanguage\gr{number}}]
+%      \gr{primitive command} 
+%      (\TeX3 only) 
+%      Insert a whatsit resetting the current language
+%      to the \gr{number} specified.
+%Chapter~\ref{cschap:setlanguage}.
+\item [\cs{setlanguage\gr{number}}]
+      \gr{primitive command} 
+      (\TeX3 only) 
+      Insert a whatsit resetting the current language
+      to the \gr{number} specified.
+Chapter~\ref{cschap:setlanguage}.
+
+%\item [\cs{sfcode\gr{8-bit number}}]
+%      \gr{internal integer}; the control sequence itself
+%      is a~\gr{codename}.
+%      Access the value of the \cs{spacefactor}
+%      associated with a character.
+%Chapter~\ref{cschap:sfcode}.
+\item [\cs{sfcode\gr{8-bit number}}]
+      \gr{internal integer}; the control sequence itself
+      is a~\gr{codename}.
+      Access the value of the \cs{spacefactor}
+      associated with a character.
+Chapter~\ref{cschap:sfcode}.
+
+%\item [\cs{shipout\gr{box}}]
+%      \gr{primitive command}
+%      Ship a box to the \n{dvi} file.
+%Chapter~\ref{cschap:shipout}.
+\item [\cs{shipout\gr{box}}]
+      \gr{primitive command}
+      Ship a box to the \n{dvi} file.
+Chapter~\ref{cschap:shipout}.
+
+%\item [\cs{show\gr{token}}]
+%      \gr{primitive command}
+%      Display the meaning of a token on the screen.
+%Chapter~\ref{cschap:show}.
+\item [\cs{show\gr{token}}]
+      \gr{primitive command}
+      Display the meaning of a token on the screen.
+Chapter~\ref{cschap:show}.
+
+%\item [\cs{showbox\gr{8-bit number}}]
+%      \gr{primitive command}
+%      Write the contents of a box to the log file.
+%Chapter~\ref{cschap:showbox}.
+\item [\cs{showbox\gr{8-bit number}}]
+      \gr{primitive command}
+      Write the contents of a box to the log file.
+Chapter~\ref{cschap:showbox}.
+
+%\item [\cs{showboxbreadth}]
+%      \gr{integer parameter}
+%      Number of successive elements that are shown when 
+%      \verb-\tracingoutput- is positive, each time a level is visited.
+%      Plain \TeX\ default:~\n{5}.
+%Chapter~\ref{cschap:showboxbreadth}.
+\item [\cs{showboxbreadth}]
+      \gr{integer parameter}
+      Number of successive elements that are shown when 
+      \verb-\tracingoutput- is positive, each time a level is visited.
+      Plain \TeX\ default:~\n{5}.
+Chapter~\ref{cschap:showboxbreadth}.
+
+%\item [\cs{showboxdepth}] 
+%      \gr{integer parameter}
+%      The number of levels that are shown when 
+%      \verb-\tracingoutput- is positive.
+%      Plain \TeX\ default:~\n{3}.
+%Chapter~\ref{cschap:showboxdepth}.
+\item [\cs{showboxdepth}] 
+      \gr{integer parameter}
+      The number of levels that are shown when 
+      \verb-\tracingoutput- is positive.
+      Plain \TeX\ default:~\n{3}.
+Chapter~\ref{cschap:showboxdepth}.
+
+%\item [\cs{showlists}]
+%      \gr{primitive command}
+%      Write to the log file the contents of the partial lists 
+%      currently built in all modes.
+%Chapter~\ref{cschap:showlists}.
+\item [\cs{showlists}]
+      \gr{primitive command}
+      Write to the log file the contents of the partial lists 
+      currently built in all modes.
+Chapter~\ref{cschap:showlists}.
+
+%\item [\cs{showthe\gr{internal quantity}}]
+%      \gr{primitive command}
+%      Display on the terminal the result 
+%      of prefixing a token with \cs{the}.
+%Chapter~\ref{cschap:showthe}.
+\item [\cs{showthe\gr{internal quantity}}]
+      \gr{primitive command}
+      Display on the terminal the result 
+      of prefixing a token with \cs{the}.
+Chapter~\ref{cschap:showthe}.
+
+%\item [\cs{skewchar\gr{font}}]
+%      \gr{internal integer}
+%      Font position of an after-placed accent.
+%     Chapter~\ref{cschap:skewchar}.
+% 
+%\item [\cs{skip\gr{8-bit number}}]
+%      \gr{internal glue}; the control sequence itself
+%      is a~\gr{register prefix}.
+%      Access skip registers
+%Chapter~\ref{cschap:skip}.
+\item [\cs{skewchar\gr{font}}]
+      \gr{internal integer}
+      Font position of an after-placed accent.
+     Chapter~\ref{cschap:skewchar}.
+ 
+\item [\cs{skip\gr{8-bit number}}]
+      \gr{internal glue}; the control sequence itself
+      is a~\gr{register prefix}.
+      Access skip registers
+Chapter~\ref{cschap:skip}.
+
+%\item [\cs{skipdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+%      \gr{shorthand definition}; the control sequence
+%      itself is a~\gr{registerdef}.
+%      Define a control sequence to be a synonym for
+%      a~\cs{skip} register.
+%Chapter~\ref{cschap:skipdef}.
+\item [\cs{skipdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+      \gr{shorthand definition}; the control sequence
+      itself is a~\gr{registerdef}.
+      Define a control sequence to be a synonym for
+      a~\cs{skip} register.
+Chapter~\ref{cschap:skipdef}.
+
+%\item [\cs{spacefactor}]
+%      \gr{special integer}
+%      1000 times the ratio by which the stretch component of the
+%      interword glue should be multiplied.
+%Chapter~\ref{cschap:spacefactor}.
+\item [\cs{spacefactor}]
+      \gr{special integer}
+      1000 times the ratio by which the stretch component of the
+      interword glue should be multiplied.
+Chapter~\ref{cschap:spacefactor}.
+
+%\item [\cs{spaceskip}]
+%      \gr{glue parameter}
+%      Interword glue if non-zero.
+%Chapter~\ref{cschap:spaceskip}.
+\item [\cs{spaceskip}]
+      \gr{glue parameter}
+      Interword glue if non-zero.
+Chapter~\ref{cschap:spaceskip}.
+
+%\item [\cs{span}]
+%      \gr{primitive command}
+%      Join two adjacent alignment entries, or (in preamble)
+%      expand the next token.
+%Chapter~\ref{cschap:span}.
+\item [\cs{span}]
+      \gr{primitive command}
+      Join two adjacent alignment entries, or (in preamble)
+      expand the next token.
+Chapter~\ref{cschap:span}.
+
+%\item [\cs{special\gr{general text}}]
+%      \gr{primitive command}
+%      Write a token list  to the \n{dvi} file.
+%Chapter~\ref{cschap:special}.
+\item [\cs{special\gr{general text}}]
+      \gr{primitive command}
+      Write a token list  to the \n{dvi} file.
+Chapter~\ref{cschap:special}.
+
+%\item [\cs{splitbotmark}]
+%      \gr{expandable command}
+%      The last mark on a split-off page.
+%Chapter~\ref{cschap:splitbotmark}.
+\item [\cs{splitbotmark}]
+      \gr{expandable command}
+      The last mark on a split-off page.
+Chapter~\ref{cschap:splitbotmark}.
+
+%\item [\cs{splitfirstmark}]
+%      \gr{expandable command}
+%      The first mark on a split-off page.
+%Chapter~\ref{cschap:splitfirstmark}.
+\item [\cs{splitfirstmark}]
+      \gr{expandable command}
+      The first mark on a split-off page.
+Chapter~\ref{cschap:splitfirstmark}.
+
+%\item [\cs{splitmaxdepth}]
+%      \gr{dimen parameter}
+%      Maximum depth of a box split off by a \cs{vsplit} operation. 
+%      Default~\n{4pt} in plain \TeX.
+%Chapter~\ref{cschap:splitmaxdepth},\ref{cschap:splitmaxdepth2}.
+\item [\cs{splitmaxdepth}]
+      \gr{dimen parameter}
+      Maximum depth of a box split off by a \cs{vsplit} operation. 
+      Default~\n{4pt} in plain \TeX.
+Chapter~\ref{cschap:splitmaxdepth},\ref{cschap:splitmaxdepth2}.
+
+%\item [\cs{splittopskip}]
+%      \gr{glue parameter}
+%      Minimum distance between the top of what remains after a
+%      \cs{vsplit} operation, and the first item in that box.
+%      Default~\n{10pt} in plain \TeX.
+%Chapter~\ref{cschap:splittopskip}.
+\item [\cs{splittopskip}]
+      \gr{glue parameter}
+      Minimum distance between the top of what remains after a
+      \cs{vsplit} operation, and the first item in that box.
+      Default~\n{10pt} in plain \TeX.
+Chapter~\ref{cschap:splittopskip}.
+
+%\item [\cs{string\gr{token}}]
+%      \gr{expandable command}
+%      Convert a token to a string of one or more characters. 
+%Chapter~\ref{cschap:string}.
+\item [\cs{string\gr{token}}]
+      \gr{expandable command}
+      Convert a token to a string of one or more characters. 
+Chapter~\ref{cschap:string}.
+
+%\item [\cs{tabskip}]
+%      \gr{glue parameter}
+%      Amount of glue in between columns (rows) of an \cs{halign}
+% \alt
+%      (\cs{valign}).
+%Chapter~\ref{cschap:tabskip}.
+\item [\cs{tabskip}]
+      \gr{glue parameter}
+      Amount of glue in between columns (rows) of an \cs{halign}
+ \alt
+      (\cs{valign}).
+Chapter~\ref{cschap:tabskip}.
+
+%\item [\cs{textfont\gr{4-bit number}}]
+%      \gr{family member}; the control sequence itself
+%      is a~\gr{font range}.
+%      Access the textfont of a family.
+%Chapter~\ref{cschap:textfont}.
+\item [\cs{textfont\gr{4-bit number}}]
+      \gr{family member}; the control sequence itself
+      is a~\gr{font range}.
+      Access the textfont of a family.
+Chapter~\ref{cschap:textfont}.
+
+%\item [\cs{textstyle}]
+%      \gr{primitive command}
+%      Select the text style of math typesetting.
+%Chapter~\ref{cschap:textstyle}.
+\item [\cs{textstyle}]
+      \gr{primitive command}
+      Select the text style of math typesetting.
+Chapter~\ref{cschap:textstyle}.
+
+%\item [\cs{the\gr{internal quantity}}]
+%      \gr{primitive command}
+%      Expand the value of various quantities in \TeX\ into a string
+%      of (character) tokens.
+%Chapter~\ref{cschap:the}.
+\item [\cs{the\gr{internal quantity}}]
+      \gr{primitive command}
+      Expand the value of various quantities in \TeX\ into a string
+      of (character) tokens.
+Chapter~\ref{cschap:the}.
+
+%\item [\cs{thickmuskip}]
+%      \gr{muglue parameter}
+%      Large amount of mu glue. 
+%      Default value in plain \TeX: \n{5mu plus 5mu}.
+%Chapter~\ref{cschap:thickmuskip}.
+\item [\cs{thickmuskip}]
+      \gr{muglue parameter}
+      Large amount of mu glue. 
+      Default value in plain \TeX: \n{5mu plus 5mu}.
+Chapter~\ref{cschap:thickmuskip}.
+
+%\item [\cs{thinmuskip}]
+%      \gr{muglue parameter}
+%      Small amount of mu glue.
+%      Default value in plain \TeX: \n{3mu}.
+%Chapter~\ref{cschap:thinmuskip}.
+\item [\cs{thinmuskip}]
+      \gr{muglue parameter}
+      Small amount of mu glue.
+      Default value in plain \TeX: \n{3mu}.
+Chapter~\ref{cschap:thinmuskip}.
+
+%\item [\cs{time}]
+%      \gr{integer parameter}
+%      Number of minutes after midnight that the current job started.
+%Chapter~\ref{cschap:time}.
+\item [\cs{time}]
+      \gr{integer parameter}
+      Number of minutes after midnight that the current job started.
+Chapter~\ref{cschap:time}.
+
+%\item [\cs{toks\gr{8-bit number}}]
+%      \gr{register prefix}
+%      Access a token list register.
+%Chapter~\ref{cschap:toks}.
+\item [\cs{toks\gr{8-bit number}}]
+      \gr{register prefix}
+      Access a token list register.
+Chapter~\ref{cschap:toks}.
+
+%\item [\cs{toksdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+%      \gr{shorthand definition}; the control sequence
+%      itself is a~\gr{registerdef}.
+%      Assign a control sequence to
+%      a~\cs{toks} register.
+%Chapter~\ref{cschap:toksdef}.
+\item [\cs{toksdef\gr{control sequence}\gr{equals}\gr{8-bit number}}]
+      \gr{shorthand definition}; the control sequence
+      itself is a~\gr{registerdef}.
+      Assign a control sequence to
+      a~\cs{toks} register.
+Chapter~\ref{cschap:toksdef}.
+
+%\item [\cs{tolerance}]
+%      \gr{integer parameter}  
+%      Tolerance value for lines in a paragraph that does use hyphenation. 
+%      Default~\n{200} in plain \TeX, \n{10$\,$000} in \IniTeX.
+%Chapter~\ref{cschap:tolerance}.
+\item [\cs{tolerance}]
+      \gr{integer parameter}  
+      Tolerance value for lines in a paragraph that does use hyphenation. 
+      Default~\n{200} in plain \TeX, \n{10$\,$000} in \IniTeX.
+Chapter~\ref{cschap:tolerance}.
+
+%\item [\cs{topmark}]
+%      \gr{expandable command}
+%      The last mark of the previous page.
+%Chapter~\ref{cschap:topmark}.
+\item [\cs{topmark}]
+      \gr{expandable command}
+      The last mark of the previous page.
+Chapter~\ref{cschap:topmark}.
+
+%\item [\cs{topskip}]
+%      \gr{glue parameter}
+%      Minimum distance between the top of the page box
+%      and the baseline of the first box on the page. 
+%      Default~\n{10pt} in plain \TeX.
+%Chapter~\ref{cschap:topskip}.
+\item [\cs{topskip}]
+      \gr{glue parameter}
+      Minimum distance between the top of the page box
+      and the baseline of the first box on the page. 
+      Default~\n{10pt} in plain \TeX.
+Chapter~\ref{cschap:topskip}.
+
+%\item [\cs{tracingcommands}]
+%      \gr{integer parameter}
+%      When this is~1, \TeX\ displays primitive commands executed; 
+%      when this is 2~or more the outcome of conditionals is also recorded.
+%Chapter~\ref{cschap:tracingcommands}.
+\item [\cs{tracingcommands}]
+      \gr{integer parameter}
+      When this is~1, \TeX\ displays primitive commands executed; 
+      when this is 2~or more the outcome of conditionals is also recorded.
+Chapter~\ref{cschap:tracingcommands}.
+
+%\item [\cs{tracinglostchars}]
+%      \gr{integer parameter}      
+%      If this parameter is positive, \TeX\ gives      
+%      diagnostic messages whenever a character is accessed that      
+%      is not present in a font. Plain \TeX\ default:~1.
+%Chapter~\ref{cschap:tracinglostchars}.
+\item [\cs{tracinglostchars}]
+      \gr{integer parameter}      
+      If this parameter is positive, \TeX\ gives      
+      diagnostic messages whenever a character is accessed that      
+      is not present in a font. Plain \TeX\ default:~1.
+Chapter~\ref{cschap:tracinglostchars}.
+
+%\item [\cs{tracingmacros}]
+%      \gr{integer parameter}
+%      If this is~1, the log file shows expansion of macros 
+%      that are performed and the actual values of the arguments; 
+%      if this is 2~or more
+%      \gr{token parameter}s such as 
+%      \cs{output} and \cs{everypar} are also traced.
+%Chapter~\ref{cschap:tracingmacros}.
+\item [\cs{tracingmacros}]
+      \gr{integer parameter}
+      If this is~1, the log file shows expansion of macros 
+      that are performed and the actual values of the arguments; 
+      if this is 2~or more
+      \gr{token parameter}s such as 
+      \cs{output} and \cs{everypar} are also traced.
+Chapter~\ref{cschap:tracingmacros}.
+
+%\item [\cs{tracingonline}]
+%      \gr{integer parameter}      
+%      If this parameter is positive, \TeX\ will write trace      
+%      information also to the terminal.
+%Chapter~\ref{cschap:tracingonline}.
+\item [\cs{tracingonline}]
+      \gr{integer parameter}      
+      If this parameter is positive, \TeX\ will write trace      
+      information also to the terminal.
+Chapter~\ref{cschap:tracingonline}.
+
+%\item [\cs{tracingoutput}]
+%      \gr{integer parameter}
+%      If this parameter is positive, the log file shows a dump of boxes 
+%      that are shipped to the \n{dvi} file.
+%Chapter~\ref{cschap:tracingoutput}.
+\item [\cs{tracingoutput}]
+      \gr{integer parameter}
+      If this parameter is positive, the log file shows a dump of boxes 
+      that are shipped to the \n{dvi} file.
+Chapter~\ref{cschap:tracingoutput}.
+
+%\item [\cs{tracingpages}]
+%      \gr{integer parameter}      
+%      If this parameter is positive, \TeX\ generates      
+%      a trace of the page-breaking algorithm.
+%Chapter~\ref{cschap:tracingpages}.
+\item [\cs{tracingpages}]
+      \gr{integer parameter}      
+      If this parameter is positive, \TeX\ generates      
+      a trace of the page-breaking algorithm.
+Chapter~\ref{cschap:tracingpages}.
+
+%\item [\cs{tracingparagraphs}]
+%      \gr{integer parameter}      
+%      If this parameter is positive, \TeX\ generates      
+%      a trace of the line-breaking algorithm.
+%Chapter~\ref{cschap:tracingparagraphs}.
+\item [\cs{tracingparagraphs}]
+      \gr{integer parameter}      
+      If this parameter is positive, \TeX\ generates      
+      a trace of the line-breaking algorithm.
+Chapter~\ref{cschap:tracingparagraphs}.
+
+%\item [\cs{tracingrestores}]
+%      \gr{integer parameter}      
+%      If this parameter is positive, \TeX\ will report      
+%      all values that are restored when a group level ends.
+%Chapter~\ref{cschap:tracingrestores}.
+\item [\cs{tracingrestores}]
+      \gr{integer parameter}      
+      If this parameter is positive, \TeX\ will report      
+      all values that are restored when a group level ends.
+Chapter~\ref{cschap:tracingrestores}.
+
+%\item [\cs{tracingstats}]
+%      \gr{integer parameter}      
+%      If this parameter is positive, \TeX\ reports at the      
+%      end of the job the usage of various internal arrays.
+%Chapter~\ref{cschap:tracingstats}.
+\item [\cs{tracingstats}]
+      \gr{integer parameter}      
+      If this parameter is positive, \TeX\ reports at the      
+      end of the job the usage of various internal arrays.
+Chapter~\ref{cschap:tracingstats}.
+
+%\item [\cs{uccode\gr{8-bit number}}]
+%      \gr{internal integer}; the control sequence itself
+%      is a~\gr{codename}.
+%      Access
+%      the character code that is the uppercase variant of a given code.
+%Chapter~\ref{cschap:uccode}.
+\item [\cs{uccode\gr{8-bit number}}]
+      \gr{internal integer}; the control sequence itself
+      is a~\gr{codename}.
+      Access
+      the character code that is the uppercase variant of a given code.
+Chapter~\ref{cschap:uccode}.
+
+%\item [\cs{uchyph}]
+%      \gr{integer parameter}
+%      Positive if hyphenating words starting with a capital 
+%      letter is allowed. 
+%      Plain \TeX\ default~1.
+%Chapter~\ref{cschap:uchyph}.
+\item [\cs{uchyph}]
+      \gr{integer parameter}
+      Positive if hyphenating words starting with a capital 
+      letter is allowed. 
+      Plain \TeX\ default~1.
+Chapter~\ref{cschap:uchyph}.
+
+%\item [\cs{underline\gr{math field}}]
+%      \gr{math atom}
+%      Underline the following \gr{math field}.
+%Chapter~\ref{cschap:underline}.
+\item [\cs{underline\gr{math field}}]
+      \gr{math atom}
+      Underline the following \gr{math field}.
+Chapter~\ref{cschap:underline}.
+
+%\item [\cs{unhbox\gr{8-bit number}}]
+%      \gr{horizontal command}
+% \alt
+%      Unpack a box register containing a horizontal box,  
+%      appending the contents to the list, and emptying the register. 
+%Chapter~\ref{cschap:unhbox}.
+\item [\cs{unhbox\gr{8-bit number}}]
+      \gr{horizontal command}
+ \alt
+      Unpack a box register containing a horizontal box,  
+      appending the contents to the list, and emptying the register. 
+Chapter~\ref{cschap:unhbox}.
+
+%\item [\cs{unhcopy\gr{8-bit number}}]
+%      \gr{horizontal command}
+% \alt
+%      The same as \cs{unhbox}, but do not empty the register. 
+%Chapter~\ref{cschap:unhcopy}.
+\item [\cs{unhcopy\gr{8-bit number}}]
+      \gr{horizontal command}
+ \alt
+      The same as \cs{unhbox}, but do not empty the register. 
+Chapter~\ref{cschap:unhcopy}.
+
+%\item [\cs{unkern}]
+%      \gr{primitive command}
+%      Remove the last item of the list if this was a kern.
+%Chapter~\ref{cschap:unkern}.
+\item [\cs{unkern}]
+      \gr{primitive command}
+      Remove the last item of the list if this was a kern.
+Chapter~\ref{cschap:unkern}.
+
+%\item [\cs{unpenalty}]
+%      \gr{primitive command}
+%      Remove the last item of the list if this was a penalty.
+%Chapter~\ref{cschap:unpenalty}.
+\item [\cs{unpenalty}]
+      \gr{primitive command}
+      Remove the last item of the list if this was a penalty.
+Chapter~\ref{cschap:unpenalty}.
+
+%\item [\cs{unskip}]
+%      \gr{primitive command}
+%      Remove the last item of the list if this was a skip.
+%Chapter~\ref{cschap:unskip}.
+\item [\cs{unskip}]
+      \gr{primitive command}
+      Remove the last item of the list if this was a skip.
+Chapter~\ref{cschap:unskip}.
+
+%\item [\cs{unvbox\gr{8-bit number}}]
+%      \gr{vertical command}
+% \alt
+%      Unpack a box register containing a vertical box, 
+%      appending the contents to the list, and emptying the register. 
+%Chapter~\ref{cschap:unvbox}.
+\item [\cs{unvbox\gr{8-bit number}}]
+      \gr{vertical command}
+ \alt
+      Unpack a box register containing a vertical box, 
+      appending the contents to the list, and emptying the register. 
+Chapter~\ref{cschap:unvbox}.
+
+%\item [\cs{unvcopy\gr{8-bit number}}]
+%      \gr{vertical command}
+% \alt
+%      The same as \cs{unvbox}, but do not empty the register. 
+%Chapter~\ref{cschap:unvcopy}.
+\item [\cs{unvcopy\gr{8-bit number}}]
+      \gr{vertical command}
+ \alt
+      The same as \cs{unvbox}, but do not empty the register. 
+Chapter~\ref{cschap:unvcopy}.
+
+%\item [\cs{uppercase\gr{general text}}]
+%      \gr{primitive command}
+%      Convert the argument to its uppercase form.
+%Chapter~\ref{cschap:uppercase}.
+\item [\cs{uppercase\gr{general text}}]
+      \gr{primitive command}
+      Convert the argument to its uppercase form.
+Chapter~\ref{cschap:uppercase}.
+
+%\item [\cs{vadjust\gr{filler}\lb\gr{vertical mode material}\rb}]
+%      \gr{primitive command}
+%      Specify in horizontal mode material for the enclosing vertical list.
+%Chapter~\ref{cschap:vadjust}.
+\item [\cs{vadjust\gr{filler}\lb\gr{vertical mode material}\rb}]
+      \gr{primitive command}
+      Specify in horizontal mode material for the enclosing vertical list.
+Chapter~\ref{cschap:vadjust}.
+
+%\item [\cs{valign\gr{box specification}\lb\gr{alignment material}\rb}]
+%      \gr{horizontal command}   
+%      Vertical alignment.   
+%Chapter~\ref{cschap:valign}.
+\item [\cs{valign\gr{box specification}\lb\gr{alignment material}\rb}]
+      \gr{horizontal command}   
+      Vertical alignment.   
+Chapter~\ref{cschap:valign}.
+
+%\item [\cs{vbadness}]
+%      \gr{integer parameter}
+%      Threshold below which overfull and underfull vertical boxes 
+%      are not shown.
+%      Plain \TeX\ default:~\n{1000}.
+%Chapter~\ref{cschap:vbadness}.
+\item [\cs{vbadness}]
+      \gr{integer parameter}
+      Threshold below which overfull and underfull vertical boxes 
+      are not shown.
+      Plain \TeX\ default:~\n{1000}.
+Chapter~\ref{cschap:vbadness}.
+
+%\item [\cs{vbox\gr{box specification}\lb\gr{vertical material}\rb}]
+%      \gr{primitive command}
+%      Construct a vertical box with reference point on the last item. 
+%Chapter~\ref{cschap:vbox}.
+\item [\cs{vbox\gr{box specification}\lb\gr{vertical material}\rb}]
+      \gr{primitive command}
+      Construct a vertical box with reference point on the last item. 
+Chapter~\ref{cschap:vbox}.
+
+%\item [\cs{vcenter\gr{box specification}\lb\gr{vertical material}\rb}]
+%      \gr{primitive command}
+%      Construct a  vertical box vertically centred on the math axis.
+%Chapter~\ref{cschap:vcenter}.
+\item [\cs{vcenter\gr{box specification}\lb\gr{vertical material}\rb}]
+      \gr{primitive command}
+      Construct a  vertical box vertically centred on the math axis.
+Chapter~\ref{cschap:vcenter}.
+
+%\item [\cs{vfil}]
+%      \gr{vertical command}
+%      Vertical skip equivalent to \verb-\vskip 0cm plus 1fil-.
+%Chapter~\ref{cschap:vfil}.
+\item [\cs{vfil}]
+      \gr{vertical command}
+      Vertical skip equivalent to \verb-\vskip 0cm plus 1fil-.
+Chapter~\ref{cschap:vfil}.
+
+%\item [\cs{vfill}]
+%      \gr{vertical command}
+%      Vertical skip equivalent to \verb-\vskip 0cm plus 1fill-.
+%Chapter~\ref{cschap:vfill}.
+\item [\cs{vfill}]
+      \gr{vertical command}
+      Vertical skip equivalent to \verb-\vskip 0cm plus 1fill-.
+Chapter~\ref{cschap:vfill}.
+
+%\item [\cs{vfilneg}]
+%      \gr{vertical command}
+%      Vertical skip equivalent to \verb-\vskip 0cm minus 1fil-.
+%Chapter~\ref{cschap:vfilneg}.
+\item [\cs{vfilneg}]
+      \gr{vertical command}
+      Vertical skip equivalent to \verb-\vskip 0cm minus 1fil-.
+Chapter~\ref{cschap:vfilneg}.
+
+%\item [\cs{vfuzz}]
+%      \gr{dimen parameter} 
+%      Excess size that \TeX\ tolerates before it considers  
+%      a vertical box overfull.
+%      Plain \TeX\ default:~\n{0.1pt}.
+%Chapter~\ref{cschap:vfuzz}.
+\item [\cs{vfuzz}]
+      \gr{dimen parameter} 
+      Excess size that \TeX\ tolerates before it considers  
+      a vertical box overfull.
+      Plain \TeX\ default:~\n{0.1pt}.
+Chapter~\ref{cschap:vfuzz}.
+
+%\item [\cs{voffset}]
+%      \gr{dimen parameter}
+%      Distance by which the page is shifted down from the reference point,
+%      which is one inch from the top of the page.
+%Chapter~\ref{cschap:voffset}.
+\item [\cs{voffset}]
+      \gr{dimen parameter}
+      Distance by which the page is shifted down from the reference point,
+      which is one inch from the top of the page.
+Chapter~\ref{cschap:voffset}.
+
+%\item [\cs{vrule}]
+%      \gr{horizontal command}
+%      Rule that spreads in vertical direction.
+%Chapter~\ref{cschap:vrule}.
+\item [\cs{vrule}]
+      \gr{horizontal command}
+      Rule that spreads in vertical direction.
+Chapter~\ref{cschap:vrule}.
+
+%\item [\cs{vsize}]
+%      \gr{dimen parameter}
+%      Height of the page box.
+%Chapter~\ref{cschap:vsize},\ref{cschap:vsize2}.
+\item [\cs{vsize}]
+      \gr{dimen parameter}
+      Height of the page box.
+Chapter~\ref{cschap:vsize},\ref{cschap:vsize2}.
+
+%\item [\cs{vskip\gr{glue}}]
+%      \gr{vertical command}
+%      Insert in vertical mode a glue item.
+%Chapter~\ref{cschap:vskip}.
+\item [\cs{vskip\gr{glue}}]
+      \gr{vertical command}
+      Insert in vertical mode a glue item.
+Chapter~\ref{cschap:vskip}.
+
+%\item [\cs{vsplit\gr{8-bit number}\n{to}\gr{dimen}}]
+%      \gr{primitive command}
+%      Split off the top part of a vertical box. 
+%Chapter~\ref{cschap:vsplit},\ref{cschap:vsplit2}.
+\item [\cs{vsplit\gr{8-bit number}\n{to}\gr{dimen}}]
+      \gr{primitive command}
+      Split off the top part of a vertical box. 
+Chapter~\ref{cschap:vsplit},\ref{cschap:vsplit2}.
+
+%\item [\cs{vss}]
+%      \gr{vertical command}
+%      Vertical skip equivalent to \verb-\vskip 0cm plus 1fil minus 1fil-.
+%Chapter~\ref{cschap:vss}.
+\item [\cs{vss}]
+      \gr{vertical command}
+      Vertical skip equivalent to \verb-\vskip 0cm plus 1fil minus 1fil-.
+Chapter~\ref{cschap:vss}.
+
+%\item [\cs{vtop\gr{box specification}\lb\gr{vertical material}\rb}]
+%      \gr{primitive command}
+%      Construct a vertical box with reference point on the first item. 
+%Chapter~\ref{cschap:vtop}.
+\item [\cs{vtop\gr{box specification}\lb\gr{vertical material}\rb}]
+      \gr{primitive command}
+      Construct a vertical box with reference point on the first item. 
+Chapter~\ref{cschap:vtop}.
+
+%\item [\cs{wd\gr{8-bit number}}]
+%      \gr{internal dimen}; the control sequence itself
+%      is a~\gr{box dimension}.
+%      Width of the box in a box register.
+%Chapter~\ref{cschap:wd}.
+\item [\cs{wd\gr{8-bit number}}]
+      \gr{internal dimen}; the control sequence itself
+      is a~\gr{box dimension}.
+      Width of the box in a box register.
+Chapter~\ref{cschap:wd}.
+
+%\item [\cs{widowpenalty}]
+%      \gr{integer parameter}
+%      Additional penalty for breaking a page before 
+%      the last line of a paragraph. 
+%      Default~\n{150} in plain \TeX.
+%Chapter~\ref{cschap:widowpenalty}.
+\item [\cs{widowpenalty}]
+      \gr{integer parameter}
+      Additional penalty for breaking a page before 
+      the last line of a paragraph. 
+      Default~\n{150} in plain \TeX.
+Chapter~\ref{cschap:widowpenalty}.
+
+%\item [\cs{write\gr{number}\gr{general text}}]
+%      \gr{primitive command}
+%      Generate a whatsit item containing
+%      a~token list to be written to the terminal or to a file. 
+%Chapter~\ref{cschap:write}.
+\item [\cs{write\gr{number}\gr{general text}}]
+      \gr{primitive command}
+      Generate a whatsit item containing
+      a~token list to be written to the terminal or to a file. 
+Chapter~\ref{cschap:write}.
+
+%\item [\cs{xdef}]
+%      \gr{def}
+%      Synonym for \verb-\global\edef-.
+%Chapter~\ref{cschap:xdef}.
+\item [\cs{xdef}]
+      \gr{def}
+      Synonym for \verb-\global\edef-.
+Chapter~\ref{cschap:xdef}.
+
+%\item [\cs{xleaders}]
+%      \gr{leaders}
+%      As \cs{leaders}, but with box leaders any excess space is 
+%      spread equally between the boxes.
+%Chapter~\ref{cschap:xleaders}.
+\item [\cs{xleaders}]
+      \gr{leaders}
+      As \cs{leaders}, but with box leaders any excess space is 
+      spread equally between the boxes.
+Chapter~\ref{cschap:xleaders}.
+
+%\item [\cs{xspaceskip}]
+%      \gr{glue parameter}
+%      Interword glue if non-zero and \cs{spacefactor}${}\geq2000$.
+%Chapter~\ref{cschap:xspaceskip}.
+\item [\cs{xspaceskip}]
+      \gr{glue parameter}
+      Interword glue if non-zero and \cs{spacefactor}${}\geq2000$.
+Chapter~\ref{cschap:xspaceskip}.
+
+%\item [\cs{year}]
+%      \gr{integer parameter}
+%      The year of the current job.
+%Chapter~\ref{cschap:year}.
+\item [\cs{year}]
+      \gr{integer parameter}
+      The year of the current job.
+Chapter~\ref{cschap:year}.
+
+%\end{glossinventory}
+\end{glossinventory}

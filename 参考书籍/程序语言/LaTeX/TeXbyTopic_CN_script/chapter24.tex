@@ -1,0 +1,655 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{23}
+
+\begin{document}
+
+%\chapter{Display Math}\label{displaymath}
+\chapter{Display Math}\label{displaymath}
+
+%Displayed formulas are set on a line of their own, usually
+%somewhere in a paragraph. This chapter explains
+%how surrounding white space (both above/below and to the
+%left/right) is calculated.
+Displayed formulas are set on a line of their own, usually
+somewhere in a paragraph. This chapter explains
+how surrounding white space (both above/below and to the
+left/right) is calculated.
+
+%\label{cschap:abovedisplayskip}\label{cschap:belowdisplayskip}\label{cschap:abovedisplayshortskip}\label{cschap:belowdisplayshortskip}\label{cschap:predisplaypenalty}\label{cschap:postdisplaypenalty}\label{cschap:displayindent}\label{cschap:displaywidth}\label{cschap:predisplaysize}\label{cschap:everydisplay}\label{cschap:eqno}\label{cschap:leqno}
+%\begin{inventory}
+%\item [\cs{abovedisplayskip \cs{belowdisplayskip}}]
+%\mdqon
+%      Glue above/""below a display.
+%\mdqoff
+%      Plain \TeX\ default:~\n{12pt plus 3pt minus 9pt}
+\label{cschap:abovedisplayskip}\label{cschap:belowdisplayskip}\label{cschap:abovedisplayshortskip}\label{cschap:belowdisplayshortskip}\label{cschap:predisplaypenalty}\label{cschap:postdisplaypenalty}\label{cschap:displayindent}\label{cschap:displaywidth}\label{cschap:predisplaysize}\label{cschap:everydisplay}\label{cschap:eqno}\label{cschap:leqno}
+\begin{inventory}
+\item [\cs{abovedisplayskip \cs{belowdisplayskip}}]
+\mdqon
+      Glue above/""below a display.
+\mdqoff
+      Plain \TeX\ default:~\n{12pt plus 3pt minus 9pt}
+
+%\item [\cs{abovedisplayshortskip \cs{belowdisplayshortskip}}]
+%\mdqon
+%      Glue above/""below a display if the line preceding the display 
+%\mdqoff
+%      was short.
+%      Plain \TeX\ defaults:~\n{0pt plus 3pt} and
+%      \n{7pt plus 3pt minus 4pt} respectively.
+\item [\cs{abovedisplayshortskip \cs{belowdisplayshortskip}}]
+\mdqon
+      Glue above/""below a display if the line preceding the display 
+\mdqoff
+      was short.
+      Plain \TeX\ defaults:~\n{0pt plus 3pt} and
+      \n{7pt plus 3pt minus 4pt} respectively.
+
+%\item [\cs{predisplaypenalty \cs{postdisplaypenalty}}]
+%\mdqon
+%      Penalty placed in the vertical list above/""below a display.
+%\mdqoff
+%      Plain \TeX\ defaults:~\n{10$\,$000} and~\n{0}
+%      respectively.
+\item [\cs{predisplaypenalty \cs{postdisplaypenalty}}]
+\mdqon
+      Penalty placed in the vertical list above/""below a display.
+\mdqoff
+      Plain \TeX\ defaults:~\n{10$\,$000} and~\n{0}
+      respectively.
+
+%\item [\cs{displayindent}] 
+%      Distance by which the box, in which the display 
+%      is centred, is indented owing to hanging indentation.
+\item [\cs{displayindent}] 
+      Distance by which the box, in which the display 
+      is centred, is indented owing to hanging indentation.
+
+%\item [\cs{displaywidth}] 
+%      Width of the box in which the display is centred.
+\item [\cs{displaywidth}] 
+      Width of the box in which the display is centred.
+
+%\item [\cs{predisplaysize}] 
+%      Effective width of the line preceding the display.
+\item [\cs{predisplaysize}] 
+      Effective width of the line preceding the display.
+
+%\item [\cs{everydisplay}] 
+%      Token list inserted at the start of a display.
+\item [\cs{everydisplay}] 
+      Token list inserted at the start of a display.
+
+%\item [\cs{eqno}] 
+%      Place a right equation number in a display formula.
+\item [\cs{eqno}] 
+      Place a right equation number in a display formula.
+
+%\item [\cs{leqno}] 
+%      Place a left equation number in a display formula.
+\item [\cs{leqno}] 
+      Place a left equation number in a display formula.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point Displays
+%\section{Displays}
+%\point Displays
+\section{Displays}
+
+%\TeX\ starts building a \indexterm{display math} formula
+%when it encounters two
+%math shift characters (characters of category~3\index{category!3},
+%\verb>$>~in plain \TeX) in a row.
+%Another such pair (possibly followed
+%\alt by one optional space) indicates the end of the display.
+\TeX\ starts building a \indexterm{display math} formula
+when it encounters two
+math shift characters (characters of category~3\index{category!3},
+\verb>$>~in plain \TeX) in a row.
+Another such pair (possibly followed
+\alt by one optional space) indicates the end of the display.
+
+%Math shift is a \gr{horizontal command}, but displays are only
+%allowed in unrestricted horizontal mode
+%(\verb>$$>~is an empty math formula in restricted horizontal mode).
+%Displays themselves, however, are started in the
+%surrounding (possibly internal) vertical mode in order to calculate
+%quantities such as~\cs{prevgraf}; the result of the display is
+%appended to the vertical list.
+Math shift is a \gr{horizontal command}, but displays are only
+allowed in unrestricted horizontal mode
+(\verb>$$>~is an empty math formula in restricted horizontal mode).
+Displays themselves, however, are started in the
+surrounding (possibly internal) vertical mode in order to calculate
+quantities such as~\cs{prevgraf}; the result of the display is
+appended to the vertical list.
+
+%The part of the paragraph above the display is broken into
+%lines as an independent paragraph (but \cs{prevgraf} is
+%carried over; see below), and the remainder of the
+%paragraph is set, starting with an empty list and \cs{spacefactor}
+%equal to~1000. 
+%The \cs{everypar} tokens are not inserted for the part of the
+%paragraph after the display, nor is \cs{parskip} glue inserted.
+% 
+%Right at the beginning of the display the \csidx{everydisplay}
+%token list is inserted (but after the calculation of
+%\cs{displayindent}, \cs{displaywidth}, and \cs{predisplaysize}).
+%See page~\pageref{left:display} for an example of the use
+%of \cs{everydisplay}.
+The part of the paragraph above the display is broken into
+lines as an independent paragraph (but \cs{prevgraf} is
+carried over; see below), and the remainder of the
+paragraph is set, starting with an empty list and \cs{spacefactor}
+equal to~1000. 
+The \cs{everypar} tokens are not inserted for the part of the
+paragraph after the display, nor is \cs{parskip} glue inserted.
+ 
+Right at the beginning of the display the \csidx{everydisplay}
+token list is inserted (but after the calculation of
+\cs{displayindent}, \cs{displaywidth}, and \cs{predisplaysize}).
+See page~\pageref{left:display} for an example of the use
+of \cs{everydisplay}.
+
+%The page builder is exercised
+%before the display 
+%(but after the \cs{everydisplay} tokens have been inserted),
+%and after the display finishes.
+The page builder is exercised
+before the display 
+(but after the \cs{everydisplay} tokens have been inserted),
+and after the display finishes.
+
+%The `display style' of math typesetting was treated in 
+%Chapter~\ref{mathfont}.
+The `display style' of math typesetting was treated in 
+Chapter~\ref{mathfont}.
+
+%%\point Displays in paragraphs
+%\section{Displays in paragraphs}
+%\point Displays in paragraphs
+\section{Displays in paragraphs}
+
+%Positioning of a display in a paragraph may be influenced
+%by hanging indentation or a \cs{parshape} specification.
+%For this, \TeX\ uses the \cs{prevgraf} parameter
+%(see Chapter~\ref{par:shape}), and
+%acts as if the display is three lines deep.
+Positioning of a display in a paragraph may be influenced
+by hanging indentation or a \cs{parshape} specification.
+For this, \TeX\ uses the \cs{prevgraf} parameter
+(see Chapter~\ref{par:shape}), and
+acts as if the display is three lines deep.
+
+%If $n$ is the value of \cs{prevgraf} when the display starts
+%\ldash so there are $n$ lines of text above the display \rdash 
+%\cs{prevgraf} is set to to $n+3$ when the paragraph resumes.
+%The display occupies, as it were, lines $n+1$, $n+2$, and~$n+3$.
+%The shift and line width for the display are those
+%that would hold for line~$n+2$.
+If $n$ is the value of \cs{prevgraf} when the display starts
+\ldash so there are $n$ lines of text above the display \rdash 
+\cs{prevgraf} is set to to $n+3$ when the paragraph resumes.
+The display occupies, as it were, lines $n+1$, $n+2$, and~$n+3$.
+The shift and line width for the display are those
+that would hold for line~$n+2$.
+
+%The shift for the display is recorded in \cs{displayindent};
+%\cstoidx displayindent\par\cstoidx displaywidth\par
+%the line width is recorded in\handbreak \cs{displaywidth}. These parameters
+%(and the \cs{predisplaysize} explained below)
+%are set immediately after the \verb>$$> has been scanned.
+%Usually they are equal to zero and \cs{hsize} respectively.
+%The user can change the values of these parameters; 
+%\TeX\ will use the
+%values that hold after the math list 
+%of the display has been processed.
+The shift for the display is recorded in \cs{displayindent};
+\cstoidx displayindent\par\cstoidx displaywidth\par
+the line width is recorded in\handbreak \cs{displaywidth}. These parameters
+(and the \cs{predisplaysize} explained below)
+are set immediately after the \verb>$$> has been scanned.
+Usually they are equal to zero and \cs{hsize} respectively.
+The user can change the values of these parameters; 
+\TeX\ will use the
+values that hold after the math list 
+of the display has been processed.
+
+%A~display is vertical material, and therefore
+%not influenced by settings of \cs{leftskip} and \cs{rightskip}.
+A~display is vertical material, and therefore
+not influenced by settings of \cs{leftskip} and \cs{rightskip}.
+
+%%\point Vertical material around displays
+%\section{Vertical material around displays}
+%\point Vertical material around displays
+\section{Vertical material around displays}
+
+%A display is preceded in the vertical list by
+%\begin{itemize}\item a penalty of size \cs{predisplaypenalty}
+%   \cstoidx predisplaypenalty\par\cstoidx abovedisplayskip\par
+%   \cstoidx abovedisplayshortskip\par
+%(plain \TeX\ default~$10\,000$), and
+%\item glue of size \cs{abovedisplayskip} 
+%or \cs{abovedisplayshortskip}; this glue is omitted in
+%cases where a~\cs{leqno} equation number is set on
+%a line of its own (see below).\end{itemize}
+%A display is followed by 
+%\begin{itemize}\item a penalty of size \cs{postdisplaypenalty}
+%   \cstoidx postdisplaypenalty\par\cstoidx belowdisplayskip\par
+%   \cstoidx belowdisplayshortskip\par
+%(default~0), and possibly
+%\item glue of size \cs{belowdisplayskip} or 
+%\cs{belowdisplayshortskip}; this glue is omitted in cases
+%where an~\cs{eqno} equation number is set on a line of
+%its own (see below).\end{itemize}
+A display is preceded in the vertical list by
+\begin{itemize}\item a penalty of size \cs{predisplaypenalty}
+   \cstoidx predisplaypenalty\par\cstoidx abovedisplayskip\par
+   \cstoidx abovedisplayshortskip\par
+(plain \TeX\ default~$10\,000$), and
+\item glue of size \cs{abovedisplayskip} 
+or \cs{abovedisplayshortskip}; this glue is omitted in
+cases where a~\cs{leqno} equation number is set on
+a line of its own (see below).\end{itemize}
+A display is followed by 
+\begin{itemize}\item a penalty of size \cs{postdisplaypenalty}
+   \cstoidx postdisplaypenalty\par\cstoidx belowdisplayskip\par
+   \cstoidx belowdisplayshortskip\par
+(default~0), and possibly
+\item glue of size \cs{belowdisplayskip} or 
+\cs{belowdisplayshortskip}; this glue is omitted in cases
+where an~\cs{eqno} equation number is set on a line of
+its own (see below).\end{itemize}
+
+%The `short' variants of the glue are taken if
+%there is no \cs{leqno} left equation number, and if
+%the last line of the paragraph above the display is
+%short enough for the display to be raised a bit without
+%coming too close to that line.
+%In order to decide this, the effective width of the
+%preceding line is saved in \csidx{predisplaysize}.
+%This value is calculated immediately after the opening \verb>$$>
+%of the display has
+%been scanned, together with the \cs{displaywidth}
+%and \cs{displayindent} explained above.
+The `short' variants of the glue are taken if
+there is no \cs{leqno} left equation number, and if
+the last line of the paragraph above the display is
+short enough for the display to be raised a bit without
+coming too close to that line.
+In order to decide this, the effective width of the
+preceding line is saved in \csidx{predisplaysize}.
+This value is calculated immediately after the opening \verb>$$>
+of the display has
+been scanned, together with the \cs{displaywidth}
+and \cs{displayindent} explained above.
+
+%Remembering that the part of the paragraph above the display
+%has already been broken into lines, the following method
+%for finding the effective width of the last line ensues.
+%\TeX\ takes the last box of the list, which is a horizontal
+%box containing the last line, and locates the right edge
+%of the last box in it. The \cs{predisplaysize} is then
+%the place of that rightmost edge, plus any amount by which
+%the last line was shifted, plus two ems in the current font.
+Remembering that the part of the paragraph above the display
+has already been broken into lines, the following method
+for finding the effective width of the last line ensues.
+\TeX\ takes the last box of the list, which is a horizontal
+box containing the last line, and locates the right edge
+of the last box in it. The \cs{predisplaysize} is then
+the place of that rightmost edge, plus any amount by which
+the last line was shifted, plus two ems in the current font.
+
+%There are two exceptions to this. The \cs{predisplaysize}
+%is taken to be $-$\cs{maxdimen} if there was no previous line,
+%that is,
+%the display started the paragraph, or it followed another display;
+%\cs{predisplaysize} is taken to be \cs{maxdimen}
+%if the glue in the last line was not set at its natural width,
+%which may happen if the \cs{parfillskip} contained only finite
+%stretch. The reason for the last clause is that glue
+%\mdqon
+%setting is slightly \emph{machine"-dependent}\index{machine dependence},
+%and such dependences
+%\mdqoff
+%should be kept out of \TeX's global decision processes.
+There are two exceptions to this. The \cs{predisplaysize}
+is taken to be $-$\cs{maxdimen} if there was no previous line,
+that is,
+the display started the paragraph, or it followed another display;
+\cs{predisplaysize} is taken to be \cs{maxdimen}
+if the glue in the last line was not set at its natural width,
+which may happen if the \cs{parfillskip} contained only finite
+stretch. The reason for the last clause is that glue
+\mdqon
+setting is slightly \emph{machine"-dependent}\index{machine dependence},
+and such dependences
+\mdqoff
+should be kept out of \TeX's global decision processes.
+
+%%\point Glue setting of the display math list
+%\section{Glue setting of the display math list}
+%\point Glue setting of the display math list
+\section{Glue setting of the display math list}
+
+%The display has to fit in \cs{displaywidth}, 
+%but in addition to the formula there
+%may be an equation number. The minimum separation
+%between the formula and the equation number should
+%be one em in the symbol font, that is,
+%\mdqon
+%\cs{font\-dimen\-6}""\cs{textfont2}.
+%\mdqoff
+The display has to fit in \cs{displaywidth}, 
+but in addition to the formula there
+may be an equation number. The minimum separation
+between the formula and the equation number should
+be one em in the symbol font, that is,
+\mdqon
+\cs{font\-dimen\-6}""\cs{textfont2}.
+\mdqoff
+
+%If the formula plus any equation number
+%and separation fit into \cs{displaywidth},
+%the glue in the formula is set at its natural width. 
+%If it does not fit,
+%but the formula contains enough shrink, it is shrunk.
+%Otherwise \TeX\ puts any equation number
+%on a line of its own, and the glue in the formula is
+%set to fit it in \cs{displaywidth}.
+%With the equation
+%number on a separate line the formula may now very well fit in the
+%display width; however,
+%if it was a very long formula the box in which it is
+%set may still be overfull. \TeX\ nevers breaks a displayed
+%formula.
+If the formula plus any equation number
+and separation fit into \cs{displaywidth},
+the glue in the formula is set at its natural width. 
+If it does not fit,
+but the formula contains enough shrink, it is shrunk.
+Otherwise \TeX\ puts any equation number
+on a line of its own, and the glue in the formula is
+set to fit it in \cs{displaywidth}.
+With the equation
+number on a separate line the formula may now very well fit in the
+display width; however,
+if it was a very long formula the box in which it is
+set may still be overfull. \TeX\ nevers breaks a displayed
+formula.
+
+%%\point Centring the display formula: displacement
+%\section{Centring the display formula: displacement}
+%\point Centring the display formula: displacement
+\section{Centring the display formula: displacement}
+
+%Based on the width of the box containing the formula \ldash which
+%may not really `contain' it; it may be overfull \rdash 
+%\TeX\ tries to centre the formula in the \cs{displaywidth},
+%that is, without taking the equation number into account.
+%Initially, a displacement is calculated that is 
+%half the difference between \cs{displaywidth} and the
+%width of the formula box.
+Based on the width of the box containing the formula \ldash which
+may not really `contain' it; it may be overfull \rdash 
+\TeX\ tries to centre the formula in the \cs{displaywidth},
+that is, without taking the equation number into account.
+Initially, a displacement is calculated that is 
+half the difference between \cs{displaywidth} and the
+width of the formula box.
+
+%However, if there is an equation number that will not
+%be put on a separate line and the displacement is less than
+%twice the width of the equation number, a new displacement
+%is calculated. This new displacement is zero if the formula
+%started with glue; otherwise it is such that the
+%formula box is centred in the space left by the equation
+%number.
+However, if there is an equation number that will not
+be put on a separate line and the displacement is less than
+twice the width of the equation number, a new displacement
+is calculated. This new displacement is zero if the formula
+started with glue; otherwise it is such that the
+formula box is centred in the space left by the equation
+number.
+
+%If there was no equation number, or if the equation number
+%will be put on a separate line, the formula box
+%is now placed, shifted right by \cs{displayindent} plus
+%the displacement calculated above.
+If there was no equation number, or if the equation number
+will be put on a separate line, the formula box
+is now placed, shifted right by \cs{displayindent} plus
+the displacement calculated above.
+
+%\section{Equation numbers}
+\section{Equation numbers}
+
+%\index{equation numbering|(}
+\index{equation numbering|(}
+
+%The user can specify a equation number for a display
+%by ending it with 
+%\cstoidx eqno\par\cstoidx leqno\par
+%\begin{Disp}\cs{eqno}\gr{math mode material}\verb>$$>\end{Disp}
+%for an equation number placed on the right, or
+%\begin{Disp}\cs{leqno}\gr{math mode material}\verb>$$>\end{Disp}
+%for an equation number placed on the left.
+The user can specify a equation number for a display
+by ending it with 
+\cstoidx eqno\par\cstoidx leqno\par
+\begin{Disp}\cs{eqno}\gr{math mode material}\verb>$$>\end{Disp}
+for an equation number placed on the right, or
+\begin{Disp}\cs{leqno}\gr{math mode material}\verb>$$>\end{Disp}
+for an equation number placed on the left.
+
+%%\spoint Ordinary equation numbers
+%\subsection{Ordinary equation numbers}
+%\spoint Ordinary equation numbers
+\subsection{Ordinary equation numbers}
+
+%Above it was described how \TeX\ calculates a displacement
+%from the display formula and the equation number, if this
+%is to be put on the same line as the formula.
+Above it was described how \TeX\ calculates a displacement
+from the display formula and the equation number, if this
+is to be put on the same line as the formula.
+
+%If the equation number was a  \cs{leqno} number,
+%\TeX\ places a box containing
+%\begin{itemize}\item the equation number,
+%\item a kern with the size of the displacement calculated, and
+%\item the formula.\end{itemize}
+%This box is shifted right by \cs{displayindent}.
+If the equation number was a  \cs{leqno} number,
+\TeX\ places a box containing
+\begin{itemize}\item the equation number,
+\item a kern with the size of the displacement calculated, and
+\item the formula.\end{itemize}
+This box is shifted right by \cs{displayindent}.
+
+%If the equation number was an \cs{eqno} number,
+%\TeX\ places a box containing
+%\begin{itemize}\item the formula,
+%\item a kern with the size of the displacement calculated, and
+%\item the equation number.\end{itemize}
+%This box is shifted right by \cs{displayindent} plus
+%the displacement calculated.
+If the equation number was an \cs{eqno} number,
+\TeX\ places a box containing
+\begin{itemize}\item the formula,
+\item a kern with the size of the displacement calculated, and
+\item the equation number.\end{itemize}
+This box is shifted right by \cs{displayindent} plus
+the displacement calculated.
+
+%%\spoint The equation number on a separate line
+%\subsection{The equation number on a separate line}
+%\spoint The equation number on a separate line
+\subsection{The equation number on a separate line}
+
+%Since displayed formulas may become rather big, \TeX\ can decide
+%(as was described above)
+%that any equation number should be placed on a line of its own.
+%A~left-placed equation number is then to be placed above the
+%display, in a box that is shifted right by \cs{displayindent};
+%a right-placed equation number will be placed below the display,
+%in a box that is shifted to the right 
+%by \cs{displayindent} plus \cs{displaywidth} minus the width of
+%the equation number box.
+Since displayed formulas may become rather big, \TeX\ can decide
+(as was described above)
+that any equation number should be placed on a line of its own.
+A~left-placed equation number is then to be placed above the
+display, in a box that is shifted right by \cs{displayindent};
+a right-placed equation number will be placed below the display,
+in a box that is shifted to the right 
+by \cs{displayindent} plus \cs{displaywidth} minus the width of
+the equation number box.
+
+%In both cases a penalty of $10\,000$ is placed between the equation
+%number box and the formula.
+In both cases a penalty of $10\,000$ is placed between the equation
+number box and the formula.
+
+%\TeX\ does not put extra glue above a left-placed
+%equation number or below
+%a right-placed equation number; \TeX\ here relies on
+%the baselineskip mechanism.
+\TeX\ does not put extra glue above a left-placed
+equation number or below
+a right-placed equation number; \TeX\ here relies on
+the baselineskip mechanism.
+
+%\index{equation numbering|)}
+\index{equation numbering|)}
+
+%\section{Non-centred displays}
+%\label{left:display}
+\section{Non-centred displays}
+\label{left:display}
+
+%As a default, \TeX\ will center displays.
+%In order to get \indextermbus{non-centred}{displays} some
+%macro trickery is needed. 
+As a default, \TeX\ will center displays.
+In order to get \indextermbus{non-centred}{displays} some
+macro trickery is needed. 
+
+%One approach would
+%be to write a macro \cs{DisplayEquation}
+%that would basically look like
+%\begin{verbatim}
+%\def\DisplayEquation#1{%
+%    \par \vskip\abovedisplayskip
+%    \hbox{\kern\parindent$\displaystyle#1$}
+%    \vskip\belowdisplayskip \noindent}
+%\end{verbatim}
+%but it would be nicer if one could just write
+%\begin{verbatim}
+%$$ ... \eqno ... $$
+%\end{verbatim}
+%\mdqon
+%and having this come out as a left"-aligning display.
+%\mdqoff
+One approach would
+be to write a macro \cs{DisplayEquation}
+that would basically look like
+\begin{verbatim}
+\def\DisplayEquation#1{%
+    \par \vskip\abovedisplayskip
+    \hbox{\kern\parindent$\displaystyle#1$}
+    \vskip\belowdisplayskip \noindent}
+\end{verbatim}
+but it would be nicer if one could just write
+\begin{verbatim}
+$$ ... \eqno ... $$
+\end{verbatim}
+\mdqon
+and having this come out as a left"-aligning display.
+\mdqoff
+
+%Using the \cs{everydisplay} token list, the above
+%idea can be realized. The basic idea is to write
+%\begin{verbatim}
+%\everydisplay{\IndentedDisplay}
+%\def\IndentedDisplay#1$${ ...
+%\end{verbatim}
+%so that the macro \cs{IndentedDisplay}
+%will receive the formula, including any equation number.
+%The first step is now to extract an equation number
+%if it is present. This makes creative use of delimited
+%macro parameters.
+%\begin{verbatim}
+%\def\ExtractEqNo#1\eqno#2\eqno#3\relax
+%   {\def\Equation{#1}\def\EqNo{#2}}
+%\def\IndentedDisplay#1$${%
+%    \ExtractEqNo#1\eqno\eqno\relax
+%\end{verbatim}
+%Next the equation should be set in the available
+%space \cs{displaywidth}:
+%\begin{verbatim}
+%    \hbox to \displaywidth
+%        {\kern\parindent
+%         $\displaystyle\Equation$\hfil$\EqNo$}$$
+%    }
+%\end{verbatim}
+%Note that the macro ends in the closing \verb>$$>
+%to balance the opening dollars that caused
+%insertion of the \cs{everydisplay} tokens.
+%This also means that the box containing the
+%displayed material will automatically be
+%surrounded by \cs{abovedisplayskip} and
+%\cs{belowdisplayskip} glue.
+%There is no need to use \cs{displayindent} anywhere
+%in this macro, because \TeX\ itself will shift the
+%display appropriately.
+Using the \cs{everydisplay} token list, the above
+idea can be realized. The basic idea is to write
+\begin{verbatim}
+\everydisplay{\IndentedDisplay}
+\def\IndentedDisplay#1$${ ...
+\end{verbatim}
+so that the macro \cs{IndentedDisplay}
+will receive the formula, including any equation number.
+The first step is now to extract an equation number
+if it is present. This makes creative use of delimited
+macro parameters.
+\begin{verbatim}
+\def\ExtractEqNo#1\eqno#2\eqno#3\relax
+   {\def\Equation{#1}\def\EqNo{#2}}
+\def\IndentedDisplay#1$${%
+    \ExtractEqNo#1\eqno\eqno\relax
+\end{verbatim}
+Next the equation should be set in the available
+space \cs{displaywidth}:
+\begin{verbatim}
+    \hbox to \displaywidth
+        {\kern\parindent
+         $\displaystyle\Equation$\hfil$\EqNo$}$$
+    }
+\end{verbatim}
+Note that the macro ends in the closing \verb>$$>
+to balance the opening dollars that caused
+insertion of the \cs{everydisplay} tokens.
+This also means that the box containing the
+displayed material will automatically be
+surrounded by \cs{abovedisplayskip} and
+\cs{belowdisplayskip} glue.
+There is no need to use \cs{displayindent} anywhere
+in this macro, because \TeX\ itself will shift the
+display appropriately.
+
+%% 
+%\endofchapter
+% 
+\endofchapter
+
+\end{document}

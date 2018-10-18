@@ -1,0 +1,1011 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{26}
+
+\begin{document}
+
+%\chapter{Page Breaking}\label{page:break}
+\chapter{分页}\label{page:break}
+
+%\index{page!breaking|(}
+\index{page!breaking|(}
+
+%This chapter treats the `page builder': the part of \TeX\
+%that decides where to break the main vertical list into pages.
+%The page builder operates before the output routine,
+%and it hands its result in \cs{box255} to the output routine.
+本章讨论`页面构建器'：\TeX\ 确定在何处将主竖直列分为多个页面的模块。
+页面构建器在输出例程之前运行，它将所得结果放入 \cs{box255} 以送给输出例程。
+
+%\label{cschap:vsplit2}\label{cschap:splittopskip}\label{cschap:pagegoal}\label{cschap:pagetotal}\label{cschap:pagedepth}\label{cschap:pagestretch}\label{cschap:pagefilstretch}\label{cschap:pagefillstretch}\label{cschap:pagefilllstretch}\label{cschap:pageshrink}\label{cschap:outputpenalty}\label{cschap:interlinepenalty}\label{cschap:clubpenalty}\label{cschap:widowpenalty}\label{cschap:displaywidowpenalty}\label{cschap:brokenpenalty}\label{cschap:penalty2}\label{cschap:lastpenalty}\label{cschap:unpenalty}
+%\begin{inventory}
+%\item [\cs{vsplit}]
+%      Split of a top part of a box. This is comparable
+%      with page breaking.
+\label{cschap:vsplit2}\label{cschap:splittopskip}\label{cschap:pagegoal}\label{cschap:pagetotal}\label{cschap:pagedepth}\label{cschap:pagestretch}\label{cschap:pagefilstretch}\label{cschap:pagefillstretch}\label{cschap:pagefilllstretch}\label{cschap:pageshrink}\label{cschap:outputpenalty}\label{cschap:interlinepenalty}\label{cschap:clubpenalty}\label{cschap:widowpenalty}\label{cschap:displaywidowpenalty}\label{cschap:brokenpenalty}\label{cschap:penalty2}\label{cschap:lastpenalty}\label{cschap:unpenalty}
+\begin{inventory}
+\item [\cs{vsplit}]
+      分割出一个盒子的顶端部分。它可与分页作对比。
+
+%\item [\cs{splittopskip}] 
+%      Minimum distance between the top of what remains after a
+%      \cs{vsplit} operation, and the first item in that box.
+%      Plain \TeX\ default:~\n{10pt}
+\item [\cs{splittopskip}] 
+      在 \cs{vsplit} 分割出的盒子中，第一个项目到盒子顶部的最小距离。
+      Plain \TeX\ 默认为~\n{10pt}。
+
+%\item [\cs{pagegoal}] 
+%      Goal height of the page box. This starts at \cs{vsize},
+%      and is diminished by heights of insertion items.
+\item [\cs{pagegoal}] 
+      页面盒子的目标高度。它刚开始等于 \cs{vsize}，
+      并且根据插入项的高度逐步减少。
+
+%\item [\cs{pagetotal}] 
+%      Accumulated natural height of the current page.
+\item [\cs{pagetotal}] 
+      当前页面积累的自然高度。
+
+%\item [\cs{pagedepth}] 
+%      Depth of the current page.
+\item [\cs{pagedepth}] 
+      当前页面的深度。
+
+%\item [\cs{pagestretch}] 
+%      Accumulated zeroth-order stretch of the current page.
+\item [\cs{pagestretch}] 
+      当前页面积累的零阶可伸长量。
+
+%\item [\cs{pagefilstretch}] 
+%      Accumulated first-order stretch of the current page.
+\item [\cs{pagefilstretch}] 
+      当前页面积累的一阶可伸长量。
+
+%\item [\cs{pagefillstretch}] 
+%      Accumulated second-order stretch of the current page.
+\item [\cs{pagefillstretch}] 
+      当前页面积累的二阶可伸长量。
+
+%\item [\cs{pagefilllstretch}] 
+%      Accumulated third-order stretch of the current page.
+\item [\cs{pagefilllstretch}] 
+      当前页面积累的三阶可伸长量。
+
+%\item [\cs{pageshrink}] 
+%      Accumulated shrink of the current page.
+\item [\cs{pageshrink}] 
+      当前页面积累的可收缩量。
+
+%\item [\cs{outputpenalty}]   
+%      Value of the penalty at the current page break,
+%      or $10\,000$ if the break was not at a penalty.
+\item [\cs{outputpenalty}]   
+      在当前分页点的惩罚值，若不在惩罚处分页，它等于 $10\,000$。
+
+%\item [\cs{interlinepenalty}] 
+%      Penalty for breaking a page between lines of a paragraph. 
+%      Plain \TeX\ default:~\n{0}
+\item [\cs{interlinepenalty}] 
+      在段落内部两行间分页的惩罚值。Plain \TeX\ 默认为~\n{0}。
+
+%\item [\cs{clubpenalty}] 
+%      Additional penalty for breaking a page after 
+%      the first line of a paragraph. 
+%      Plain \TeX\ default:~\n{150}
+\item [\cs{clubpenalty}] 
+      在段落首行之后分页的额外惩罚值。Plain \TeX\ 默认为~\n{150}。
+
+%\item [\cs{widowpenalty}] 
+%      Additional penalty for breaking a page before 
+%      the last line of a paragraph. 
+%      Plain \TeX\ default:~\n{150}
+\item [\cs{widowpenalty}] 
+      在段落尾行之前分页的额外惩罚值。Plain \TeX\ 默认为~\n{150}。
+
+%\item [\cs{displaywidowpenalty}] 
+%      Additional penalty for breaking a page before the last line 
+%      above a display formula. 
+%      Plain \TeX\ default:~\n{50}
+\item [\cs{displaywidowpenalty}] 
+      在陈列公式上面的尾行之前分页的额外惩罚值。Plain \TeX\ 默认为~\n{50}。
+
+%\item [\cs{brokenpenalty}] 
+%      Additional penalty for breaking a page after a hyphenated line. 
+%      Plain \TeX\ default:~\n{100}
+\item [\cs{brokenpenalty}] 
+      在连字行之后分页的额外惩罚值。Plain \TeX\ 默认为~\n{100}。
+
+%\item [\cs{penalty}]
+%      Place a penalty on the current list.
+%\item [\cs{lastpenalty}]
+%      If the last item on the list was a penalty, the value of this.
+%\item [\cs{unpenalty}]
+%      Remove the last item of the current list if this
+%      was a penalty.
+\item [\cs{penalty}]
+      在当前列表上添加一个惩罚项。
+\item [\cs{lastpenalty}]
+      如果当前列表的上一项为惩罚项，它表示该惩罚项的值。
+\item [\cs{unpenalty}]
+      如果当前列表的上一项为惩罚项，删除该项目。
+
+%\end{inventory}
+\end{inventory}
+
+%%\point The current page and the recent contributions
+%\section{The current page and the recent contributions}
+%\point The current page and the recent contributions
+\section{当前页面与备选内容}
+
+%The main vertical list of \TeX\ is divided in two parts:
+%the \indexterm{current page} and the list of \indexterm{recent contributions}.
+%Any material that is added to the main vertical list is
+%appended to the recent contributions; the act of moving
+%the recent contributions to the current page is known
+%as exercising the \indextermsub{page}{builder}.
+\TeX\ 的主竖直列被分为两部分：\indexterm{当前页面}和\indexterm{备选内容}列。
+任何添加到主竖直列的素材被追加到备选内容中；
+将素材从备选内容移动到当前页面的操作称为执行\indextermsub{页面}{构建器}.
+
+%Every time something is moved to the current page, \TeX\
+%computes the cost of breaking the page at that point.
+%If it decides that it is past the optimal point,
+%the current page up to 
+%\altt 
+%the best break so far
+%is put in \cs{box255} and the remainder of
+%the current page is moved back on top of the recent contributions.
+%If the page is broken at a penalty,
+%\label{break:penalty}%
+%that value is recorded in \cs{outputpenalty}, and 
+%a penalty of size $10\,000$ is placed on top of the
+%recent contributions; otherwise, \csidx{outputpenalty}
+%is set to~$10\,000$.
+每次有内容移动到当前页面时，\TeX\ 计算在该处分页的代价。
+如果 \TeX\ 判断该处已经越过最佳分页点，
+当前页面在最佳分页点之前的所有内容就被放入\cs{box255}，
+\altt 
+而剩下的内容被放回备选内容顶部。如果页面在惩罚项处分页，
+\label{break:penalty}%
+该惩罚的值就被记录在 \cs{outputpenalty} 中，
+而且值为 $10\,000$ 的惩罚项被放在备选内容的顶部；
+否则，\csidx{outputpenalty} 就被设为~$10\,000$。
+
+%If the current page is empty, discardable items that are moved
+%from the recent contributions are discarded. This is the mechanism
+%that lets glue disappear after a page break and at the top of
+%the first page. When the first non-discardable item is moved
+%to the current page, the \cs{topskip} glue is inserted;
+%see the previous chapter.
+如果当前页面是空的，从备选内容移动过来的可弃项目将被丢弃。
+此机制会让分页点之后以及第一页顶部的粘连消失。
+在第一个非可弃项目移动到当前页面时，\cs{topskip} 粘连将会被插入；
+详见上一章。
+
+%The workings of the page builder can be made visible by
+%setting \cs{tracingpages} to some positive value
+%(see Chapter~\ref{trace}).
+要看到页面构建器的工作过程，可以将 \cs{tracingpages}
+设定为某个正值（见第~\ref{trace}~章）。
+
+%%\point Activating the page builder
+%\section{Activating the page builder}
+%\point Activating the page builder
+\section{激活页面构建器}
+
+%The page builder comes into play  in the
+%following circumstances.
+%\begin{itemize}\item Around paragraphs: after the \cs{everypar}
+%    tokens have been inserted, and after the paragraph has been
+%    added to the vertical list. See the end of this chapter for 
+%    an example.
+%\item Around display formulas: after the \cs{everydisplay}
+%    tokens have been inserted, and after the display has been
+%    added to the list.
+%\item After \cs{par} commands, boxes, insertions, 
+%    and explicit penalties in vertical mode. 
+%\item After an output routine has ended. \end{itemize}
+%In these places the page builder moves the recent
+%contributions to the current page. Note that \TeX\ need not be 
+%in vertical mode when the page builder is exercised.
+%In horizontal mode, activating the page builder
+%serves to move preceding vertical glue (for example, \cs{parskip},
+%\cs{abovedisplayskip}) to the page.
+页面构建器将在下列位置起作用：
+\begin{itemize}
+\item 在段落前后：在 \cs{everypar} 记号列被插入后，
+  以及段落被加入到竖直列后。见本章结尾处的例子。
+\item 在陈列公式前后：在 \cs{everydisplay} 记号列被插入后，
+  以及陈列公式被加入到竖直列后。
+\item 在竖直模式的 \cs{par} 命令、盒子、插入项和显式惩罚项之后。
+\item 在输出例程结束后。
+\end{itemize}
+页面构建器在这些位置将备选内容移动到当前页面。
+注意页面构建器运行时 \TeX\ 无需处于竖直模式中。
+在水平模式，激活页面构建器是为了将前面的竖直粘连（比如 \cs{parskip}
+和 \cs{abovedisplayskip}）移动到当前页面。
+
+%The \cs{end} command \ldash which is only allowed in
+%external vertical mode \rdash  terminates a \TeX\ job, but only if the
+%main vertical list is empty and \cs{deadcycles}${}=0$.
+%If this is not the case the combination
+%\label{end:play}%
+%\begin{disp}\verb>\hbox{}\vfill\penalty>$-2^{30}$\end{disp}
+%is appended, which forces the output routine to act.
+\cs{end} 命令 \ldash 它只能用于外部竖直模式中 \rdash
+在主竖直列为空且 \cs{deadcycles}${}=0$ 时将终止 \TeX\ 任务。
+否则，下列这串记号
+\label{end:play}%
+\begin{disp}\verb>\hbox{}\vfill\penalty>$-2^{30}$\end{disp}
+将被插入进来，这促使输出例程开始运行
+【译注：然后 \cs{end} 命令将被重新读入】。
+
+%%\point Page length bookkeeping
+%\section{Page length bookkeeping}
+%\point Page length bookkeeping
+\section{页面长度的记录}
+
+%\index{page!length|(}
+\index{page!length|(}
+
+%The height and depth of the page box that reaches the output
+%routine are determined by \cs{vsize}, \cs{topskip},
+%and~\cs{maxdepth} as described in the previous chapter.
+%\TeX\ places the \cs{topskip} glue
+%when the first box is placed on the current page; the
+%\cs{vsize} and \cs{maxdepth} are read when the first
+%box or insertion occurs on the page. Any subsequent changes to these
+%parameters will not be noticeable until the next page or,
+%more strictly, until after the output routine has been called.
+如上一章所述，到达输出例程的页面盒子的高度和深度由 \cs{vsize}、
+\cs{topskip} 和 \cs{maxdepth} 确定。在第一个盒子出现当前页面时，
+\TeX\ 放入 \cs{topskip} 粘连；而 \cs{vsize} 和 \cs{maxdepth}
+在第一个盒子或插入项出现在页面时读取。此后对这些参数的修改将不会被注意到，
+直到下一页或者，更严格地说，直到输出例程调用完毕之后。
+
+%After the first box, rule, or insertion on the current page
+%the \cs{vsize} is recorded in \cs{pagegoal},
+%and its value is not looked at  until \cs{output}
+%has been active.
+%Changing \cs{pagegoal} does have an effect on the current
+%page.
+%When the page is empty,
+%the pagegoal is \cs{maxdimen}, and \cs{pagetotal} is zero.
+在第一个盒子、标线或插入项出现在当前页面之后，
+\cs{vsize} 被记录在 \cs{pagegoal} 中，
+并且在 \cs{output} 调用完毕之前不再被查看。
+改变 \cs{pagegoal} 对当前页面不会有任何影响。
+当页面为空时，\cs{pagegoal} 等于 \cs{maxdimen}，而 \cs{pagetotal} 等于零。
+
+%Accumulated dimensions and stretch are available in
+%the parameters \cs{pagetotal}, \cs{pagedepth}, 
+%\cs{pagestretch}, \cs{pagefilstretch}, \cs{pagefillstretch}, 
+%\cs{pageshrink},
+%and \cs{pagefilllstretch}.
+%\cstoidx pagetotal\par\cstoidx pagedepth\par
+%\cstoidx pagestretch\par\cstoidx pagefilstretch\par
+%\cstoidx pagefillstretch\par
+%\cstoidx pageshrink\par\cstoidx pagefilllstretch\par
+%They are set by the page builder. The stretch and
+%shrink parameters are updated every time glue is added
+%to the page. The depth parameter becomes zero
+%if the last item was kern or glue.
+积累的尺寸和可伸缩量记录在 \cs{pagetotal}、\cs{pagedepth}、
+\cs{pagestretch}、\cs{pagefilstretch}、\cs{pagefillstretch}、
+\cs{pagefilllstretch} 以及 \cs{pageshrink}这些参数中。
+\cstoidx pagetotal\par\cstoidx pagedepth\par
+\cstoidx pagestretch\par\cstoidx pagefilstretch\par
+\cstoidx pagefillstretch\par
+\cstoidx pageshrink\par\cstoidx pagefilllstretch\par
+它们由页面构建器设定。在添加每个粘连到页面时，
+可伸长量和可收缩量参数都会被更新。
+如果最后一个项目是紧排或者粘连，\cs{pagedepth} 参数等于零。
+
+%These parameters are \gr{special dimen}s; an assignment
+%to any of them is an \gr{intimate assignment},
+%and it is automatically global.
+这些参数都是 \gr{special dimen}；对它们中任何一个的赋值都是
+\gr{intimate assignment}，而且自动就是全局的。
+
+%\index{page!length|)}
+\index{page!length|)}
+
+%\section{Breakpoints}
+\section{分页点}
+
+%%\spoint Possible breakpoints
+%\subsection{Possible breakpoints}
+%\spoint Possible breakpoints
+\subsection{可能的分页点}
+
+%Page breaks can occur at the same kind of locations where
+%line breaks can occur. The \indexterm{breakpoints in vertical lists}
+%are:
+%\begin{itemize}\item at glue that is preceded by a non-discardable
+%item;\item at a kern that is immediately followed by glue;
+%\item at a penalty.\end{itemize}
+%\TeX\ inserts interline glue and various sorts of
+%interline penalties when the lines of a paragraph are
+%added to the vertical list, so there will usually be 
+%sufficient breakpoints on the page.
+分页点可以出现在与断行点相同类型的位置。
+\indexterm{竖直模式的断点}如下：
+\begin{itemize}
+\item 在粘连处，只要它前面是非可弃项目；
+\item 在紧排处，只要它后面是一个粘连；
+\item 在惩罚处。
+\end{itemize}
+在添加段落行到竖直列时，\TeX\ 会插入行间粘连和各种行间惩罚，
+这使得页面上通常有足够的分页点。
+
+%%\spoint Breakpoint penalties
+%\subsection{Breakpoint penalties}
+%\spoint Breakpoint penalties
+\subsection{分页点的惩罚}
+
+%If \TeX\ decides to break a page at a penalty item, this
+%penalty will, most of the time, be one that
+%has been inserted automatically
+%between the lines of a paragraph.
+如果 \TeX\ 决定在惩罚项处分页，这个惩罚项，在多数情况下，是之前自动插入到段落各行间的。
+
+%If the last item on a list (not necessarily a vertical list)
+%\alt
+%is a penalty, the value of this is recorded
+%in the parameter \csidx{lastpenalty}. If the item is other than
+%a penalty, this parameter has the value zero.
+%The last penalty of a list can be removed with the command
+%\csidx{unpenalty}. See Section~\ref{varioset} for an example.
+%\message{Spoint ref varioset}
+如果列表（未必得是竖直列）的最后一项是个惩罚项，
+\alt
+它的值会在记录在 \csidx{lastpenalty} 参数中。
+如果这个项目不是一个惩罚项，这个参数的值为零。
+列表的最后一个惩罚项可以用命令 \csidx{unpenalty} 删除。
+见第~\ref{varioset}~节的例子。
+\message{Spoint ref varioset}
+
+%Here is a list of the \indextermsub{penalties}{in vertical mode}:
+%\begin{inventory}
+%\item [\cs{interlinepenalty}] 
+%      Penalty for breaking a page between lines of a paragraph. 
+%      In plain \TeX\ this is zero, so no penalty is added in
+%      between lines. \TeX\ can then find a valid breakpoint at the
+%      \cs{baselineskip} glue.
+下面列出了各种\emph{竖直模式的惩罚}\index{惩罚!竖直模式中}：
+\begin{inventory}
+\item [\cs{interlinepenalty}] 
+      在段落内部两行间分页的惩罚值。 
+      在 plain \TeX\ 中它默认为零，因此两行间不会添加惩罚项。
+      这样 \TeX\ 可以在 \cs{baselineskip} 粘连处寻找有效分页点。
+
+%\item [\cs{clubpenalty}] 
+%      Extra penalty for breaking a page after the first line of a paragraph. 
+%      In plain \TeX\ this is~\n{150}.
+%      This amount, and the following penalties, are 
+%      added to the \cs{interlinepenalty}, and
+%      a penalty of the resulting size is inserted after the
+%      \cs{hbox} containing the first line of a paragraph
+%      instead of the \cs{interlinepenalty}.
+\item [\cs{clubpenalty}] 
+      在段落首行之后分页的额外惩罚值。Plain \TeX\ 默认为~\n{150}。
+      这个数值将被加到 \cs{interlinepenalty} 上，
+      依照所得结果插入一个惩罚项到包含段落第一行的 \cs{hbox} 之后，
+      以替代 \cs{interlinepenalty}。后面几个惩罚的情形类似。
+
+%\item [\cs{widowpenalty}] 
+%      Extra penalty for breaking a page before the last line of a paragraph. 
+%      In plain \TeX\ this is~\n{150}.
+\item [\cs{widowpenalty}] 
+      在段落尾行之前分页的额外惩罚值。 Plain \TeX\ 默认为~\n{150}。
+
+%\item [\cs{displaywidowpenalty}] 
+%      Extra penalty for breaking a page before the last line 
+%      above a display formula. The default value in plain \TeX\
+%      is~\n{50}.
+\item [\cs{displaywidowpenalty}] 
+      在陈列公式上面的尾行之前分页的额外惩罚值。在 plain \TeX\ 中默认为~\n{50}。
+
+%\item [\cs{brokenpenalty}] 
+%      Extra penalty for breaking a page after a hyphenated line. 
+%      The default value in plain \TeX\ is~\n{100}.
+%\end{inventory}
+%If the resulting penalty is zero, it is not placed.
+\item [\cs{brokenpenalty}] 
+      在连字行之后分页的额外惩罚值。在 plain \TeX\ 中默认为~\n{100}。
+\end{inventory}
+如果惩罚值等于零，惩罚项将不会被插入。
+
+%Penalties can also be inserted by the user. For instance,
+%the plain format has macros to encourage (possibly, force)
+%or prohibit page breaks\cstoidx penalty\par:
+%\begin{verbatim}
+%\def\break{\penalty-10000 }        % force break
+%\def\nobreak{\penalty10000 }       % prohibit break
+%\def\goodbreak{\par\penalty-500 }  % encourage page break
+%\end{verbatim}
+%Also, \verb>\vadjust{\penalty ... }> is a way of getting
+%penalties in the vertical list. This can be used to
+%discourage or encourage page breaking after a certain
+%line of a paragraph.
+用户也可以插入惩罚项。比如 plain 格式有用于强制、阻止或鼓励分页的%
+\cstoidx 惩罚\par 宏：
+\begin{verbatim}
+\def\break{\penalty-10000 }        % force break
+\def\nobreak{\penalty10000 }       % prohibit break
+\def\goodbreak{\par\penalty-500 }  % encourage page break
+\end{verbatim}
+另外，\verb>\vadjust{\penalty ... }> 是另一种在竖直列中添加惩罚项的方法。
+它可以用于阻碍或鼓励在段落某行之后分页。
+
+%%\spoint Breakpoint computation
+%\subsection{Breakpoint computation}
+%\spoint Breakpoint computation
+\subsection{分页点的计算}
+
+%\index{breakpoints!computation of|(}
+%\advance\rightskip by 5.5cm
+\index{breakpoints!computation of|(}
+\advance\rightskip by 5.5cm
+
+%Whenever an item is moved to the current page, \TeX\
+%\vadjust{\advance\hsize by -5.5cm
+%  \hbox to \hsize{\hfil\rlap{\hskip.4cm\vtop to 0pt
+%  {\kern-2\baselineskip
+%    \SansSerif %\pointSize:8 \Style:roman
+%   \parindent0pt \offinterlineskip
+%   \def\tbox#1{\hbox{\quad\quad #1%
+%               \vrule height 10pt depth3pt width0cm }}
+%   \hbox
+%   {\vrule width\lw \kern-\lw
+%    \vbox{\hsize=5cm
+%          \hrule height\lw \ \vskip0cm
+%           \kern40pt
+%           \tbox{underfull page}
+%           \tbox{$b=10\,000$}
+%           \kern40pt
+%          \hrule height\lw
+%           \kern8pt
+%           \tbox{feasible breakpoints}
+%           \tbox{$b<10\,000$}
+%           \kern8pt
+%          \hrule height\lw
+%           \kern8pt
+%           \tbox{overfull page}
+%           \tbox{$b=\infty$}
+%           \kern3pt
+%           \tbox{.\vrule height3.5pt depth1pt width0cm}
+%           \tbox{.\vrule height3.5pt depth1pt width0cm}
+%           \tbox{.\vrule height3.5pt depth1pt width0cm}
+%           \kern8pt
+%           }%
+%    \kern-\lw \vrule width\lw}%
+%    \vss}}}}
+%computes the penalty $p$ and the badness $b$ associated with
+%breaking the page at that place. From the penalty and
+%the badness the cost $c$ of breaking is computed.
+每当有项目移动到当前页面，\TeX\
+\vadjust{\advance\hsize by -5.5cm
+  \hbox to \hsize{\hfil\rlap{\hskip.4cm\vtop to 0pt
+  {\kern-2\baselineskip
+    \SansSerif %\pointSize:8 \Style:roman
+   \parindent0pt \offinterlineskip
+   \def\tbox#1{\hbox{\quad\quad #1%
+               \vrule height 10pt depth3pt width0cm }}
+   \hbox
+   {\vrule width\lw \kern-\lw
+    \vbox{\hsize=5cm
+          \hrule height\lw \ \vskip0cm
+           \kern40pt
+           \tbox{未满的页面}
+           \tbox{$b=10\,000$}
+           \kern40pt
+          \hrule height\lw
+           \kern8pt
+           \tbox{可行的断点}
+           \tbox{$b<10\,000$}
+           \kern8pt
+          \hrule height\lw
+           \kern8pt
+           \tbox{过满的页面}
+           \tbox{$b=\infty$}
+           \kern3pt
+           \tbox{.\vrule height3.5pt depth1pt width0cm}
+           \tbox{.\vrule height3.5pt depth1pt width0cm}
+           \tbox{.\vrule height3.5pt depth1pt width0cm}
+           \kern3pt
+           }%
+    \kern-\lw \vrule width\lw}%
+    \vss}}}}
+计算在该位置分页时的惩罚值 $p$ 和丑度 $b$。
+从惩罚值和丑度再计算出分页的代价 $c$。
+
+%The place of least cost is remembered, and when
+%the cost is infinite, that is, the page is overfull, or
+%when the penalty is $p\leq-10\,000$, the current page is broken
+%at  the (last remembered) place of least cost. 
+%The broken-off piece is then
+%put in \cs{box255} and the output routine token list
+%is inserted. Box 255 is always given a height of \cs{vsize},
+%regardless of how much material it has.
+代价最小的位置被记录下来，而当代价为无穷时，即页面过满或惩罚值为
+$p\leq-10\,000$ 时，当前页面就在（上回记录的）代价最小位置分开。
+分出来的部分就被放入 \cs{box255}，然后输出例程记号列被插入。
+第~255~号盒子的高度总是被设为 \cs{vsize}，不管它包含多少素材。
+
+%The badness calculation is based on the amount of stretching
+%or shrinking that is necessary to fit the page in
+%a box with height \cs{vsize} 
+%and maximum depth \cs{maxdepth}. This calculation is
+%the same as for line breaking (see Chapter~\ref{glue}).
+%Badness is a value $0\leq b\leq 10\,000$, except when
+%pages are overfull; then~$b=\infty$.
+丑度计算基于要将页面放入高度为 \cs{vsize} 深度不超过 \cs{maxdepth}
+的盒子所需的伸长或收缩量。计算方法和断行时一样（见第~\ref{glue}~章）。
+丑度满足 $0\leq b\leq 10\,000$，除了在页面过满时~$b=\infty$。
+
+%\advance\rightskip by -5.5cm
+\advance\rightskip by -5.5cm
+
+%Some penalties are implicitly inserted by \TeX, 
+%for instance the \cs{interlinepenalty}
+%which is put in between every pair of lines of a paragraph.
+%Other penalties can
+%be explicitly inserted by the user or a user macro. 
+%A~penalty
+%value $p\geq10\,000$ inhibits breaking; a penalty
+%$p\leq-10\,000$ (in external vertical mode)
+%\alt
+%forces a page break, and immediately
+%activates the output routine. 
+有些惩罚是由 \TeX\ 隐式插入的，比如 \cs{interlinepenalty}
+就是在段落任何两行间自动插入的。其他惩罚可以由用户或用户宏隐式插入。
+惩罚值 $p\geq10\,000$ 将阻止分页；而惩罚值
+$p\leq-10\,000$（在外部竖直模式中）%
+\alt
+将强制分页，并立即激活输出例程。
+
+%Cost calculation proceeds as follows:
+%\begin{enumerate} \item When a penalty is so low that it forces
+%a page break and immediate invocation of the output routine, 
+%but the page is not overfull, that is
+%\begin{disp}$b<\infty\quad\hbox{and}\quad p\leq-10\,000$\end{disp}
+%the cost is equal to the penalty:~$c=p$.
+分页代价依照下面步骤计算：
+\begin{enumerate}
+\item 若惩罚值小到导致强制分页并立即激活输出例程，而且页面不是过满的，即
+\begin{disp}$b<\infty\quad\hbox{且}\quad p\leq-10\,000$\end{disp}
+则代价等于惩罚值：$c=p$。
+
+%\item When penalties do not force anything, and the page is not
+%overfull, that is
+%\begin{disp}$b<\infty\quad\hbox{and}\quad |p|<10\,000$\end{disp}
+%the cost is~$c=b+p$.
+\item 若惩罚值不会导致强制或禁止分页，而且页面不是过满的，即
+\begin{disp}$b<\infty\quad\hbox{且}\quad |p|<10\,000$\end{disp}
+则代价等于~$c=b+p$。
+
+%\item For pages that are very bad, that is
+%\begin{disp}$b=10\,000\quad\hbox{and}\quad |p|<10\,000$\end{disp}
+%the cost is~$c=10\,000$.
+\item 若页面非常糟糕，即
+\begin{disp}$b=10\,000\quad\hbox{且}\quad |p|<10\,000$\end{disp}
+则代价等于~$c=10\,000$.
+
+%\item An overfull page, that is
+%\begin{disp}$b=\infty\quad\hbox{and}\quad p<10\,000$\end{disp}
+%gives infinite cost:~$c=\infty$.
+%In this case \TeX\ decides that the optimal break point
+%must have occurred earlier, and it invokes the output routine.
+%Values of \cs{insertpenalties} (see Chapter~\ref{insert})
+%that exceed $10\,000$
+%also give infinite cost.
+%\end{enumerate}
+\item 若页面过满，即
+\begin{disp}$b=\infty\quad\hbox{且}\quad p<10\,000$\end{disp}
+则代价为无穷大：$c=\infty$.
+此时 \TeX\ 判定最佳分页点应该出现在前面，并且调用输出例程。
+超过 $10\,000$ 的 \cs{insertpenalties} 值（见第~\ref{insert}~章）%
+同样给出无穷大的代价。
+\end{enumerate}
+
+%The fact that a penalty $p\leq-10\,000$ activates
+%the output routine is used extensively
+%in the \LaTeX\ output routine: 
+%the excess $\mathopen|p\mathclose|-10\,000$ is
+%a code indicating the reason for calling the output routine;
+%see also the second example in the next chapter.
+惩罚值 $p\leq-10\,000$ 将激活输出例程这个事实在 \LaTeX\ 输出例程中多次用到：
+差值码 $\mathopen|p\mathclose|-10\,000$ 用于表示调用输出例程的原因%
+【译注：见 \verb|source2e| 第~317~页】；另外可以见下一章的第二个例子。
+
+%\index{breakpoints!computation of|)}
+\index{breakpoints!computation of|)}
+
+%\section{\protect\cs{vsplit}}
+%\label{vsplit}
+\section{分割竖直列}
+\label{vsplit}
+
+%The page-breaking operation is available to the user
+%through the \csidx{vsplit} operation.
+用户可以通过 \csidx{vsplit} 命令实现分页操作。
+
+%\begin{example}
+%\begin{verbatim}
+%\setbox1 = \vsplit2 to \dimen3
+%\end{verbatim}
+%assigns to box~1 the top part of size \cs{dimen3}
+%of box~2. This material is actually removed from box~2.
+%Compare this with splitting off a chunk of size \cs{vsize}
+%from the current page.
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\setbox1 = \vsplit2 to \dimen3
+\end{verbatim}
+将~2~号盒子顶部 \cs{dimen3} 大小的部分赋予~1~号盒子。
+这部分素材实际上是从~2~号盒子移除出来的。
+可以将它与从当前页面分割出 \cs{vsize} 大小的一块内容作对比。
+\end{example}
+
+%The extracted
+%result of 
+%\begin{disp}\cs{vsplit}\gr{8-bit number}\n{to}\gr{dimen}
+%\end{disp} is a box with the following properties.
+%\begin{itemize} \item Height equal to the specified \gr{dimen}; \TeX\ will
+%      go through the original box register (which must contain
+%      a vertical box) to find the best breakpoint. This may
+%      result in an underfull box.
+%\item Depth at most \csidx{splitmaxdepth}; this is analogous to
+%            the \cs{maxdepth} for the page box, rather than the \cs{boxmaxdepth}
+%      that holds for any box.
+%\item A first and last mark in the \cs{splitfirstmark} and 
+%      \cs{splitbotmark} registers.
+%\end{itemize}
+分割命令
+\begin{disp}
+\cs{vsplit}\gr{8-bit number}\n{to}\gr{dimen}
+\end{disp}
+提取出的结果是一个满足下列属性的盒子：
+\begin{itemize}
+\item 高度等于指定的 \gr{dimen}；\TeX\ 将遍历原始的盒子寄存器%
+      （它必须容纳一个竖直盒子）以找到最佳断点。最后可能得到一个未满盒子。
+\item 深度不超过 \csidx{splitmaxdepth}；与它类似的是页面盒子的 \cs{maxdepth}，
+      而不是对任何盒子都适用的 \cs{boxmaxdepth}。
+\item 第一个和最后一个标记放在 \cs{splitfirstmark} 和 \cs{splitbotmark}寄存器中。
+\end{itemize}
+
+%The remainder of the \cs{vsplit} operation is a box where
+%\begin{itemize} \item all discardables have been removed
+%      from the top;
+%\item glue of size \csidx{splittopskip} has been inserted on top;
+%      if the box being split was box~255, it
+%      already had \cs{topskip} glue on top;
+%\item its depth has been forced to be at most \cs{splitmaxdepth}.
+%\end{itemize}
+而经过 \cs{vsplit} 操作后盒子的剩余部分是这样的：
+\begin{itemize}
+\item 顶部的所有可弃项都被删除；
+\item 大小为 \csidx{splittopskip} 的粘连被插入到顶部；
+      如果所分割的是第~255~号盒子，它的顶部已经有了 \cs{topskip} 粘连；
+\item 其深度不得超过 \cs{splitmaxdepth}。
+\end{itemize}
+
+%The bottom of the original box is always a valid breakpoint
+%for the \cs{vsplit} operation. If this breakpoint is taken,
+%the remainder box register is void. The extracted box
+%can be empty; it is only void if the original box
+%was void, or not a vertical box.
+原始盒子的底部始终是 \cs{vsplit} 操作的合适断点。
+如果选择它为断点，剩余的盒子寄存器就是空的。提取出的盒子也可以是空的；
+它是空的当且仅当原始盒子是空的或者并非竖直盒子。
+
+%Typically, the \cs{vsplit} operation is used to split off part
+%of \cs{box255}. By setting \cs{splitmaxdepth} equal to \cs{boxmaxdepth}
+%the result is something that could have been made by \TeX's page
+%builder. After pruning the top of \cs{box255}, the 
+%mark registers \cs{firstmark} and \cs{botmark} contain the first
+%and last marks on the remainder of box~255.
+%See the next chapter for more information on marks.
+通常，\cs{vsplit} 被用于从 \cs{box255} 分割出一部分。
+通过设定 \cs{splitmaxdepth} 等于 \cs{boxmaxdepth}，
+得到的结果就和 \TeX\ 的页面构建器的一样。
+在修剪 \cs{box255} 顶部之后，标记寄存器 \cs{firstmark} 和 \cs{botmark}
+就包含 \cs{box255} 剩余部分的第一个和最后一个标记。
+见下一章关于标记的更多信息。
+
+%%\point Examples of page breaking
+%\section{Examples of page breaking}
+%\point Examples of page breaking
+\section{分页的例子}
+
+%%\spoint Filling up a page
+%\subsection{Filling up a page}
+%\spoint Filling up a page
+\subsection{填满页面}
+
+%Suppose a certain vertical box is too large
+%to fit on the remainder of the page.
+%Then
+%\begin{verbatim}
+%\vfil\vbox{ ... }
+%\end{verbatim}
+%is the wrong way
+%to fill up the page and push the box to the next.
+%\TeX\ can only break at the start of the glue, and
+%the \cs{vfil} is discarded after the break: the result
+%is an underfull, or at least horribly stretched, page.
+%On the other hand,
+%\begin{verbatim}
+%\vfil\penalty0 % or any other value
+%\vbox{ ... }
+%\end{verbatim}
+%is the correct way: \TeX\ will break
+%at the penalty, and the page will be filled.
+假设某个竖直盒子太大以致在页面剩余部分放不下。
+要将页面填满并将该盒子放到下一页，使用
+\begin{verbatim}
+\vfil\vbox{ ... }
+\end{verbatim}
+是错误的。这样 \TeX\ 只会在 \cs{vfil} 粘连开始处分页，
+而分页后 \cs{vfil} 将会被丢弃：结果将得到一个未满页面，
+或者至少是一个有伸长太多的糟糕页面。另一方面，
+\begin{verbatim}
+\vfil\penalty0 % or any other value
+\vbox{ ... }
+\end{verbatim}
+就是正确的做法：\TeX\ 将在惩罚处分页，而该页面将被填满。
+
+%%\spoint Determining the breakpoint
+%\subsection{Determining the breakpoint}
+%\spoint Determining the breakpoint
+\subsection{确定断点}
+
+%In the following examples the \cs{vsplit} operation is
+%used, which has the same
+%mechanism as page breaking.
+在接下来的例子中我们使用与分页机制相同的 \cs{vsplit} 操作。
+
+%Let the macros and
+%parameter settings
+%\begin{verbatim}
+%\offinterlineskip \showboxdepth=1
+%\def\High{\hbox{\vrule height5pt}}
+%\def\HighAndDeep{\hbox{\vrule height2.5pt depth2.5pt}}
+%\end{verbatim}
+%be given.
+假设已经给出下面的宏和参数设定：
+\begin{verbatim}
+\offinterlineskip \showboxdepth=1
+\def\High{\hbox{\vrule height5pt}}
+\def\HighAndDeep{\hbox{\vrule height2.5pt depth2.5pt}}
+\end{verbatim}
+
+%First let us consider
+%an example where a vertical list is simply stretched
+%in order to reach a break point.
+%\begin{verbatim}
+%\splitmaxdepth=4pt 
+%\setbox1=\vbox{\High \vfil \HighAndDeep}
+%\setbox2=\vsplit1 to 9pt
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%> \box2=
+%\vbox(9.0+2.5)x0.4, glue set 1.5fil
+%.\hbox(5.0+0.0)x0.4 []
+%.\glue 0.0 plus 1.0fil
+%.\glue(\lineskip) 0.0
+%.\hbox(2.5+2.5)x0.4 []
+%\end{verbatim}
+%The two boxes together have a height of \n{7.5pt},
+%so the glue has to stretch~\n{1.5pt}.
+首先我们考虑伸长竖直列以到达断点的例子。 
+\begin{verbatim}
+\splitmaxdepth=4pt 
+\setbox1=\vbox{\High \vfil \HighAndDeep}
+\setbox2=\vsplit1 to 9pt
+\end{verbatim}
+给出
+\begin{verbatim}
+> \box2=
+\vbox(9.0+2.5)x0.4, glue set 1.5fil
+.\hbox(5.0+0.0)x0.4 []
+.\glue 0.0 plus 1.0fil
+.\glue(\lineskip) 0.0
+.\hbox(2.5+2.5)x0.4 []
+\end{verbatim}
+这两个盒子合起来的高度为 \n{7.5pt}，因此粘连需要伸长~\n{1.5pt}。
+
+%Next, we decrease the allowed depth of the resulting list.
+%\begin{verbatim}
+%\splitmaxdepth=2pt 
+%\setbox1=\vbox{\High \vfil \HighAndDeep}
+%\setbox2=\vsplit1 to 9pt
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%> \box2=
+%\vbox(9.0+2.0)x0.4, glue set 1.0fil
+%.\hbox(5.0+0.0)x0.4 []
+%.\glue 0.0 plus 1.0fil
+%.\glue(\lineskip) 0.0
+%.\hbox(2.5+2.5)x0.4 []
+%\end{verbatim}
+%The reference point is moved down half a point,
+%and the stretch is correspondingly diminished,
+%\alt
+%but this motion cannot lead to a larger dimension
+%than was specified.
+其次，我们减少结果列表所允许的深度值。
+\begin{verbatim}
+\splitmaxdepth=2pt 
+\setbox1=\vbox{\High \vfil \HighAndDeep}
+\setbox2=\vsplit1 to 9pt
+\end{verbatim}
+给出
+\begin{verbatim}
+> \box2=
+\vbox(9.0+2.0)x0.4, glue set 1.0fil
+.\hbox(5.0+0.0)x0.4 []
+.\glue 0.0 plus 1.0fil
+.\glue(\lineskip) 0.0
+.\hbox(2.5+2.5)x0.4 []
+\end{verbatim}
+此时基准点被下移 \n{0.5pt}，而伸长量也相应减少，
+\alt
+但是结果列表的尺寸不会比所指定的大。
+
+%As an example of this,
+%\alt
+%consider the sequence
+%\begin{verbatim}
+%\splitmaxdepth=3pt 
+%\setbox1=\vbox{\High \kern1.5pt \HighAndDeep}
+%\setbox2=\vsplit1 to 9pt
+%\end{verbatim}
+%This gives a box exactly 9 points high and 2.5 points deep.
+%Setting \verb>\splitmaxdepth=2pt> does not increase
+%the height by half a point; instead, an underfull box
+%results because an earlier break is taken.
+作为这个事实的例子，
+\alt
+再考虑下面的例子
+\begin{verbatim}
+\splitmaxdepth=3pt 
+\setbox1=\vbox{\High \kern1.5pt \HighAndDeep}
+\setbox2=\vsplit1 to 9pt
+\end{verbatim}
+这将会给出一个恰好 \n{9pt} 高 \n{2.5pt} 深的盒子：
+\begin{verbatim}
+> \box2=
+\vbox(9.0+2.5)x0.4
+.\hbox(5.0+0.0)x0.4 []
+.\kern 1.5
+.\glue(\lineskip) 0.0
+.\hbox(2.5+2.5)x0.4 []
+\end{verbatim}
+若改为 \verb>\splitmaxdepth=2pt>，将不会让高度增加 \n{0.5pt}；
+反而由于断点提前而得到一个未满盒子：
+\begin{verbatim}
+> \box2=
+\vbox(9.0+0.0)x0.4
+.\hbox(5.0+0.0)x0.4 []
+\end{verbatim}
+
+%Sometimes the timing of actions is important.
+%\TeX\ first locates a breakpoint that will lead
+%to the requested height, then checks whether accommodating
+%the \cs{maxdepth} or \cs{splitmaxdepth} will not
+%violate that height.
+有时候分割的时机也是重要的。
+\TeX\ 首先寻找能得到所需高度的断点，然后看依照 \cs{maxdepth}
+或 \cs{splitmaxdepth} 调节深度是否会超出规定高度。
+
+%Consider an example of this timing:
+%\alt
+%in
+%\begin{verbatim}
+%\splitmaxdepth=4pt 
+%\setbox1=\vbox{\High \vfil \HighAndDeep}
+%\setbox2=\vsplit1 to 7pt
+%\end{verbatim}
+%the result is {\italic not\/} a box
+%of 7 points high and 3 points deep. Instead,
+%\begin{verbatim}
+%> \box2=
+%\vbox(7.0+0.0)x0.4
+%.\hbox(5.0+0.0)x0.4 []
+%\end{verbatim}
+%which is an underfull box.
+考虑一个与此时机有关的例子：
+\alt
+这段代码
+\begin{verbatim}
+\splitmaxdepth=4pt 
+\setbox1=\vbox{\High \vfil \HighAndDeep}
+\setbox2=\vsplit1 to 7pt
+\end{verbatim}
+所得结果{\italic 并非\/}一个 \n{7pt} 高 \n{3pt} 深的盒子，
+而是一个未满盒子：
+\begin{verbatim}
+> \box2=
+\vbox(7.0+0.0)x0.4
+.\hbox(5.0+0.0)x0.4 []
+\end{verbatim}
+
+%%\spoint[par:page:build] The page builder after a paragraph
+%\subsection{The page builder after a paragraph}
+%\label{par:page:build}
+%\spoint[par:page:build] The page builder after a paragraph
+\subsection{段落后的页面构建}
+\label{par:page:build}
+
+%After a paragraph, the page builder moves material
+%to the current page, but it does not decide whether a breakpoint
+%has been found yet.
+在段落结束后，页面构建器将素材移动到当前页面，
+但它并不决定断点是否已经找到。
+
+%\begin{example}
+%\begin{verbatim}
+%\output{\interrupt \plainoutput}% show when you're active
+%\def\nl{\hfil\break}\vsize=22pt % make pages of two lines
+%a\nl b\nl c\par \showlists      % make a 3-line paragraph
+%\end{verbatim}
+%will report
+%\begin{verbatim}
+%### current page:
+%[...]
+%total height 34.0
+% goal height 22.0
+%prevdepth 0.0, prevgraf 3 lines
+%\end{verbatim}
+%Even though more than enough
+%material has been gathered, \cs{output} is only invoked
+%when the next paragraph starts: typing a \n d gives
+%\begin{verbatim}
+%! Undefined control sequence.
+%<output> {\interrupt 
+%                     \plainoutput }
+%<to be read again> 
+%                   d
+%\end{verbatim}
+%when \cs{output} is inserted after \cs{everypar}.
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\output{\interrupt \plainoutput}% show when you're active
+\def\nl{\hfil\break}\vsize=22pt % make pages of two lines
+a\nl b\nl c\par \showlists      % make a 3-line paragraph
+\end{verbatim}
+将报告
+\begin{verbatim}
+### current page:
+[...]
+total height 34.0
+ goal height 22.0
+prevdepth 0.0, prevgraf 3 lines
+\end{verbatim}
+纵使已经收集到过多的素材，\cs{output} 还是仅会在下个段落开始时才执行：
+当 \cs{output} 被插入到 \cs{everypar} 后，键入 \n d 将给出
+\begin{verbatim}
+! Undefined control sequence.
+<output> {\interrupt 
+                     \plainoutput }
+<to be read again> 
+                   d
+\end{verbatim}
+\end{example}
+
+%\index{page!breaking|)}
+\index{page!breaking|)}
+
+%\endofchapter
+\endofchapter
+
+\end{document}

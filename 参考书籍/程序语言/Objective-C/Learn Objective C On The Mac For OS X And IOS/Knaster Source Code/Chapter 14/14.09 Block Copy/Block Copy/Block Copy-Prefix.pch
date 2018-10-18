@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Block Copy' target in the 'Block Copy' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

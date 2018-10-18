@@ -1,0 +1,1323 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{18}
+
+\begin{document}
+
+%\chapter{Line Breaking}\label{line:break}
+%\index{paragraph!breaking into lines|(}
+%\index{line breaking|(}
+\chapter{Line Breaking}\label{line:break}
+\index{paragraph!breaking into lines|(}
+\index{line breaking|(}
+
+%This chapter treats line breaking and the concept of `badness' that \TeX\
+%uses to decide how to break a paragraph into lines,
+%or where to break a page.
+%The various penalties contributing to the cost of line breaking
+%are treated here, as is hyphenation.
+%Page breaking is treated in Chapter~\ref{page:break}.
+This chapter treats line breaking and the concept of `badness' that \TeX\
+uses to decide how to break a paragraph into lines,
+or where to break a page.
+The various penalties contributing to the cost of line breaking
+are treated here, as is hyphenation.
+Page breaking is treated in Chapter~\ref{page:break}.
+
+%\label{cschap:penalty}\label{cschap:linepenalty}\label{cschap:hyphenpenalty}\label{cschap:exhyphenpenalty}\label{cschap:adjdemerits}\label{cschap:doublehyphendemerits}\label{cschap:finalhyphendemerits}\label{cschap:allowbreak}\label{cschap:pretolerance}\label{cschap:tolerance}\label{cschap:emergencystretch}\label{cschap:looseness}\label{cschap:prevgraf}\label{cschap:discretionary}\label{cschap:-}\label{cschap:hyphenchar2}\label{cschap:defaulthyphenchar2}\label{cschap:uchyph}\label{cschap:lefthyphenmin}\label{cschap:righthyphenmin}\label{cschap:patterns}\label{cschap:hyphenation}\label{cschap:language}\label{cschap:setlanguage}
+%\begin{inventory}
+%\item [\cs{penalty}]
+%      Specify desirability of not breaking at this point.
+\label{cschap:penalty}\label{cschap:linepenalty}\label{cschap:hyphenpenalty}\label{cschap:exhyphenpenalty}\label{cschap:adjdemerits}\label{cschap:doublehyphendemerits}\label{cschap:finalhyphendemerits}\label{cschap:allowbreak}\label{cschap:pretolerance}\label{cschap:tolerance}\label{cschap:emergencystretch}\label{cschap:looseness}\label{cschap:prevgraf}\label{cschap:discretionary}\label{cschap:-}\label{cschap:hyphenchar2}\label{cschap:defaulthyphenchar2}\label{cschap:uchyph}\label{cschap:lefthyphenmin}\label{cschap:righthyphenmin}\label{cschap:patterns}\label{cschap:hyphenation}\label{cschap:language}\label{cschap:setlanguage}
+\begin{inventory}
+\item [\cs{penalty}]
+      Specify desirability of not breaking at this point.
+
+%\item [\cs{linepenalty}]
+%      Penalty value associated with each line break.
+%      Plain \TeX\ default:~\n{10}.
+\item [\cs{linepenalty}]
+      Penalty value associated with each line break.
+      Plain \TeX\ default:~\n{10}.
+
+%\item [\cs{hyphenpenalty}]
+%      Penalty associated with break at a discretionary item
+%      in the general case.
+%      Plain \TeX\ default:~\n{50}.
+\item [\cs{hyphenpenalty}]
+      Penalty associated with break at a discretionary item
+      in the general case.
+      Plain \TeX\ default:~\n{50}.
+
+%\item [\cs{exhyphenpenalty}]
+%      Penalty for breaking a horizontal line at a discretionary
+%      item in the special case where the prebreak text is empty.
+%      Plain \TeX\ default:~\n{50}.
+\item [\cs{exhyphenpenalty}]
+      Penalty for breaking a horizontal line at a discretionary
+      item in the special case where the prebreak text is empty.
+      Plain \TeX\ default:~\n{50}.
+
+%\item [\cs{adjdemerits}]
+%      Penalty for adjacent visually incompatible lines.
+%      Plain \TeX\ default:~\n{10$\,$000}.
+\item [\cs{adjdemerits}]
+      Penalty for adjacent visually incompatible lines.
+      Plain \TeX\ default:~\n{10$\,$000}.
+
+%\item [\cs{doublehyphendemerits}]
+%      Penalty for consecutive lines ending with a hyphen.
+%      Plain \TeX\ default: \n{10$\,$000}.
+\item [\cs{doublehyphendemerits}]
+      Penalty for consecutive lines ending with a hyphen.
+      Plain \TeX\ default: \n{10$\,$000}.
+
+%\item [\cs{finalhyphendemerits}]
+%      Penalty added when the penultimate line of a
+%      paragraph ends with a hyphen.
+%      Plain \TeX\ default:~\n{5000}.
+\item [\cs{finalhyphendemerits}]
+      Penalty added when the penultimate line of a
+      paragraph ends with a hyphen.
+      Plain \TeX\ default:~\n{5000}.
+
+%\item [\cs{allowbreak}]
+%      Macro for creating a breakpoint by inserting a
+%      \cs{penalty0}.
+\item [\cs{allowbreak}]
+      Macro for creating a breakpoint by inserting a
+      \cs{penalty0}.
+
+%\item [\cs{pretolerance}]
+%      Tolerance value for a paragraph without hyphenation.
+%      Plain \TeX\ default:~\n{100}.
+\item [\cs{pretolerance}]
+      Tolerance value for a paragraph without hyphenation.
+      Plain \TeX\ default:~\n{100}.
+
+%\item [\cs{tolerance}]
+%      Tolerance value for lines in a paragraph with hyphenation.
+%      Plain \TeX\ default:~\n{200}.
+\item [\cs{tolerance}]
+      Tolerance value for lines in a paragraph with hyphenation.
+      Plain \TeX\ default:~\n{200}.
+
+%\item [\cs{emergencystretch}]
+%      (\TeX3 only)
+%      Assumed extra stretchability in lines of a paragraph.
+\item [\cs{emergencystretch}]
+      (\TeX3 only)
+      Assumed extra stretchability in lines of a paragraph.
+
+%\item [\cs{looseness}]
+%      Number of lines by which this paragraph has to be made longer
+%      than it would be ideally.
+\item [\cs{looseness}]
+      Number of lines by which this paragraph has to be made longer
+      than it would be ideally.
+
+%\item [\cs{prevgraf}]
+%      The number of lines in the paragraph last
+%      added to the vertical list.
+\item [\cs{prevgraf}]
+      The number of lines in the paragraph last
+      added to the vertical list.
+
+%\item [\cs{discretionary}]
+%      Specify the way a character sequence is split up at a line break.
+\item [\cs{discretionary}]
+      Specify the way a character sequence is split up at a line break.
+
+%\item [\cs{-}]
+%      Discretionary hyphen; this is
+%      equivalent to \verb|\discretionary{-}{}{}|.
+\item [\cs{-}]
+      Discretionary hyphen; this is
+      equivalent to \verb|\discretionary{-}{}{}|.
+
+%\item [\cs{hyphenchar}]
+%      Number of the hyphen character of a font.
+\item [\cs{hyphenchar}]
+      Number of the hyphen character of a font.
+
+%\item [\cs{defaulthyphenchar}]
+%      Value of \cs{hyphenchar} when a font is loaded.
+%      Plain \TeX\ default:~\n{`\cs{-}}.
+\item [\cs{defaulthyphenchar}]
+      Value of \cs{hyphenchar} when a font is loaded.
+      Plain \TeX\ default:~\n{`\cs{-}}.
+
+%\item [\cs{uchyph}]
+%      Positive to allow hyphenation of words starting with a capital
+%      letter.
+%      Plain \TeX\ default:~\n{1}.
+\item [\cs{uchyph}]
+      Positive to allow hyphenation of words starting with a capital
+      letter.
+      Plain \TeX\ default:~\n{1}.
+
+%\item [\cs{lefthyphenmin}]
+%      (\TeX3 only)
+%      Minimal number of characters before a hyphenation.
+%      Plain \TeX\ default:~\n{2}.
+\item [\cs{lefthyphenmin}]
+      (\TeX3 only)
+      Minimal number of characters before a hyphenation.
+      Plain \TeX\ default:~\n{2}.
+
+%\item [\cs{righthyphenmin}]
+%      (\TeX3 only)
+%      Minimum number of characters after a hyphenation.
+%      Plain \TeX\ default:~\n{3}.
+\item [\cs{righthyphenmin}]
+      (\TeX3 only)
+      Minimum number of characters after a hyphenation.
+      Plain \TeX\ default:~\n{3}.
+
+%\item [\cs{patterns}]
+%      Define a list of hyphenation patterns for the current
+%      value of \cs{language};  allowed only in \IniTeX.
+\item [\cs{patterns}]
+      Define a list of hyphenation patterns for the current
+      value of \cs{language};  allowed only in \IniTeX.
+
+%\item [\cs{hyphenation}]
+%      Define hyphenation exceptions for the current value of \cs{language}.
+\item [\cs{hyphenation}]
+      Define hyphenation exceptions for the current value of \cs{language}.
+
+%\item [\cs{language}]
+%      Choose a set of hyphenation patterns and exceptions.
+\item [\cs{language}]
+      Choose a set of hyphenation patterns and exceptions.
+
+%\item [\cs{setlanguage}]
+%      Reset the current language.
+\item [\cs{setlanguage}]
+      Reset the current language.
+
+%\end{inventory}
+\end{inventory}
+
+
+%%\point Paragraph break cost calculation
+%\section{Paragraph break cost calculation}
+%\point Paragraph break cost calculation
+\section{Paragraph break cost calculation}
+
+%A paragraph is broken such that the amount $d$ of {\em demerits\/}
+%associated with breaking it is minimized.
+%The total amount of demerits for a paragraph is the sum
+%of those for the individual lines, plus possibly some extra
+%penalties. Considering a paragraph as a whole instead of
+%breaking it on a line-by-line basis can lead to better
+%line breaking: \TeX\ can choose to take a slightly less beautiful
+%line in the beginning of the paragraph in order to avoid
+%bigger trouble later on.
+A paragraph is broken such that the amount $d$ of {\em demerits\/}
+associated with breaking it is minimized.
+The total amount of demerits for a paragraph is the sum
+of those for the individual lines, plus possibly some extra
+penalties. Considering a paragraph as a whole instead of
+breaking it on a line-by-line basis can lead to better
+line breaking: \TeX\ can choose to take a slightly less beautiful
+line in the beginning of the paragraph in order to avoid
+bigger trouble later on.
+
+%For each line demerits are calculated from the {\em badness\/}~$b$
+%of stretching or shrinking the line to the break, and
+%the {\em penalty\/}~$p$ associated with the break.
+%The badness is not allowed to exceed a certain prescribed
+%tolerance.
+For each line demerits are calculated from the {\em badness\/}~$b$
+of stretching or shrinking the line to the break, and
+the {\em penalty\/}~$p$ associated with the break.
+The badness is not allowed to exceed a certain prescribed
+tolerance.
+
+%In addition to the demerits for breaking individual lines,
+%\TeX\ assigns demerits for the way lines combine; see below.
+In addition to the demerits for breaking individual lines,
+\TeX\ assigns demerits for the way lines combine; see below.
+
+%The
+%\mdqon
+%implementation of \TeX's paragraph"-breaking algorithm
+%\mdqoff
+%is explained in~\cite{K:break}.
+The
+\mdqon
+implementation of \TeX's paragraph"-breaking algorithm
+\mdqoff
+is explained in~\cite{K:break}.
+
+%%\spoint Badness
+%\subsection{Badness}
+%\spoint Badness
+\subsection{Badness}
+
+%From the ratio between the stretch or shrink present in a
+%line, and the actual stretch or shrink taken,
+%the \emph{badness}\index{badness! and line breaking}\index{line breaking!badness}
+%of breaking a line at a certain point is calculated.
+%This badness is an important
+%factor in the process of line breaking.
+%See page~\pageref{bad:form} for the formula for badness.
+From the ratio between the stretch or shrink present in a
+line, and the actual stretch or shrink taken,
+the \emph{badness}\index{badness! and line breaking}\index{line breaking!badness}
+of breaking a line at a certain point is calculated.
+This badness is an important
+factor in the process of line breaking.
+See page~\pageref{bad:form} for the formula for badness.
+
+%In this chapter
+%badness will only be discussed in the context of line breaking.
+%Badness is also computed when a vertical list is stretched
+%or shrunk (see Chapter~\ref{page:break}).
+In this chapter
+badness will only be discussed in the context of line breaking.
+Badness is also computed when a vertical list is stretched
+or shrunk (see Chapter~\ref{page:break}).
+
+%The following terminology is used to describe badness:
+%\begin{description} \item [tight (3)]
+%is any line that has shrunk with a badness~$b\geq13$,
+%that is, by using at least one-half of its amount of shrink
+%(see page~\pageref{bad:form} for the computation).
+%\item [decent (2)]
+%is any line with a badness~$b\leq12$.
+%\item [loose (1)]
+%is any line that has stretched with a badness~$b\geq13$,
+%that is, by using at least one-half of its amount of stretch.
+%\item [very loose (0)]
+%is any line that has stretched with a badness~$b\geq100$,
+%that is, by using its full amount of stretch or more. Recall
+%that glue can stretch, but not shrink more than its
+%allowed amount.
+%\end{description}
+%The numbering is used in trace output (Chapter~\ref{trace}), and
+%it is also used in the following definition:
+%if the classifications of two adjacent lines differ by more than~1,
+%the lines are said to be {\em visually incompatible\/}.
+%See below for the \cs{adjdemerits} parameter associated with this.
+The following terminology is used to describe badness:
+\begin{description} \item [tight (3)]
+is any line that has shrunk with a badness~$b\geq13$,
+that is, by using at least one-half of its amount of shrink
+(see page~\pageref{bad:form} for the computation).
+\item [decent (2)]
+is any line with a badness~$b\leq12$.
+\item [loose (1)]
+is any line that has stretched with a badness~$b\geq13$,
+that is, by using at least one-half of its amount of stretch.
+\item [very loose (0)]
+is any line that has stretched with a badness~$b\geq100$,
+that is, by using its full amount of stretch or more. Recall
+that glue can stretch, but not shrink more than its
+allowed amount.
+\end{description}
+The numbering is used in trace output (Chapter~\ref{trace}), and
+it is also used in the following definition:
+if the classifications of two adjacent lines differ by more than~1,
+the lines are said to be {\em visually incompatible\/}.
+See below for the \cs{adjdemerits} parameter associated with this.
+
+%Overfull horizontal and vertical
+%boxes are passed unnoticed if their excess width
+%or height is less than \cs{hfuzz} or \cs{vfuzz} respectively;
+%they are not reported if the badness is less than
+%\cs{hbadness} or \cs{vbadness} (see Chapter~\ref{boxes}).
+Overfull horizontal and vertical
+boxes are passed unnoticed if their excess width
+or height is less than \cs{hfuzz} or \cs{vfuzz} respectively;
+they are not reported if the badness is less than
+\cs{hbadness} or \cs{vbadness} (see Chapter~\ref{boxes}).
+
+%%\spoint Penalties and other break locations
+%\subsection{Penalties and other break locations}
+%
+%Line breaks can occur at the following \emph{breakpoints}
+%\index{lists !horizontal! breakpoints in}
+%in horizontal lists:
+%\begin{enumerate} \item At a penalty. The penalty value is the
+%`aesthetic cost' of breaking the line at that place.
+%Negative penalties are considered as bonuses.
+%A~penalty of $10\,000$ or more inhibits, and a penalty
+%of $-10\,000$ or less forces, a~break.
+%\spoint Penalties and other break locations
+\subsection{Penalties and other break locations}
+
+Line breaks can occur at the following \emph{breakpoints}
+\index{lists !horizontal! breakpoints in}
+in horizontal lists:
+\begin{enumerate} \item At a penalty. The penalty value is the
+`aesthetic cost' of breaking the line at that place.
+Negative penalties are considered as bonuses.
+A~penalty of $10\,000$ or more inhibits, and a penalty
+of $-10\,000$ or less forces, a~break.
+
+%Putting more than one penalty
+%in a row is equivalent to putting just the one with the
+%minimal value, because that one is the best candidate for line breaking.
+Putting more than one penalty
+in a row is equivalent to putting just the one with the
+minimal value, because that one is the best candidate for line breaking.
+
+%Penalties in horizontal mode are inserted by the user (or a
+%user macro). The only exception is the \cs{nobreak}
+%inserted before the \cs{parfillskip} glue.
+Penalties in horizontal mode are inserted by the user (or a
+user macro). The only exception is the \cs{nobreak}
+inserted before the \cs{parfillskip} glue.
+
+%\item At a glue, if it is not part of a math formula, and
+%if it is preceded by a non-discardable item (see Chapter~\ref{hvmode}).
+%There is no penalty associated with breaking at glue.
+\item At a glue, if it is not part of a math formula, and
+if it is preceded by a non-discardable item (see Chapter~\ref{hvmode}).
+There is no penalty associated with breaking at glue.
+
+%The condition about the non-discardable precursor is necessary,
+%because otherwise breaking in between  two pieces of glue would
+%be possible, which would cause ragged edges to the paragraph.
+The condition about the non-discardable precursor is necessary,
+because otherwise breaking in between  two pieces of glue would
+be possible, which would cause ragged edges to the paragraph.
+
+%\item At a kern, if it is not part of a math formula
+%and if it is followed by  glue.
+%There is no penalty associated with breaking at a~kern.
+\item At a kern, if it is not part of a math formula
+and if it is followed by  glue.
+There is no penalty associated with breaking at a~kern.
+
+%\item At a math-off, if that is followed by glue.
+%Since math-off
+%(and math-on) act as kerns (see Chapter~\ref{math}),
+%this is very much like the previous case.
+%There is no penalty associated with breaking at a~math-off.
+\item At a math-off, if that is followed by glue.
+Since math-off
+(and math-on) act as kerns (see Chapter~\ref{math}),
+this is very much like the previous case.
+There is no penalty associated with breaking at a~math-off.
+
+%\item At a discretionary break. The penalty
+%is the \cs{hyphenpenalty} or the \cs{exhyphenpenalty}.
+%This is treated below.
+%\end{enumerate}
+\item At a discretionary break. The penalty
+is the \cs{hyphenpenalty} or the \cs{exhyphenpenalty}.
+This is treated below.
+\end{enumerate}
+
+%Any discardable material following the break \ldash glue, kerns,
+%\mdqon
+%math-on/""off and penalties \rdash  is discarded. If one considers
+%\mdqoff
+%a line break at glue (kern, math-on{/}off) to occur at the
+%front end of the glue item, this implies that that piece
+%of glue disappears in the break.
+Any discardable material following the break \ldash glue, kerns,
+\mdqon
+math-on/""off and penalties \rdash  is discarded. If one considers
+\mdqoff
+a line break at glue (kern, math-on{/}off) to occur at the
+front end of the glue item, this implies that that piece
+of glue disappears in the break.
+
+%%\spoint Demerits
+%\subsection{Demerits}
+%\spoint Demerits
+\subsection{Demerits}
+
+%From the badness of a line and the penalty, if any, the demerits
+%of the line are calculated. Let $l$ be the value of
+%\csidx{linepenalty}, $b$~the badness of the line,
+%$p$~the penalty at the break; then the \indexterm{demerits}~$d$
+%are given by
+%\begin{disp}$\displaystyle d=\cases{(l+b)^2+p^2&if $0\leq p<10\,000$\cr
+%           (l+b)^2-p^2&if $-10\,000<p<0$\cr
+%           (l+b)^2    &if $p\leq-10\,000$\cr}$\end{disp}
+From the badness of a line and the penalty, if any, the demerits
+of the line are calculated. Let $l$ be the value of
+\csidx{linepenalty}, $b$~the badness of the line,
+$p$~the penalty at the break; then the \indexterm{demerits}~$d$
+are given by
+\begin{disp}$\displaystyle d=
+\begin{cases} (l+b)^2+p^2& \text{if } 0\leq p<10\,000 \\
+           (l+b)^2-p^2&\text{if } -10\,000<p<0 \\
+           (l+b)^2    &\text{if } p\leq-10\,000 \end{cases}$\end{disp}
+
+%Both this formula and the one for the badness are described
+%\alt
+%in \cite{K:break} as `quite arbitrary',
+%but they have been shown  to lead to
+%good results in practice.
+Both this formula and the one for the badness are described
+\alt
+in \cite{K:break} as `quite arbitrary',
+but they have been shown  to lead to
+good results in practice.
+
+%The demerits for a paragraph are the sum of the demerits for
+%the lines, plus
+%\begin{itemize}
+%\item the \csidx{adjdemerits} for any two
+%      adjacent lines that are not visually compatible (see above),
+%\item \csidx{doublehyphendemerits} for any two
+%      consecutive lines ending with a hyphen, and the
+%\item \csidx{finalhyphendemerits}
+%      if the penultimate line of a paragraph
+%   ends with a hyphen.\end{itemize}
+The demerits for a paragraph are the sum of the demerits for
+the lines, plus
+\begin{itemize}
+\item the \csidx{adjdemerits} for any two
+      adjacent lines that are not visually compatible (see above),
+\item \csidx{doublehyphendemerits} for any two
+      consecutive lines ending with a hyphen, and the
+\item \csidx{finalhyphendemerits}
+      if the penultimate line of a paragraph
+   ends with a hyphen.\end{itemize}
+
+%At the start of a paragraph \TeX\ acts as if
+%there was a preceding line which was `decent'.
+%Therefore \cs{adjdemerits} will be added if the first
+%line is `very loose'. Also, the last line
+%of a paragraph is ordinarily also `decent'
+%\ldash all spaces are set at natural width
+%owing to the infinite stretch in the \cs{parfillskip} \rdash
+%so \cs{adjdemerits} are added if
+%the preceding line is `very loose'.
+At the start of a paragraph \TeX\ acts as if
+there was a preceding line which was `decent'.
+Therefore \cs{adjdemerits} will be added if the first
+line is `very loose'. Also, the last line
+of a paragraph is ordinarily also `decent'
+\ldash all spaces are set at natural width
+owing to the infinite stretch in the \cs{parfillskip} \rdash
+so \cs{adjdemerits} are added if
+the preceding line is `very loose'.
+
+%Note that the penalties at which a line break
+%is chosen weigh about as heavily as the badness of
+%the line, so they can be relatively small.
+%However, the three extra demerit parameters
+%have to be of the order of the square of
+%penalties and badnesses to weigh equally heavily.
+Note that the penalties at which a line break
+is chosen weigh about as heavily as the badness of
+the line, so they can be relatively small.
+However, the three extra demerit parameters
+have to be of the order of the square of
+penalties and badnesses to weigh equally heavily.
+
+%%\spoint The number of lines of a paragraph
+%\subsection{The number of lines of a paragraph}
+%\spoint The number of lines of a paragraph
+\subsection{The number of lines of a paragraph}
+
+%After a paragraph has been completed (or partially
+%completed prior to a display), the variable \csidx{prevgraf}
+%records the number of lines in the paragraph.
+%By assigning to this variable \ldash and
+%because this is a \gr{special integer}
+%such an assignment is automatically global \rdash
+%\TeX's decision processes can be influenced.
+%This may be useful in combination with hanging indentation
+%or \cs{parshape} specifications (see Chapter~\ref{par:shape}).
+After a paragraph has been completed (or partially
+completed prior to a display), the variable \csidx{prevgraf}
+records the number of lines in the paragraph.
+By assigning to this variable \ldash and
+because this is a \gr{special integer}
+such an assignment is automatically global \rdash
+\TeX's decision processes can be influenced.
+This may be useful in combination with hanging indentation
+or \cs{parshape} specifications (see Chapter~\ref{par:shape}).
+
+%\mdqon
+%Some direct influence of the line"-breaking process
+%\mdqoff
+%on the resulting number of lines exists. One factor
+%is the \cs{linepenalty} which is included in the demerits
+%of each line. By increasing the line penalty \TeX\ can be
+%made to minimize the number of lines in a paragraph.
+\mdqon
+Some direct influence of the line"-breaking process
+\mdqoff
+on the resulting number of lines exists. One factor
+is the \cs{linepenalty} which is included in the demerits
+of each line. By increasing the line penalty \TeX\ can be
+made to minimize the number of lines in a paragraph.
+
+%Deviations from the optimal number of lines, that is, the
+%number of lines stemming from the optimal way of breaking a
+%paragraph into lines, can be forced by the user by means
+%of the \csidx{looseness} parameter. This parameter, which is
+%reset every time the shape parameters
+%are cleared (see Chapter~\ref{par:shape}),
+%indicates by how many lines the current
+%paragraph should be made longer than is optimal. A~negative
+%value of \cs{looseness} will attempt to make the paragraph shorter
+%by a number of lines that is the absolute value of the parameter.
+Deviations from the optimal number of lines, that is, the
+number of lines stemming from the optimal way of breaking a
+paragraph into lines, can be forced by the user by means
+of the \csidx{looseness} parameter. This parameter, which is
+reset every time the shape parameters
+are cleared (see Chapter~\ref{par:shape}),
+indicates by how many lines the current
+paragraph should be made longer than is optimal. A~negative
+value of \cs{looseness} will attempt to make the paragraph shorter
+by a number of lines that is the absolute value of the parameter.
+
+%\TeX\ will still observe the values
+%of \cs{pretolerance} and \cs{tolerance} (see below)
+%when lengthening or shortening a paragraph under influence
+%of \cs{looseness}.
+%Therefore,
+%\TeX\ will only lengthen or shorten a paragraph for as far
+%as is possible without exceeding these parameters.
+\TeX\ will still observe the values
+of \cs{pretolerance} and \cs{tolerance} (see below)
+when lengthening or shortening a paragraph under influence
+of \cs{looseness}.
+Therefore,
+\TeX\ will only lengthen or shorten a paragraph for as far
+as is possible without exceeding these parameters.
+
+
+%%\spoint[between:lines] Between the lines
+%\subsection{Between the lines}
+%\label{between:lines}
+%\spoint[between:lines] Between the lines
+\subsection{Between the lines}
+\label{between:lines}
+
+%\TeX's
+%paragraph mechanism packages lines into horizontal boxes
+%that are appended to the surrounding vertical list.
+%The resulting sequence of vertical items is then a
+%repeating sequence of
+%\begin{itemize}\item a box containing a line of text,
+%\item possibly migrated vertical material (see page~\pageref{migrate}),
+%\item a penalty item reflecting the cost of a page break
+%      at that point, which is normally the \cs{interlinepenalty}
+%      (see Chapter~\ref{page:break}), and
+%\item interline glue, which is calculated automatically
+%      on basis of the \cs{prevdepth} (see Chapter~\ref{baseline}).
+%\end{itemize}
+\TeX's
+paragraph mechanism packages lines into horizontal boxes
+that are appended to the surrounding vertical list.
+The resulting sequence of vertical items is then a
+repeating sequence of
+\begin{itemize}\item a box containing a line of text,
+\item possibly migrated vertical material (see page~\pageref{migrate}),
+\item a penalty item reflecting the cost of a page break
+      at that point, which is normally the \cs{interlinepenalty}
+      (see Chapter~\ref{page:break}), and
+\item interline glue, which is calculated automatically
+      on basis of the \cs{prevdepth} (see Chapter~\ref{baseline}).
+\end{itemize}
+
+%%\point The process of breaking
+%\section{The process of breaking}
+%\point The process of breaking
+\section{The process of breaking}
+
+%\TeX\ tries to break paragraphs in such a way that
+%the badness of each line does not exceed a certain tolerance.
+%If there exists more than one solution to this, the one with
+%the fewest demerits is taken.
+\TeX\ tries to break paragraphs in such a way that
+the badness of each line does not exceed a certain tolerance.
+If there exists more than one solution to this, the one with
+the fewest demerits is taken.
+
+%By setting \csidx{tracingparagraphs} to a positive value,
+%\TeX\ can be made to report the calculations of the
+%paragraph mechanism in the log file. Some implementations of \TeX\
+%may have this option disabled to make \TeX\ run faster.
+By setting \csidx{tracingparagraphs} to a positive value,
+\TeX\ can be made to report the calculations of the
+paragraph mechanism in the log file. Some implementations of \TeX\
+may have this option disabled to make \TeX\ run faster.
+
+%%\spoint Three passes
+%\subsection{Three passes}
+%\spoint Three passes
+\subsection{Three passes}
+
+%First an attempt is made to split the paragraph into lines
+%without hyphenating, that is, without inserting discretionary
+%hyphens. This attempt succeeds if none of the
+%lines has a badness exceeding \csidx{pretolerance}.
+First an attempt is made to split the paragraph into lines
+without hyphenating, that is, without inserting discretionary
+hyphens. This attempt succeeds if none of the
+lines has a badness exceeding \csidx{pretolerance}.
+
+%Otherwise, a second pass is made, inserting discretionaries
+%and using \csidx{tolerance}.
+%\handbreak If \cs{pretolerance} is negative, the first pass is omitted.
+Otherwise, a second pass is made, inserting discretionaries
+and using \csidx{tolerance}.
+\handbreak If \cs{pretolerance} is negative, the first pass is omitted.
+
+%\TeX\ can be made to make a third pass if the first and
+%second pass fail.
+%If \csidx{emergencystretch} is a positive dimension,
+%\TeX\ will assume this much extra stretchability
+%in each line when badness and demerits are calculated.
+%Thus solutions that only slightly exceeded the given
+%tolerances will now become feasible.
+%However, no glue of size \cs{emergencystretch} is
+%actually present, so underfull box messages
+%may still occur.
+\TeX\ can be made to make a third pass if the first and
+second pass fail.
+If \csidx{emergencystretch} is a positive dimension,
+\TeX\ will assume this much extra stretchability
+in each line when badness and demerits are calculated.
+Thus solutions that only slightly exceeded the given
+tolerances will now become feasible.
+However, no glue of size \cs{emergencystretch} is
+actually present, so underfull box messages
+may still occur.
+
+%%\spoint Tolerance values
+%\subsection{Tolerance values}
+%\spoint Tolerance values
+\subsection{Tolerance values}
+
+%How much
+%trouble \TeX\ will have typesetting a piece of text
+%depends partly on the tolerance value.
+%Therefore it is sensible to have some idea of
+%what badness values mean in visual terms.
+How much
+trouble \TeX\ will have typesetting a piece of text
+depends partly on the tolerance value.
+Therefore it is sensible to have some idea of
+what badness values mean in visual terms.
+
+%For lines that are stretched, the badness is
+%100 times the cube of the stretch ratio.
+%A~badness of 800 thus means that the stretch ratio
+%is~2.
+%If the space is,
+%\alt
+%as in the ten-point Computer Modern Font,
+%\begin{verbatim}
+%3.33pt plus 1.67pt minus 1.11pt
+%\end{verbatim}
+%a badness of 800 means that spaces have been stretched to
+%\begin{disp} \n{3.33pt}${}+2\times{}$\n{1.67pt}${}={}$\n{6.66pt}\end{disp}
+%that is, to exactly double their natural size.
+%It is up to you to decide whether this is too large.
+For lines that are stretched, the badness is
+100 times the cube of the stretch ratio.
+A~badness of 800 thus means that the stretch ratio
+is~2.
+If the space is,
+\alt
+as in the ten-point Computer Modern Font,
+\begin{verbatim}
+3.33pt plus 1.67pt minus 1.11pt
+\end{verbatim}
+a badness of 800 means that spaces have been stretched to
+\begin{disp} \n{3.33pt}${}+2\times{}$\n{1.67pt}${}={}$\n{6.66pt}\end{disp}
+that is, to exactly double their natural size.
+It is up to you to decide whether this is too large.
+
+%%\point Discretionaries
+%\section{Discretionaries}
+%\point Discretionaries
+\section{Discretionaries}
+
+%A \indexterm{discretionary item} \verb-\discretionary{..}{..}{..}-
+%\cstoidx discretionary\par
+%marks a place where a word can be broken.
+%Each of the three arguments is a \gr{general text}
+%(see Chapter~\ref{gramm}):
+%they are, in sequence,
+%\begin{itemize} \item the {\em pre-break\/} text, which is appended
+%to the part of the word before the break,
+%\item the {\em post-break\/} text, which is prepended to the part
+%of the word after the break, and
+%\item the {\em no-break\/} text, which is used if the word
+%is not broken at the discretionary item.\end{itemize}
+%For example: \verb>ab\discretionary{g}{h}{cd}ef>
+%is the word \hbox{\n{abcdef}}, but it can be hyphenated
+%\alt
+%with \n{abg} before the break and \n{hef} after.
+%Note that there is no automatic hyphen character.
+A \indexterm{discretionary item} \verb-\discretionary{..}{..}{..}-
+\cstoidx discretionary\par
+marks a place where a word can be broken.
+Each of the three arguments is a \gr{general text}
+(see Chapter~\ref{gramm}):
+they are, in sequence,
+\begin{itemize} \item the {\em pre-break\/} text, which is appended
+to the part of the word before the break,
+\item the {\em post-break\/} text, which is prepended to the part
+of the word after the break, and
+\item the {\em no-break\/} text, which is used if the word
+is not broken at the discretionary item.\end{itemize}
+For example: \verb>ab\discretionary{g}{h}{cd}ef>
+is the word \hbox{\n{abcdef}}, but it can be hyphenated
+\alt
+with \n{abg} before the break and \n{hef} after.
+Note that there is no automatic hyphen character.
+
+%All three texts may contain any sorts of tokens,
+%but any primitive commands and macros
+%should expand to boxes, kerns, and characters.
+All three texts may contain any sorts of tokens,
+but any primitive commands and macros
+should expand to boxes, kerns, and characters.
+
+%%\spoint Hyphens and discretionaries
+%\subsection{Hyphens and discretionaries}
+%\spoint Hyphens and discretionaries
+\subsection{Hyphens and discretionaries}
+
+%Internally, \TeX\ inserts the equivalent of
+%\cstoidx hyphenchar\par
+%\begin{verbatim}
+%\discretionary{\char\hyphenchar\font}{}{}
+%\end{verbatim}
+%at every place where a word can be broken. This causes a \indextermbus{hyphen}{character} to be placed before any break.
+%No
+%such discretionary is inserted if \verb>\hyphenchar\font>
+%is not in the range 0--255, or if its position in the
+%font is not filled.
+%When a font is loaded, its \cs{hyphenchar} value
+%is set to \csidx{defaulthyphenchar}. The \cs{hyphenchar}
+%value can be changed after this.
+Internally, \TeX\ inserts the equivalent of
+\cstoidx hyphenchar\par
+\begin{verbatim}
+\discretionary{\char\hyphenchar\font}{}{}
+\end{verbatim}
+at every place where a word can be broken. This causes a \indextermbus{hyphen}{character} to be placed before any break.
+No
+such discretionary is inserted if \verb>\hyphenchar\font>
+is not in the range 0--255, or if its position in the
+font is not filled.
+When a font is loaded, its \cs{hyphenchar} value
+is set to \csidx{defaulthyphenchar}. The \cs{hyphenchar}
+value can be changed after this.
+
+%In plain \TeX\ the \cs{defaulthyphenchar} has the value~\verb>`\->, so
+%for all fonts character~45 (the \ascii\ hyphen character)
+%is the hyphen sign, unless
+%it is specified otherwise.
+In plain \TeX\ the \cs{defaulthyphenchar} has the value~\verb>`\->, so
+for all fonts character~45 (the \ascii\ hyphen character)
+is the hyphen sign, unless
+it is specified otherwise.
+
+%The primitive command \verb|\-| (called a `discretionary hyphen')
+%\csterm -\par\indexterm{discretionary hyphen}
+%is equivalent to the above
+%\handbreak
+%\verb|\discretionary{\char\hyphenchar\font}{}{}|.
+%Breaking at such a discretionary, whether inserted implicitly
+%by \TeX\ or explicitly by the user, has
+%a cost of \csidx{hyphenpenalty}.
+The primitive command \verb|\-| (called a `discretionary hyphen')
+\csterm -\par\indexterm{discretionary hyphen}
+is equivalent to the above
+\handbreak
+\verb|\discretionary{\char\hyphenchar\font}{}{}|.
+Breaking at such a discretionary, whether inserted implicitly
+by \TeX\ or explicitly by the user, has
+a cost of \csidx{hyphenpenalty}.
+
+
+%In unrestricted horizontal mode an empty discretionary
+%\cs{disc\-re\-tio\-na\-ry}\verb-{}{}{}-
+%is automatically inserted after characters
+%whose character code is the \cs{hyphenchar} value
+%of the font, thus enabling hyphenation at that point.
+%The penalty for breaking a line at
+%such a discretionary with an empty pre-break text
+%is \csidx{exhyphenpenalty}, that is, the `explicit hyphen' penalty.
+In unrestricted horizontal mode an empty discretionary
+\cs{disc\-re\-tio\-na\-ry}\verb-{}{}{}-
+is automatically inserted after characters
+whose character code is the \cs{hyphenchar} value
+of the font, thus enabling hyphenation at that point.
+The penalty for breaking a line at
+such a discretionary with an empty pre-break text
+is \csidx{exhyphenpenalty}, that is, the `explicit hyphen' penalty.
+
+%If a word contains
+%discretionary breaks, for instance
+%because of  explicit hyphen characters,
+%\TeX\ will not consider it for further hyphenation.
+%People have solved the ensuing problems by tricks
+%such as
+%\howto Enable hyphenation of a word containing a hyphen\par
+%\begin{verbatim}
+%\def\={\penalty10000 \hskip0pt -\penalty0 \hskip0pt\relax}
+%... integro\=differential equations...
+%\end{verbatim}
+%The skips before and after the hyphen lead \TeX\ into
+%treating the first and second half of the
+%compound expression as separate words; the penalty
+%before the first skip inhibits breaking before the hyphen.
+If a word contains
+discretionary breaks, for instance
+because of  explicit hyphen characters,
+\TeX\ will not consider it for further hyphenation.
+People have solved the ensuing problems by tricks
+such as
+\howto Enable hyphenation of a word containing a hyphen\par
+\begin{verbatim}
+\def\={\penalty10000 \hskip0pt -\penalty0 \hskip0pt\relax}
+... integro\=differential equations...
+\end{verbatim}
+The skips before and after the hyphen lead \TeX\ into
+treating the first and second half of the
+compound expression as separate words; the penalty
+before the first skip inhibits breaking before the hyphen.
+
+%%\spoint Examples of discretionaries
+%\subsection{Examples of discretionaries}
+%\spoint Examples of discretionaries
+\subsection{Examples of discretionaries}
+
+%\emph{Languages}\index{languages} such as German or Dutch have words
+%that change spelling when hyphenated (German: `\hbox{backen}' becomes
+%`\hbox{bak-ken}'; Dutch: `\hbox{autootje}' becomes
+%`\hbox{auto-tje}'). This problem can be solved with \TeX's
+%discretionaries.
+\emph{Languages}\index{languages} such as German or Dutch have words
+that change spelling when hyphenated (German: `\hbox{backen}' becomes
+`\hbox{bak-ken}'; Dutch: `\hbox{autootje}' becomes
+`\hbox{auto-tje}'). This problem can be solved with \TeX's
+discretionaries.
+
+%For instance, for German (this is inspired by~\cite{Partl}):
+%\begin{verbatim}
+%\catcode`\"=\active
+%\def"#1{\ifx#1k\discretionary{k-}{k}{ck}\fi}
+%\end{verbatim}
+%which enables the user to write \verb>ba"ken>.
+For instance, for German (this is inspired by~\cite{Partl}):
+\begin{verbatim}
+\catcode`\"=\active
+\def"#1{\ifx#1k\discretionary{k-}{k}{ck}\fi}
+\end{verbatim}
+which enables the user to write \verb>ba"ken>.
+
+%In Dutch there is a further problem which allows a nice
+%systematic solution. Umlaut characters (`trema' is the
+%Dutch term) should often
+%disappear in a break, for instance `\hbox{na"apen}'
+%hyphenates as `\hbox{na-apen}', and `\hbox{onbe"invloedbaar}'
+%hyphenates as `\hbox{onbe-invloedbaar}'. A solution
+%(inspired by~\cite{Babel}) is
+%\begin{verbatim}
+%\catcode`\"=\active
+%\def"#1{\ifx#1i\discretionary{-}{i}{\"\i}%
+%        \else  \discretionary{-}{#1}{\"#1}\fi}
+%\end{verbatim}
+%which enables the user to type \verb>na"apen> and
+%\verb>onbe"invloedbaar>.
+In Dutch there is a further problem which allows a nice
+systematic solution. Umlaut characters (`trema' is the
+Dutch term) should often
+disappear in a break, for instance `\hbox{na"apen}'
+hyphenates as `\hbox{na-apen}', and `\hbox{onbe"invloedbaar}'
+hyphenates as `\hbox{onbe-invloedbaar}'. A solution
+(inspired by~\cite{Babel}) is
+\begin{verbatim}
+\catcode`\"=\active
+\def"#1{\ifx#1i\discretionary{-}{i}{\"\i}%
+        \else  \discretionary{-}{#1}{\"#1}\fi}
+\end{verbatim}
+which enables the user to type \verb>na"apen> and
+\verb>onbe"invloedbaar>.
+
+%%\point Hyphenation
+%\section{Hyphenation}
+%\point Hyphenation
+\section{Hyphenation}
+
+%\TeX's \indexterm{hyphenation}
+%algorithm uses a list of patterns to
+%determine at what places a word that is a candidate for
+%hyphenation can be broken.
+%Those aspects of hyphenation connected with these
+%patterns are
+%treated in appendix~H of \TeXbook;
+%the method of generating hyphenation patterns automatically
+%is described in~\cite{Liang}. People have been known
+%to generate lists of patterns by hand;
+%see for instance~\cite{Vas:add}. Such hand-generated lists
+%may be superior to automatically generated lists.
+\TeX's \indexterm{hyphenation}
+algorithm uses a list of patterns to
+determine at what places a word that is a candidate for
+hyphenation can be broken.
+Those aspects of hyphenation connected with these
+patterns are
+treated in appendix~H of \TeXbook;
+the method of generating hyphenation patterns automatically
+is described in~\cite{Liang}. People have been known
+to generate lists of patterns by hand;
+see for instance~\cite{Vas:add}. Such hand-generated lists
+may be superior to automatically generated lists.
+
+%Here it will mainly be described how \TeX\ declares a word to
+%be a candidate for hyphenation. The  problem here is
+%how to cope with punctuation and things such as quotation marks
+%that can be attached to a word. Also, {\em implicit kerns\/},
+%that is, kerns inserted because of font information,
+%must  be handled properly.
+Here it will mainly be described how \TeX\ declares a word to
+be a candidate for hyphenation. The  problem here is
+how to cope with punctuation and things such as quotation marks
+that can be attached to a word. Also, {\em implicit kerns\/},
+that is, kerns inserted because of font information,
+must  be handled properly.
+
+%%\spoint Start of a word
+%\subsection{Start of a word}
+%\spoint Start of a word
+\subsection{Start of a word}
+
+%\TeX\ starts at glue items (if they are not in math mode)
+%looking for a {\em starting letter\/} of a word:
+%a character with non-zero \cs{lccode}, or a ligature starting
+%\mdqon
+%with such a character (upper/""lowercase codes are explained
+%\mdqoff
+%on page~\pageref{uc/lc}).
+%Looking for this starting letter,
+%\TeX\ bypasses any implicit kerns, and
+%characters with zero \cs{lccode} (this includes,
+%for instance, punctuation and quotation marks),
+%or ligatures starting with
+%such a character.
+\TeX\ starts at glue items (if they are not in math mode)
+looking for a {\em starting letter\/} of a word:
+a character with non-zero \cs{lccode}, or a ligature starting
+\mdqon
+with such a character (upper/""lowercase codes are explained
+\mdqoff
+on page~\pageref{uc/lc}).
+Looking for this starting letter,
+\TeX\ bypasses any implicit kerns, and
+characters with zero \cs{lccode} (this includes,
+for instance, punctuation and quotation marks),
+or ligatures starting with
+such a character.
+
+%If no suitable starting letter turns up, that is, if
+%something is found that is not a character or ligature,
+%\TeX\ skips to the next glue, and starts this algorithm anew.
+%Otherwise a trial word is collected consisting of
+%all following characters with non-zero \cs{lccode}
+%from the same font as the starting letter, or ligatures consisting
+%completely of such characters. Implicit kerns are allowed
+%between the characters and ligatures.
+If no suitable starting letter turns up, that is, if
+something is found that is not a character or ligature,
+\TeX\ skips to the next glue, and starts this algorithm anew.
+Otherwise a trial word is collected consisting of
+all following characters with non-zero \cs{lccode}
+from the same font as the starting letter, or ligatures consisting
+completely of such characters. Implicit kerns are allowed
+between the characters and ligatures.
+
+%If the starting letter is from a font for which the value
+%of \cs{hyphenchar} is invalid, or for which this character
+%does not exist, hyphenation is abandoned for this word.
+%If the starting letter is an uppercase letter (that is,
+%it is not equal to its own \cs{lccode}), \TeX\ will
+%abandon hyphenation unless \csidx{uchyph} is positive.
+%The default value for this parameter is~1  in
+%plain \TeX,
+%implying that capitalized words are subject to hyphenation.
+If the starting letter is from a font for which the value
+of \cs{hyphenchar} is invalid, or for which this character
+does not exist, hyphenation is abandoned for this word.
+If the starting letter is an uppercase letter (that is,
+it is not equal to its own \cs{lccode}), \TeX\ will
+abandon hyphenation unless \csidx{uchyph} is positive.
+The default value for this parameter is~1  in
+plain \TeX,
+implying that capitalized words are subject to hyphenation.
+
+%%\spoint End of a word
+%\subsection{End of a word}
+%\spoint End of a word
+\subsection{End of a word}
+
+
+%Following the trial word can be characters (from another
+%font, or with zero \cs{lccode}), ligatures or implicit kerns.
+%After these items, if any, must follow
+%\begin{itemize}\item glue or an explicit kern,
+%\item a penalty,
+%\item a whatsit, or
+%\item a \cs{mark}, \cs{insert}, or \cs{vadjust} item.
+%\end{itemize}
+%In particular, the word will not be hyphenated if it is
+%followed by a
+%\begin{itemize}\item box, \item rule, \item math
+%formula, or \item discretionary item.\end{itemize}
+Following the trial word can be characters (from another
+font, or with zero \cs{lccode}), ligatures or implicit kerns.
+After these items, if any, must follow
+\begin{itemize}\item glue or an explicit kern,
+\item a penalty,
+\item a whatsit, or
+\item a \cs{mark}, \cs{insert}, or \cs{vadjust} item.
+\end{itemize}
+In particular, the word will not be hyphenated if it is
+followed by a
+\begin{itemize}\item box, \item rule, \item math
+formula, or \item discretionary item.\end{itemize}
+
+%Since discretionaries are inserted after the \cs{hyphenchar}
+%of the font, occurrence of this character inhibits further
+%hyphenation. Also, placement of accents is implemented using
+%explicit kerns (see Chapter~\ref{char}), so any \cs{accent}
+%command is considered to be the end of a word, and inhibits
+%hyphenation of the word.
+Since discretionaries are inserted after the \cs{hyphenchar}
+of the font, occurrence of this character inhibits further
+hyphenation. Also, placement of accents is implemented using
+explicit kerns (see Chapter~\ref{char}), so any \cs{accent}
+command is considered to be the end of a word, and inhibits
+hyphenation of the word.
+
+%%\spoint \TeX2 versus \TeX3
+%\subsection{\TeX2 versus \TeX3}
+%\spoint \TeX2 versus \TeX3
+\subsection{\TeX2 versus \TeX3}
+
+%There is a noticeable difference in the treatment of
+%\thecstoidxsub{TeX}{version 3}
+%hyphenated fragments between \TeX2 and \TeX3.
+%\TeX2 insists that the part before the break should be
+%at least two characters, and the part after the break three
+%characters, long.
+%Typographically this is a sound decision: this way
+%there are no two-character pieces of a word stranded at the
+%end or beginning of the line. Both before and after the break
+%there are at least three characters.
+There is a noticeable difference in the treatment of
+\thecstoidxsub{TeX}{version 3}
+hyphenated fragments between \TeX2 and \TeX3.
+\TeX2 insists that the part before the break should be
+at least two characters, and the part after the break three
+characters, long.
+Typographically this is a sound decision: this way
+there are no two-character pieces of a word stranded at the
+end or beginning of the line. Both before and after the break
+there are at least three characters.
+
+%In \TeX3 two integer parameters have been introduced to control
+%the length of these fragments:
+%\csidx{lefthyphenmin} and \csidx{righthyphenmin}. These are
+%set to 2 and~3 respectively in the plain format for \TeX3.
+%If the sum of these two is 63 or more, all hyphenation is
+%suppressed.
+In \TeX3 two integer parameters have been introduced to control
+the length of these fragments:
+\csidx{lefthyphenmin} and \csidx{righthyphenmin}. These are
+set to 2 and~3 respectively in the plain format for \TeX3.
+If the sum of these two is 63 or more, all hyphenation is
+suppressed.
+
+%Another addition in \TeX3,
+%the possibility to have several sets of hyphenation patterns,
+%is treated below.
+Another addition in \TeX3,
+the possibility to have several sets of hyphenation patterns,
+is treated below.
+
+%%\spoint Patterns and exceptions
+%\subsection{Patterns and exceptions}
+%\spoint Patterns and exceptions
+\subsection{Patterns and exceptions}
+
+%The statements
+%\begin{disp}\cs{patterns}\gr{general text}\nl
+%\csidx{hyphenation}\gr{general text}\end{disp}
+%are \gr{hyphenation assignment}s, which are
+%\gr{global assignment}s.
+%The \csidx{patterns} command, which specifies a list
+%of hyphenation patterns, is allowed only in \IniTeX\
+%(see Chapter~\ref{TeXcomm}),
+%and all patterns must be specified before the first
+%paragraph is typeset.
+The statements
+\begin{disp}\cs{patterns}\gr{general text}\nl
+\csidx{hyphenation}\gr{general text}\end{disp}
+are \gr{hyphenation assignment}s, which are
+\gr{global assignment}s.
+The \csidx{patterns} command, which specifies a list
+of hyphenation patterns, is allowed only in \IniTeX\
+(see Chapter~\ref{TeXcomm}),
+and all patterns must be specified before the first
+paragraph is typeset.
+
+%Hyphenation exceptions can be specified at any time
+%\howto Specify exceptional hyphenations\par
+%with statements such as
+%\begin{verbatim}
+%\hyphenation{oxy-mo-ron gar-goyle}
+%\end{verbatim}
+%which specify locations where a word may be hyphenated.
+%Subsequent \cs{hyphenation} statements are cumulative.
+Hyphenation exceptions can be specified at any time
+\howto Specify exceptional hyphenations\par
+with statements such as
+\begin{verbatim}
+\hyphenation{oxy-mo-ron gar-goyle}
+\end{verbatim}
+which specify locations where a word may be hyphenated.
+Subsequent \cs{hyphenation} statements are cumulative.
+
+%In \TeX3 these statements are taken to hold for the
+%language that is the current value of the \cs{language}
+%parameter.
+In \TeX3 these statements are taken to hold for the
+language that is the current value of the \cs{language}
+parameter.
+
+%%\point Switching hyphenation patterns
+%\section{Switching hyphenation patterns}
+%\point Switching hyphenation patterns
+\section{Switching hyphenation patterns}
+
+%When typesetting paragraphs, \TeX\ (version~3) can use several
+%\alt
+%sets of patterns and hyphenation exceptions, for at most 256
+%\emph{languages}\index{language}.
+When typesetting paragraphs, \TeX\ (version~3) can use several
+\alt
+sets of patterns and hyphenation exceptions, for at most 256
+\emph{languages}\index{language}.
+
+%If a \cs{patterns} or \cs{hyphenation}
+%command is given (see above), \TeX\ stores the patterns or exceptions
+%under the current value of the \csidx{language} parameter.
+%The \cs{patterns} command is only allowed in \IniTeX, and
+%patterns must be specified before any typesetting is done.
+%Hyphenation exceptions, however, can
+%be specified cumulatively, and not only in \IniTeX.
+If a \cs{patterns} or \cs{hyphenation}
+command is given (see above), \TeX\ stores the patterns or exceptions
+under the current value of the \csidx{language} parameter.
+The \cs{patterns} command is only allowed in \IniTeX, and
+patterns must be specified before any typesetting is done.
+Hyphenation exceptions, however, can
+be specified cumulatively, and not only in \IniTeX.
+
+%In addition to the \cs{language} parameter, which can be set by the
+%user, \TeX\ has internally a \indextermbus{current}{language}. This is
+%set to zero at the start of every paragraph.  For every character that
+%is added to a paragraph the current language is compared with the
+%value of \cs{language}, and if they differ a whatsit element is added
+%to the horizontal list, resetting the current language to the value of
+%\cs{language}.
+In addition to the \cs{language} parameter, which can be set by the
+user, \TeX\ has internally a \indextermbus{current}{language}. This is
+set to zero at the start of every paragraph.  For every character that
+is added to a paragraph the current language is compared with the
+value of \cs{language}, and if they differ a whatsit element is added
+to the horizontal list, resetting the current language to the value of
+\cs{language}.
+
+%At the start of a paragraph, this whatsit is inserted
+%\altt
+%after the \cs{everypar} tokens, but \cs{lastbox}
+%can still access the indentation box.
+At the start of a paragraph, this whatsit is inserted
+\altt
+after the \cs{everypar} tokens, but \cs{lastbox}
+can still access the indentation box.
+
+%As an example, suppose that a format has been created such that
+%language~0 is English, and language~1 is Dutch. English hyphenations
+%will then be used if the user does not specify otherwise;
+%if a job starts with
+%\begin{verbatim}
+%\language=1
+%\end{verbatim}
+%the whole document
+%will be set using Dutch hyphenations, because \TeX\ will insert
+%a command changing the current language at the start of
+%every paragraph. For example:
+%\begin{verbatim}
+%\language=1
+%T...
+%\end{verbatim}
+%gives
+%\begin{verbatim}
+%.\hbox(0.0+0.0)x20.0           % indentation
+%.\setlanguage1 (hyphenmin 2,3) % language whatsit
+%.\tenrm T                      % start of text
+%\end{verbatim}
+As an example, suppose that a format has been created such that
+language~0 is English, and language~1 is Dutch. English hyphenations
+will then be used if the user does not specify otherwise;
+if a job starts with
+\begin{verbatim}
+\language=1
+\end{verbatim}
+the whole document
+will be set using Dutch hyphenations, because \TeX\ will insert
+a command changing the current language at the start of
+every paragraph. For example:
+\begin{verbatim}
+\language=1
+T...
+\end{verbatim}
+gives
+\begin{verbatim}
+.\hbox(0.0+0.0)x20.0           % indentation
+.\setlanguage1 (hyphenmin 2,3) % language whatsit
+.\tenrm T                      % start of text
+\end{verbatim}
+
+%The whatsit can be inserted explicitly, without changing
+%the value of \csidx{language}, by specifying
+%\begin{disp}\cs{setlanguage}\gr{number}\end{disp}
+%However, this will hardly ever be needed.
+%One case where it may be necessary is when the contents of
+%a horizontal box are unboxed to a paragraph: inside the box no
+%whatsits are added automatically, since inside such a box
+%no hyphenation can take place.
+%See page~\pageref{wide:vbox} for another problem with text
+%in horizontal boxes.
+The whatsit can be inserted explicitly, without changing
+the value of \csidx{language}, by specifying
+\begin{disp}\cs{setlanguage}\gr{number}\end{disp}
+However, this will hardly ever be needed.
+One case where it may be necessary is when the contents of
+a horizontal box are unboxed to a paragraph: inside the box no
+whatsits are added automatically, since inside such a box
+no hyphenation can take place.
+See page~\pageref{wide:vbox} for another problem with text
+in horizontal boxes.
+
+%\endofchapter
+\endofchapter
+
+\end{document}
+

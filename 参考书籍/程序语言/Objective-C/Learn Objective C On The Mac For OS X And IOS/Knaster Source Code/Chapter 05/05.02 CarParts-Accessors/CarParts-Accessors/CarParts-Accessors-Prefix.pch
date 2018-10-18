@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'CarParts-Accessors' target in the 'CarParts-Accessors' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

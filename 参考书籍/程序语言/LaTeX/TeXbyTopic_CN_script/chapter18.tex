@@ -1,0 +1,700 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{17}
+
+\begin{document}
+
+%\chapter{Paragraph Shape}\label{par:shape}
+%\index{paragraph!shape|(}
+\chapter{段落形状}\label{par:shape}
+\index{paragraph!shape|(}
+
+%This chapter discusses the parameters and commands that influence the
+%shape of a paragraph.
+本章讨论影响段落形状的参数和命令。
+
+%\label{cschap:parindent2}\label{cschap:hsize2}\label{cschap:leftskip}\label{cschap:rightskip}\label{cschap:hangindent}\label{cschap:hangafter}\label{cschap:parshape}
+%\begin{inventory}
+%\item [\cs{parindent}] 
+%      Width of the indentation box added in front of a paragraph.
+%      Plain \TeX\ default:~\n{20pt}.
+\label{cschap:parindent2}\label{cschap:hsize2}\label{cschap:leftskip}\label{cschap:rightskip}\label{cschap:hangindent}\label{cschap:hangafter}\label{cschap:parshape}
+\begin{inventory}
+\item [\cs{parindent}] 
+      在段落开头添加的缩进盒子的宽度。Plain \TeX\ 默认为~\n{20pt}。
+
+%\item [\cs{hsize}] 
+%      Line width used for typesetting a paragraph.
+%      Plain \TeX\ default:~\n{6.5in}.
+\item [\cs{hsize}] 
+      段落排版所用的行宽。Plain \TeX\ 默认为~\n{6.5in}。
+
+%\item [\cs{leftskip}] 
+%      Glue that is placed to the left of all lines of a paragraph.
+\item [\cs{leftskip}] 
+      放在段落各行左侧的粘连。
+
+
+%\item [\cs{rightskip}] 
+%      Glue that is placed to the right of all lines of a paragraph.
+\item [\cs{rightskip}] 
+      放在段落各行右侧的粘连。
+
+
+%\item [\cs{hangindent}]   
+%      If positive, this indicates indentation from the left margin; 
+%      if negative, this is the negative of the indentation 
+%      from the right margin.
+\item [\cs{hangindent}]   
+      若大于零，表示左侧的缩进量；若小于零，表示右侧缩进量的负值。
+
+%\item [\cs{hangafter}]   
+%      If positive, this denotes the number of lines 
+%      before indenting starts; 
+%      if negative, the absolute value of this is the number 
+%      of indented lines starting with the first line of the paragraph.
+%      Default:~\n1.
+\item [\cs{hangafter}]   
+      若大于零，表示仅不缩进段落的前面多少行；若小于零，其绝对值表示仅缩进段落的前面多少行。
+      默认值为~\n1。
+
+%\item [\cs{parshape}]
+%      Command for general paragraph shapes.
+\item [\cs{parshape}]
+      用于设定段落形状的一般命令。
+
+%\end{inventory}
+\end{inventory}
+
+
+%\begin{figure}[ht]
+%  \input figs20
+%\end{figure}
+\begin{figure}[ht]
+  \input figs20
+\end{figure}
+
+%%\point The width of text lines
+%\section{The width of text lines}
+%\index{line!width|(}
+%\point The width of text lines
+\section{文本行的宽度}
+\index{line!width|(}
+
+%When \TeX\ has finished absorbing a paragraph, 
+%it has formed a horizontal list, starting with an indentation
+%box, and ending with \cs{parfillskip} glue.
+%This list is then broken into lines of length \cs{hsize}.
+%\cstoidx hsize\par\cstoidx leftskip\par\cstoidx rightskip\par
+%Each line of a paragraph is padded left and right with
+%certain amounts of glue, the \cs{leftskip} and \cs{rightskip},
+%which are taken into account in reaching \cs{hsize}.
+在吸收完一个段落后，\TeX\ 形成了一个以缩进盒子开头，
+以 \cs{parfillskip} 粘连结尾的水平列，然后将此列表分为长度相等的多行。
+\cstoidx hsize\par\cstoidx leftskip\par\cstoidx rightskip\par
+段落各行的宽度等于 \cs{hsize}，其中包括两侧填充的 \cs{leftskip} 和
+\cs{rightskip} 粘连。
+
+%The values of \cs{leftskip} and \cs{rightskip} are taken 
+%into account in the line-breaking algorithm.
+%Thus the main point about the \csidx{raggedright} 
+%macro in plain \TeX\ and the \LaTeX\ `flushleft'
+%environment is that they
+%set the \cs{rightskip} to  zero plus some stretch.
+\TeX\ 的断行算法将 \cs{leftskip} 和 \cs{rightskip} 的值考虑在内。
+而 plain \TeX\ 的 \csidx{raggedright} 宏与 \LaTeX\ 的 `flushleft'
+环境的要点就在于，将 \cs{rightskip} 设定为零加上某些伸长量。
+
+%The commands \cs{parshape} and \cs{hangindent}
+%also affect line width. They work by altering the
+%\cs{hsize} and afterwards shifting the boxes 
+%containing the lines.
+命令 \cs{parshape} 和 \cs{hangindent} 也影响行宽。
+它们通过改变 \cs{hsize} 然后移动文本行所在盒子来实现。
+
+%\index{line!width|)}
+\index{line!width|)}
+
+%%\point Shape parameters
+%\section{Shape parameters}
+%\point Shape parameters
+\section{段落形状参数}
+
+%%\spoint Hanging indentation
+%\subsection{Hanging indentation}
+%\index{indentation!hanging|(}
+%\spoint Hanging indentation
+\subsection{悬挂缩进}
+\index{indentation!hanging|(}
+
+%\message{twolines?}
+%A simple, and frequently occurring, paragraph shape is that
+%\cstoidx hangafter\par\cstoidx hangindent\par
+%with a number of starting or trailing lines indented.
+%\TeX\ can realize such shapes using two parameters:
+%\cs{hangafter} and \cs{hangindent}.
+%Both can assume positive and negative values.
+\message{twolines?}
+有种简单而常见的段落形状是开头或结尾若干行缩进。
+\cstoidx hangafter\par\cstoidx hangindent\par
+\TeX\ 用 \cs{hangafter} 和 \cs{hangindent} 这两个参数实现这种形状。
+这两者都可以设定为正值或负值。
+
+%The \cs{hangindent} controls the amount of indentation:
+%\begin{itemize}\item \cs{hangindent}${}>0$: the paragraph
+%is indented at the left margin by this amount.
+%\item\cs{hangindent}${}<0$: the paragraph is indented
+%at the right margin by the absolute value of this amount.
+%\end{itemize}
+%\def\exnul{\leftskip=0pt \rightskip=0pt \relax}
+%For example (assume \cs{parindent=0pt}),
+%\begin{disp}\leavevmode\message{Check parshape example!}%
+%\hbox{%\Distance:verbatimwhiteleft=0pt
+%$\vcenter{\hsize=3.5in \snugbox{\begin{verbatim}
+% a a a a a a a a a a a a ...
+%
+% \hangindent=10pt
+% a a a a a a a a a a a a ...
+%
+% \hangindent=-10pt
+% a a a a a a a a a a a a ...
+%\end{verbatim}
+%}}$\quad gives\quad\quad
+%$\vcenter{\parindent0pt \setbox0\hbox{a a a a a}\hsize\wd0
+% \leftskip=0pt %\parskip6pt 
+% a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+% \hangindent=10pt
+% a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+% \hangindent=-10pt
+% a a a a a a a a a a a a \dots\par}$
+%}\end{disp}
+%The default value of \cs{hangindent} is~\n{0pt}.
+\cs{hangindent} 控制缩进量的大小：
+\begin{itemize}\item \cs{hangindent}${}>0$：段落根据它的大小在左侧缩进。
+\item\cs{hangindent}${}<0$：段落根据它的绝对值的大小在右侧缩进。
+\end{itemize}
+\def\exnul{\leftskip=0pt \rightskip=0pt \relax}
+举个例子（假设 \cs{parindent=0pt}），
+\begin{disp}\leavevmode\message{Check parshape example!}%
+\hbox{%\Distance:verbatimwhiteleft=0pt
+$\vcenter{\hsize=2.7in \snugbox{\begin{verbatim}
+a a a a a a a a a a a a ...
+
+\hangindent=10pt
+a a a a a a a a a a a a ...
+
+\hangindent=-10pt
+a a a a a a a a a a a a ...
+\end{verbatim}
+}}$\quad 给出\quad\quad
+$\vcenter{\parindent0pt \setbox0\hbox{a a a a a}\hsize\wd0
+ \leftskip=0pt %\parskip6pt 
+ a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+ \hangindent=10pt
+ a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+ \hangindent=-10pt
+ a a a a a a a a a a a a \dots\par}$
+}\end{disp}
+\cs{hangindent} 的默认值为~\n{0pt}。
+
+%The \cs{hangafter} parameter determines the number of
+%lines that is indented:
+%\begin{itemize}\item \cs{hangafter}${}\geq0$: 
+%after this number of lines the rest of the lines will be
+%indented; in other words, this many lines from the
+%start of the paragraph will not be indented.
+%\item \cs{hangafter}${}<0$: the absolute value of this
+%is the number of lines that will be indented starting
+%at the beginning of the paragraph.\end{itemize}
+%For example,
+%\message{check left align}
+%\begin{disp}\leavevmode\hbox{%\Distance:verbatimwhiteleft=0pt
+%$\vcenter{\hsize=3.5in \snugbox{\begin{verbatim}
+% a a a a a a a a a a a a ...
+%
+% \hangindent=10pt \hangafter=2
+% a a a a a a a a a a a a ...
+%
+% \hangindent=10pt \hangafter=-2
+% a a a a a a a a a a a a ...
+%\end{verbatim}
+%}}$\quad looks like\quad\quad
+%$\vcenter{\parindent0pt \setbox0\hbox{a a a a a}\hsize\wd0
+% \leftskip=0pt %\parskip6pt
+% a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+% \hangindent=10pt \hangafter=2
+% a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+% \hangindent=10pt \hangafter=-2
+% a a a a a a a a a a a a \dots\par}$
+%}\end{disp}
+\cs{hangafter} 参数确定需要缩进的行的数目：
+\begin{itemize}
+\item \cs{hangafter}${}\geq0$：
+这么多行除外的其他行都被缩进；也就是说，段落开头的这么多行将不会被缩进。
+\item \cs{hangafter}${}<0$：它的绝对值就是段落开头将被缩进的行的数目。
+\end{itemize}
+举个例子，
+\message{check left align}
+\begin{disp}\leavevmode\hbox{%\Distance:verbatimwhiteleft=0pt
+$\vcenter{\hsize=2.8in \snugbox{\begin{verbatim}
+a a a a a a a a a a a a ...
+
+\hangindent=10pt \hangafter=2
+a a a a a a a a a a a a ...
+
+\hangindent=10pt \hangafter=-2
+a a a a a a a a a a a a ...
+\end{verbatim}
+}}$\quad 给出\quad\quad
+$\vcenter{\parindent0pt \setbox0\hbox{a a a a a}\hsize\wd0
+ \leftskip=0pt %\parskip6pt
+ a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+ \hangindent=10pt \hangafter=2
+ a a a a a a a a a a a a \dots\par%\vskip\baselineskip
+ \hangindent=10pt \hangafter=-2
+ a a a a a a a a a a a a \dots\par}$
+}\end{disp}
+%The default value for \cs{hangafter} is~\n1.
+\cs{hangafter} 的默认值为~\n1。
+
+%With both parameters having the possibility to
+%be positive and negative,
+%four ways of hanging indentation result. See below
+%for hanging indentation into the margin (`outdent').
+这两个参数都可正可负，总共有四种悬挂缩进结果。
+下面还将介绍探出边界的悬挂缩进（`outdent'）。
+
+%Hanging indentation is implemented as follows.
+%The amount of hanging indentation is subtracted
+%from the \cs{hsize} for the lines that indent;
+%after the paragraph has been broken into horizontal
+%boxes, the lines that should indent on the left are
+%shifted right.
+悬挂缩进是这样实现的：先从缩进行的 \cs{hsize} 中减去缩进量，
+接着将段落分段为行，然后往右移动那些左侧缩进行。
+
+%Regular indentation of size \cs{parindent} is not
+%influenced by hanging indentation. Thus you should
+%start a paragraph with hanging indentation 
+%explicitly by~\cs{noindent} if the extra
+%indentation is unwanted.
+正常的 \cs{parindent} 缩进不受悬挂缩进影响。
+如果不想要这个多余缩进，你应该在悬挂缩进段落开头使用 \cs{noindent}。
+
+%The default values of \cs{hangindent} and \cs{hangafter} are
+%restored after every \cs{par} command.
+在每个 \cs{par} 命令之后 \cs{hangindent} 和 \cs{hangafter} 被还原为它们的默认值。
+
+%\index{indentation!hanging|)}
+\index{indentation!hanging|)}
+
+%\subsection{General paragraph shapes: \cs{parshape}}
+\subsection{一般形状}
+
+%Quite general paragraph shapes can be implemented
+%using \csidx{parshape}. With this command line lengths and indentation
+%for the first $n$ lines
+%of a paragraph can be specified. Thus this command
+%takes $2n+1$ parameters: the number of lines $n$, followed
+%by $n$ pairs of an indentation   and a line length.
+%\begin{disp} \cs{parshape}\gr{equals}
+%    $n$ $i_1$ $\ell_1$ $\ldots$ $i_n$ $\ell_n$\end{disp}
+%The   specification for the last line is repeated if the
+%paragraph following has more than $n$ lines. If there are fewer
+%than $n$ lines the remaining specifications are ignored.
+%The default value is (naturally) \cs{parshape${}={}$0}.
+用 \csidx{parshape} 可以实现很一般的段落形状。
+这个命令可以指定段落前 $n$ 行的缩进量和行宽，因此它有 $2n+1$ 个参数：
+先是行数 $n$，接着是 $n$ 对缩进量和行宽。
+\begin{disp} \cs{parshape}\gr{equals}
+    $n$ $i_1$ $\ell_1$ $\ldots$ $i_n$ $\ell_n$\end{disp}
+如果段落超过 $n$ 行，剩下的各行将重复第$n$行的指定。
+如果段落少于 $n$ 行，多余的指定将被忽略。
+默认值（当然）是 \cs{parshape${}={}$0}。
+
+%A \cs{parshape} command takes precedence over a \cs{hangindent}
+%if both have been specified. 
+%%Regular \cs{parindent} indentation
+%%is suppressed if \cs{parshape} is in effect.
+%Regular \cs{parindent}, \cs{leftskip}, 
+%and \cs{rightskip} are still obeyed if \cs{parshape} is in effect.
+如果两者同时给出，那么 \TeX 执行 \cs{parshape} 命令而忽略掉 \cs{hangindent}。
+%Regular \cs{parindent} indentation
+%is suppressed if \cs{parshape} is in effect.
+在 \cs{parshape} 生效时，原本的 \cs{parindent}、\cs{leftskip} 和
+\cs{rightskip} 仍然有效。
+
+%The \cs{parshape} parameter is, like \cs{hangindent}, \cs{hangafter},
+%and \cs{looseness} (see Chapter~\ref{line:break}),
+%cleared after a \cs{par}
+%command. Since every empty line generates a \cs{par} token,
+%one should not leave an empty line
+%between a paragraph shape (or hanging indentation)
+%declaration and the following paragraph.
+如同 \cs{hangindent}、\cs{hangafter} 和 \cs{looseness} 命令，
+\cs{parshape}参数也会在 \cs{par} 命令后被重置（见第~\ref{line:break}~章）。
+由于每个空行生成一个 \cs{par} 记号，
+在段落形状（或悬挂缩进）定义和段落内容之间你不应该留下空行。
+
+%The control sequence
+%\alt
+%\cs{parshape} is an \gr{internal integer}:
+%its value is the number of lines $n$ with which
+%it was set.
+控制序列
+\alt
+\cs{parshape} 是一个 \gr{internal integer}：
+它的值等于所设定的行数 $n$。
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{杂项注记}
+
+%%\spoint Centred last lines
+%\subsection{Centred last lines}
+%\spoint Centred last lines
+\subsection{末尾行居中}
+
+%Equal stretch and shrink amounts for the \cs{leftskip} and 
+%\cs{rightskip}
+%give centred texts, in the sense that each line is
+%centred. 
+%For proper centring of the first
+%and last lines of a paragraph the \cs{parindent} and
+%\cs{parfillskip} have to be made zero.
+%However, the margins are ragged.
+给 \cs{leftskip} 和 \cs{rightskip} 设定相等的伸长量和收缩量将给出居中文本，
+在各行都居中的意义上。要让段落首行和尾行真正地居中，
+必须将 \cs{parindent} 和 \cs{parfillskip} 都设定为零。
+然而，两侧边界是不对齐的。
+
+%A surprising application of \cs{leftskip} and \cs{rightskip}
+%\mdqon
+%\howto Centre the first/""last line of a paragraph\par
+%\mdqoff
+%leads to paragraphs with flush margins and a centred
+%last line.
+%\begin{verbatim}
+%\leftskip=0cm plus 0.5fil \rightskip=0cm plus -0.5fil
+%\parfillskip=0cm plus 1fil
+%\end{verbatim}
+出人意料地，\cs{leftskip} 和 \cs{rightskip}
+\mdqon
+\howto Centre the first/""last line of a paragraph\par
+\mdqoff
+可以让段落两侧对齐而末尾行居中：
+\begin{verbatim}
+\leftskip=0cm plus 0.5fil \rightskip=0cm plus -0.5fil
+\parfillskip=0cm plus 1fil
+\end{verbatim}
+%For all lines of a paragraph but the 
+%last one the stretch components
+%add up to zero so the \cs{leftskip} and \cs{rightskip}
+%inserted are zero.
+%On the last line the \cs{parfillskip} adds \hbox{\n{plus 1fil}}
+%of stretch; therefore there is a total of
+%\hbox{\n{plus 0.5fil}} of stretch at both the left and right
+%end of the line.
+在段落的非末尾行，伸长量加起来等于零，
+所以插入的 \cs{leftskip} 和 \cs{rightskip} 等于零。
+而在末尾行，\cs{parfillskip} 添加了 \hbox{\n{plus 1fil}} 的伸长量；
+因此左右两边的总伸长量都是 \hbox{\n{plus 0.5fil}}。
+
+%It would have been incorrect to specify
+%\begin{verbatim}
+%\leftskip=0cm plus 0.5fil \rightskip=0cm minus 0.5fil
+%\end{verbatim}
+%\TeX\ gives an error about this: it complains about
+%`infinite shrinkage'.
+如果这样写将会是错误的：
+\begin{verbatim}
+\leftskip=0cm plus 0.5fil \rightskip=0cm minus 0.5fil
+\end{verbatim}
+对此 \TeX\ 将给出一个错误：它抱怨 `infinite shrinkage'。
+%%【译注】完整的错误信息如下：
+%%! Infinite glue shrinkage found in a paragraph.
+%%
+%%The paragraph just ended includes some glue that has
+%%infinite shrinkability, e.g., `\hskip 0pt minus 1fil'.
+%%Such glue doesn't belong there---it allows a paragraph
+%%of any length to fit on one line. But it's safe to proceed,
+%%since the offensive shrinkability has been made finite.
+
+%Centring not only the last line, but also the
+%first line of a paragraph can be done by
+%the parameter settings
+%\begin{verbatim}
+%\parindent=0pt \everypar{\hskip 0pt plus -1fil}
+%\leftskip=0pt plus .5fil
+%\rightskip=0pt plus -.5fil
+%\end{verbatim}
+%This time a horizontal skip inserted by \cs{everypar}
+%combines with the \cs{leftskip} to give the same
+%amount of stretchability on both sides of the
+%first line of the paragraph.
+要让首行和尾行一样居中，可以用下面的参数设定：
+\begin{verbatim}
+\parindent=0pt \everypar{\hskip 0pt plus -1fil}
+\leftskip=0pt plus .5fil
+\rightskip=0pt plus -.5fil
+\end{verbatim}
+此时用 \cs{everypar} 插入的水平间距和 \cs{leftskip}
+间距合起来将使得段落首行两侧的伸展能力相同。
+
+%%\spoint Indenting into the margin
+%\subsection{Indenting into the margin}
+%\spoint Indenting into the margin
+\subsection{凸出边界}
+
+%Suppose you want a hanging indent of \n{1cm} {\sl into\/}
+%\howto Indent into the margin\par
+%the left margin after the first two lines of a paragraph. 
+%Specifying \verb/\hangindent=-1cm/ will give
+%a hanging indentation of one centimetre from the {\sl right\/}
+%margin, so another approach is necessary. The following does the
+%job:
+%\begin{verbatim}
+% \leftskip=-1cm \hangindent=1cm \hangafter=-2
+%\end{verbatim}
+%The only problem with this is that
+%the leftskip needs to be reset after the paragraph.
+%Suitable redefinition of \cs{par} removes this objection:
+%\begin{verbatim}
+%\def\hangintomargin{\bgroup
+%    \leftskip=-1cm \hangindent=1cm \hangafter=-2
+%    \def\par{\endgraf\egroup}}
+%\end{verbatim}
+%The redefinition of \cs{par} is here local to the paragraph that
+%should be outdented.
+假设你想要的悬挂缩进是让段落第二行以后各行{\sl 凸出\/}左边界 \n{1cm}。
+\howto Indent into the margin\par
+设定 \verb/\hangindent=-1cm/ 将得到在{\sl 右边界\/}缩进 \n{1cm} 的悬挂缩进，
+所以需要另想办法。下面的方法可以完成此任务：
+\begin{verbatim}
+ \leftskip=-1cm \hangindent=1cm \hangafter=-2
+\end{verbatim}
+此方法的唯一问题在于段落结束后需要重设 \cs{leftskip}。
+我们可以通过重定义 \cs{par} 解决此问题：
+\begin{verbatim}
+\def\hangintomargin{\bgroup
+    \leftskip=-1cm \hangindent=1cm \hangafter=-2
+    \def\par{\endgraf\egroup}}
+\end{verbatim}
+这里对 \cs{par} 的重定义是局部的，只对需要凸出的段落生效。
+
+%Another, elegant, solution uses \cs{parshape}:
+%\begin{verbatim}
+% 
+%\dimen0=\hsize \advance\dimen0 by 1cm
+%\parshape=3        % three lines:
+%    0cm\hsize      % first  line specification
+%    0cm\hsize      % second line specification
+%    -1cm\dimen0    % third  line specification
+%\end{verbatim}
+还有一种更简洁的做法是利用 \cs{parshape}：
+\begin{verbatim}
+\dimen0=\hsize \advance\dimen0 by 1cm
+\parshape=3        % three lines:
+    0cm\hsize      % first  line specification
+    0cm\hsize      % second line specification
+    -1cm\dimen0    % third  line specification
+\end{verbatim}
+
+%%\spoint Hang a paragraph from an object
+%\subsection{Hang a paragraph from an object}
+%\spoint Hang a paragraph from an object
+\subsection{悬挂在对象上}
+
+%The \LaTeX\ format has a macro, \cs{@hangfrom}, to have
+%\howto Hang a paragraph from an object\par
+%one paragraph of text hanging from some object, usually a box
+%or a short line of text. 
+\LaTeX\ 格式有一个 \cs{@hangfrom} 宏，
+\howto Hang a paragraph from an object\par
+用于将整个段落的文本悬挂在某个对象上，此对象通常是盒子或短文本。
+
+%\begingroup
+%\medskip
+%\def\hangobject{Example \ }
+%\setbox0=\hbox{\hangobject}
+%\hangindent \wd0 \noindent \hangobject
+%This paragraph is an example of the \cs{hangfrom} macro
+%defined below.
+%In the \LaTeX\ document
+%styles, the \cs{@hangfrom} macro (which is similar to this)
+%is used for multi-line section headings.\par
+%\endgroup
+\begingroup
+\medskip
+\def\hangobject{悬挂例子 \ }
+\setbox0=\hbox{\hangobject}
+\hangindent \wd0 \noindent \hangobject
+这个段落是下面定义的 \cs{hangfrom} 宏的一个例子。在 \LaTeX\ 文档类中，
+有一个 \cs{@hangfrom} 宏（与这里定义的类似）用于排版多行节标题。\par
+\endgroup
+
+%Consider then the macro \cs{hangfrom}:
+%\begin{verbatim}
+% 
+%\def\hangfrom#1{\def\hangobject{#1}\setbox0=\hbox{\hangobject}%
+%    \hangindent \wd0 \noindent \hangobject \ignorespaces}
+%\end{verbatim}
+%Because of the default \cs{hangafter=1}, this 
+%will produce one line of width \cs{hsize}, after which the
+%rest of the paragraph will be left indented  by the width of the
+%\cs{hangobject}.
+现在来看 \cs{hangfrom} 宏的定义：
+\begin{verbatim}
+ 
+\def\hangfrom#1{\def\hangobject{#1}\setbox0=\hbox{\hangobject}%
+    \hangindent \wd0 \noindent \hangobject \ignorespaces}
+\end{verbatim}
+由于默认情形 \cs{hangafter=1}，这将使得段落首行的宽度为 \cs{hsize}，
+而后面各行按照 \cs{hangobject} 的宽度左缩进。
+
+%%\spoint Another approach to hanging indentation
+%\subsection{Another approach to hanging indentation}
+%\spoint Another approach to hanging indentation
+\subsection{另一种悬挂缩进方法}
+
+%Hanging indentation can also be attained by a combination
+%of shifting the left margin and outdenting.
+%Itemized lists can for instance be implemented in this manner:
+%\begin{verbatim}
+%\newdimen\listindent
+%\def\itemize{\begingroup
+%    \advance\leftskip by \listindent
+%    \parindent=-\listindent}
+%\def\stopitemize{\par\endgroup}
+%\def\item#1{\par\leavevmode
+%    \hbox to \listindent{#1\hfil}\ignorespaces
+%    }
+%\end{verbatim}
+%If an item should encompass more than one paragraph, the
+%implementation could be
+%\begin{verbatim}
+%\newdimen\listindent \newdimen\listparindent
+%\def\itemize{\begingroup
+%    \advance\leftskip by \listindent
+%    \parindent=\listparindent}
+%\def\stopitemize{\par\endgroup}
+%\def\item#1{\par\noindent
+%    \hbox to 0cm{\kern-\listindent #1\hfil}\ignorespaces
+%    }
+%\end{verbatim}
+将移动边界和凸出边界结合起来也可以得到悬挂缩进。
+比如逐项列表就可以用这种方式实现：
+\begin{verbatim}
+\newdimen\listindent
+\def\itemize{\begingroup
+    \advance\leftskip by \listindent
+    \parindent=-\listindent}
+\def\stopitemize{\par\endgroup}
+\def\item#1{\par\leavevmode
+    \hbox to \listindent{#1\hfil}\ignorespaces
+    }
+\end{verbatim}
+若想让列表项包含多个段落，可以这样实现：
+\begin{verbatim}
+\newdimen\listindent \newdimen\listparindent
+\def\itemize{\begingroup
+    \advance\leftskip by \listindent
+    \parindent=\listparindent}
+\def\stopitemize{\par\endgroup}
+\def\item#1{\par\noindent
+    \hbox to 0cm{\kern-\listindent #1\hfil}\ignorespaces
+    }
+\end{verbatim}
+
+%\begin{example}
+%\begin{verbatim}
+%\itemize\item{1.}First item\par
+%Is two paragraphs long.
+%\item{2.}Second item.\stopitemize
+%\end{verbatim}
+%gives
+%\begin{disp}
+%\def\itemize{\begingroup
+%    \advance\leftskip by \parindent
+%    \parindent=1em\relax}
+%\def\stopitemize{\par\endgroup}
+%\def\item#1{\par\noindent
+%    \hbox to 0cm{\kern-\parindent #1\hfil}\ignorespaces
+%    }
+%\itemize\item{1.}First item\par
+%Is two paragraphs long.
+%\item{2.}Second item.\stopitemize
+%\end{disp}
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\itemize\item{1.}First item\par
+Is two paragraphs long.
+\item{2.}Second item.\stopitemize
+\end{verbatim}
+给出
+\begin{disp}
+\def\itemize{\begingroup
+    \advance\leftskip by \parindent
+    \parindent=1em\relax}
+\def\stopitemize{\par\endgroup}
+\def\item#1{\par\noindent
+    \hbox to 0cm{\kern-\parindent #1\hfil}\ignorespaces
+    }
+\itemize\item{1.}First item\par
+Is two paragraphs long.
+\item{2.}Second item.\stopitemize
+\end{disp}
+\end{example}
+
+%%\spoint Hanging indentation versus \cs{leftskip} shifting
+%\subsection{Hanging indentation versus \cs{leftskip} shifting}
+%\spoint Hanging indentation versus \cs{leftskip} shifting
+\subsection{悬挂缩进对比边界移动}
+
+%From the above examples it would seem that
+%hanging indentation and modifying the \cs{leftskip} and \cs{rightskip}
+%are interchangeable. They are, but only to a certain   extent.
+%\altt
+上面的例子似乎表明悬挂缩进与修改 \cs{leftskip} 和 \cs{rightskip} 是可互换的。
+它们确实可以，但只在一定程度上。
+\altt
+
+%Setting \cs{leftskip} to some positive value for a paragraph
+%means that the \cs{hsize} stays the same, but every line
+%starts with a glue item. Hanging indentation, on the other hand,
+%is implemented by decreasing the \cs{hsize} value for the
+%lines that hang, and shifting the finished 
+%horizontal boxes horizontally in the surrounding vertical list.
+将段落的 \cs{leftskip} 设为某个正值意味着 \cs{hsize} 保持不变，
+但各行都以一个粘连项开始。另一方面，悬挂缩进是通过减少缩进行的
+\cs{hsize} 值，然后在竖直列中移动水平盒子实现的。
+
+%The difference between the two approaches becomes visible
+%mainly in the fact that display formulas are not shifted
+%when the \cs{leftskip} is altered.
+%See Chapter~\ref{rules} for an example showing how leaders
+%are affected by margin shifting.
+这两种方法的区别可以从这个事实中看到：改变 \cs{leftskip} 并不会移动陈列公式。
+见第~\ref{rules}~章中展示的指引线如何受边界移动影响的例子。
+
+%%\spoint More examples
+%\subsection{More examples}
+%\spoint More examples
+\subsection{更多例子}
+
+%Some more examples of paragraph shapes (effected by
+%various means) can be found in~\cite{E1}. One example
+%from that article appears on page~\pageref{varioset}.
+段落形状（用各种方式修改）的更多例子可以在~\cite{E1}~中找到。
+第~\pageref{varioset}~页的一个例子就取自该文章。
+
+%\index{paragraph!shape|)}
+%\endofchapter
+\index{paragraph!shape|)}
+\endofchapter
+
+\end{document}

@@ -1,0 +1,845 @@
+% -*- coding: utf-8 -*-
+\documentclass{book}
+
+\input{preamble}
+\setcounter{chapter}{8}
+
+\begin{document}
+
+%\chapter{Rules and Leaders}\label{rules}
+\chapter{Rules and Leaders}\label{rules}
+
+%Rules and leaders are two ways of getting \TeX\ to draw a line.
+%Leaders are more general than rules: they can also fill
+%available space with copies of a certain box. This chapter
+%explain how rules and leaders work, and how they interact with modes.
+Rules and leaders are two ways of getting \TeX\ to draw a line.
+Leaders are more general than rules: they can also fill
+available space with copies of a certain box. This chapter
+explain how rules and leaders work, and how they interact with modes.
+
+%\label{cschap:hrule}\label{cschap:vrule}\label{cschap:leaders}\label{cschap:cleaders}\label{cschap:xleaders}
+%\begin{inventory}
+%\item [\cs{hrule}] 
+%      Rule that spreads in horizontal direction.
+\label{cschap:hrule}\label{cschap:vrule}\label{cschap:leaders}\label{cschap:cleaders}\label{cschap:xleaders}
+\begin{inventory}
+\item [\cs{hrule}] 
+      Rule that spreads in horizontal direction.
+
+%\item [\cs{vrule}] 
+%      Rule that spreads in vertical direction.
+\item [\cs{vrule}] 
+      Rule that spreads in vertical direction.
+
+%\item [\cs{leaders}] 
+%      Fill a specified amount of space with a rule or copies of box.
+\item [\cs{leaders}] 
+      Fill a specified amount of space with a rule or copies of box.
+
+%\item [\cs{cleaders}] 
+%      Like \verb=\leaders=, but with box leaders 
+%      any excess space is split equally before and after the leaders.
+\item [\cs{cleaders}] 
+      Like \verb=\leaders=, but with box leaders 
+      any excess space is split equally before and after the leaders.
+
+%\item [\cs{xleaders}] 
+%      Like \verb=\leaders=, but with box leaders any excess space is 
+%      spread equally before, after, and between the boxes.
+\item [\cs{xleaders}] 
+      Like \verb=\leaders=, but with box leaders any excess space is 
+      spread equally before, after, and between the boxes.
+
+%\end{inventory}
+\end{inventory}
+
+%%\point Rules
+%\section{Rules}
+%\point Rules
+\section{Rules}
+
+%\TeX's rule commands give
+%\indexterm{rules}:
+%rectangular black patches with horizontal and vertical sides.
+%Most of the times, a rule command will give output that
+%looks like a rule, but~\hbox{\vrule height 1.5ex width 1.5ex}
+%can also be produced by a rule.
+\TeX's rule commands give
+\indexterm{rules}:
+rectangular black patches with horizontal and vertical sides.
+Most of the times, a rule command will give output that
+looks like a rule, but~\hbox{\vrule height 1.5ex width 1.5ex}
+can also be produced by a rule.
+
+%\TeX\ has both horizontal and vertical rules, 
+%but the names do not necessarily imply anything about the shape.
+%They do, however, imply something about modes:
+%an \csidx{hrule} command can only be used in vertical mode,
+%and a \csidx{vrule} only in horizontal mode.
+%In fact, an \cs{hrule} is a \gr{vertical command}, and a \cs{vrule}
+%is a \gr{horizontal command}, so \TeX\ may change
+%modes when encountering these commands.
+\TeX\ has both horizontal and vertical rules, 
+but the names do not necessarily imply anything about the shape.
+They do, however, imply something about modes:
+an \csidx{hrule} command can only be used in vertical mode,
+and a \csidx{vrule} only in horizontal mode.
+In fact, an \cs{hrule} is a \gr{vertical command}, and a \cs{vrule}
+is a \gr{horizontal command}, so \TeX\ may change
+modes when encountering these commands.
+
+%Why then is a \cs{vrule} called a {\em vertical\/} rule?
+%The reason is that a \cs{vrule} can expand arbitrarily
+%far in the vertical direction: if its height and depth are not
+%specified explicitly it will take as much room as its
+%surroundings allow\altt.
+Why then is a \cs{vrule} called a {\em vertical\/} rule?
+The reason is that a \cs{vrule} can expand arbitrarily
+far in the vertical direction: if its height and depth are not
+specified explicitly it will take as much room as its
+surroundings allow\altt.
+
+%\begin{example}
+%\begin{verbatim}
+%\hbox{\vrule\ text \vrule}
+%\end{verbatim}
+%looks like \begin{disp}\leavevmode\hbox{\vrule\ text \vrule}\end{disp}
+%and
+%\begin{verbatim}
+%\hbox{\vrule\ A gogo! \vrule}
+%\end{verbatim}
+%looks like
+%\begin{disp}\leavevmode\hbox{\vrule\ A gogo! \vrule}\end{disp}
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\hbox{\vrule\ text \vrule}
+\end{verbatim}
+looks like \begin{disp}\leavevmode\hbox{\vrule\ text \vrule}\end{disp}
+and
+\begin{verbatim}
+\hbox{\vrule\ A gogo! \vrule}
+\end{verbatim}
+looks like
+\begin{disp}\leavevmode\hbox{\vrule\ A gogo! \vrule}\end{disp}
+\end{example}
+
+%For the \cs{hrule} command a similar statement is true:
+%a horizontal rule can spread to assume the width of
+%its surroundings. Thus 
+%\begin{verbatim}
+%\vbox{\hbox{One line of text}\hrule}
+%\end{verbatim}
+%looks like
+%\begin{disp}\leavevmode\vtop{\hbox{One line of text}\hrule}\end{disp}
+For the \cs{hrule} command a similar statement is true:
+a horizontal rule can spread to assume the width of
+its surroundings. Thus 
+\begin{verbatim}
+\vbox{\hbox{One line of text}\hrule}
+\end{verbatim}
+looks like
+\begin{disp}\leavevmode\vtop{\hbox{One line of text}\hrule}\end{disp}
+
+
+%%\spoint Rule dimensions
+%\subsection{Rule dimensions}
+%\spoint Rule dimensions
+\subsection{Rule dimensions}
+
+%Horizontal and vertical rules have a default thickness:
+%\begin{Disp} \cs{hrule}\quad is the same as\quad \verb-\hrule height.4pt depth0pt-
+%\end{Disp}
+%and 
+%\begin{Disp} \cs{vrule}\quad is the same as\quad \verb-\vrule width.4pt- \end{Disp}
+%and if the remaining dimension remains unspecified, the rule
+%extends in that direction to fill the enclosing box.
+Horizontal and vertical rules have a default thickness:
+\begin{Disp} \cs{hrule}\quad is the same as\quad \verb-\hrule height.4pt depth0pt-
+\end{Disp}
+and 
+\begin{Disp} \cs{vrule}\quad is the same as\quad \verb-\vrule width.4pt- \end{Disp}
+and if the remaining dimension remains unspecified, the rule
+extends in that direction to fill the enclosing box.
+
+%Here is the formal specification of how to indicate rule sizes:
+%\begin{disp}\gr{vertical rule} $\longrightarrow$ 
+%                        \cs{vrule}\gr{rule specification}\nl
+%     \gr{horizontal rule} $\longrightarrow$
+%                        \cs{hrule}\gr{rule specification}\nl
+%     \gr{rule specification} $\longrightarrow$
+%                        \gr{optional spaces} \nl \indent$|$
+%                        \gr{rule dimensions}\gr{rule specification}\nl
+%     \gr{rule dimension} $\longrightarrow$
+%                        \n{width}\gr{dimen} $|$ \n{height}\gr{dimen} $|$
+%                        \n{depth}\gr{dimen}
+%     \end{disp}
+%If a rule dimension is specified twice, the second instance
+%takes precedence over the first. This makes it possible
+%to override the default dimensions. For instance,
+%after
+%\alt
+%\howto Change the default dimensions of rules\par
+%\begin{verbatim}
+%\let\xhrule\hrule  \def\hrule{\xhrule height .8pt}
+%\end{verbatim}
+%the macro \cs{hrule} gives a horizontal rule
+%of double the original height, and it is still possible
+%with
+%\begin{verbatim}
+%\hrule height 2pt
+%\end{verbatim}
+%to specify other heights.
+Here is the formal specification of how to indicate rule sizes:
+\begin{disp}\gr{vertical rule} $\longrightarrow$ 
+                        \cs{vrule}\gr{rule specification}\nl
+     \gr{horizontal rule} $\longrightarrow$
+                        \cs{hrule}\gr{rule specification}\nl
+     \gr{rule specification} $\longrightarrow$
+                        \gr{optional spaces} \nl \indent$|$
+                        \gr{rule dimensions}\gr{rule specification}\nl
+     \gr{rule dimension} $\longrightarrow$
+                        \n{width}\gr{dimen} $|$ \n{height}\gr{dimen} $|$
+                        \n{depth}\gr{dimen}
+     \end{disp}
+If a rule dimension is specified twice, the second instance
+takes precedence over the first. This makes it possible
+to override the default dimensions. For instance,
+after
+\alt
+\howto Change the default dimensions of rules\par
+\begin{verbatim}
+\let\xhrule\hrule  \def\hrule{\xhrule height .8pt}
+\end{verbatim}
+the macro \cs{hrule} gives a horizontal rule
+of double the original height, and it is still possible
+with
+\begin{verbatim}
+\hrule height 2pt
+\end{verbatim}
+to specify other heights.
+
+%It is possible to specify all three dimensions; then
+%\begin{verbatim}
+%\vrule height1ex depth0pt width1ex
+%\end{verbatim}
+%and
+%\begin{verbatim}
+%\hrule height1ex depth0pt width1ex
+%\end{verbatim}
+%look the same.
+%Still, each of them can be used only in the appropriate mode.
+It is possible to specify all three dimensions; then
+\begin{verbatim}
+\vrule height1ex depth0pt width1ex
+\end{verbatim}
+and
+\begin{verbatim}
+\hrule height1ex depth0pt width1ex
+\end{verbatim}
+look the same.
+Still, each of them can be used only in the appropriate mode.
+
+%%\point Leaders
+%\section{Leaders}
+%\point Leaders
+\section{Leaders}
+
+%Rules are intimately connected to modes, which makes it easy
+%to obtain some effects. For instance, a typical application
+%of a vertical rule looks like
+%\begin{verbatim}
+%\hbox{\vrule width1pt\ Important text! \vrule width 1pt}
+%\end{verbatim}
+%which gives
+%\begin{disp}\leavevmode\hbox{\vrule width 1pt\ Important text! 
+%                      \vrule width 1pt}\end{disp}
+%However, one might want to have a horizontal rule
+%in horizontal mode for effects such as
+%\begin{disp}\leavevmode
+%\vbox{\hbox to 5cm{$\longleftarrow$\hfil 5cm\hfil$\longrightarrow$}
+%    \hbox to 5cm{from here\leaders\hrule\hfil to there}}\end{disp}
+%An \cs{hrule} can not be used in horizontal mode, and
+%a vertical rule will not spread automatically.
+Rules are intimately connected to modes, which makes it easy
+to obtain some effects. For instance, a typical application
+of a vertical rule looks like
+\begin{verbatim}
+\hbox{\vrule width1pt\ Important text! \vrule width 1pt}
+\end{verbatim}
+which gives
+\begin{disp}\leavevmode\hbox{\vrule width 1pt\ Important text! 
+                      \vrule width 1pt}\end{disp}
+However, one might want to have a horizontal rule
+in horizontal mode for effects such as
+\begin{disp}\leavevmode
+\vbox{\hbox to 5cm{$\longleftarrow$\hfil 5cm\hfil$\longrightarrow$}
+    \hbox to 5cm{from here\leaders\hrule\hfil to there}}\end{disp}
+An \cs{hrule} can not be used in horizontal mode, and
+a vertical rule will not spread automatically.
+
+%However, there is a way to use an \cs{hrule} command in
+%horizontal mode and a \cs{vrule} in vertical mode,
+%and that is with \indexterm{leaders}, so called because
+%they lead your eye across the page. 
+%A~leader command tells \TeX\
+%to fill a~specified space, in whatever mode it is in,
+%with as many copies of some box or rule specification
+%as are needed. For instance, the above example
+%was given as
+%\begin{disp}\verb>\hbox to 5cm{from here\leaders\hrule\hfil to there}>\end{disp}
+%that is, with an \cs{hrule} that was allowed to stretch along
+%an \cs{hfil}.
+%Note that the leader was given a horizontal skip,
+%corresponding to the horizontal mode in which it appeared.
+However, there is a way to use an \cs{hrule} command in
+horizontal mode and a \cs{vrule} in vertical mode,
+and that is with \indexterm{leaders}, so called because
+they lead your eye across the page. 
+A~leader command tells \TeX\
+to fill a~specified space, in whatever mode it is in,
+with as many copies of some box or rule specification
+as are needed. For instance, the above example
+was given as
+\begin{disp}\verb>\hbox to 5cm{from here\leaders\hrule\hfil to there}>\end{disp}
+that is, with an \cs{hrule} that was allowed to stretch along
+an \cs{hfil}.
+Note that the leader was given a horizontal skip,
+corresponding to the horizontal mode in which it appeared.
+
+%A general leader command looks like
+%\begin{Disp} \gr{leaders}\gr{box or rule}%
+%      \gr{vertical/horizontal/mathematical skip}\end{Disp}
+%where \gr{leaders} is \cs{leaders}, \cs{cleaders}, 
+%or~\cs{xleaders}, a \gr{box~or~rule}
+%is a~\gr{box}, \cs{vrule}, or~\cs{hrule}, and the
+%lists of horizontal and vertical skips appear in Chapter~\ref{hvmode};
+%a~mathematical skip is either a horizontal skip or an~\cs{mskip}
+%(see page~\pageref{muglue}).
+%Leaders can thus be used in all three modes. Of course, the
+%appropriate kind of skip must be specified. 
+A general leader command looks like
+\begin{Disp} \gr{leaders}\gr{box or rule}%
+      \gr{vertical/horizontal/mathematical skip}\end{Disp}
+where \gr{leaders} is \cs{leaders}, \cs{cleaders}, 
+or~\cs{xleaders}, a \gr{box~or~rule}
+is a~\gr{box}, \cs{vrule}, or~\cs{hrule}, and the
+lists of horizontal and vertical skips appear in Chapter~\ref{hvmode};
+a~mathematical skip is either a horizontal skip or an~\cs{mskip}
+(see page~\pageref{muglue}).
+Leaders can thus be used in all three modes. Of course, the
+appropriate kind of skip must be specified. 
+
+%A horizontal (vertical) box containing leaders has at least
+%the height and depth (width) of the \gr{box~or~rule} used
+%in the leaders, even if, as can happen in the case of box leaders,
+%no actual leaders are placed.
+A horizontal (vertical) box containing leaders has at least
+the height and depth (width) of the \gr{box~or~rule} used
+in the leaders, even if, as can happen in the case of box leaders,
+no actual leaders are placed.
+
+%%\spoint Rule leaders
+%\subsection{Rule leaders}
+%\spoint Rule leaders
+\subsection{Rule leaders}
+
+%\emph{Rule leaders}\index{leaders!rule}
+%fill the specified amount of space with a rule
+%\cstoidx leaders\par
+%extending in the direction of the skip specified.
+%The other dimensions of the resulting rule leader
+%are determined by the sort of rule that is used:
+%either dimensions can be specified explicitly, or
+%the default values can be used.
+\emph{Rule leaders}\index{leaders!rule}
+fill the specified amount of space with a rule
+\cstoidx leaders\par
+extending in the direction of the skip specified.
+The other dimensions of the resulting rule leader
+are determined by the sort of rule that is used:
+either dimensions can be specified explicitly, or
+the default values can be used.
+
+%For instance, 
+%\begin{verbatim}
+%\hbox{g\leaders\hrule\hskip20pt f}
+%\end{verbatim}
+%gives \begin{disp}\leavevmode\hbox{g\leaders\hrule\hskip20pt f}\end{disp}
+%because a horizontal rule has a default height of~\n{.4pt}.
+%On the other hand,
+%\begin{verbatim}
+%\hbox{g\leaders\vrule\hskip20pt f}
+%\end{verbatim}
+%gives \begin{disp}\leavevmode\hbox{g\leaders\vrule\hskip20pt f}\end{disp}
+%because the height and depth of a vertical rule
+%by default fill the surrounding box.
+For instance, 
+\begin{verbatim}
+\hbox{g\leaders\hrule\hskip20pt f}
+\end{verbatim}
+gives \begin{disp}\leavevmode\hbox{g\leaders\hrule\hskip20pt f}\end{disp}
+because a horizontal rule has a default height of~\n{.4pt}.
+On the other hand,
+\begin{verbatim}
+\hbox{g\leaders\vrule\hskip20pt f}
+\end{verbatim}
+gives \begin{disp}\leavevmode\hbox{g\leaders\vrule\hskip20pt f}\end{disp}
+because the height and depth of a vertical rule
+by default fill the surrounding box.
+
+%Spurious rule dimensions are ignored: in horizontal mode
+%\begin{verbatim}
+%\leaders\hrule width 10pt \hskip 20pt
+%\end{verbatim}
+%is equivalent to
+%\begin{verbatim}
+%\leaders\hrule \hskip 20pt
+%\end{verbatim}
+Spurious rule dimensions are ignored: in horizontal mode
+\begin{verbatim}
+\leaders\hrule width 10pt \hskip 20pt
+\end{verbatim}
+is equivalent to
+\begin{verbatim}
+\leaders\hrule \hskip 20pt
+\end{verbatim}
+
+%If the width or height-plus-depth
+%of either the skip or the box is negative, 
+%\TeX\ uses ordinary glue instead of leaders.
+If the width or height-plus-depth
+of either the skip or the box is negative, 
+\TeX\ uses ordinary glue instead of leaders.
+
+%%\spoint Box leaders
+%\subsection{Box leaders}
+%\spoint Box leaders
+\subsection{Box leaders}
+
+%Box leaders fill the available spaces with copies of
+%a given box, instead of with a rule. 
+Box leaders fill the available spaces with copies of
+a given box, instead of with a rule. 
+
+%\newbox\centerdot  \setbox\centerdot=\hbox{\hskip.7em.\hskip.7em}
+\newbox\centerdot  \setbox\centerdot=\hbox{\hskip.7em.\hskip.7em}
+
+%For all of the following examples, assume that a box register
+%has been allocated:
+%\begin{verbatim}
+%\newbox\centerdot  \setbox\centerdot=\hbox{\hskip.7em.\hskip.7em}
+%\end{verbatim}
+%Now the output of
+%\begin{verbatim}
+%\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+%\end{verbatim}
+%is 
+%\begin{disp}\leavevmode\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+%\end{disp} That is, copies of the box register fill up the
+%available space.
+For all of the following examples, assume that a box register
+has been allocated:
+\begin{verbatim}
+\newbox\centerdot  \setbox\centerdot=\hbox{\hskip.7em.\hskip.7em}
+\end{verbatim}
+Now the output of
+\begin{verbatim}
+\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+\end{verbatim}
+is 
+\begin{disp}\leavevmode\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+\end{disp} That is, copies of the box register fill up the
+available space.
+
+%Dot leaders, as in the above example, are often used for
+%tables of contents. In such applications it is desirable that
+%dots on subsequent lines are vertically aligned.
+%The \cs{leaders} command does this automatically:
+%\begin{verbatim}
+%\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+%\hbox to 8cm {over here\leaders\copy\centerdot\hfil over there}
+%\end{verbatim}
+%gives \begin{disp}\leavevmode
+%\vtop{\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+%\hbox to 8cm {over here\leaders\copy\centerdot\hfil over there\strut}}
+%\end{disp}
+%The mechanism behind this is the following:
+%\TeX\ acts as if an infinite row of boxes starts (invisibly) at 
+%the left edge of the surrounding box, 
+%and the row of copies actually placed is 
+%merely the part of this row that is not obscured by
+%the other contents of the box.
+Dot leaders, as in the above example, are often used for
+tables of contents. In such applications it is desirable that
+dots on subsequent lines are vertically aligned.
+The \cs{leaders} command does this automatically:
+\begin{verbatim}
+\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+\hbox to 8cm {over here\leaders\copy\centerdot\hfil over there}
+\end{verbatim}
+gives \begin{disp}\leavevmode
+\vtop{\hbox to 8cm {here\leaders\copy\centerdot\hfil there}
+\hbox to 8cm {over here\leaders\copy\centerdot\hfil over there\strut}}
+\end{disp}
+The mechanism behind this is the following:
+\TeX\ acts as if an infinite row of boxes starts (invisibly) at 
+the left edge of the surrounding box, 
+and the row of copies actually placed is 
+merely the part of this row that is not obscured by
+the other contents of the box.
+
+%Stated differently, box leaders are a window on an infinite
+%row of boxes, and the row starts at the left edge of the
+%surrounding box. Consider the following example:
+%\begin{verbatim}
+%\hbox to 8cm {\leaders\copy\centerdot\hfil}
+%\hbox to 8cm {word\leaders\copy\centerdot\hfil}
+%\end{verbatim}
+%which gives
+%\begin{disp}\leavevmode\vtop{\hbox to 8cm {\leaders\copy\centerdot\hfil}
+%\hbox to 8cm {word\leaders\copy\centerdot\hfil\strut}}\end{disp}
+%The row of leaders boxes becomes visible as soon as it
+%does not coincide with other material.
+Stated differently, box leaders are a window on an infinite
+row of boxes, and the row starts at the left edge of the
+surrounding box. Consider the following example:
+\begin{verbatim}
+\hbox to 8cm {\leaders\copy\centerdot\hfil}
+\hbox to 8cm {word\leaders\copy\centerdot\hfil}
+\end{verbatim}
+which gives
+\begin{disp}\leavevmode\vtop{\hbox to 8cm {\leaders\copy\centerdot\hfil}
+\hbox to 8cm {word\leaders\copy\centerdot\hfil\strut}}\end{disp}
+The row of leaders boxes becomes visible as soon as it
+does not coincide with other material.
+
+%The above discussion only talked about leaders in horizontal
+%mode. Leaders can equally well be placed in vertical mode;
+%for box leaders the `infinite row' then starts at the top
+%of the surrounding box.
+The above discussion only talked about leaders in horizontal
+mode. Leaders can equally well be placed in vertical mode;
+for box leaders the `infinite row' then starts at the top
+of the surrounding box.
+
+%%\spoint Evenly spaced leaders
+%\subsection{Evenly spaced leaders}
+%\spoint Evenly spaced leaders
+\subsection{Evenly spaced leaders}
+
+%Aligning subsequent box leaders in the way described above
+%means that the white space before and after the
+%leaders will in general be different.
+%If vertical alignment is not
+%an issue it may be aesthetically more pleasing to have
+%the leaders evenly spaced.
+%The \csidx{cleaders} command is like \cs{leaders},
+%except that it splits excess space before and after the leaders
+%into two equal parts, centring the row of boxes in the
+%available space.
+Aligning subsequent box leaders in the way described above
+means that the white space before and after the
+leaders will in general be different.
+If vertical alignment is not
+an issue it may be aesthetically more pleasing to have
+the leaders evenly spaced.
+The \csidx{cleaders} command is like \cs{leaders},
+except that it splits excess space before and after the leaders
+into two equal parts, centring the row of boxes in the
+available space.
+
+%\begin{example}\message{check verbatim indentation}
+%\begin{verbatim}
+%\hbox to 7.8cm {here\cleaders\copy\centerdot\hfil there}
+%\hbox to 7.8cm {here is\cleaders\copy\centerdot\hfil there}
+%\end{verbatim}
+%gives \begin{disp}\leavevmode\vbox{
+%\hbox to 7.8cm {here\cleaders\copy\centerdot\hfil there}
+%\hbox to 7.8cm {here is\cleaders\copy\centerdot\hfil there\strut}
+%}\end{disp}
+%The `expanding leaders' \csidx{xleaders} spread excess space evenly
+%between the boxes, with equal globs of glue before, after,
+%and in between leader boxes.
+%\end{example}
+\begin{example}\message{check verbatim indentation}
+\begin{verbatim}
+\hbox to 7.8cm {here\cleaders\copy\centerdot\hfil there}
+\hbox to 7.8cm {here is\cleaders\copy\centerdot\hfil there}
+\end{verbatim}
+gives \begin{disp}\leavevmode\vbox{
+\hbox to 7.8cm {here\cleaders\copy\centerdot\hfil there}
+\hbox to 7.8cm {here is\cleaders\copy\centerdot\hfil there\strut}
+}\end{disp}
+The `expanding leaders' \csidx{xleaders} spread excess space evenly
+between the boxes, with equal globs of glue before, after,
+and in between leader boxes.
+\end{example}
+
+%\begin{example}
+%\begin{verbatim}
+%\hbox to 7.8cm{here\hskip.7em
+%      \xleaders\copy\centerdot\hfil  \hskip.7em there}
+%\end{verbatim}
+%gives \begin{disp}\leavevmode
+%\hbox to 7.8cm {here\hskip.7em\xleaders\copy\centerdot\hfil\hskip.7em there}
+%\end{disp} Note that the glue in the leader box is balanced here
+%with explicit glue before and after the leaders;
+%leaving out these glue items, as in
+%\begin{verbatim}
+%\hbox to 7.8cm {here\xleaders\copy\centerdot\hfil there}
+%\end{verbatim}
+%gives \begin{disp}\leavevmode
+%\hbox to 7.8cm {here\xleaders\copy\centerdot\hfil there}
+%\end{disp}
+%which is clearly not what was intended.
+%\end{example}
+\begin{example}
+\begin{verbatim}
+\hbox to 7.8cm{here\hskip.7em
+      \xleaders\copy\centerdot\hfil  \hskip.7em there}
+\end{verbatim}
+gives \begin{disp}\leavevmode
+\hbox to 7.8cm {here\hskip.7em\xleaders\copy\centerdot\hfil\hskip.7em there}
+\end{disp} Note that the glue in the leader box is balanced here
+with explicit glue before and after the leaders;
+leaving out these glue items, as in
+\begin{verbatim}
+\hbox to 7.8cm {here\xleaders\copy\centerdot\hfil there}
+\end{verbatim}
+gives \begin{disp}\leavevmode
+\hbox to 7.8cm {here\xleaders\copy\centerdot\hfil there}
+\end{disp}
+which is clearly not what was intended.
+\end{example}
+
+%%\point Assorted remarks
+%\section{Assorted remarks}
+%\point Assorted remarks
+\section{Assorted remarks}
+
+%%\spoint Rules and modes
+%\subsection{Rules and modes}
+%\spoint Rules and modes
+\subsection{Rules and modes}
+
+%Above it was explained how rules can only occur in the 
+%appropriate modes. Rules also influence mode-specific
+%quantities:
+%no baselineskip is added before rules in 
+%vertical mode. In order to prevent glue after rules,
+%\TeX\ sets \cs{prevdepth} to
+%\n{\hbox{-}1000pt}
+%(see Chapter~\ref{baseline}).
+%Similarly the \cs{spacefactor} is set to 1000 after a \cs{vrule}
+%in horizontal mode (see Chapter~\ref{line:break}).
+Above it was explained how rules can only occur in the 
+appropriate modes. Rules also influence mode-specific
+quantities:
+no baselineskip is added before rules in 
+vertical mode. In order to prevent glue after rules,
+\TeX\ sets \cs{prevdepth} to
+\n{\hbox{-}1000pt}
+(see Chapter~\ref{baseline}).
+Similarly the \cs{spacefactor} is set to 1000 after a \cs{vrule}
+in horizontal mode (see Chapter~\ref{line:break}).
+
+
+%%\spoint[par:leaders:end] Ending a paragraph with leaders
+%\subsection{Ending a paragraph with leaders}
+%\label{par:leaders:end}
+%\spoint[par:leaders:end] Ending a paragraph with leaders
+\subsection{Ending a paragraph with leaders}
+\label{par:leaders:end}
+
+%An attempt to simulate an \cs{hrule} at the end of a paragraph by
+%\howto End a paragraph with leaders\par
+%\begin{verbatim}
+%\nobreak\leaders\hrule\hfill\par
+%\end{verbatim}
+%does not work. The reason for this is that \TeX\
+%performs an \cs{unskip} at the end of a paragraph,
+%which removes the leaders. Normally this \cs{unskip} removes
+%any space token inserted by the input processor after the
+%last line. Remedy: stick an \verb.\hbox{}. at the end of
+%the leaders.
+An attempt to simulate an \cs{hrule} at the end of a paragraph by
+\howto End a paragraph with leaders\par
+\begin{verbatim}
+\nobreak\leaders\hrule\hfill\par
+\end{verbatim}
+does not work. The reason for this is that \TeX\
+performs an \cs{unskip} at the end of a paragraph,
+which removes the leaders. Normally this \cs{unskip} removes
+any space token inserted by the input processor after the
+last line. Remedy: stick an \verb.\hbox{}. at the end of
+the leaders.
+
+%%\spoint Leaders and box registers
+%\subsection{Leaders and box registers}
+%\spoint Leaders and box registers
+\subsection{Leaders and box registers}
+
+%In the above examples the leader box was inserted with
+%\cs{copy}. The output of
+%\begin{verbatim}
+%\hbox to 8cm {here\leaders\box\centerdot\hfil there}
+%\hbox to 8cm {over here\leaders\box\centerdot\hfil 
+%                   over there}
+%\end{verbatim}
+%is
+%\begin{disp}\leavevmode
+%     \vtop{\hbox to 8cm {here\leaders\box\centerdot\hfil there}
+%           \hbox to 8cm {over here\leaders\box\centerdot\hfil over there}
+%           }\end{disp}
+%The box register is emptied after the first leader command,
+%but more than one copy is placed in that first command.
+In the above examples the leader box was inserted with
+\cs{copy}. The output of
+\begin{verbatim}
+\hbox to 8cm {here\leaders\box\centerdot\hfil there}
+\hbox to 8cm {over here\leaders\box\centerdot\hfil 
+                   over there}
+\end{verbatim}
+is
+\begin{disp}\leavevmode
+     \vtop{\hbox to 8cm {here\leaders\box\centerdot\hfil there}
+           \hbox to 8cm {over here\leaders\box\centerdot\hfil over there}
+           }\end{disp}
+The box register is emptied after the first leader command,
+but more than one copy is placed in that first command.
+
+%%\spoint Output in leader boxes
+%\subsection{Output in leader boxes}
+%\spoint Output in leader boxes
+\subsection{Output in leader boxes}
+
+%Any \cs{write}, \cs{openout}, or \cs{closeout} operation
+%appearing in leader boxes is ignored. 
+%Otherwise such an operation would be executed once for every
+%copy of the box that would be shipped out.
+Any \cs{write}, \cs{openout}, or \cs{closeout} operation
+appearing in leader boxes is ignored. 
+Otherwise such an operation would be executed once for every
+copy of the box that would be shipped out.
+
+%%\spoint Box leaders in trace output
+%\subsection{Box leaders in trace output}
+%\spoint Box leaders in trace output
+\subsection{Box leaders in trace output}
+
+%The dumped box representation obtained from,
+%for instance, \cs{tracingoutput}
+%does not write out box leaders in full: only the total size and
+%one copy of the box used are dumped. In particular,
+%the surrounding white space before and after the leaders
+%is not indicated.
+The dumped box representation obtained from,
+for instance, \cs{tracingoutput}
+does not write out box leaders in full: only the total size and
+one copy of the box used are dumped. In particular,
+the surrounding white space before and after the leaders
+is not indicated.
+
+%%\spoint Leaders and shifted margins
+%\subsection{Leaders and shifted margins}
+%\spoint Leaders and shifted margins
+\subsection{Leaders and shifted margins}
+
+%If margins have been shifted,
+%leaders may look different
+%depending on how the shift has been realized.
+%For an illustration of how \cs{hangindent} and \cs{leftskip}
+%influence the look of leaders, consider the following
+%examples, where
+%\begin{verbatim}
+%\setbox0=\hbox{K o }
+%\end{verbatim}
+%The horizontal boxes above  the leaders
+%\altt
+%serve to indicate the starting point of the row of leaders.
+If margins have been shifted,
+leaders may look different
+depending on how the shift has been realized.
+For an illustration of how \cs{hangindent} and \cs{leftskip}
+influence the look of leaders, consider the following
+examples, where
+\begin{verbatim}
+\setbox0=\hbox{K o }
+\end{verbatim}
+The horizontal boxes above  the leaders
+\altt
+serve to indicate the starting point of the row of leaders.
+
+%First
+%\begin{verbatim}
+%\hbox{\leaders\copy0\hskip5cm}
+%\noindent\advance\leftskip 1em
+%      \leaders\copy0\hskip5cm\hbox{}\par
+%\end{verbatim}
+%gives\message{examples on}
+%\begin{disp}\leavevmode\vbox{\leftskip=0pt \hsize=7cm
+%\setbox0=\hbox{K o }
+%\hbox{\leaders\copy0\hskip5cm}
+%\noindent\advance\leftskip 1em
+%      \leaders\copy0\hskip5cm\hbox{}\par
+%    }\end{disp}
+%Then
+%\begin{verbatim}
+%\hbox{\kern1em\hbox{\leaders\copy0\hskip5cm}}
+%\hangindent=1em \hangafter=-1 \noindent
+%      \leaders\copy0\hskip5cm\hbox{}\par
+%\end{verbatim}
+%gives (note the shift with respect to the previous example)
+%\begin{disp}\leavevmode\vbox{\leftskip=0pt \hsize=7cm
+%\setbox0=\hbox{K o }
+%\hbox{\kern1em\hbox{\leaders\copy0\hskip5cm}}
+%\hangindent=1em \hangafter=-1 \noindent
+%      \leaders\copy0\hskip5cm\hbox{}\par}\end{disp}
+%\message{one page}
+%In the first paragraph the \cs{leftskip} glue only obscures
+%the first leader box; in the second paragraph the hanging
+%indentation actually shifts the orientation point for the 
+%row of leaders. Hanging indentation is performed in \TeX\
+%by a \cs{moveright} of the boxes containing the lines
+%of the paragraph.
+First
+\begin{verbatim}
+\hbox{\leaders\copy0\hskip5cm}
+\noindent\advance\leftskip 1em
+      \leaders\copy0\hskip5cm\hbox{}\par
+\end{verbatim}
+gives\message{examples on}
+\begin{disp}\leavevmode\vbox{\leftskip=0pt \hsize=7cm
+\setbox0=\hbox{K o }
+\hbox{\leaders\copy0\hskip5cm}
+\noindent\advance\leftskip 1em
+      \leaders\copy0\hskip5cm\hbox{}\par
+    }\end{disp}
+Then
+\begin{verbatim}
+\hbox{\kern1em\hbox{\leaders\copy0\hskip5cm}}
+\hangindent=1em \hangafter=-1 \noindent
+      \leaders\copy0\hskip5cm\hbox{}\par
+\end{verbatim}
+gives (note the shift with respect to the previous example)
+\begin{disp}\leavevmode\vbox{\leftskip=0pt \hsize=7cm
+\setbox0=\hbox{K o }
+\hbox{\kern1em\hbox{\leaders\copy0\hskip5cm}}
+\hangindent=1em \hangafter=-1 \noindent
+      \leaders\copy0\hskip5cm\hbox{}\par}\end{disp}
+\message{one page}
+In the first paragraph the \cs{leftskip} glue only obscures
+the first leader box; in the second paragraph the hanging
+indentation actually shifts the orientation point for the 
+row of leaders. Hanging indentation is performed in \TeX\
+by a \cs{moveright} of the boxes containing the lines
+of the paragraph.
+
+%\endofchapter
+%%%%% end of input file [rules]
+\endofchapter
+%%%% end of input file [rules]
+
+\end{document}

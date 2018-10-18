@@ -1,0 +1,236 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		84DF62AB153268D50003D204 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84DF62AA153268D50003D204 /* Foundation.framework */; };
+		84DF62AE153268D50003D204 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DF62AD153268D50003D204 /* main.m */; };
+		84DF62B2153268D50003D204 /* Sorting_Array.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 84DF62B1153268D50003D204 /* Sorting_Array.1 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		84DF62A4153268D50003D204 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				84DF62B2153268D50003D204 /* Sorting_Array.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		84DF62A6153268D50003D204 /* Sorting Array */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Sorting Array"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84DF62AA153268D50003D204 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		84DF62AD153268D50003D204 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		84DF62B0153268D50003D204 /* Sorting Array-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sorting Array-Prefix.pch"; sourceTree = "<group>"; };
+		84DF62B1153268D50003D204 /* Sorting_Array.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Sorting_Array.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		84DF62A3153268D50003D204 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84DF62AB153268D50003D204 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		84DF629B153268D50003D204 = {
+			isa = PBXGroup;
+			children = (
+				84DF62AC153268D50003D204 /* Sorting Array */,
+				84DF62A9153268D50003D204 /* Frameworks */,
+				84DF62A7153268D50003D204 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		84DF62A7153268D50003D204 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84DF62A6153268D50003D204 /* Sorting Array */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		84DF62A9153268D50003D204 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				84DF62AA153268D50003D204 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		84DF62AC153268D50003D204 /* Sorting Array */ = {
+			isa = PBXGroup;
+			children = (
+				84DF62AD153268D50003D204 /* main.m */,
+				84DF62B1153268D50003D204 /* Sorting_Array.1 */,
+				84DF62AF153268D50003D204 /* Supporting Files */,
+			);
+			path = "Sorting Array";
+			sourceTree = "<group>";
+		};
+		84DF62AF153268D50003D204 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				84DF62B0153268D50003D204 /* Sorting Array-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		84DF62A5153268D50003D204 /* Sorting Array */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84DF62B5153268D50003D204 /* Build configuration list for PBXNativeTarget "Sorting Array" */;
+			buildPhases = (
+				84DF62A2153268D50003D204 /* Sources */,
+				84DF62A3153268D50003D204 /* Frameworks */,
+				84DF62A4153268D50003D204 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Sorting Array";
+			productName = "Sorting Array";
+			productReference = 84DF62A6153268D50003D204 /* Sorting Array */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		84DF629D153268D50003D204 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 84DF62A0153268D50003D204 /* Build configuration list for PBXProject "Sorting Array" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 84DF629B153268D50003D204;
+			productRefGroup = 84DF62A7153268D50003D204 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				84DF62A5153268D50003D204 /* Sorting Array */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		84DF62A2153268D50003D204 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84DF62AE153268D50003D204 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		84DF62B3153268D50003D204 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		84DF62B4153268D50003D204 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		84DF62B6153268D50003D204 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sorting Array/Sorting Array-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		84DF62B7153268D50003D204 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sorting Array/Sorting Array-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		84DF62A0153268D50003D204 /* Build configuration list for PBXProject "Sorting Array" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84DF62B3153268D50003D204 /* Debug */,
+				84DF62B4153268D50003D204 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84DF62B5153268D50003D204 /* Build configuration list for PBXNativeTarget "Sorting Array" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84DF62B6153268D50003D204 /* Debug */,
+				84DF62B7153268D50003D204 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 84DF629D153268D50003D204 /* Project object */;
+}

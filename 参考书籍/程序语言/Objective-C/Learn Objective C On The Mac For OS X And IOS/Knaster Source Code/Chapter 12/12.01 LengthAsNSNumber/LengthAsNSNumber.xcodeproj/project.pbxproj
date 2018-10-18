@@ -1,0 +1,243 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		842A24DD1522BA7100CC772A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842A24DC1522BA7100CC772A /* Foundation.framework */; };
+		842A24E01522BA7100CC772A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A24DF1522BA7100CC772A /* main.m */; };
+		842A24E41522BA7100CC772A /* LengthAsNSNumber.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 842A24E31522BA7100CC772A /* LengthAsNSNumber.1 */; };
+		842A24F01522BB0800CC772A /* NSString+NumberConvenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A24EF1522BB0800CC772A /* NSString+NumberConvenience.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		842A24D61522BA7100CC772A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				842A24E41522BA7100CC772A /* LengthAsNSNumber.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		842A24D81522BA7100CC772A /* LengthAsNSNumber */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LengthAsNSNumber; sourceTree = BUILT_PRODUCTS_DIR; };
+		842A24DC1522BA7100CC772A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		842A24DF1522BA7100CC772A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		842A24E21522BA7100CC772A /* LengthAsNSNumber-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LengthAsNSNumber-Prefix.pch"; sourceTree = "<group>"; };
+		842A24E31522BA7100CC772A /* LengthAsNSNumber.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = LengthAsNSNumber.1; sourceTree = "<group>"; };
+		842A24EE1522BB0800CC772A /* NSString+NumberConvenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+NumberConvenience.h"; sourceTree = "<group>"; };
+		842A24EF1522BB0800CC772A /* NSString+NumberConvenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NumberConvenience.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		842A24D51522BA7100CC772A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				842A24DD1522BA7100CC772A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		842A24CD1522BA7100CC772A = {
+			isa = PBXGroup;
+			children = (
+				842A24DE1522BA7100CC772A /* LengthAsNSNumber */,
+				842A24DB1522BA7100CC772A /* Frameworks */,
+				842A24D91522BA7100CC772A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		842A24D91522BA7100CC772A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				842A24D81522BA7100CC772A /* LengthAsNSNumber */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		842A24DB1522BA7100CC772A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				842A24DC1522BA7100CC772A /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		842A24DE1522BA7100CC772A /* LengthAsNSNumber */ = {
+			isa = PBXGroup;
+			children = (
+				842A24EE1522BB0800CC772A /* NSString+NumberConvenience.h */,
+				842A24EF1522BB0800CC772A /* NSString+NumberConvenience.m */,
+				842A24DF1522BA7100CC772A /* main.m */,
+				842A24E31522BA7100CC772A /* LengthAsNSNumber.1 */,
+				842A24E11522BA7100CC772A /* Supporting Files */,
+			);
+			path = LengthAsNSNumber;
+			sourceTree = "<group>";
+		};
+		842A24E11522BA7100CC772A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				842A24E21522BA7100CC772A /* LengthAsNSNumber-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		842A24D71522BA7100CC772A /* LengthAsNSNumber */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 842A24E71522BA7100CC772A /* Build configuration list for PBXNativeTarget "LengthAsNSNumber" */;
+			buildPhases = (
+				842A24D41522BA7100CC772A /* Sources */,
+				842A24D51522BA7100CC772A /* Frameworks */,
+				842A24D61522BA7100CC772A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LengthAsNSNumber;
+			productName = LengthAsNSNumber;
+			productReference = 842A24D81522BA7100CC772A /* LengthAsNSNumber */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		842A24CF1522BA7100CC772A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 842A24D21522BA7100CC772A /* Build configuration list for PBXProject "LengthAsNSNumber" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 842A24CD1522BA7100CC772A;
+			productRefGroup = 842A24D91522BA7100CC772A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				842A24D71522BA7100CC772A /* LengthAsNSNumber */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		842A24D41522BA7100CC772A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				842A24E01522BA7100CC772A /* main.m in Sources */,
+				842A24F01522BB0800CC772A /* NSString+NumberConvenience.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		842A24E51522BA7100CC772A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		842A24E61522BA7100CC772A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		842A24E81522BA7100CC772A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LengthAsNSNumber/LengthAsNSNumber-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		842A24E91522BA7100CC772A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LengthAsNSNumber/LengthAsNSNumber-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		842A24D21522BA7100CC772A /* Build configuration list for PBXProject "LengthAsNSNumber" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				842A24E51522BA7100CC772A /* Debug */,
+				842A24E61522BA7100CC772A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		842A24E71522BA7100CC772A /* Build configuration list for PBXNativeTarget "LengthAsNSNumber" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				842A24E81522BA7100CC772A /* Debug */,
+				842A24E91522BA7100CC772A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 842A24CF1522BA7100CC772A /* Project object */;
+}

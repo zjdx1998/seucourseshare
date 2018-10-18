@@ -1,0 +1,68 @@
+\input figs
+
+%\advance\lw by -\unitindent
+
+\newdimen\tal \tal=70pt % text arrow length
+\dh = .3\fbh
+
+\def\tarrow#1{\hbox to \tal
+   {$\leftarrow$%
+    \hss\hbox{\figfont #1}\hss
+    $\rightarrow$}}
+\def\arrow{\tarrow{}}
+\def\daline#1 #2 #3 {\hbox to \hsize
+   {\vrule width\lw \tarrow{#1}{#2}\tarrow{#3}\vrule width\lw}}
+\def\bline{\hbox to \hsize
+   {\vrule width\lw height.6\dh depth.3\dh
+    \hfil.\hfil \vrule width\lw}}
+\newbox\dbox
+\setbox\dbox\hbox{$\vcenter{\vbox to \dh
+              {\hsize=1pt \hrule height0pt depth\lw \
+               \vfil \hrule height\lw}}$}
+%\figure{
+    \daline{}
+           {{\tal=80pt \tarrow{parindent}}%
+            \vrule width\lw
+            \leaders\copy\dbox\hfil
+            \vrule width\lw
+            }
+           {}
+    \kern-\lw
+    \daline{leftskip}
+           {\vrule width\lw
+            \leaders\copy\dbox\hfil
+            \vrule width\lw
+            }
+           {rightskip}
+    \kern-\lw
+    \daline{}
+           {\vrule width\lw
+            \leaders\copy\dbox\hfil
+            \vrule width\lw} {}
+    \kern-\lw
+    \bline \bline \bline \bline
+    \daline{}
+           {\vrule width\lw
+            \leaders\copy\dbox\hfil
+            \vrule width\lw} {}
+    \kern-\lw
+    \daline{}
+           {\vrule width\lw
+            \leaders\copy\dbox\hfil
+            \vrule width\lw} {}
+    \kern-\lw
+    \daline{}
+           {\vrule width\lw
+            \leaders\copy\dbox\hfil
+            \vrule width\lw
+            {\tal=90pt \tarrow{parfillskip}}%
+            }
+           {}
+    \hbox to \hsize{\vrule width\lw
+       $\longleftarrow$\hfil
+       \setbox0=\hbox{\figfont hsize}\ht0=15pt
+       \box0
+       \hfil$\longrightarrow$%
+       \vrule width\lw}
+%    }
+

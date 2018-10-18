@@ -1,0 +1,26 @@
+This README belongs with the source of "TeX by Topic"
+copyright Victor Eijkhout 1991-2012,
+released under the GNU Free Documentation License
+
+Printed copies of this book are available on lulu.com
+see: http://www.eijkhout.net/texbytopic/texbytopic.html
+
+The source of the book is contained in the files 
+  TeXbyTopic.tex
+  figflow.tex
+  glossary.tex
+  tables.tex
+
+If you do anything interesting with this book, kindly contact
+
+  Victor Eijkhout
+  victor@eijkhout.net
+  Texas Advanced Computing Center
+  The University of Texas at Austin
+  10100 Burnet Road, Austin TX 78758, USA
+
+I am interested in incorporating useful additions into the
+official release of the book.
+
+Victor Eijkhout
+2007-2012

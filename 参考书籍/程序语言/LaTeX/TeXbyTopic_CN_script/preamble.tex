@@ -1,0 +1,214 @@
+% -*- coding: utf-8 -*-
+
+\usepackage[b5paper,text={5in,8in},centering]{geometry}
+\usepackage{amsmath}
+\usepackage[heading = false, scheme = plain]{ctex}
+% \usepackage[CJKchecksingle]{xeCJK}
+\setmainfont[Mapping=tex-text]{TeX Gyre Schola}
+%\setsansfont{URW Gothic L Book}
+%\setmonofont{Nimbus Mono L}
+% \setCJKmainfont[BoldFont=FandolHei,ItalicFont=FandolKai]{FandolSong}
+% \setCJKsansfont{FandolHei}
+% \setCJKmonofont{FandolFang}
+\xeCJKsetup{PunctStyle = kaiming}
+
+\linespread{1.25}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.5ex}
+\usepackage{indentfirst}
+
+\usepackage{xcolor}
+\definecolor{myblue}{rgb}{0,0.2,0.6}
+
+\usepackage{titlesec}
+\titleformat{\chapter}
+    {\normalfont\Huge\sffamily\color{myblue}}
+    {第\thechapter 章}
+    {1em}
+    {}
+%\titlespacing{\chapter}{0pt}{50pt}{40pt}
+\titleformat{\section}
+    {\normalfont\Large\sffamily\color{myblue}}
+    {\thesection}
+    {1em}
+    {}
+%\titlespacing{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titleformat{\subsection}
+    {\normalfont\large\sffamily\color{myblue}}
+    {\thesubsection}
+    {1em}
+    {}
+%\titlespacing{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+%
+\newpagestyle{special}[\small\sffamily]{
+  \headrule
+  \sethead[\usepage][][\chaptertitle]
+  {\chaptertitle}{}{\usepage}}
+\newpagestyle{main}[\small\sffamily]{
+  \headrule
+  \sethead[\usepage][][第\thechapter 章\quad\chaptertitle]
+  {\thesection\quad\sectiontitle}{}{\usepage}}
+
+\usepackage{titletoc}
+%\setcounter{tocdepth}{1}
+%\titlecontents{标题层次}[左间距]{上间距和整体格式}{标题序号}{标题内容}{指引线和页码}[下间距]
+\titlecontents{chapter}[1.5em]{\vspace{.5em}\bfseries\sffamily}{\color{myblue}\contentslabel{1.5em}}{}
+    {\titlerule*[20pt]{$\cdot$}\contentspage}[]
+\titlecontents{section}[4.5em]{\sffamily}{\color{myblue}\contentslabel{3em}}{}
+    {\titlerule*[20pt]{$\cdot$}\contentspage}[]
+%\titlecontents{subsection}[8.5em]{\sffamily}{\contentslabel{4em}}{}
+%    {\titlerule*[20pt]{$\cdot$}\contentspage}
+
+\usepackage{enumitem}
+\setlist{topsep=2pt,itemsep=2pt,parsep=1pt,leftmargin=\parindent}
+
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{verbatim}{Verbatim}
+  {xleftmargin=2em,baselinestretch=1,formatcom=\color{teal}\upshape}
+
+\usepackage{etoolbox}
+\makeatletter
+\preto{\FV@ListVSpace}{\topsep=2pt \partopsep=0pt }
+\makeatother
+
+\usepackage[colorlinks,plainpages,pagebackref]{hyperref}
+\hypersetup{
+   pdfstartview={FitH},
+   citecolor=teal,
+   linkcolor=myblue,
+   urlcolor=black,
+   bookmarksnumbered
+}
+
+\usepackage{comment,makeidx,multicol}
+
+%\usepackage{german}
+%% german
+%\righthyphenmin=3
+%\mdqoff
+%\captionsenglish
+\usepackage[english]{babel}
+{\catcode`"=13 \gdef"#1{\ifx#1"\discretionary{}{}{}\fi\relax}}
+\def\mdqon{\catcode`"=13\relax}
+\def\mdqoff{\catcode`"=12\relax}
+\makeindex
+\hyphenation{ex-em-pli-fies}
+
+\newdimen\tempdima \newdimen\tempdimb
+
+% these are fine
+\def\handbreak{\\ \message{^^JManual break!!!!^^J}}
+\def\nl{\protect\\}\def\n#1{{\tt #1}}
+\protected\def\cs#1{\texttt{\textbackslash#1}}
+\pdfstringdefDisableCommands{\def\cs#1{\textbackslash#1}}
+\let\csc\cs
+\def\lb{{\tt\char`\{}}\def\rb{{\tt\char`\}}}
+\def\gr#1{\texorpdfstring{$\langle$#1$\rangle$}{<#1>}} %\def\gr#1{$\langle$#1$\rangle$}
+\def\marg#1{{\tt \{}#1{\tt \}}}
+\def\oarg#1{{\tt [}#1{\tt }}
+\def\key#1{{\tt#1}}
+\def\alt{}\def\altt{}%this way in manstijl
+\def\ldash{\unskip\ ——\nobreak\ \ignorespaces}
+\def\rdash{\unskip\nobreak\ ——\ \ignorespaces}
+% check these
+\def\hex{{\tt"}}
+\def\ascii{{\sc ascii}}
+\def\ebcdic{{\sc ebcdic}}
+\def\IniTeX{Ini\TeX}\def\LamsTeX{LAMS\TeX}\def\VirTeX{Vir\TeX}
+\def\AmsTeX{Ams\TeX}
+\def\TeXbook{the \TeX\ book}\def\web{{\sc web}}
+% needs major thinking
+\newenvironment{myquote}{\list{}{%
+    \topsep=2pt \partopsep=0pt%
+    \leftmargin=\parindent \rightmargin=\parindent
+    }\item[]}{\endlist}
+\newenvironment{disp}{\begin{myquote}}{\end{myquote}}
+\newenvironment{Disp}{\begin{myquote}}{\end{myquote}}
+\newenvironment{tdisp}{\begin{myquote}}{\end{myquote}}
+\newenvironment{example}{\begin{myquote}\noindent\itshape 例子：}{\end{myquote}}
+\newenvironment{inventory}{\begin{description}\raggedright}{\end{description}}
+\newenvironment{glossinventory}{\begin{description}}{\end{description}}
+\def\gram#1{\gr{#1}}%???
+\def\meta{\gr}% alias
+%
+% index
+%
+\def\indexterm#1{\emph{#1}\index{#1}}
+\def\indextermsub#1#2{\emph{#1 #2}\index{#1!#2}}
+\def\indextermbus#1#2{\emph{#1 #2}\index{#2!#1}}
+\def\cindextermsub#1#2{\emph{#1#2}\index{#1!#1#2}}
+\def\cindextermbus#1#2{\emph{#1#2}\index{#2!#1#2}}
+\def\term#1\par{\index{#1}}
+\def\howto#1\par{}
+\def\cstoidx#1\par{\index{#1@\cs{#1}@}}
+\def\thecstoidx#1\par{\index{#1@\protect\csname #1\endcsname}}
+\def\thecstoidxsub#1#2{\index{#1, #2@\protect\csname #1\endcsname, #2}\ignorespaces}
+\def\csterm#1\par{\cstoidx #1\par\cs{#1}}
+\def\csidx#1{\cstoidx #1\par\cs{#1}}
+
+\def\tmc{\tracingmacros=2 \tracingcommands\tracingmacros}
+
+%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\def\snugbox{\hbox\bgroup\setbox\z@\vbox\bgroup
+    \leftskip\z@
+    \bgroup\aftergroup\make@snug
+    \let\next=}
+\def\make@snug{\par\sn@gify\egroup \box\z@\egroup}
+\def\sn@gify
+   {\skip\z@=\lastskip \unskip
+    \advance\skip\z@\lastskip \unskip
+    \unpenalty
+    \setbox\z@\lastbox
+    \ifvoid\z@ \nointerlineskip \else {\sn@gify} \fi
+    \hbox{\unhbox\z@}\nointerlineskip
+    \vskip\skip\z@
+    }
+
+\newdimen\fbh \fbh=60pt % dimension for easy scaling:
+\newdimen\fbw \fbw=60pt % height and width of character box
+
+\newdimen\dh \newdimen\dw % height and width of current character box
+\newdimen\lh % height of previous character box
+\newdimen\lw \lw=.4pt % line weight, instead of default .4pt
+
+\def\hdotfill{\noindent
+    \leaders\hbox{\vrule width 1pt height\lw
+                  \kern4pt
+                  \vrule width.5pt height\lw}\hfill\hbox{}
+    \par}
+\def\hlinefill{\noindent
+    \leaders\hbox{\vrule width 5.5pt height\lw         }\hfill\hbox{}
+    \par}
+\def\stippel{$\qquad\qquad\qquad\qquad$}
+\makeatother
+%%%%%%%%%%%%%%%%%%%
+
+%\def\SansSerif{\Typeface:macHelvetica }
+%\def\SerifFont{\Typeface:macTimes }
+%\def\SansSerif{\Typeface:bsGillSans }
+%\def\SerifFont{\Typeface:bsBaskerville }
+\let\SansSerif\relax \def\italic{\it}
+\let\SerifFont\relax \def\MainFont{\rm}
+\let\SansSerif\relax
+\let\SerifFont\relax
+\let\PopIndentLevel\relax \let\PushIndentLevel\relax
+\let\ToVerso\relax \let\ToRecto\relax
+
+%\def\stop@command@suffix{stop}
+%\let\PopListLevel\PopIndentLevel
+%\let\FlushRight\relax
+%\let\flushright\FlushRight
+%\let\SetListIndent\LevelIndent
+%\def\awp{\ifhmode\vadjust{\penalty-10000 }\else
+%    \penalty-10000 \fi}
+\let\awp\relax
+\let\PopIndentLevel\relax \let\PopListLevel\relax
+
+\showboxdepth=-1
+
+%\input figs
+\def\endofchapter{\vfill\noindent}
+
+\newcommand{\liamfnote}[1]{\footnote{译注（Liam0205）：#1}}
+\newcommand{\cstate}[1]{状态 \textit{#1}}
