@@ -1,0 +1,43 @@
+#include    "sntp.h"##  1 ##src/ssntp/main.c##
+
+int##  2 ##src/ssntp/main.c##
+main(int argc, char **argv)##  3 ##src/ssntp/main.c##
+{##  4 ##src/ssntp/main.c##
+    int     sockfd;##  5 ##src/ssntp/main.c##
+    char    buf[MAXLINE];##  6 ##src/ssntp/main.c##
+    ssize_t n;##  7 ##src/ssntp/main.c##
+    socklen_t salen, len;##  8 ##src/ssntp/main.c##
+    struct ifi_info *ifi;##  9 ##src/ssntp/main.c##
+    struct sockaddr *mcastsa, *wild, *from;## 10 ##src/ssntp/main.c##
+    struct timeval now;## 11 ##src/ssntp/main.c##
+
+    if (argc != 2)## 12 ##src/ssntp/main.c##
+        err_quit("usage: ssntp <IPaddress>");## 13 ##src/ssntp/main.c##
+
+    sockfd = Udp_client(argv[1], "ntp", (void **) &mcastsa, &salen);## 14 ##src/ssntp/main.c##
+
+    wild = Malloc(salen);## 15 ##src/ssntp/main.c##
+    memcpy(wild, mcastsa, salen);   /* copy family and port */## 16 ##src/ssntp/main.c##
+    sock_set_wild(wild, salen);## 17 ##src/ssntp/main.c##
+    Bind(sockfd, wild, salen);  /* bind wildcard */## 18 ##src/ssntp/main.c##
+
+#ifdef  MCAST## 19 ##src/ssntp/main.c##
+    /* 4obtain interface list and process each one */## 20 ##src/ssntp/main.c##
+    for (ifi = Get_ifi_info(mcastsa->sa_family, 1); ifi != NULL;## 21 ##src/ssntp/main.c##
+         ifi = ifi->ifi_next) {## 22 ##src/ssntp/main.c##
+        if (ifi->ifi_flags & IFF_MULTICAST) {## 23 ##src/ssntp/main.c##
+            Mcast_join(sockfd, mcastsa, salen, ifi->ifi_name, 0);## 24 ##src/ssntp/main.c##
+            printf("joined %s on %s\n",## 25 ##src/ssntp/main.c##
+                   Sock_ntop(mcastsa, salen), ifi->ifi_name);## 26 ##src/ssntp/main.c##
+        }## 27 ##src/ssntp/main.c##
+    }## 28 ##src/ssntp/main.c##
+#endif## 29 ##src/ssntp/main.c##
+
+    from = Malloc(salen);## 30 ##src/ssntp/main.c##
+    for (;;) {## 31 ##src/ssntp/main.c##
+        len = salen;## 32 ##src/ssntp/main.c##
+        n = Recvfrom(sockfd, buf, sizeof(buf), 0, from, &len);## 33 ##src/ssntp/main.c##
+        Gettimeofday(&now, NULL);## 34 ##src/ssntp/main.c##
+        sntp_proc(buf, n, &now);## 35 ##src/ssntp/main.c##
+    }## 36 ##src/ssntp/main.c##
+}## 37 ##src/ssntp/main.c##

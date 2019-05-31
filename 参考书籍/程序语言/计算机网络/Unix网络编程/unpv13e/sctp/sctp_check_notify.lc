@@ -1,0 +1,27 @@
+
+void##  1 ##src/sctp/sctp_check_notify.c##
+check_notification(int sock_fd, char *recvline, int rd_len)##  2 ##src/sctp/sctp_check_notify.c##
+{##  3 ##src/sctp/sctp_check_notify.c##
+    union sctp_notification *snp;##  4 ##src/sctp/sctp_check_notify.c##
+    struct sctp_assoc_change *sac;##  5 ##src/sctp/sctp_check_notify.c##
+    struct sockaddr_storage *sal, *sar;##  6 ##src/sctp/sctp_check_notify.c##
+    int     num_rem, num_loc;##  7 ##src/sctp/sctp_check_notify.c##
+
+    snp = (union sctp_notification *) recvline;##  8 ##src/sctp/sctp_check_notify.c##
+    if (snp->sn_header.sn_type == SCTP_ASSOC_CHANGE) {##  9 ##src/sctp/sctp_check_notify.c##
+        sac = &snp->sn_assoc_change;## 10 ##src/sctp/sctp_check_notify.c##
+        if ((sac->sac_state == SCTP_COMM_UP) ||## 11 ##src/sctp/sctp_check_notify.c##
+            (sac->sac_state == SCTP_RESTART)) {## 12 ##src/sctp/sctp_check_notify.c##
+            num_rem = sctp_getpaddrs(sock_fd, sac->sac_assoc_id, &sar);## 13 ##src/sctp/sctp_check_notify.c##
+            printf("There are %d remote addresses and they are:\n", num_rem);## 14 ##src/sctp/sctp_check_notify.c##
+            sctp_print_addresses(sar, num_rem);## 15 ##src/sctp/sctp_check_notify.c##
+            sctp_freepaddrs(sar);## 16 ##src/sctp/sctp_check_notify.c##
+
+            num_loc = sctp_getladdrs(sock_fd, sac->sac_assoc_id, &sal);## 17 ##src/sctp/sctp_check_notify.c##
+            printf("There are %d local addresses and they are:\n", num_loc);## 18 ##src/sctp/sctp_check_notify.c##
+            sctp_print_addresses(sal, num_loc);## 19 ##src/sctp/sctp_check_notify.c##
+            sctp_freeladdrs(sal);## 20 ##src/sctp/sctp_check_notify.c##
+        }## 21 ##src/sctp/sctp_check_notify.c##
+    }## 22 ##src/sctp/sctp_check_notify.c##
+
+}## 23 ##src/sctp/sctp_check_notify.c##

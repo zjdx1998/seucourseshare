@@ -1,0 +1,49 @@
+/* include udp_connect */
+#include    "unp.h"##  1 ##src/lib/udp_connect.c##
+
+int##  2 ##src/lib/udp_connect.c##
+udp_connect(const char *host, const char *serv)##  3 ##src/lib/udp_connect.c##
+{##  4 ##src/lib/udp_connect.c##
+    int     sockfd, n;##  5 ##src/lib/udp_connect.c##
+    struct addrinfo hints, *res, *ressave;##  6 ##src/lib/udp_connect.c##
+
+    bzero(&hints, sizeof(struct addrinfo));##  7 ##src/lib/udp_connect.c##
+    hints.ai_family = AF_UNSPEC;##  8 ##src/lib/udp_connect.c##
+    hints.ai_socktype = SOCK_DGRAM;##  9 ##src/lib/udp_connect.c##
+
+    if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)## 10 ##src/lib/udp_connect.c##
+        err_quit("udp_connect error for %s, %s: %s",## 11 ##src/lib/udp_connect.c##
+                 host, serv, gai_strerror(n));## 12 ##src/lib/udp_connect.c##
+    ressave = res;## 13 ##src/lib/udp_connect.c##
+
+    do {## 14 ##src/lib/udp_connect.c##
+        sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);## 15 ##src/lib/udp_connect.c##
+        if (sockfd < 0)## 16 ##src/lib/udp_connect.c##
+            continue;           /* ignore this one */## 17 ##src/lib/udp_connect.c##
+
+        if (connect(sockfd, res->ai_addr, res->ai_addrlen) == 0)## 18 ##src/lib/udp_connect.c##
+            break;              /* success */## 19 ##src/lib/udp_connect.c##
+
+        Close(sockfd);          /* ignore this one */## 20 ##src/lib/udp_connect.c##
+    } while ((res = res->ai_next) != NULL);## 21 ##src/lib/udp_connect.c##
+
+    if (res == NULL)            /* errno set from final connect() */## 22 ##src/lib/udp_connect.c##
+        err_sys("udp_connect error for %s, %s", host, serv);## 23 ##src/lib/udp_connect.c##
+
+    freeaddrinfo(ressave);## 24 ##src/lib/udp_connect.c##
+
+    return (sockfd);## 25 ##src/lib/udp_connect.c##
+}## 26 ##src/lib/udp_connect.c##
+/* end udp_connect */
+
+int## 27 ##src/lib/udp_connect.c##
+Udp_connect(const char *host, const char *serv)## 28 ##src/lib/udp_connect.c##
+{## 29 ##src/lib/udp_connect.c##
+    int     n;## 30 ##src/lib/udp_connect.c##
+
+    if ((n = udp_connect(host, serv)) < 0) {## 31 ##src/lib/udp_connect.c##
+        err_quit("udp_connect error for %s, %s: %s",## 32 ##src/lib/udp_connect.c##
+                 host, serv, gai_strerror(-n));## 33 ##src/lib/udp_connect.c##
+    }## 34 ##src/lib/udp_connect.c##
+    return (n);## 35 ##src/lib/udp_connect.c##
+}## 36 ##src/lib/udp_connect.c##

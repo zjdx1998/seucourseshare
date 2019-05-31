@@ -1,0 +1,61 @@
+#include    "ping.h"##  1 ##src/ping/main.c##
+
+struct proto proto_v4 = { proc_v4, send_v4, NULL, NULL, 0, IPPROTO_ICMP };##  2 ##src/ping/main.c##
+
+#ifdef  IPV6##  3 ##src/ping/main.c##
+struct proto proto_v6 = { proc_v6, send_v6, NULL, NULL, 0, IPPROTO_ICMPV6 };##  4 ##src/ping/main.c##
+#endif##  5 ##src/ping/main.c##
+
+int     datalen = 56;           /* data that goes with ICMP echo request */##  6 ##src/ping/main.c##
+
+int##  7 ##src/ping/main.c##
+main(int argc, char **argv)##  8 ##src/ping/main.c##
+{##  9 ##src/ping/main.c##
+    int     c;## 10 ##src/ping/main.c##
+    struct addrinfo *ai;## 11 ##src/ping/main.c##
+
+    opterr = 0;                 /* don't want getopt() writing to stderr */## 12 ##src/ping/main.c##
+    while ((c = getopt(argc, argv, "v")) != -1) {## 13 ##src/ping/main.c##
+        switch (c) {## 14 ##src/ping/main.c##
+        case 'v':## 15 ##src/ping/main.c##
+            verbose++;## 16 ##src/ping/main.c##
+            break;## 17 ##src/ping/main.c##
+
+        case '?':## 18 ##src/ping/main.c##
+            err_quit("unrecognized option: %c", c);## 19 ##src/ping/main.c##
+        }## 20 ##src/ping/main.c##
+    }## 21 ##src/ping/main.c##
+
+    if (optind != argc - 1)## 22 ##src/ping/main.c##
+        err_quit("usage: ping [ -v ] <hostname>");## 23 ##src/ping/main.c##
+    host = argv[optind];## 24 ##src/ping/main.c##
+
+    pid = getpid();## 25 ##src/ping/main.c##
+    Signal(SIGALRM, sig_alrm);## 26 ##src/ping/main.c##
+
+    ai = Host_serv(host, NULL, 0, 0);## 27 ##src/ping/main.c##
+
+    printf("PING %s (%s): %d data bytes\n", ai->ai_canonname,## 28 ##src/ping/main.c##
+           Sock_ntop_host(ai->ai_addr, ai->ai_addrlen), datalen);## 29 ##src/ping/main.c##
+
+    /* 4initialize according to protocol */## 30 ##src/ping/main.c##
+    if (ai->ai_family == AF_INET) {## 31 ##src/ping/main.c##
+        pr = &proto_v4;## 32 ##src/ping/main.c##
+#ifdef  IPV6## 33 ##src/ping/main.c##
+    } else if (ai->ai_family == AF_INET6) {## 34 ##src/ping/main.c##
+        pr = &proto_v6;## 35 ##src/ping/main.c##
+        if (IN6_IS_ADDR_V4MAPPED(&(((struct sockaddr_in6 *)## 36 ##src/ping/main.c##
+                                    ai->ai_addr)->sin6_addr)))## 37 ##src/ping/main.c##
+            err_quit("cannot ping IPv4-mapped IPv6 address");## 38 ##src/ping/main.c##
+#endif## 39 ##src/ping/main.c##
+    } else## 40 ##src/ping/main.c##
+        err_quit("unknown address family %d", ai->ai_family);## 41 ##src/ping/main.c##
+
+    pr->sasend = ai->ai_addr;## 42 ##src/ping/main.c##
+    pr->sarecv = Calloc(1, ai->ai_addrlen);## 43 ##src/ping/main.c##
+    pr->salen = ai->ai_addrlen;## 44 ##src/ping/main.c##
+
+    readloop();## 45 ##src/ping/main.c##
+
+    exit(0);## 46 ##src/ping/main.c##
+}## 47 ##src/ping/main.c##

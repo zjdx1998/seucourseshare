@@ -1,0 +1,18 @@
+#include    "unp.h"##  1 ##src/names/myaddrs1.c##
+#include    <sys/param.h>##  2 ##src/names/myaddrs1.c##
+
+char  **##  3 ##src/names/myaddrs1.c##
+my_addrs(int *addrtype)##  4 ##src/names/myaddrs1.c##
+{##  5 ##src/names/myaddrs1.c##
+    struct hostent *hptr;##  6 ##src/names/myaddrs1.c##
+    char    myname[MAXHOSTNAMELEN];##  7 ##src/names/myaddrs1.c##
+
+    if (gethostname(myname, sizeof(myname)) < 0)##  8 ##src/names/myaddrs1.c##
+        return (NULL);##  9 ##src/names/myaddrs1.c##
+
+    if ((hptr = gethostbyname(myname)) == NULL)## 10 ##src/names/myaddrs1.c##
+        return (NULL);## 11 ##src/names/myaddrs1.c##
+
+    *addrtype = hptr->h_addrtype;## 12 ##src/names/myaddrs1.c##
+    return (hptr->h_addr_list);## 13 ##src/names/myaddrs1.c##
+}## 14 ##src/names/myaddrs1.c##

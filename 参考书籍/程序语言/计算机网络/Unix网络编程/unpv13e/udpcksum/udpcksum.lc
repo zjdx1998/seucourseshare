@@ -1,0 +1,49 @@
+/* include sig_alrm */
+#include    "udpcksum.h"##  1 ##src/udpcksum/udpcksum.c##
+#include    <setjmp.h>##  2 ##src/udpcksum/udpcksum.c##
+
+static sigjmp_buf jmpbuf;##  3 ##src/udpcksum/udpcksum.c##
+static int canjump;##  4 ##src/udpcksum/udpcksum.c##
+
+void##  5 ##src/udpcksum/udpcksum.c##
+sig_alrm(int signo)##  6 ##src/udpcksum/udpcksum.c##
+{##  7 ##src/udpcksum/udpcksum.c##
+    if (canjump == 0)##  8 ##src/udpcksum/udpcksum.c##
+        return;##  9 ##src/udpcksum/udpcksum.c##
+    siglongjmp(jmpbuf, 1);## 10 ##src/udpcksum/udpcksum.c##
+}## 11 ##src/udpcksum/udpcksum.c##
+/* end sig_alrm */
+
+/* include test_udp */
+void## 12 ##src/udpcksum/udpcksum.c##
+test_udp(void)## 13 ##src/udpcksum/udpcksum.c##
+{## 14 ##src/udpcksum/udpcksum.c##
+    volatile int nsent = 0, timeout = 3;## 15 ##src/udpcksum/udpcksum.c##
+    struct udpiphdr *ui;## 16 ##src/udpcksum/udpcksum.c##
+
+    Signal(SIGALRM, sig_alrm);## 17 ##src/udpcksum/udpcksum.c##
+
+    if (sigsetjmp(jmpbuf, 1)) {## 18 ##src/udpcksum/udpcksum.c##
+        if (nsent >= 3)## 19 ##src/udpcksum/udpcksum.c##
+            err_quit("no response");## 20 ##src/udpcksum/udpcksum.c##
+        printf("timeout\n");## 21 ##src/udpcksum/udpcksum.c##
+        timeout *= 2;           /* exponential backoff: 3, 6, 12 */## 22 ##src/udpcksum/udpcksum.c##
+    }## 23 ##src/udpcksum/udpcksum.c##
+    canjump = 1;                /* siglongjmp is now OK */## 24 ##src/udpcksum/udpcksum.c##
+
+    send_dns_query();## 25 ##src/udpcksum/udpcksum.c##
+    nsent++;## 26 ##src/udpcksum/udpcksum.c##
+
+    alarm(timeout);## 27 ##src/udpcksum/udpcksum.c##
+    ui = udp_read();## 28 ##src/udpcksum/udpcksum.c##
+    canjump = 0;## 29 ##src/udpcksum/udpcksum.c##
+    alarm(0);## 30 ##src/udpcksum/udpcksum.c##
+
+    if (ui->ui_sum == 0)## 31 ##src/udpcksum/udpcksum.c##
+        printf("UDP checksums off\n");## 32 ##src/udpcksum/udpcksum.c##
+    else## 33 ##src/udpcksum/udpcksum.c##
+        printf("UDP checksums on\n");## 34 ##src/udpcksum/udpcksum.c##
+    if (verbose)## 35 ##src/udpcksum/udpcksum.c##
+        printf("received UDP checksum = %x\n", ntohs(ui->ui_sum));## 36 ##src/udpcksum/udpcksum.c##
+}## 37 ##src/udpcksum/udpcksum.c##
+/* end test_udp */

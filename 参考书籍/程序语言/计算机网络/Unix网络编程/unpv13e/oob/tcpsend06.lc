@@ -1,0 +1,29 @@
+#include    "unp.h"##  1 ##src/oob/tcpsend06.c##
+
+int##  2 ##src/oob/tcpsend06.c##
+main(int argc, char **argv)##  3 ##src/oob/tcpsend06.c##
+{##  4 ##src/oob/tcpsend06.c##
+    int     sockfd;##  5 ##src/oob/tcpsend06.c##
+
+    if (argc != 3)##  6 ##src/oob/tcpsend06.c##
+        err_quit("usage: tcpsend06 <host> <port#>");##  7 ##src/oob/tcpsend06.c##
+
+    sockfd = Tcp_connect(argv[1], argv[2]);##  8 ##src/oob/tcpsend06.c##
+
+    Write(sockfd, "123", 3);##  9 ##src/oob/tcpsend06.c##
+    printf("wrote 3 bytes of normal data\n");## 10 ##src/oob/tcpsend06.c##
+
+    Send(sockfd, "4", 1, MSG_OOB);## 11 ##src/oob/tcpsend06.c##
+    printf("wrote 1 byte of OOB data\n");## 12 ##src/oob/tcpsend06.c##
+
+    Write(sockfd, "5", 1);## 13 ##src/oob/tcpsend06.c##
+    printf("wrote 1 byte of normal data\n");## 14 ##src/oob/tcpsend06.c##
+
+    Send(sockfd, "6", 1, MSG_OOB);## 15 ##src/oob/tcpsend06.c##
+    printf("wrote 1 byte of OOB data\n");## 16 ##src/oob/tcpsend06.c##
+
+    Write(sockfd, "7", 1);## 17 ##src/oob/tcpsend06.c##
+    printf("wrote 1 byte of normal data\n");## 18 ##src/oob/tcpsend06.c##
+
+    exit(0);## 19 ##src/oob/tcpsend06.c##
+}## 20 ##src/oob/tcpsend06.c##

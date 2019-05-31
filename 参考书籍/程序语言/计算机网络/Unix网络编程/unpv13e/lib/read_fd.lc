@@ -1,0 +1,68 @@
+/* include read_fd */
+#include    "unp.h"##  1 ##src/lib/read_fd.c##
+
+ssize_t##  2 ##src/lib/read_fd.c##
+read_fd(int fd, void *ptr, size_t nbytes, int *recvfd)##  3 ##src/lib/read_fd.c##
+{##  4 ##src/lib/read_fd.c##
+    struct msghdr msg;##  5 ##src/lib/read_fd.c##
+    struct iovec iov[1];##  6 ##src/lib/read_fd.c##
+    ssize_t n;##  7 ##src/lib/read_fd.c##
+
+#ifdef  HAVE_MSGHDR_MSG_CONTROL##  8 ##src/lib/read_fd.c##
+    union {##  9 ##src/lib/read_fd.c##
+        struct cmsghdr cm;## 10 ##src/lib/read_fd.c##
+        char    control[CMSG_SPACE(sizeof(int))];## 11 ##src/lib/read_fd.c##
+    } control_un;## 12 ##src/lib/read_fd.c##
+    struct cmsghdr *cmptr;## 13 ##src/lib/read_fd.c##
+
+    msg.msg_control = control_un.control;## 14 ##src/lib/read_fd.c##
+    msg.msg_controllen = sizeof(control_un.control);## 15 ##src/lib/read_fd.c##
+#else## 16 ##src/lib/read_fd.c##
+    int     newfd;## 17 ##src/lib/read_fd.c##
+
+    msg.msg_accrights = (caddr_t) & newfd;## 18 ##src/lib/read_fd.c##
+    msg.msg_accrightslen = sizeof(int);## 19 ##src/lib/read_fd.c##
+#endif## 20 ##src/lib/read_fd.c##
+
+    msg.msg_name = NULL;## 21 ##src/lib/read_fd.c##
+    msg.msg_namelen = 0;## 22 ##src/lib/read_fd.c##
+
+    iov[0].iov_base = ptr;## 23 ##src/lib/read_fd.c##
+    iov[0].iov_len = nbytes;## 24 ##src/lib/read_fd.c##
+    msg.msg_iov = iov;## 25 ##src/lib/read_fd.c##
+    msg.msg_iovlen = 1;## 26 ##src/lib/read_fd.c##
+
+    if ((n = recvmsg(fd, &msg, 0)) <= 0)## 27 ##src/lib/read_fd.c##
+        return (n);## 28 ##src/lib/read_fd.c##
+
+#ifdef  HAVE_MSGHDR_MSG_CONTROL## 29 ##src/lib/read_fd.c##
+    if ((cmptr = CMSG_FIRSTHDR(&msg)) != NULL &&## 30 ##src/lib/read_fd.c##
+        cmptr->cmsg_len == CMSG_LEN(sizeof(int))) {## 31 ##src/lib/read_fd.c##
+        if (cmptr->cmsg_level != SOL_SOCKET)## 32 ##src/lib/read_fd.c##
+            err_quit("control level != SOL_SOCKET");## 33 ##src/lib/read_fd.c##
+        if (cmptr->cmsg_type != SCM_RIGHTS)## 34 ##src/lib/read_fd.c##
+            err_quit("control type != SCM_RIGHTS");## 35 ##src/lib/read_fd.c##
+        *recvfd = *((int *) CMSG_DATA(cmptr));## 36 ##src/lib/read_fd.c##
+    } else## 37 ##src/lib/read_fd.c##
+        *recvfd = -1;           /* descriptor was not passed */## 38 ##src/lib/read_fd.c##
+#else## 39 ##src/lib/read_fd.c##
+    if (msg.msg_accrightslen == sizeof(int))## 40 ##src/lib/read_fd.c##
+        *recvfd = newfd;## 41 ##src/lib/read_fd.c##
+    else## 42 ##src/lib/read_fd.c##
+        *recvfd = -1;       /* descriptor was not passed */## 43 ##src/lib/read_fd.c##
+#endif## 44 ##src/lib/read_fd.c##
+
+    return (n);## 45 ##src/lib/read_fd.c##
+}## 46 ##src/lib/read_fd.c##
+/* end read_fd */
+
+ssize_t## 47 ##src/lib/read_fd.c##
+Read_fd(int fd, void *ptr, size_t nbytes, int *recvfd)## 48 ##src/lib/read_fd.c##
+{## 49 ##src/lib/read_fd.c##
+    ssize_t n;## 50 ##src/lib/read_fd.c##
+
+    if ((n = read_fd(fd, ptr, nbytes, recvfd)) < 0)## 51 ##src/lib/read_fd.c##
+        err_sys("read_fd error");## 52 ##src/lib/read_fd.c##
+
+    return (n);## 53 ##src/lib/read_fd.c##
+}## 54 ##src/lib/read_fd.c##

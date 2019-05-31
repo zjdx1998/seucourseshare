@@ -1,0 +1,18 @@
+#!/bin/sh
+
+case $# in
+1)	break ;;
+*)	echo "one argument (#simultaneous connections) required" 1>&2
+	exit 1 ;;
+esac
+
+time ./web $1 192.207.117.2 / \
+	/img/logo/awl_logo_blue_50x40.gif \
+	/img/a_world_of_learning.gif \
+	/img/toolbar_soptions.gif \
+	/img/toolbar_purchase.gif \
+	/img/toolbar_feedback.gif \
+	/img/toolbar_top_hilite.gif \
+	/img/toolbar_qsearch.gif \
+	/img/blue_dot.gif \
+	/img/logo/pearson_logo_50.gif

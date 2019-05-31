@@ -1,0 +1,46 @@
+#include    "unpthread.h"##  1 ##src/threads/example02.c##
+
+#define NLOOP 5000##  2 ##src/threads/example02.c##
+
+int     counter;                /* this is incremented by the threads */##  3 ##src/threads/example02.c##
+pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;##  4 ##src/threads/example02.c##
+
+void   *doit(void *);##  5 ##src/threads/example02.c##
+
+int##  6 ##src/threads/example02.c##
+main(int argc, char **argv)##  7 ##src/threads/example02.c##
+{##  8 ##src/threads/example02.c##
+    pthread_t tidA, tidB;##  9 ##src/threads/example02.c##
+
+    Pthread_create(&tidA, NULL, &doit, NULL);## 10 ##src/threads/example02.c##
+    Pthread_create(&tidB, NULL, &doit, NULL);## 11 ##src/threads/example02.c##
+
+    /* 4wait for both threads to terminate */## 12 ##src/threads/example02.c##
+    Pthread_join(tidA, NULL);## 13 ##src/threads/example02.c##
+    Pthread_join(tidB, NULL);## 14 ##src/threads/example02.c##
+
+    exit(0);## 15 ##src/threads/example02.c##
+}## 16 ##src/threads/example02.c##
+
+void   *## 17 ##src/threads/example02.c##
+doit(void *vptr)## 18 ##src/threads/example02.c##
+{## 19 ##src/threads/example02.c##
+    int     i, val;## 20 ##src/threads/example02.c##
+
+    /* ## 21 ##src/threads/example02.c##
+     * Each thread fetches, prints, and increments the counter NLOOP times.## 22 ##src/threads/example02.c##
+     * The value of the counter should increase monotonically.## 23 ##src/threads/example02.c##
+     */## 24 ##src/threads/example02.c##
+
+    for (i = 0; i < NLOOP; i++) {## 25 ##src/threads/example02.c##
+        Pthread_mutex_lock(&counter_mutex);## 26 ##src/threads/example02.c##
+
+        val = counter;## 27 ##src/threads/example02.c##
+        printf("%d: %d\n", pthread_self(), val + 1);## 28 ##src/threads/example02.c##
+        counter = val + 1;## 29 ##src/threads/example02.c##
+
+        Pthread_mutex_unlock(&counter_mutex);## 30 ##src/threads/example02.c##
+    }## 31 ##src/threads/example02.c##
+
+    return (NULL);## 32 ##src/threads/example02.c##
+}## 33 ##src/threads/example02.c##

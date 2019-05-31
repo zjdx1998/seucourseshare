@@ -1,0 +1,58 @@
+/* include dgcli011 */
+#include    "unpicmpd.h"##  1 ##src/icmpd/dgcli01.c##
+
+void##  2 ##src/icmpd/dgcli01.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  3 ##src/icmpd/dgcli01.c##
+{##  4 ##src/icmpd/dgcli01.c##
+    int     icmpfd, maxfdp1;##  5 ##src/icmpd/dgcli01.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  6 ##src/icmpd/dgcli01.c##
+    fd_set  rset;##  7 ##src/icmpd/dgcli01.c##
+    ssize_t n;##  8 ##src/icmpd/dgcli01.c##
+    struct timeval tv;##  9 ##src/icmpd/dgcli01.c##
+    struct icmpd_err icmpd_err;## 10 ##src/icmpd/dgcli01.c##
+
+    Sock_bind_wild(sockfd, pservaddr->sa_family);## 11 ##src/icmpd/dgcli01.c##
+
+    icmpfd = Tcp_connect("/unix", ICMPD_PATH);## 12 ##src/icmpd/dgcli01.c##
+    Write_fd(icmpfd, "1", 1, sockfd);## 13 ##src/icmpd/dgcli01.c##
+    n = Read(icmpfd, recvline, 1);## 14 ##src/icmpd/dgcli01.c##
+    if (n != 1 || recvline[0] != '1')## 15 ##src/icmpd/dgcli01.c##
+        err_quit("error creating icmp socket, n = %d, char = %c",## 16 ##src/icmpd/dgcli01.c##
+                 n, recvline[0]);## 17 ##src/icmpd/dgcli01.c##
+
+    FD_ZERO(&rset);## 18 ##src/icmpd/dgcli01.c##
+    maxfdp1 = max(sockfd, icmpfd) + 1;## 19 ##src/icmpd/dgcli01.c##
+/* end dgcli011 */
+
+/* include dgcli012 */
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {## 20 ##src/icmpd/dgcli01.c##
+        Sendto(sockfd, sendline, strlen(sendline), 0, pservaddr, servlen);## 21 ##src/icmpd/dgcli01.c##
+
+        tv.tv_sec = 5;## 22 ##src/icmpd/dgcli01.c##
+        tv.tv_usec = 0;## 23 ##src/icmpd/dgcli01.c##
+        FD_SET(sockfd, &rset);## 24 ##src/icmpd/dgcli01.c##
+        FD_SET(icmpfd, &rset);## 25 ##src/icmpd/dgcli01.c##
+        if ((n = Select(maxfdp1, &rset, NULL, NULL, &tv)) == 0) {## 26 ##src/icmpd/dgcli01.c##
+            fprintf(stderr, "socket timeout\n");## 27 ##src/icmpd/dgcli01.c##
+            continue;## 28 ##src/icmpd/dgcli01.c##
+        }## 29 ##src/icmpd/dgcli01.c##
+
+        if (FD_ISSET(sockfd, &rset)) {## 30 ##src/icmpd/dgcli01.c##
+            n = Recvfrom(sockfd, recvline, MAXLINE, 0, NULL, NULL);## 31 ##src/icmpd/dgcli01.c##
+            recvline[n] = 0;    /* null terminate */## 32 ##src/icmpd/dgcli01.c##
+            Fputs(recvline, stdout);## 33 ##src/icmpd/dgcli01.c##
+        }## 34 ##src/icmpd/dgcli01.c##
+
+        if (FD_ISSET(icmpfd, &rset)) {## 35 ##src/icmpd/dgcli01.c##
+            if ((n = Read(icmpfd, &icmpd_err, sizeof(icmpd_err))) == 0)## 36 ##src/icmpd/dgcli01.c##
+                err_quit("ICMP daemon terminated");## 37 ##src/icmpd/dgcli01.c##
+            else if (n != sizeof(icmpd_err))## 38 ##src/icmpd/dgcli01.c##
+                err_quit("n = %d, expected %d", n, sizeof(icmpd_err));## 39 ##src/icmpd/dgcli01.c##
+            printf("ICMP error: dest = %s, %s, type = %d, code = %d\n",## 40 ##src/icmpd/dgcli01.c##
+                   Sock_ntop(&icmpd_err.icmpd_dest, icmpd_err.icmpd_len),## 41 ##src/icmpd/dgcli01.c##
+                   strerror(icmpd_err.icmpd_errno),## 42 ##src/icmpd/dgcli01.c##
+                   icmpd_err.icmpd_type, icmpd_err.icmpd_code);## 43 ##src/icmpd/dgcli01.c##
+        }## 44 ##src/icmpd/dgcli01.c##
+    }## 45 ##src/icmpd/dgcli01.c##
+}## 46 ##src/icmpd/dgcli01.c##
+/* end dgcli012 */

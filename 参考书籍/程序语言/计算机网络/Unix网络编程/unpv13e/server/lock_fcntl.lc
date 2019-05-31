@@ -1,0 +1,51 @@
+/* include my_lock_init */
+#include    "unp.h"##  1 ##src/server/lock_fcntl.c##
+
+static struct flock lock_it, unlock_it;##  2 ##src/server/lock_fcntl.c##
+static int lock_fd = -1;##  3 ##src/server/lock_fcntl.c##
+                    /* fcntl() will fail if my_lock_init() not called */##  4 ##src/server/lock_fcntl.c##
+
+void##  5 ##src/server/lock_fcntl.c##
+my_lock_init(char *pathname)##  6 ##src/server/lock_fcntl.c##
+{##  7 ##src/server/lock_fcntl.c##
+    char    lock_file[1024];##  8 ##src/server/lock_fcntl.c##
+
+    /* 4must copy caller's string, in case it's a constant */##  9 ##src/server/lock_fcntl.c##
+    strncpy(lock_file, pathname, sizeof(lock_file));## 10 ##src/server/lock_fcntl.c##
+    lock_fd = Mkstemp(lock_file);## 11 ##src/server/lock_fcntl.c##
+
+    Unlink(lock_file);          /* but lock_fd remains open */## 12 ##src/server/lock_fcntl.c##
+
+    lock_it.l_type = F_WRLCK;## 13 ##src/server/lock_fcntl.c##
+    lock_it.l_whence = SEEK_SET;## 14 ##src/server/lock_fcntl.c##
+    lock_it.l_start = 0;## 15 ##src/server/lock_fcntl.c##
+    lock_it.l_len = 0;## 16 ##src/server/lock_fcntl.c##
+
+    unlock_it.l_type = F_UNLCK;## 17 ##src/server/lock_fcntl.c##
+    unlock_it.l_whence = SEEK_SET;## 18 ##src/server/lock_fcntl.c##
+    unlock_it.l_start = 0;## 19 ##src/server/lock_fcntl.c##
+    unlock_it.l_len = 0;## 20 ##src/server/lock_fcntl.c##
+}## 21 ##src/server/lock_fcntl.c##
+/* end my_lock_init */
+
+/* include my_lock_wait */
+void## 22 ##src/server/lock_fcntl.c##
+my_lock_wait()## 23 ##src/server/lock_fcntl.c##
+{## 24 ##src/server/lock_fcntl.c##
+    int     rc;## 25 ##src/server/lock_fcntl.c##
+
+    while ((rc = fcntl(lock_fd, F_SETLKW, &lock_it)) < 0) {## 26 ##src/server/lock_fcntl.c##
+        if (errno == EINTR)## 27 ##src/server/lock_fcntl.c##
+            continue;## 28 ##src/server/lock_fcntl.c##
+        else## 29 ##src/server/lock_fcntl.c##
+            err_sys("fcntl error for my_lock_wait");## 30 ##src/server/lock_fcntl.c##
+    }## 31 ##src/server/lock_fcntl.c##
+}## 32 ##src/server/lock_fcntl.c##
+
+void## 33 ##src/server/lock_fcntl.c##
+my_lock_release()## 34 ##src/server/lock_fcntl.c##
+{## 35 ##src/server/lock_fcntl.c##
+    if (fcntl(lock_fd, F_SETLKW, &unlock_it) < 0)## 36 ##src/server/lock_fcntl.c##
+        err_sys("fcntl error for my_lock_release");## 37 ##src/server/lock_fcntl.c##
+}## 38 ##src/server/lock_fcntl.c##
+/* end my_lock_wait */

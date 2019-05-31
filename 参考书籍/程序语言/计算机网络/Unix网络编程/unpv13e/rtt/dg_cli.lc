@@ -1,0 +1,20 @@
+#include    "unp.h"##  1 ##src/rtt/dg_cli.c##
+
+ssize_t Dg_send_recv(int, const void *, size_t, void *, size_t,##  2 ##src/rtt/dg_cli.c##
+                     const SA *, socklen_t);##  3 ##src/rtt/dg_cli.c##
+
+void##  4 ##src/rtt/dg_cli.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  5 ##src/rtt/dg_cli.c##
+{##  6 ##src/rtt/dg_cli.c##
+    ssize_t n;##  7 ##src/rtt/dg_cli.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  8 ##src/rtt/dg_cli.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {##  9 ##src/rtt/dg_cli.c##
+
+        n = Dg_send_recv(sockfd, sendline, strlen(sendline),## 10 ##src/rtt/dg_cli.c##
+                         recvline, MAXLINE, pservaddr, servlen);## 11 ##src/rtt/dg_cli.c##
+
+        recvline[n] = 0;        /* null terminate */## 12 ##src/rtt/dg_cli.c##
+        Fputs(recvline, stdout);## 13 ##src/rtt/dg_cli.c##
+    }## 14 ##src/rtt/dg_cli.c##
+}## 15 ##src/rtt/dg_cli.c##

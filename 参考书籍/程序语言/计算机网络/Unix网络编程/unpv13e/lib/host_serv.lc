@@ -1,0 +1,47 @@
+/* include host_serv */
+#include    "unp.h"##  1 ##src/lib/host_serv.c##
+
+struct addrinfo *##  2 ##src/lib/host_serv.c##
+host_serv(const char *host, const char *serv, int family, int socktype)##  3 ##src/lib/host_serv.c##
+{##  4 ##src/lib/host_serv.c##
+    int     n;##  5 ##src/lib/host_serv.c##
+    struct addrinfo hints, *res;##  6 ##src/lib/host_serv.c##
+
+    bzero(&hints, sizeof(struct addrinfo));##  7 ##src/lib/host_serv.c##
+    hints.ai_flags = AI_CANONNAME;  /* always return canonical name */##  8 ##src/lib/host_serv.c##
+    hints.ai_family = family;   /* AF_UNSPEC, AF_INET, AF_INET6, etc. */##  9 ##src/lib/host_serv.c##
+    hints.ai_socktype = socktype;   /* 0, SOCK_STREAM, SOCK_DGRAM, etc. */## 10 ##src/lib/host_serv.c##
+
+    if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)## 11 ##src/lib/host_serv.c##
+        return (NULL);## 12 ##src/lib/host_serv.c##
+
+    return (res);               /* return pointer to first on linked list */## 13 ##src/lib/host_serv.c##
+}## 14 ##src/lib/host_serv.c##
+/* end host_serv */
+
+/*## 15 ##src/lib/host_serv.c##
+ * There is no easy way to pass back the integer return code from## 16 ##src/lib/host_serv.c##
+ * getaddrinfo() in the function above, short of adding another argument## 17 ##src/lib/host_serv.c##
+ * that is a pointer, so the easiest way to provide the wrapper function## 18 ##src/lib/host_serv.c##
+ * is just to duplicate the simple function as we do here.## 19 ##src/lib/host_serv.c##
+ */## 20 ##src/lib/host_serv.c##
+
+struct addrinfo *## 21 ##src/lib/host_serv.c##
+Host_serv(const char *host, const char *serv, int family, int socktype)## 22 ##src/lib/host_serv.c##
+{## 23 ##src/lib/host_serv.c##
+    int     n;## 24 ##src/lib/host_serv.c##
+    struct addrinfo hints, *res;## 25 ##src/lib/host_serv.c##
+
+    bzero(&hints, sizeof(struct addrinfo));## 26 ##src/lib/host_serv.c##
+    hints.ai_flags = AI_CANONNAME;  /* always return canonical name */## 27 ##src/lib/host_serv.c##
+    hints.ai_family = family;   /* 0, AF_INET, AF_INET6, etc. */## 28 ##src/lib/host_serv.c##
+    hints.ai_socktype = socktype;   /* 0, SOCK_STREAM, SOCK_DGRAM, etc. */## 29 ##src/lib/host_serv.c##
+
+    if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)## 30 ##src/lib/host_serv.c##
+        err_quit("host_serv error for %s, %s: %s",## 31 ##src/lib/host_serv.c##
+                 (host == NULL) ? "(no hostname)" : host,## 32 ##src/lib/host_serv.c##
+                 (serv == NULL) ? "(no service name)" : serv,## 33 ##src/lib/host_serv.c##
+                 gai_strerror(n));## 34 ##src/lib/host_serv.c##
+
+    return (res);               /* return pointer to first on linked list */## 35 ##src/lib/host_serv.c##
+}## 36 ##src/lib/host_serv.c##

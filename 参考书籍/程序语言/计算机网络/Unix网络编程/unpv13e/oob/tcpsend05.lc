@@ -1,0 +1,28 @@
+#include    "unp.h"##  1 ##src/oob/tcpsend05.c##
+
+int##  2 ##src/oob/tcpsend05.c##
+main(int argc, char **argv)##  3 ##src/oob/tcpsend05.c##
+{##  4 ##src/oob/tcpsend05.c##
+    int     sockfd, size;##  5 ##src/oob/tcpsend05.c##
+    char    buff[16384];##  6 ##src/oob/tcpsend05.c##
+
+    if (argc != 3)##  7 ##src/oob/tcpsend05.c##
+        err_quit("usage: tcpsend05 <host> <port#>");##  8 ##src/oob/tcpsend05.c##
+
+    sockfd = Tcp_connect(argv[1], argv[2]);##  9 ##src/oob/tcpsend05.c##
+
+    size = 32768;## 10 ##src/oob/tcpsend05.c##
+    Setsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, &size, sizeof(size));## 11 ##src/oob/tcpsend05.c##
+
+    Write(sockfd, buff, 16384);## 12 ##src/oob/tcpsend05.c##
+    printf("wrote 16384 bytes of normal data\n");## 13 ##src/oob/tcpsend05.c##
+    sleep(5);## 14 ##src/oob/tcpsend05.c##
+
+    Send(sockfd, "a", 1, MSG_OOB);## 15 ##src/oob/tcpsend05.c##
+    printf("wrote 1 byte of OOB data\n");## 16 ##src/oob/tcpsend05.c##
+
+    Write(sockfd, buff, 1024);## 17 ##src/oob/tcpsend05.c##
+    printf("wrote 1024 bytes of normal data\n");## 18 ##src/oob/tcpsend05.c##
+
+    exit(0);## 19 ##src/oob/tcpsend05.c##
+}## 20 ##src/oob/tcpsend05.c##

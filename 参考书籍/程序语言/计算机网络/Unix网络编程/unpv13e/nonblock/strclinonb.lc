@@ -1,0 +1,114 @@
+/* include nonb1 */
+#include    "unp.h"##  1 ##src/nonblock/strclinonb.c##
+
+void##  2 ##src/nonblock/strclinonb.c##
+str_cli(FILE *fp, int sockfd)##  3 ##src/nonblock/strclinonb.c##
+{##  4 ##src/nonblock/strclinonb.c##
+    int     maxfdp1, val, stdineof;##  5 ##src/nonblock/strclinonb.c##
+    ssize_t n, nwritten;##  6 ##src/nonblock/strclinonb.c##
+    fd_set  rset, wset;##  7 ##src/nonblock/strclinonb.c##
+    char    to[MAXLINE], fr[MAXLINE];##  8 ##src/nonblock/strclinonb.c##
+    char   *toiptr, *tooptr, *friptr, *froptr;##  9 ##src/nonblock/strclinonb.c##
+
+    val = Fcntl(sockfd, F_GETFL, 0);## 10 ##src/nonblock/strclinonb.c##
+    Fcntl(sockfd, F_SETFL, val | O_NONBLOCK);## 11 ##src/nonblock/strclinonb.c##
+
+    val = Fcntl(STDIN_FILENO, F_GETFL, 0);## 12 ##src/nonblock/strclinonb.c##
+    Fcntl(STDIN_FILENO, F_SETFL, val | O_NONBLOCK);## 13 ##src/nonblock/strclinonb.c##
+
+    val = Fcntl(STDOUT_FILENO, F_GETFL, 0);## 14 ##src/nonblock/strclinonb.c##
+    Fcntl(STDOUT_FILENO, F_SETFL, val | O_NONBLOCK);## 15 ##src/nonblock/strclinonb.c##
+
+    toiptr = tooptr = to;       /* initialize buffer pointers */## 16 ##src/nonblock/strclinonb.c##
+    friptr = froptr = fr;## 17 ##src/nonblock/strclinonb.c##
+    stdineof = 0;## 18 ##src/nonblock/strclinonb.c##
+
+    maxfdp1 = max(max(STDIN_FILENO, STDOUT_FILENO), sockfd) + 1;## 19 ##src/nonblock/strclinonb.c##
+    for (;;) {## 20 ##src/nonblock/strclinonb.c##
+        FD_ZERO(&rset);## 21 ##src/nonblock/strclinonb.c##
+        FD_ZERO(&wset);## 22 ##src/nonblock/strclinonb.c##
+        if (stdineof == 0 && toiptr < &to[MAXLINE])## 23 ##src/nonblock/strclinonb.c##
+            FD_SET(STDIN_FILENO, &rset);    /* read from stdin */## 24 ##src/nonblock/strclinonb.c##
+        if (friptr < &fr[MAXLINE])## 25 ##src/nonblock/strclinonb.c##
+            FD_SET(sockfd, &rset);  /* read from socket */## 26 ##src/nonblock/strclinonb.c##
+        if (tooptr != toiptr)## 27 ##src/nonblock/strclinonb.c##
+            FD_SET(sockfd, &wset);  /* data to write to socket */## 28 ##src/nonblock/strclinonb.c##
+        if (froptr != friptr)## 29 ##src/nonblock/strclinonb.c##
+            FD_SET(STDOUT_FILENO, &wset);   /* data to write to stdout */## 30 ##src/nonblock/strclinonb.c##
+
+        Select(maxfdp1, &rset, &wset, NULL, NULL);## 31 ##src/nonblock/strclinonb.c##
+/* end nonb1 */
+/* include nonb2 */
+        if (FD_ISSET(STDIN_FILENO, &rset)) {## 32 ##src/nonblock/strclinonb.c##
+            if ((n = read(STDIN_FILENO, toiptr, &to[MAXLINE] - toiptr)) < 0) {## 33 ##src/nonblock/strclinonb.c##
+                if (errno != EWOULDBLOCK)## 34 ##src/nonblock/strclinonb.c##
+                    err_sys("read error on stdin");## 35 ##src/nonblock/strclinonb.c##
+
+            } else if (n == 0) {## 36 ##src/nonblock/strclinonb.c##
+                fprintf(stderr, "%s: EOF on stdin\n", gf_time());## 37 ##src/nonblock/strclinonb.c##
+                stdineof = 1;   /* all done with stdin */## 38 ##src/nonblock/strclinonb.c##
+                if (tooptr == toiptr)## 39 ##src/nonblock/strclinonb.c##
+                    Shutdown(sockfd, SHUT_WR);  /* send FIN */## 40 ##src/nonblock/strclinonb.c##
+
+            } else {## 41 ##src/nonblock/strclinonb.c##
+                fprintf(stderr, "%s: read %d bytes from stdin\n", gf_time(),## 42 ##src/nonblock/strclinonb.c##
+                        n);## 43 ##src/nonblock/strclinonb.c##
+                toiptr += n;    /* # just read */## 44 ##src/nonblock/strclinonb.c##
+                FD_SET(sockfd, &wset);  /* try and write to socket below */## 45 ##src/nonblock/strclinonb.c##
+            }## 46 ##src/nonblock/strclinonb.c##
+        }## 47 ##src/nonblock/strclinonb.c##
+
+        if (FD_ISSET(sockfd, &rset)) {## 48 ##src/nonblock/strclinonb.c##
+            if ((n = read(sockfd, friptr, &fr[MAXLINE] - friptr)) < 0) {## 49 ##src/nonblock/strclinonb.c##
+                if (errno != EWOULDBLOCK)## 50 ##src/nonblock/strclinonb.c##
+                    err_sys("read error on socket");## 51 ##src/nonblock/strclinonb.c##
+
+            } else if (n == 0) {## 52 ##src/nonblock/strclinonb.c##
+                fprintf(stderr, "%s: EOF on socket\n", gf_time());## 53 ##src/nonblock/strclinonb.c##
+                if (stdineof)## 54 ##src/nonblock/strclinonb.c##
+                    return;     /* normal termination */## 55 ##src/nonblock/strclinonb.c##
+                else## 56 ##src/nonblock/strclinonb.c##
+                    err_quit("str_cli: server terminated prematurely");## 57 ##src/nonblock/strclinonb.c##
+
+            } else {## 58 ##src/nonblock/strclinonb.c##
+                fprintf(stderr, "%s: read %d bytes from socket\n",## 59 ##src/nonblock/strclinonb.c##
+                        gf_time(), n);## 60 ##src/nonblock/strclinonb.c##
+                friptr += n;    /* # just read */## 61 ##src/nonblock/strclinonb.c##
+                FD_SET(STDOUT_FILENO, &wset);   /* try and write below */## 62 ##src/nonblock/strclinonb.c##
+            }## 63 ##src/nonblock/strclinonb.c##
+        }## 64 ##src/nonblock/strclinonb.c##
+/* end nonb2 */
+/* include nonb3 */
+        if (FD_ISSET(STDOUT_FILENO, &wset) && ((n = friptr - froptr) > 0)) {## 65 ##src/nonblock/strclinonb.c##
+            if ((nwritten = write(STDOUT_FILENO, froptr, n)) < 0) {## 66 ##src/nonblock/strclinonb.c##
+                if (errno != EWOULDBLOCK)## 67 ##src/nonblock/strclinonb.c##
+                    err_sys("write error to stdout");## 68 ##src/nonblock/strclinonb.c##
+
+            } else {## 69 ##src/nonblock/strclinonb.c##
+                fprintf(stderr, "%s: wrote %d bytes to stdout\n",## 70 ##src/nonblock/strclinonb.c##
+                        gf_time(), nwritten);## 71 ##src/nonblock/strclinonb.c##
+                froptr += nwritten; /* # just written */## 72 ##src/nonblock/strclinonb.c##
+                if (froptr == friptr)## 73 ##src/nonblock/strclinonb.c##
+                    froptr = friptr = fr;   /* back to beginning of buffer */## 74 ##src/nonblock/strclinonb.c##
+            }## 75 ##src/nonblock/strclinonb.c##
+        }## 76 ##src/nonblock/strclinonb.c##
+
+        if (FD_ISSET(sockfd, &wset) && ((n = toiptr - tooptr) > 0)) {## 77 ##src/nonblock/strclinonb.c##
+            if ((nwritten = write(sockfd, tooptr, n)) < 0) {## 78 ##src/nonblock/strclinonb.c##
+                if (errno != EWOULDBLOCK)## 79 ##src/nonblock/strclinonb.c##
+                    err_sys("write error to socket");## 80 ##src/nonblock/strclinonb.c##
+
+            } else {## 81 ##src/nonblock/strclinonb.c##
+                fprintf(stderr, "%s: wrote %d bytes to socket\n",## 82 ##src/nonblock/strclinonb.c##
+                        gf_time(), nwritten);## 83 ##src/nonblock/strclinonb.c##
+                tooptr += nwritten; /* # just written */## 84 ##src/nonblock/strclinonb.c##
+                if (tooptr == toiptr) {## 85 ##src/nonblock/strclinonb.c##
+                    toiptr = tooptr = to;   /* back to beginning of buffer */## 86 ##src/nonblock/strclinonb.c##
+                    if (stdineof)## 87 ##src/nonblock/strclinonb.c##
+                        Shutdown(sockfd, SHUT_WR);  /* send FIN */## 88 ##src/nonblock/strclinonb.c##
+                }## 89 ##src/nonblock/strclinonb.c##
+            }## 90 ##src/nonblock/strclinonb.c##
+        }## 91 ##src/nonblock/strclinonb.c##
+    }## 92 ##src/nonblock/strclinonb.c##
+}## 93 ##src/nonblock/strclinonb.c##
+/* end nonb3 */

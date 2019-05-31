@@ -1,0 +1,271 @@
+/* include mcast_join1 */
+#include    "unp.h"##  1 ##src/lib/mcast_join.c##
+#include    <net/if.h>##  2 ##src/lib/mcast_join.c##
+
+int##  3 ##src/lib/mcast_join.c##
+mcast_join(int sockfd, const SA *grp, socklen_t grplen,##  4 ##src/lib/mcast_join.c##
+           const char *ifname, u_int ifindex)##  5 ##src/lib/mcast_join.c##
+{##  6 ##src/lib/mcast_join.c##
+#ifdef MCAST_JOIN_GROUP##  7 ##src/lib/mcast_join.c##
+    struct group_req req;##  8 ##src/lib/mcast_join.c##
+    if (ifindex > 0) {##  9 ##src/lib/mcast_join.c##
+        req.gr_interface = ifindex;## 10 ##src/lib/mcast_join.c##
+    } else if (ifname != NULL) {## 11 ##src/lib/mcast_join.c##
+        if ((req.gr_interface = if_nametoindex(ifname)) == 0) {## 12 ##src/lib/mcast_join.c##
+            errno = ENXIO;      /* i/f name not found */## 13 ##src/lib/mcast_join.c##
+            return (-1);## 14 ##src/lib/mcast_join.c##
+        }## 15 ##src/lib/mcast_join.c##
+    } else## 16 ##src/lib/mcast_join.c##
+        req.gr_interface = 0;## 17 ##src/lib/mcast_join.c##
+    memcpy(&req.gr_group, grp, grplen);## 18 ##src/lib/mcast_join.c##
+    return (setsockopt(sockfd, family_to_level(grp->sa_family),## 19 ##src/lib/mcast_join.c##
+                       MCAST_JOIN_GROUP, &req, sizeof(req)));## 20 ##src/lib/mcast_join.c##
+/* end mcast_join1 */
+#else## 21 ##src/lib/mcast_join.c##
+
+/* include mcast_join2 */
+    switch (grp->sa_family) {## 22 ##src/lib/mcast_join.c##
+    case AF_INET:{## 23 ##src/lib/mcast_join.c##
+            struct ip_mreq mreq;## 24 ##src/lib/mcast_join.c##
+            struct ifreq ifreq;## 25 ##src/lib/mcast_join.c##
+
+            memcpy(&mreq.imr_multiaddr,## 26 ##src/lib/mcast_join.c##
+                   &((const struct sockaddr_in *) grp)->sin_addr,## 27 ##src/lib/mcast_join.c##
+                   sizeof(struct in_addr));## 28 ##src/lib/mcast_join.c##
+
+            if (ifindex > 0) {## 29 ##src/lib/mcast_join.c##
+                if (if_indextoname(ifindex, ifreq.ifr_name) == NULL) {## 30 ##src/lib/mcast_join.c##
+                    errno = ENXIO;  /* i/f index not found */## 31 ##src/lib/mcast_join.c##
+                    return (-1);## 32 ##src/lib/mcast_join.c##
+                }## 33 ##src/lib/mcast_join.c##
+                goto doioctl;## 34 ##src/lib/mcast_join.c##
+            } else if (ifname != NULL) {## 35 ##src/lib/mcast_join.c##
+                strncpy(ifreq.ifr_name, ifname, IFNAMSIZ);## 36 ##src/lib/mcast_join.c##
+              doioctl:## 37 ##src/lib/mcast_join.c##
+                if (ioctl(sockfd, SIOCGIFADDR, &ifreq) < 0)## 38 ##src/lib/mcast_join.c##
+                    return (-1);## 39 ##src/lib/mcast_join.c##
+                memcpy(&mreq.imr_interface,## 40 ##src/lib/mcast_join.c##
+                       &((struct sockaddr_in *) &ifreq.ifr_addr)->sin_addr,## 41 ##src/lib/mcast_join.c##
+                       sizeof(struct in_addr));## 42 ##src/lib/mcast_join.c##
+            } else## 43 ##src/lib/mcast_join.c##
+                mreq.imr_interface.s_addr = htonl(INADDR_ANY);## 44 ##src/lib/mcast_join.c##
+
+            return (setsockopt(sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP,## 45 ##src/lib/mcast_join.c##
+                               &mreq, sizeof(mreq)));## 46 ##src/lib/mcast_join.c##
+        }## 47 ##src/lib/mcast_join.c##
+/* end mcast_join2 */
+
+/* include mcast_join3 */
+#ifdef  IPV6## 48 ##src/lib/mcast_join.c##
+#ifndef IPV6_JOIN_GROUP         /* APIv0 compatibility */## 49 ##src/lib/mcast_join.c##
+#define IPV6_JOIN_GROUP     IPV6_ADD_MEMBERSHIP## 50 ##src/lib/mcast_join.c##
+#endif## 51 ##src/lib/mcast_join.c##
+    case AF_INET6:{## 52 ##src/lib/mcast_join.c##
+            struct ipv6_mreq mreq6;## 53 ##src/lib/mcast_join.c##
+
+            memcpy(&mreq6.ipv6mr_multiaddr,## 54 ##src/lib/mcast_join.c##
+                   &((const struct sockaddr_in6 *) grp)->sin6_addr,## 55 ##src/lib/mcast_join.c##
+                   sizeof(struct in6_addr));## 56 ##src/lib/mcast_join.c##
+
+            if (ifindex > 0) {## 57 ##src/lib/mcast_join.c##
+                mreq6.ipv6mr_interface = ifindex;## 58 ##src/lib/mcast_join.c##
+            } else if (ifname != NULL) {## 59 ##src/lib/mcast_join.c##
+                if ((mreq6.ipv6mr_interface = if_nametoindex(ifname)) == 0) {## 60 ##src/lib/mcast_join.c##
+                    errno = ENXIO;  /* i/f name not found */## 61 ##src/lib/mcast_join.c##
+                    return (-1);## 62 ##src/lib/mcast_join.c##
+                }## 63 ##src/lib/mcast_join.c##
+            } else## 64 ##src/lib/mcast_join.c##
+                mreq6.ipv6mr_interface = 0;## 65 ##src/lib/mcast_join.c##
+
+            return (setsockopt(sockfd, IPPROTO_IPV6, IPV6_JOIN_GROUP,## 66 ##src/lib/mcast_join.c##
+                               &mreq6, sizeof(mreq6)));## 67 ##src/lib/mcast_join.c##
+        }## 68 ##src/lib/mcast_join.c##
+#endif## 69 ##src/lib/mcast_join.c##
+
+    default:## 70 ##src/lib/mcast_join.c##
+        errno = EPROTONOSUPPORT;## 71 ##src/lib/mcast_join.c##
+        return (-1);## 72 ##src/lib/mcast_join.c##
+    }## 73 ##src/lib/mcast_join.c##
+#endif## 74 ##src/lib/mcast_join.c##
+}## 75 ##src/lib/mcast_join.c##
+/* end mcast_join3 */
+
+void## 76 ##src/lib/mcast_join.c##
+Mcast_join(int sockfd, const SA *grp, socklen_t grplen,## 77 ##src/lib/mcast_join.c##
+           const char *ifname, u_int ifindex)## 78 ##src/lib/mcast_join.c##
+{## 79 ##src/lib/mcast_join.c##
+    if (mcast_join(sockfd, grp, grplen, ifname, ifindex) < 0)## 80 ##src/lib/mcast_join.c##
+        err_sys("mcast_join error");## 81 ##src/lib/mcast_join.c##
+}## 82 ##src/lib/mcast_join.c##
+
+int## 83 ##src/lib/mcast_join.c##
+mcast_join_source_group(int sockfd, const SA *src, socklen_t srclen,## 84 ##src/lib/mcast_join.c##
+                        const SA *grp, socklen_t grplen,## 85 ##src/lib/mcast_join.c##
+                        const char *ifname, u_int ifindex)## 86 ##src/lib/mcast_join.c##
+{## 87 ##src/lib/mcast_join.c##
+#ifdef MCAST_JOIN_SOURCE_GROUP## 88 ##src/lib/mcast_join.c##
+    struct group_source_req req;## 89 ##src/lib/mcast_join.c##
+    if (ifindex > 0) {## 90 ##src/lib/mcast_join.c##
+        req.gr_interface = ifindex;## 91 ##src/lib/mcast_join.c##
+    } else if (ifname != NULL) {## 92 ##src/lib/mcast_join.c##
+        if ((req.gr_interface = if_nametoindex(ifname)) == 0) {## 93 ##src/lib/mcast_join.c##
+            errno = ENXIO;      /* i/f name not found */## 94 ##src/lib/mcast_join.c##
+            return (-1);## 95 ##src/lib/mcast_join.c##
+        }## 96 ##src/lib/mcast_join.c##
+    } else## 97 ##src/lib/mcast_join.c##
+        req.gr_interface = 0;## 98 ##src/lib/mcast_join.c##
+    memcpy(&req.gr_group, grp, grplen);## 99 ##src/lib/mcast_join.c##
+    memcpy(&req.gr_src, src, srclen);##100 ##src/lib/mcast_join.c##
+    return (setsockopt(sockfd, family_to_level(grp->sa_family),##101 ##src/lib/mcast_join.c##
+                       MCAST_JOIN_SOURCE_GROUP, &req, sizeof(req)));##102 ##src/lib/mcast_join.c##
+#else##103 ##src/lib/mcast_join.c##
+    switch (grp->sa_family) {##104 ##src/lib/mcast_join.c##
+#ifdef IP_ADD_SOURCE_MEMBERSHIP##105 ##src/lib/mcast_join.c##
+    case AF_INET:{##106 ##src/lib/mcast_join.c##
+            struct ip_mreq_source mreq;##107 ##src/lib/mcast_join.c##
+            struct ifreq ifreq;##108 ##src/lib/mcast_join.c##
+
+            memcpy(&mreq.imr_multiaddr,##109 ##src/lib/mcast_join.c##
+                   &((struct sockaddr_in *) grp)->sin_addr,##110 ##src/lib/mcast_join.c##
+                   sizeof(struct in_addr));##111 ##src/lib/mcast_join.c##
+            memcpy(&mreq.imr_sourceaddr,##112 ##src/lib/mcast_join.c##
+                   &((struct sockaddr_in *) src)->sin_addr,##113 ##src/lib/mcast_join.c##
+                   sizeof(struct in_addr));##114 ##src/lib/mcast_join.c##
+
+            if (ifindex > 0) {##115 ##src/lib/mcast_join.c##
+                if (if_indextoname(ifindex, ifreq.ifr_name) == NULL) {##116 ##src/lib/mcast_join.c##
+                    errno = ENXIO;  /* i/f index not found */##117 ##src/lib/mcast_join.c##
+                    return (-1);##118 ##src/lib/mcast_join.c##
+                }##119 ##src/lib/mcast_join.c##
+                goto doioctl;##120 ##src/lib/mcast_join.c##
+            } else if (ifname != NULL) {##121 ##src/lib/mcast_join.c##
+                strncpy(ifreq.ifr_name, ifname, IFNAMSIZ);##122 ##src/lib/mcast_join.c##
+              doioctl:##123 ##src/lib/mcast_join.c##
+                if (ioctl(sockfd, SIOCGIFADDR, &ifreq) < 0)##124 ##src/lib/mcast_join.c##
+                    return (-1);##125 ##src/lib/mcast_join.c##
+                memcpy(&mreq.imr_interface,##126 ##src/lib/mcast_join.c##
+                       &((struct sockaddr_in *) &ifreq.ifr_addr)->sin_addr,##127 ##src/lib/mcast_join.c##
+                       sizeof(struct in_addr));##128 ##src/lib/mcast_join.c##
+            } else##129 ##src/lib/mcast_join.c##
+                mreq.imr_interface.s_addr = htonl(INADDR_ANY);##130 ##src/lib/mcast_join.c##
+
+            return (setsockopt(sockfd, IPPROTO_IP, IP_ADD_SOURCE_MEMBERSHIP,##131 ##src/lib/mcast_join.c##
+                               &mreq, sizeof(mreq)));##132 ##src/lib/mcast_join.c##
+        }##133 ##src/lib/mcast_join.c##
+#endif##134 ##src/lib/mcast_join.c##
+
+#ifdef  IPV6##135 ##src/lib/mcast_join.c##
+    case AF_INET6:              /* IPv6 source-specific API is MCAST_JOIN_SOURCE_GROUP */##136 ##src/lib/mcast_join.c##
+#endif##137 ##src/lib/mcast_join.c##
+    default:##138 ##src/lib/mcast_join.c##
+        errno = EPROTONOSUPPORT;##139 ##src/lib/mcast_join.c##
+        return (-1);##140 ##src/lib/mcast_join.c##
+    }##141 ##src/lib/mcast_join.c##
+#endif##142 ##src/lib/mcast_join.c##
+}##143 ##src/lib/mcast_join.c##
+
+void##144 ##src/lib/mcast_join.c##
+Mcast_join_source_group(int sockfd, const SA *src, socklen_t srclen,##145 ##src/lib/mcast_join.c##
+                        const SA *grp, socklen_t grplen,##146 ##src/lib/mcast_join.c##
+                        const char *ifname, u_int ifindex)##147 ##src/lib/mcast_join.c##
+{##148 ##src/lib/mcast_join.c##
+    if (mcast_join_source_group(sockfd, src, srclen, grp, grplen,##149 ##src/lib/mcast_join.c##
+                                ifname, ifindex) < 0)##150 ##src/lib/mcast_join.c##
+        err_sys("mcast_join_source_group error");##151 ##src/lib/mcast_join.c##
+}##152 ##src/lib/mcast_join.c##
+
+int##153 ##src/lib/mcast_join.c##
+mcast_block_source(int sockfd, const SA *src, socklen_t srclen,##154 ##src/lib/mcast_join.c##
+                   const SA *grp, socklen_t grplen)##155 ##src/lib/mcast_join.c##
+{##156 ##src/lib/mcast_join.c##
+#ifdef MCAST_BLOCK_SOURCE##157 ##src/lib/mcast_join.c##
+    struct group_source_req req;##158 ##src/lib/mcast_join.c##
+    req.gr_interface = 0;##159 ##src/lib/mcast_join.c##
+    memcpy(&req.gr_group, grp, grplen);##160 ##src/lib/mcast_join.c##
+    memcpy(&req.gr_src, src, srclen);##161 ##src/lib/mcast_join.c##
+    return (setsockopt(sockfd, family_to_level(grp->sa_family),##162 ##src/lib/mcast_join.c##
+                       MCAST_BLOCK_SOURCE, &req, sizeof(req)));##163 ##src/lib/mcast_join.c##
+#else##164 ##src/lib/mcast_join.c##
+    switch (grp->sa_family) {##165 ##src/lib/mcast_join.c##
+#ifdef IP_BLOCK_SOURCE##166 ##src/lib/mcast_join.c##
+    case AF_INET:{##167 ##src/lib/mcast_join.c##
+            struct ip_mreq_source mreq;##168 ##src/lib/mcast_join.c##
+
+            memcpy(&mreq.imr_multiaddr,##169 ##src/lib/mcast_join.c##
+                   &((struct sockaddr_in *) grp)->sin_addr,##170 ##src/lib/mcast_join.c##
+                   sizeof(struct in_addr));##171 ##src/lib/mcast_join.c##
+            memcpy(&mreq.imr_sourceaddr,##172 ##src/lib/mcast_join.c##
+                   &((struct sockaddr_in *) src)->sin_addr,##173 ##src/lib/mcast_join.c##
+                   sizeof(struct in_addr));##174 ##src/lib/mcast_join.c##
+            mreq.imr_interface.s_addr = htonl(INADDR_ANY);##175 ##src/lib/mcast_join.c##
+
+            return (setsockopt(sockfd, IPPROTO_IP, IP_BLOCK_SOURCE,##176 ##src/lib/mcast_join.c##
+                               &mreq, sizeof(mreq)));##177 ##src/lib/mcast_join.c##
+        }##178 ##src/lib/mcast_join.c##
+#endif##179 ##src/lib/mcast_join.c##
+
+#ifdef  IPV6##180 ##src/lib/mcast_join.c##
+    case AF_INET6:              /* IPv6 source-specific API is MCAST_BLOCK_SOURCE */##181 ##src/lib/mcast_join.c##
+#endif##182 ##src/lib/mcast_join.c##
+    default:##183 ##src/lib/mcast_join.c##
+        errno = EPROTONOSUPPORT;##184 ##src/lib/mcast_join.c##
+        return (-1);##185 ##src/lib/mcast_join.c##
+    }##186 ##src/lib/mcast_join.c##
+#endif##187 ##src/lib/mcast_join.c##
+}##188 ##src/lib/mcast_join.c##
+
+void##189 ##src/lib/mcast_join.c##
+Mcast_block_source(int sockfd, const SA *src, socklen_t srclen,##190 ##src/lib/mcast_join.c##
+                   const SA *grp, socklen_t grplen)##191 ##src/lib/mcast_join.c##
+{##192 ##src/lib/mcast_join.c##
+    if (mcast_block_source(sockfd, src, srclen, grp, grplen) < 0)##193 ##src/lib/mcast_join.c##
+        err_sys("mcast_block_source error");##194 ##src/lib/mcast_join.c##
+}##195 ##src/lib/mcast_join.c##
+
+int##196 ##src/lib/mcast_join.c##
+mcast_unblock_source(int sockfd, const SA *src, socklen_t srclen,##197 ##src/lib/mcast_join.c##
+                     const SA *grp, socklen_t grplen)##198 ##src/lib/mcast_join.c##
+{##199 ##src/lib/mcast_join.c##
+#ifdef MCAST_UNBLOCK_SOURCE##200 ##src/lib/mcast_join.c##
+    struct group_source_req req;##201 ##src/lib/mcast_join.c##
+    req.gr_interface = 0;##202 ##src/lib/mcast_join.c##
+    memcpy(&req.gr_group, grp, grplen);##203 ##src/lib/mcast_join.c##
+    memcpy(&req.gr_src, src, srclen);##204 ##src/lib/mcast_join.c##
+    return (setsockopt(sockfd, family_to_level(grp->sa_family),##205 ##src/lib/mcast_join.c##
+                       MCAST_UNBLOCK_SOURCE, &req, sizeof(req)));##206 ##src/lib/mcast_join.c##
+#else##207 ##src/lib/mcast_join.c##
+    switch (grp->sa_family) {##208 ##src/lib/mcast_join.c##
+#ifdef IP_UNBLOCK_SOURCE##209 ##src/lib/mcast_join.c##
+    case AF_INET:{##210 ##src/lib/mcast_join.c##
+            struct ip_mreq_source mreq;##211 ##src/lib/mcast_join.c##
+
+            memcpy(&mreq.imr_multiaddr,##212 ##src/lib/mcast_join.c##
+                   &((struct sockaddr_in *) grp)->sin_addr,##213 ##src/lib/mcast_join.c##
+                   sizeof(struct in_addr));##214 ##src/lib/mcast_join.c##
+            memcpy(&mreq.imr_sourceaddr,##215 ##src/lib/mcast_join.c##
+                   &((struct sockaddr_in *) src)->sin_addr,##216 ##src/lib/mcast_join.c##
+                   sizeof(struct in_addr));##217 ##src/lib/mcast_join.c##
+            mreq.imr_interface.s_addr = htonl(INADDR_ANY);##218 ##src/lib/mcast_join.c##
+
+            return (setsockopt(sockfd, IPPROTO_IP, IP_UNBLOCK_SOURCE,##219 ##src/lib/mcast_join.c##
+                               &mreq, sizeof(mreq)));##220 ##src/lib/mcast_join.c##
+        }##221 ##src/lib/mcast_join.c##
+#endif##222 ##src/lib/mcast_join.c##
+
+#ifdef  IPV6##223 ##src/lib/mcast_join.c##
+    case AF_INET6:              /* IPv6 source-specific API is MCAST_UNBLOCK_SOURCE */##224 ##src/lib/mcast_join.c##
+#endif##225 ##src/lib/mcast_join.c##
+    default:##226 ##src/lib/mcast_join.c##
+        errno = EPROTONOSUPPORT;##227 ##src/lib/mcast_join.c##
+        return (-1);##228 ##src/lib/mcast_join.c##
+    }##229 ##src/lib/mcast_join.c##
+#endif##230 ##src/lib/mcast_join.c##
+}##231 ##src/lib/mcast_join.c##
+
+void##232 ##src/lib/mcast_join.c##
+Mcast_unblock_source(int sockfd, const SA *src, socklen_t srclen,##233 ##src/lib/mcast_join.c##
+                     const SA *grp, socklen_t grplen)##234 ##src/lib/mcast_join.c##
+{##235 ##src/lib/mcast_join.c##
+    if (mcast_unblock_source(sockfd, src, srclen, grp, grplen) < 0)##236 ##src/lib/mcast_join.c##
+        err_sys("mcast_unblock_source error");##237 ##src/lib/mcast_join.c##
+}##238 ##src/lib/mcast_join.c##

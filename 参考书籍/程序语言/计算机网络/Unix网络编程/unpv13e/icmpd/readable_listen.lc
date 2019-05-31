@@ -1,0 +1,29 @@
+#include    "icmpd.h"##  1 ##src/icmpd/readable_listen.c##
+
+int##  2 ##src/icmpd/readable_listen.c##
+readable_listen(void)##  3 ##src/icmpd/readable_listen.c##
+{##  4 ##src/icmpd/readable_listen.c##
+    int     i, connfd;##  5 ##src/icmpd/readable_listen.c##
+    socklen_t clilen;##  6 ##src/icmpd/readable_listen.c##
+
+    clilen = addrlen;##  7 ##src/icmpd/readable_listen.c##
+    connfd = Accept(listenfd, cliaddr, &clilen);##  8 ##src/icmpd/readable_listen.c##
+
+    /* 4find first available client[] structure */##  9 ##src/icmpd/readable_listen.c##
+    for (i = 0; i < FD_SETSIZE; i++)## 10 ##src/icmpd/readable_listen.c##
+        if (client[i].connfd < 0) {## 11 ##src/icmpd/readable_listen.c##
+            client[i].connfd = connfd;  /* save descriptor */## 12 ##src/icmpd/readable_listen.c##
+            break;## 13 ##src/icmpd/readable_listen.c##
+        }## 14 ##src/icmpd/readable_listen.c##
+    if (i == FD_SETSIZE)## 15 ##src/icmpd/readable_listen.c##
+        err_quit("too many clients");## 16 ##src/icmpd/readable_listen.c##
+    printf("new connection, i = %d, connfd = %d\n", i, connfd);## 17 ##src/icmpd/readable_listen.c##
+
+    FD_SET(connfd, &allset);    /* add new descriptor to set */## 18 ##src/icmpd/readable_listen.c##
+    if (connfd > maxfd)## 19 ##src/icmpd/readable_listen.c##
+        maxfd = connfd;         /* for select() */## 20 ##src/icmpd/readable_listen.c##
+    if (i > maxi)## 21 ##src/icmpd/readable_listen.c##
+        maxi = i;               /* max index in client[] array */## 22 ##src/icmpd/readable_listen.c##
+
+    return (--nready);## 23 ##src/icmpd/readable_listen.c##
+}## 24 ##src/icmpd/readable_listen.c##

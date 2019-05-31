@@ -1,0 +1,125 @@
+/* include main1 */
+#include    "udpcksum.h"##  1 ##src/udpcksum/main.c##
+
+            /* define global variables */##  2 ##src/udpcksum/main.c##
+struct sockaddr *dest, *local;##  3 ##src/udpcksum/main.c##
+struct sockaddr_in locallookup;##  4 ##src/udpcksum/main.c##
+socklen_t destlen, locallen;##  5 ##src/udpcksum/main.c##
+
+int     datalink;               /* from pcap_datalink(), in <net/bpf.h> */##  6 ##src/udpcksum/main.c##
+char   *device;                 /* pcap device */##  7 ##src/udpcksum/main.c##
+pcap_t *pd;                     /* packet capture struct pointer */##  8 ##src/udpcksum/main.c##
+int     rawfd;                  /* raw socket to write on */##  9 ##src/udpcksum/main.c##
+int     snaplen = 200;          /* amount of data to capture */## 10 ##src/udpcksum/main.c##
+int     verbose;## 11 ##src/udpcksum/main.c##
+int     zerosum;                /* send UDP query with no checksum */## 12 ##src/udpcksum/main.c##
+
+static void usage(const char *);## 13 ##src/udpcksum/main.c##
+
+int## 14 ##src/udpcksum/main.c##
+main(int argc, char *argv[])## 15 ##src/udpcksum/main.c##
+{## 16 ##src/udpcksum/main.c##
+    int     c, lopt = 0;## 17 ##src/udpcksum/main.c##
+    char   *ptr, localname[1024], *localport;## 18 ##src/udpcksum/main.c##
+    struct addrinfo *aip;## 19 ##src/udpcksum/main.c##
+
+    if (argc < 2)## 20 ##src/udpcksum/main.c##
+        usage("");## 21 ##src/udpcksum/main.c##
+/* end main1 */
+
+/* include main2 */
+    opterr = 0;                 /* don't want getopt() writing to stderr */## 22 ##src/udpcksum/main.c##
+    while ((c = getopt(argc, argv, "0i:l:v")) != -1) {## 23 ##src/udpcksum/main.c##
+        switch (c) {## 24 ##src/udpcksum/main.c##
+
+        case '0':## 25 ##src/udpcksum/main.c##
+            zerosum = 1;## 26 ##src/udpcksum/main.c##
+            break;## 27 ##src/udpcksum/main.c##
+
+        case 'i':## 28 ##src/udpcksum/main.c##
+            device = optarg;    /* pcap device */## 29 ##src/udpcksum/main.c##
+            break;## 30 ##src/udpcksum/main.c##
+
+        case 'l':               /* local IP address and port#: a.b.c.d.p */## 31 ##src/udpcksum/main.c##
+            if ((ptr = strrchr(optarg, '.')) == NULL)## 32 ##src/udpcksum/main.c##
+                usage("invalid -l option");## 33 ##src/udpcksum/main.c##
+
+            *ptr++ = 0;         /* null replaces final period */## 34 ##src/udpcksum/main.c##
+            localport = ptr;    /* service name or port number */## 35 ##src/udpcksum/main.c##
+            strncpy(localname, optarg, sizeof(localname));## 36 ##src/udpcksum/main.c##
+            lopt = 1;## 37 ##src/udpcksum/main.c##
+            break;## 38 ##src/udpcksum/main.c##
+
+        case 'v':## 39 ##src/udpcksum/main.c##
+            verbose = 1;## 40 ##src/udpcksum/main.c##
+            break;## 41 ##src/udpcksum/main.c##
+
+        case '?':## 42 ##src/udpcksum/main.c##
+            usage("unrecognized option");## 43 ##src/udpcksum/main.c##
+        }## 44 ##src/udpcksum/main.c##
+    }## 45 ##src/udpcksum/main.c##
+/* end main2 */
+/* include main3 */
+    if (optind != argc - 2)## 46 ##src/udpcksum/main.c##
+        usage("missing <host> and/or <serv>");## 47 ##src/udpcksum/main.c##
+
+    /* 4convert destination name and service */## 48 ##src/udpcksum/main.c##
+    aip = Host_serv(argv[optind], argv[optind + 1], AF_INET, SOCK_DGRAM);## 49 ##src/udpcksum/main.c##
+    dest = aip->ai_addr;        /* don't freeaddrinfo() */## 50 ##src/udpcksum/main.c##
+    destlen = aip->ai_addrlen;## 51 ##src/udpcksum/main.c##
+
+    /* ## 52 ##src/udpcksum/main.c##
+     * Need local IP address for source IP address for UDP datagrams.## 53 ##src/udpcksum/main.c##
+     * Can't specify 0 and let IP choose, as we need to know it for## 54 ##src/udpcksum/main.c##
+     * the pseudo-header to calculate the UDP checksum.## 55 ##src/udpcksum/main.c##
+     * If -l option supplied, then use those values; otherwise,## 56 ##src/udpcksum/main.c##
+     * connect a UDP socket to the destination to determine the right## 57 ##src/udpcksum/main.c##
+     * source address.## 58 ##src/udpcksum/main.c##
+     */## 59 ##src/udpcksum/main.c##
+    if (lopt) {## 60 ##src/udpcksum/main.c##
+        /* 4convert local name and service */## 61 ##src/udpcksum/main.c##
+        aip = Host_serv(localname, localport, AF_INET, SOCK_DGRAM);## 62 ##src/udpcksum/main.c##
+        local = aip->ai_addr;   /* don't freeaddrinfo() */## 63 ##src/udpcksum/main.c##
+        locallen = aip->ai_addrlen;## 64 ##src/udpcksum/main.c##
+    } else {## 65 ##src/udpcksum/main.c##
+        int     s;## 66 ##src/udpcksum/main.c##
+        s = Socket(AF_INET, SOCK_DGRAM, 0);## 67 ##src/udpcksum/main.c##
+        Connect(s, dest, destlen);## 68 ##src/udpcksum/main.c##
+        /* the kernel chooses the correct local address for dest */## 69 ##src/udpcksum/main.c##
+        locallen = sizeof(locallookup);## 70 ##src/udpcksum/main.c##
+        local = (struct sockaddr *) &locallookup;## 71 ##src/udpcksum/main.c##
+        Getsockname(s, local, &locallen);## 72 ##src/udpcksum/main.c##
+        if (locallookup.sin_addr.s_addr == htonl(INADDR_ANY))## 73 ##src/udpcksum/main.c##
+            err_quit("Can't determine local address - use -l\n");## 74 ##src/udpcksum/main.c##
+        close(s);## 75 ##src/udpcksum/main.c##
+    }## 76 ##src/udpcksum/main.c##
+
+    open_output();              /* open output, either raw socket or libnet */## 77 ##src/udpcksum/main.c##
+
+    open_pcap();                /* open packet capture device */## 78 ##src/udpcksum/main.c##
+
+    setuid(getuid());           /* don't need superuser privileges any more */## 79 ##src/udpcksum/main.c##
+
+    Signal(SIGTERM, cleanup);## 80 ##src/udpcksum/main.c##
+    Signal(SIGINT, cleanup);## 81 ##src/udpcksum/main.c##
+    Signal(SIGHUP, cleanup);## 82 ##src/udpcksum/main.c##
+
+    test_udp();## 83 ##src/udpcksum/main.c##
+
+    cleanup(0);## 84 ##src/udpcksum/main.c##
+}## 85 ##src/udpcksum/main.c##
+/* end main3 */
+
+static void## 86 ##src/udpcksum/main.c##
+usage(const char *msg)## 87 ##src/udpcksum/main.c##
+{## 88 ##src/udpcksum/main.c##
+    err_msg("usage: udpcksum [ options ] <host> <serv>\n"## 89 ##src/udpcksum/main.c##
+            "options: -0    send UDP datagram with checksum set to 0\n"## 90 ##src/udpcksum/main.c##
+            "         -i s  packet capture device\n"## 91 ##src/udpcksum/main.c##
+            "         -l a.b.c.d.p  local IP=a.b.c.d, local port=p\n"## 92 ##src/udpcksum/main.c##
+            "         -v    verbose output");## 93 ##src/udpcksum/main.c##
+
+    if (msg[0] != 0)## 94 ##src/udpcksum/main.c##
+        err_quit("%s", msg);## 95 ##src/udpcksum/main.c##
+    exit(1);## 96 ##src/udpcksum/main.c##
+}## 97 ##src/udpcksum/main.c##

@@ -1,0 +1,31 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/ga_clone.c##
+
+/*##  2 ##src/libgai/ga_clone.c##
+ * Clone a new addrinfo structure from an existing one.##  3 ##src/libgai/ga_clone.c##
+ */##  4 ##src/libgai/ga_clone.c##
+
+/* include ga_clone */
+struct addrinfo *##  5 ##src/libgai/ga_clone.c##
+ga_clone(struct addrinfo *ai)##  6 ##src/libgai/ga_clone.c##
+{##  7 ##src/libgai/ga_clone.c##
+    struct addrinfo *new;##  8 ##src/libgai/ga_clone.c##
+
+    if ((new = calloc(1, sizeof(struct addrinfo))) == NULL)##  9 ##src/libgai/ga_clone.c##
+        return (NULL);## 10 ##src/libgai/ga_clone.c##
+
+    new->ai_next = ai->ai_next;## 11 ##src/libgai/ga_clone.c##
+    ai->ai_next = new;## 12 ##src/libgai/ga_clone.c##
+
+    new->ai_flags = 0;          /* make sure AI_CLONE is off */## 13 ##src/libgai/ga_clone.c##
+    new->ai_family = ai->ai_family;## 14 ##src/libgai/ga_clone.c##
+    new->ai_socktype = ai->ai_socktype;## 15 ##src/libgai/ga_clone.c##
+    new->ai_protocol = ai->ai_protocol;## 16 ##src/libgai/ga_clone.c##
+    new->ai_canonname = NULL;## 17 ##src/libgai/ga_clone.c##
+    new->ai_addrlen = ai->ai_addrlen;## 18 ##src/libgai/ga_clone.c##
+    if ((new->ai_addr = malloc(ai->ai_addrlen)) == NULL)## 19 ##src/libgai/ga_clone.c##
+        return (NULL);## 20 ##src/libgai/ga_clone.c##
+    memcpy(new->ai_addr, ai->ai_addr, ai->ai_addrlen);## 21 ##src/libgai/ga_clone.c##
+
+    return (new);## 22 ##src/libgai/ga_clone.c##
+}## 23 ##src/libgai/ga_clone.c##
+/* end ga_clone */

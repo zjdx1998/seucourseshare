@@ -1,0 +1,120 @@
+/* include dgecho1 */
+#include    "unp.h"##  1 ##src/sigio/dgecho01.c##
+
+static int sockfd;##  2 ##src/sigio/dgecho01.c##
+
+#define QSIZE      8            /* size of input queue */##  3 ##src/sigio/dgecho01.c##
+#define MAXDG   4096            /* maximum datagram size */##  4 ##src/sigio/dgecho01.c##
+
+typedef struct {##  5 ##src/sigio/dgecho01.c##
+    void   *dg_data;            /* ptr to actual datagram */##  6 ##src/sigio/dgecho01.c##
+    size_t  dg_len;             /* length of datagram */##  7 ##src/sigio/dgecho01.c##
+    struct sockaddr *dg_sa;     /* ptr to sockaddr{} w/client's address */##  8 ##src/sigio/dgecho01.c##
+    socklen_t dg_salen;         /* length of sockaddr{} */##  9 ##src/sigio/dgecho01.c##
+} DG;## 10 ##src/sigio/dgecho01.c##
+static DG dg[QSIZE];            /* the queue of datagrams to process */## 11 ##src/sigio/dgecho01.c##
+static long cntread[QSIZE + 1]; /* diagnostic counter */## 12 ##src/sigio/dgecho01.c##
+
+static int iget;                /* next one for main loop to process */## 13 ##src/sigio/dgecho01.c##
+static int iput;                /* next one for signal handler to read into */## 14 ##src/sigio/dgecho01.c##
+static int nqueue;              /* #on queue for main loop to process */## 15 ##src/sigio/dgecho01.c##
+static socklen_t clilen;        /* max length of sockaddr{} */## 16 ##src/sigio/dgecho01.c##
+
+static void sig_io(int);## 17 ##src/sigio/dgecho01.c##
+static void sig_hup(int);## 18 ##src/sigio/dgecho01.c##
+/* end dgecho1 */
+
+/* include dgecho2 */
+void## 19 ##src/sigio/dgecho01.c##
+dg_echo(int sockfd_arg, SA *pcliaddr, socklen_t clilen_arg)## 20 ##src/sigio/dgecho01.c##
+{## 21 ##src/sigio/dgecho01.c##
+    int     i;## 22 ##src/sigio/dgecho01.c##
+    const int on = 1;## 23 ##src/sigio/dgecho01.c##
+    sigset_t zeromask, newmask, oldmask;## 24 ##src/sigio/dgecho01.c##
+
+    sockfd = sockfd_arg;## 25 ##src/sigio/dgecho01.c##
+    clilen = clilen_arg;## 26 ##src/sigio/dgecho01.c##
+
+    for (i = 0; i < QSIZE; i++) {   /* init queue of buffers */## 27 ##src/sigio/dgecho01.c##
+        dg[i].dg_data = Malloc(MAXDG);## 28 ##src/sigio/dgecho01.c##
+        dg[i].dg_sa = Malloc(clilen);## 29 ##src/sigio/dgecho01.c##
+        dg[i].dg_salen = clilen;## 30 ##src/sigio/dgecho01.c##
+    }## 31 ##src/sigio/dgecho01.c##
+    iget = iput = nqueue = 0;## 32 ##src/sigio/dgecho01.c##
+
+    Signal(SIGHUP, sig_hup);## 33 ##src/sigio/dgecho01.c##
+    Signal(SIGIO, sig_io);## 34 ##src/sigio/dgecho01.c##
+    Fcntl(sockfd, F_SETOWN, getpid());## 35 ##src/sigio/dgecho01.c##
+    Ioctl(sockfd, FIOASYNC, &on);## 36 ##src/sigio/dgecho01.c##
+    Ioctl(sockfd, FIONBIO, &on);## 37 ##src/sigio/dgecho01.c##
+
+    Sigemptyset(&zeromask);     /* init three signal sets */## 38 ##src/sigio/dgecho01.c##
+    Sigemptyset(&oldmask);## 39 ##src/sigio/dgecho01.c##
+    Sigemptyset(&newmask);## 40 ##src/sigio/dgecho01.c##
+    Sigaddset(&newmask, SIGIO); /* the signal we want to block */## 41 ##src/sigio/dgecho01.c##
+
+    Sigprocmask(SIG_BLOCK, &newmask, &oldmask);## 42 ##src/sigio/dgecho01.c##
+    for (;;) {## 43 ##src/sigio/dgecho01.c##
+        while (nqueue == 0)## 44 ##src/sigio/dgecho01.c##
+            sigsuspend(&zeromask);  /* wait for a datagram to process */## 45 ##src/sigio/dgecho01.c##
+
+        /* 4unblock SIGIO */## 46 ##src/sigio/dgecho01.c##
+        Sigprocmask(SIG_SETMASK, &oldmask, NULL);## 47 ##src/sigio/dgecho01.c##
+
+        Sendto(sockfd, dg[iget].dg_data, dg[iget].dg_len, 0,## 48 ##src/sigio/dgecho01.c##
+               dg[iget].dg_sa, dg[iget].dg_salen);## 49 ##src/sigio/dgecho01.c##
+
+        if (++iget >= QSIZE)## 50 ##src/sigio/dgecho01.c##
+            iget = 0;## 51 ##src/sigio/dgecho01.c##
+
+        /* 4block SIGIO */## 52 ##src/sigio/dgecho01.c##
+        Sigprocmask(SIG_BLOCK, &newmask, &oldmask);## 53 ##src/sigio/dgecho01.c##
+        nqueue--;## 54 ##src/sigio/dgecho01.c##
+    }## 55 ##src/sigio/dgecho01.c##
+}## 56 ##src/sigio/dgecho01.c##
+/* end dgecho2 */
+
+/* include sig_io */
+static void## 57 ##src/sigio/dgecho01.c##
+sig_io(int signo)## 58 ##src/sigio/dgecho01.c##
+{## 59 ##src/sigio/dgecho01.c##
+    ssize_t len;## 60 ##src/sigio/dgecho01.c##
+    int     nread;## 61 ##src/sigio/dgecho01.c##
+    DG     *ptr;## 62 ##src/sigio/dgecho01.c##
+
+    for (nread = 0;;) {## 63 ##src/sigio/dgecho01.c##
+        if (nqueue >= QSIZE)## 64 ##src/sigio/dgecho01.c##
+            err_quit("receive overflow");## 65 ##src/sigio/dgecho01.c##
+
+        ptr = &dg[iput];## 66 ##src/sigio/dgecho01.c##
+        ptr->dg_salen = clilen;## 67 ##src/sigio/dgecho01.c##
+        len = recvfrom(sockfd, ptr->dg_data, MAXDG, 0,## 68 ##src/sigio/dgecho01.c##
+                       ptr->dg_sa, &ptr->dg_salen);## 69 ##src/sigio/dgecho01.c##
+        if (len < 0) {## 70 ##src/sigio/dgecho01.c##
+            if (errno == EWOULDBLOCK)## 71 ##src/sigio/dgecho01.c##
+                break;          /* all done; no more queued to read */## 72 ##src/sigio/dgecho01.c##
+            else## 73 ##src/sigio/dgecho01.c##
+                err_sys("recvfrom error");## 74 ##src/sigio/dgecho01.c##
+        }## 75 ##src/sigio/dgecho01.c##
+        ptr->dg_len = len;## 76 ##src/sigio/dgecho01.c##
+
+        nread++;## 77 ##src/sigio/dgecho01.c##
+        nqueue++;## 78 ##src/sigio/dgecho01.c##
+        if (++iput >= QSIZE)## 79 ##src/sigio/dgecho01.c##
+            iput = 0;## 80 ##src/sigio/dgecho01.c##
+
+    }## 81 ##src/sigio/dgecho01.c##
+    cntread[nread]++;           /* histogram of #datagrams read per signal */## 82 ##src/sigio/dgecho01.c##
+}## 83 ##src/sigio/dgecho01.c##
+/* end sig_io */
+
+/* include sig_hup */
+static void## 84 ##src/sigio/dgecho01.c##
+sig_hup(int signo)## 85 ##src/sigio/dgecho01.c##
+{## 86 ##src/sigio/dgecho01.c##
+    int     i;## 87 ##src/sigio/dgecho01.c##
+
+    for (i = 0; i <= QSIZE; i++)## 88 ##src/sigio/dgecho01.c##
+        printf("cntread[%d] = %ld\n", i, cntread[i]);## 89 ##src/sigio/dgecho01.c##
+}## 90 ##src/sigio/dgecho01.c##
+/* end sig_hup */

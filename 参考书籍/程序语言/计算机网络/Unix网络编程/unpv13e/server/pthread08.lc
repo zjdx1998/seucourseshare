@@ -1,0 +1,33 @@
+#include    "unpthread.h"##  1 ##src/server/pthread08.c##
+#include    "pthread08.h"##  2 ##src/server/pthread08.c##
+
+void##  3 ##src/server/pthread08.c##
+thread_make(int i)##  4 ##src/server/pthread08.c##
+{##  5 ##src/server/pthread08.c##
+    void   *thread_main(void *);##  6 ##src/server/pthread08.c##
+
+    Pthread_create(&tptr[i].thread_tid, NULL, &thread_main, (void *) i);##  7 ##src/server/pthread08.c##
+    return;                     /* main thread returns */##  8 ##src/server/pthread08.c##
+}##  9 ##src/server/pthread08.c##
+
+void   *## 10 ##src/server/pthread08.c##
+thread_main(void *arg)## 11 ##src/server/pthread08.c##
+{## 12 ##src/server/pthread08.c##
+    int     connfd;## 13 ##src/server/pthread08.c##
+    void    web_child(int);## 14 ##src/server/pthread08.c##
+
+    printf("thread %d starting\n", (int) arg);## 15 ##src/server/pthread08.c##
+    for (;;) {## 16 ##src/server/pthread08.c##
+        Pthread_mutex_lock(&clifd_mutex);## 17 ##src/server/pthread08.c##
+        while (iget == iput)## 18 ##src/server/pthread08.c##
+            Pthread_cond_wait(&clifd_cond, &clifd_mutex);## 19 ##src/server/pthread08.c##
+        connfd = clifd[iget];   /* connected socket to service */## 20 ##src/server/pthread08.c##
+        if (++iget == MAXNCLI)## 21 ##src/server/pthread08.c##
+            iget = 0;## 22 ##src/server/pthread08.c##
+        Pthread_mutex_unlock(&clifd_mutex);## 23 ##src/server/pthread08.c##
+        tptr[(int) arg].thread_count++;## 24 ##src/server/pthread08.c##
+
+        web_child(connfd);      /* process the request */## 25 ##src/server/pthread08.c##
+        Close(connfd);## 26 ##src/server/pthread08.c##
+    }## 27 ##src/server/pthread08.c##
+}## 28 ##src/server/pthread08.c##

@@ -1,0 +1,219 @@
+/*##  1 ##src/lib/wrapsock.c##
+ * Socket wrapper functions.##  2 ##src/lib/wrapsock.c##
+ * These could all go into separate files, so only the ones needed cause##  3 ##src/lib/wrapsock.c##
+ * the corresponding function to be added to the executable.  If sockets##  4 ##src/lib/wrapsock.c##
+ * are a library (SVR4) this might make a difference (?), but if sockets##  5 ##src/lib/wrapsock.c##
+ * are in the kernel (BSD) it doesn't matter.##  6 ##src/lib/wrapsock.c##
+ *##  7 ##src/lib/wrapsock.c##
+ * These wrapper functions also use the same prototypes as POSIX.1g,##  8 ##src/lib/wrapsock.c##
+ * which might differ from many implementations (i.e., POSIX.1g specifies##  9 ##src/lib/wrapsock.c##
+ * the fourth argument to getsockopt() as "void *", not "char *").## 10 ##src/lib/wrapsock.c##
+ *## 11 ##src/lib/wrapsock.c##
+ * If your system's headers are not correct [i.e., the Solaris 2.5## 12 ##src/lib/wrapsock.c##
+ * <sys/socket.h> omits the "const" from the second argument to both## 13 ##src/lib/wrapsock.c##
+ * bind() and connect()], you'll get warnings of the form:## 14 ##src/lib/wrapsock.c##
+ *warning: passing arg 2 of bind discards const from pointer target type## 15 ##src/lib/wrapsock.c##
+ *warning: passing arg 2 of connect discards const from pointer target type## 16 ##src/lib/wrapsock.c##
+ */## 17 ##src/lib/wrapsock.c##
+
+#include    "unp.h"## 18 ##src/lib/wrapsock.c##
+
+int## 19 ##src/lib/wrapsock.c##
+Accept(int fd, struct sockaddr *sa, socklen_t *salenptr)## 20 ##src/lib/wrapsock.c##
+{## 21 ##src/lib/wrapsock.c##
+    int     n;## 22 ##src/lib/wrapsock.c##
+
+  again:## 23 ##src/lib/wrapsock.c##
+    if ((n = accept(fd, sa, salenptr)) < 0) {## 24 ##src/lib/wrapsock.c##
+#ifdef  EPROTO## 25 ##src/lib/wrapsock.c##
+        if (errno == EPROTO || errno == ECONNABORTED)## 26 ##src/lib/wrapsock.c##
+#else## 27 ##src/lib/wrapsock.c##
+        if (errno == ECONNABORTED)## 28 ##src/lib/wrapsock.c##
+#endif## 29 ##src/lib/wrapsock.c##
+            goto again;## 30 ##src/lib/wrapsock.c##
+        else## 31 ##src/lib/wrapsock.c##
+            err_sys("accept error");## 32 ##src/lib/wrapsock.c##
+    }## 33 ##src/lib/wrapsock.c##
+    return (n);## 34 ##src/lib/wrapsock.c##
+}## 35 ##src/lib/wrapsock.c##
+
+void## 36 ##src/lib/wrapsock.c##
+Bind(int fd, const struct sockaddr *sa, socklen_t salen)## 37 ##src/lib/wrapsock.c##
+{## 38 ##src/lib/wrapsock.c##
+    if (bind(fd, sa, salen) < 0)## 39 ##src/lib/wrapsock.c##
+        err_sys("bind error");## 40 ##src/lib/wrapsock.c##
+}## 41 ##src/lib/wrapsock.c##
+
+void## 42 ##src/lib/wrapsock.c##
+Connect(int fd, const struct sockaddr *sa, socklen_t salen)## 43 ##src/lib/wrapsock.c##
+{## 44 ##src/lib/wrapsock.c##
+    if (connect(fd, sa, salen) < 0)## 45 ##src/lib/wrapsock.c##
+        err_sys("connect error");## 46 ##src/lib/wrapsock.c##
+}## 47 ##src/lib/wrapsock.c##
+
+void## 48 ##src/lib/wrapsock.c##
+Getpeername(int fd, struct sockaddr *sa, socklen_t *salenptr)## 49 ##src/lib/wrapsock.c##
+{## 50 ##src/lib/wrapsock.c##
+    if (getpeername(fd, sa, salenptr) < 0)## 51 ##src/lib/wrapsock.c##
+        err_sys("getpeername error");## 52 ##src/lib/wrapsock.c##
+}## 53 ##src/lib/wrapsock.c##
+
+void## 54 ##src/lib/wrapsock.c##
+Getsockname(int fd, struct sockaddr *sa, socklen_t *salenptr)## 55 ##src/lib/wrapsock.c##
+{## 56 ##src/lib/wrapsock.c##
+    if (getsockname(fd, sa, salenptr) < 0)## 57 ##src/lib/wrapsock.c##
+        err_sys("getsockname error");## 58 ##src/lib/wrapsock.c##
+}## 59 ##src/lib/wrapsock.c##
+
+void## 60 ##src/lib/wrapsock.c##
+Getsockopt(int fd, int level, int optname, void *optval,## 61 ##src/lib/wrapsock.c##
+           socklen_t *optlenptr)## 62 ##src/lib/wrapsock.c##
+{## 63 ##src/lib/wrapsock.c##
+    if (getsockopt(fd, level, optname, optval, optlenptr) < 0)## 64 ##src/lib/wrapsock.c##
+        err_sys("getsockopt error");## 65 ##src/lib/wrapsock.c##
+}## 66 ##src/lib/wrapsock.c##
+
+/* include Listen */
+void## 67 ##src/lib/wrapsock.c##
+Listen(int fd, int backlog)## 68 ##src/lib/wrapsock.c##
+{## 69 ##src/lib/wrapsock.c##
+    char   *ptr;## 70 ##src/lib/wrapsock.c##
+
+    /* 4can override 2nd argument with environment variable */## 71 ##src/lib/wrapsock.c##
+    if ((ptr = getenv("LISTENQ")) != NULL)## 72 ##src/lib/wrapsock.c##
+        backlog = atoi(ptr);## 73 ##src/lib/wrapsock.c##
+
+    if (listen(fd, backlog) < 0)## 74 ##src/lib/wrapsock.c##
+        err_sys("listen error");## 75 ##src/lib/wrapsock.c##
+}## 76 ##src/lib/wrapsock.c##
+/* end Listen */
+
+#ifdef  HAVE_POLL## 77 ##src/lib/wrapsock.c##
+int## 78 ##src/lib/wrapsock.c##
+Poll(struct pollfd *fdarray, unsigned long nfds, int timeout)## 79 ##src/lib/wrapsock.c##
+{## 80 ##src/lib/wrapsock.c##
+    int     n;## 81 ##src/lib/wrapsock.c##
+
+    if ((n = poll(fdarray, nfds, timeout)) < 0)## 82 ##src/lib/wrapsock.c##
+        err_sys("poll error");## 83 ##src/lib/wrapsock.c##
+
+    return (n);## 84 ##src/lib/wrapsock.c##
+}## 85 ##src/lib/wrapsock.c##
+#endif## 86 ##src/lib/wrapsock.c##
+
+ssize_t## 87 ##src/lib/wrapsock.c##
+Recv(int fd, void *ptr, size_t nbytes, int flags)## 88 ##src/lib/wrapsock.c##
+{## 89 ##src/lib/wrapsock.c##
+    ssize_t n;## 90 ##src/lib/wrapsock.c##
+
+    if ((n = recv(fd, ptr, nbytes, flags)) < 0)## 91 ##src/lib/wrapsock.c##
+        err_sys("recv error");## 92 ##src/lib/wrapsock.c##
+    return (n);## 93 ##src/lib/wrapsock.c##
+}## 94 ##src/lib/wrapsock.c##
+
+ssize_t## 95 ##src/lib/wrapsock.c##
+Recvfrom(int fd, void *ptr, size_t nbytes, int flags,## 96 ##src/lib/wrapsock.c##
+         struct sockaddr *sa, socklen_t *salenptr)## 97 ##src/lib/wrapsock.c##
+{## 98 ##src/lib/wrapsock.c##
+    ssize_t n;## 99 ##src/lib/wrapsock.c##
+
+    if ((n = recvfrom(fd, ptr, nbytes, flags, sa, salenptr)) < 0)##100 ##src/lib/wrapsock.c##
+        err_sys("recvfrom error");##101 ##src/lib/wrapsock.c##
+    return (n);##102 ##src/lib/wrapsock.c##
+}##103 ##src/lib/wrapsock.c##
+
+ssize_t##104 ##src/lib/wrapsock.c##
+Recvmsg(int fd, struct msghdr *msg, int flags)##105 ##src/lib/wrapsock.c##
+{##106 ##src/lib/wrapsock.c##
+    ssize_t n;##107 ##src/lib/wrapsock.c##
+
+    if ((n = recvmsg(fd, msg, flags)) < 0)##108 ##src/lib/wrapsock.c##
+        err_sys("recvmsg error");##109 ##src/lib/wrapsock.c##
+    return (n);##110 ##src/lib/wrapsock.c##
+}##111 ##src/lib/wrapsock.c##
+
+int##112 ##src/lib/wrapsock.c##
+Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,##113 ##src/lib/wrapsock.c##
+       struct timeval *timeout)##114 ##src/lib/wrapsock.c##
+{##115 ##src/lib/wrapsock.c##
+    int     n;##116 ##src/lib/wrapsock.c##
+
+    if ((n = select(nfds, readfds, writefds, exceptfds, timeout)) < 0)##117 ##src/lib/wrapsock.c##
+        err_sys("select error");##118 ##src/lib/wrapsock.c##
+    return (n);                 /* can return 0 on timeout */##119 ##src/lib/wrapsock.c##
+}##120 ##src/lib/wrapsock.c##
+
+void##121 ##src/lib/wrapsock.c##
+Send(int fd, const void *ptr, size_t nbytes, int flags)##122 ##src/lib/wrapsock.c##
+{##123 ##src/lib/wrapsock.c##
+    if (send(fd, ptr, nbytes, flags) != (ssize_t) nbytes)##124 ##src/lib/wrapsock.c##
+        err_sys("send error");##125 ##src/lib/wrapsock.c##
+}##126 ##src/lib/wrapsock.c##
+
+void##127 ##src/lib/wrapsock.c##
+Sendto(int fd, const void *ptr, size_t nbytes, int flags,##128 ##src/lib/wrapsock.c##
+       const struct sockaddr *sa, socklen_t salen)##129 ##src/lib/wrapsock.c##
+{##130 ##src/lib/wrapsock.c##
+    if (sendto(fd, ptr, nbytes, flags, sa, salen) != (ssize_t) nbytes)##131 ##src/lib/wrapsock.c##
+        err_sys("sendto error");##132 ##src/lib/wrapsock.c##
+}##133 ##src/lib/wrapsock.c##
+
+void##134 ##src/lib/wrapsock.c##
+Sendmsg(int fd, const struct msghdr *msg, int flags)##135 ##src/lib/wrapsock.c##
+{##136 ##src/lib/wrapsock.c##
+    unsigned int i;##137 ##src/lib/wrapsock.c##
+    ssize_t nbytes;##138 ##src/lib/wrapsock.c##
+
+    nbytes = 0;                 /* must first figure out what return value should be */##139 ##src/lib/wrapsock.c##
+    for (i = 0; i < msg->msg_iovlen; i++)##140 ##src/lib/wrapsock.c##
+        nbytes += msg->msg_iov[i].iov_len;##141 ##src/lib/wrapsock.c##
+
+    if (sendmsg(fd, msg, flags) != nbytes)##142 ##src/lib/wrapsock.c##
+        err_sys("sendmsg error");##143 ##src/lib/wrapsock.c##
+}##144 ##src/lib/wrapsock.c##
+
+void##145 ##src/lib/wrapsock.c##
+Setsockopt(int fd, int level, int optname, const void *optval,##146 ##src/lib/wrapsock.c##
+           socklen_t optlen)##147 ##src/lib/wrapsock.c##
+{##148 ##src/lib/wrapsock.c##
+    if (setsockopt(fd, level, optname, optval, optlen) < 0)##149 ##src/lib/wrapsock.c##
+        err_sys("setsockopt error");##150 ##src/lib/wrapsock.c##
+}##151 ##src/lib/wrapsock.c##
+
+void##152 ##src/lib/wrapsock.c##
+Shutdown(int fd, int how)##153 ##src/lib/wrapsock.c##
+{##154 ##src/lib/wrapsock.c##
+    if (shutdown(fd, how) < 0)##155 ##src/lib/wrapsock.c##
+        err_sys("shutdown error");##156 ##src/lib/wrapsock.c##
+}##157 ##src/lib/wrapsock.c##
+
+int##158 ##src/lib/wrapsock.c##
+Sockatmark(int fd)##159 ##src/lib/wrapsock.c##
+{##160 ##src/lib/wrapsock.c##
+    int     n;##161 ##src/lib/wrapsock.c##
+
+    if ((n = sockatmark(fd)) < 0)##162 ##src/lib/wrapsock.c##
+        err_sys("sockatmark error");##163 ##src/lib/wrapsock.c##
+    return (n);##164 ##src/lib/wrapsock.c##
+}##165 ##src/lib/wrapsock.c##
+
+/* include Socket */
+int##166 ##src/lib/wrapsock.c##
+Socket(int family, int type, int protocol)##167 ##src/lib/wrapsock.c##
+{##168 ##src/lib/wrapsock.c##
+    int     n;##169 ##src/lib/wrapsock.c##
+
+    if ((n = socket(family, type, protocol)) < 0)##170 ##src/lib/wrapsock.c##
+        err_sys("socket error");##171 ##src/lib/wrapsock.c##
+    return (n);##172 ##src/lib/wrapsock.c##
+}##173 ##src/lib/wrapsock.c##
+/* end Socket */
+
+void##174 ##src/lib/wrapsock.c##
+Socketpair(int family, int type, int protocol, int *fd)##175 ##src/lib/wrapsock.c##
+{##176 ##src/lib/wrapsock.c##
+    int     n;##177 ##src/lib/wrapsock.c##
+
+    if ((n = socketpair(family, type, protocol, fd)) < 0)##178 ##src/lib/wrapsock.c##
+        err_sys("socketpair error");##179 ##src/lib/wrapsock.c##
+}##180 ##src/lib/wrapsock.c##

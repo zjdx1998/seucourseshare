@@ -1,0 +1,87 @@
+/* include readline1 */
+#include    "unpthread.h"##  1 ##src/threads/readline.c##
+
+static pthread_key_t rl_key;##  2 ##src/threads/readline.c##
+static pthread_once_t rl_once = PTHREAD_ONCE_INIT;##  3 ##src/threads/readline.c##
+
+static void##  4 ##src/threads/readline.c##
+readline_destructor(void *ptr)##  5 ##src/threads/readline.c##
+{##  6 ##src/threads/readline.c##
+    free(ptr);##  7 ##src/threads/readline.c##
+}##  8 ##src/threads/readline.c##
+
+static void##  9 ##src/threads/readline.c##
+readline_once(void)## 10 ##src/threads/readline.c##
+{## 11 ##src/threads/readline.c##
+    Pthread_key_create(&rl_key, readline_destructor);## 12 ##src/threads/readline.c##
+}## 13 ##src/threads/readline.c##
+
+typedef struct {## 14 ##src/threads/readline.c##
+    int     rl_cnt;             /* initialize to 0 */## 15 ##src/threads/readline.c##
+    char   *rl_bufptr;          /* initialize to rl_buf */## 16 ##src/threads/readline.c##
+    char    rl_buf[MAXLINE];## 17 ##src/threads/readline.c##
+} Rline;## 18 ##src/threads/readline.c##
+/* end readline1 */
+
+/* include readline2 */
+static ssize_t## 19 ##src/threads/readline.c##
+my_read(Rline *tsd, int fd, char *ptr)## 20 ##src/threads/readline.c##
+{## 21 ##src/threads/readline.c##
+    if (tsd->rl_cnt <= 0) {## 22 ##src/threads/readline.c##
+      again:## 23 ##src/threads/readline.c##
+        if ((tsd->rl_cnt = read(fd, tsd->rl_buf, MAXLINE)) < 0) {## 24 ##src/threads/readline.c##
+            if (errno == EINTR)## 25 ##src/threads/readline.c##
+                goto again;## 26 ##src/threads/readline.c##
+            return (-1);## 27 ##src/threads/readline.c##
+        } else if (tsd->rl_cnt == 0)## 28 ##src/threads/readline.c##
+            return (0);## 29 ##src/threads/readline.c##
+        tsd->rl_bufptr = tsd->rl_buf;## 30 ##src/threads/readline.c##
+    }## 31 ##src/threads/readline.c##
+
+    tsd->rl_cnt--;## 32 ##src/threads/readline.c##
+    *ptr = *tsd->rl_bufptr++;## 33 ##src/threads/readline.c##
+    return (1);## 34 ##src/threads/readline.c##
+}## 35 ##src/threads/readline.c##
+
+ssize_t## 36 ##src/threads/readline.c##
+readline(int fd, void *vptr, size_t maxlen)## 37 ##src/threads/readline.c##
+{## 38 ##src/threads/readline.c##
+    int     n, rc;## 39 ##src/threads/readline.c##
+    char    c, *ptr;## 40 ##src/threads/readline.c##
+    Rline  *tsd;## 41 ##src/threads/readline.c##
+
+    Pthread_once(&rl_once, readline_once);## 42 ##src/threads/readline.c##
+    if ((tsd = pthread_getspecific(rl_key)) == NULL) {## 43 ##src/threads/readline.c##
+        tsd = Calloc(1, sizeof(Rline)); /* init to 0 */## 44 ##src/threads/readline.c##
+        Pthread_setspecific(rl_key, tsd);## 45 ##src/threads/readline.c##
+    }## 46 ##src/threads/readline.c##
+
+    ptr = vptr;## 47 ##src/threads/readline.c##
+    for (n = 1; n < maxlen; n++) {## 48 ##src/threads/readline.c##
+        if ((rc = my_read(tsd, fd, &c)) == 1) {## 49 ##src/threads/readline.c##
+            *ptr++ = c;## 50 ##src/threads/readline.c##
+            if (c == '\n')## 51 ##src/threads/readline.c##
+                break;## 52 ##src/threads/readline.c##
+        } else if (rc == 0) {## 53 ##src/threads/readline.c##
+            if (n == 1)## 54 ##src/threads/readline.c##
+                return (0);     /* EOF, no data read */## 55 ##src/threads/readline.c##
+            else## 56 ##src/threads/readline.c##
+                break;          /* EOF, some data was read */## 57 ##src/threads/readline.c##
+        } else## 58 ##src/threads/readline.c##
+            return (-1);        /* error, errno set by read() */## 59 ##src/threads/readline.c##
+    }## 60 ##src/threads/readline.c##
+
+    *ptr = 0;## 61 ##src/threads/readline.c##
+    return (n);## 62 ##src/threads/readline.c##
+}## 63 ##src/threads/readline.c##
+/* end readline2 */
+
+ssize_t## 64 ##src/threads/readline.c##
+Readline(int fd, void *ptr, size_t maxlen)## 65 ##src/threads/readline.c##
+{## 66 ##src/threads/readline.c##
+    ssize_t n;## 67 ##src/threads/readline.c##
+
+    if ((n = readline(fd, ptr, maxlen)) < 0)## 68 ##src/threads/readline.c##
+        err_sys("readline error");## 69 ##src/threads/readline.c##
+    return (n);## 70 ##src/threads/readline.c##
+}## 71 ##src/threads/readline.c##

@@ -1,0 +1,16 @@
+kohala % ./udpcli01 gemini.tuc.noao.edu  echo
+hello, world
+ICMP error: dest = 140.252.1.11.7, type = 3, code = 3
+kohala % 
+kohala % ./udpcli 198.82.204.99 echo
+ksh: ./udpcli:  not found
+kohala % ./udpcli01 198.82.204.99 echo
+hello, world
+ICMP error: dest = 198.82.204.99.7, type = 3, code = 3
+kohala % ./udpcli01 192.3.4.5.82.204.99 echo
+udp_client error for 192.3.4.5.82.204.99, echo: host nor service provided, or not known
+kohala % ./udpcli01 192.3.4.5 echo          
+hello
+ICMP error: dest = 192.3.4.5.7, type = 3, code = 1
+
+

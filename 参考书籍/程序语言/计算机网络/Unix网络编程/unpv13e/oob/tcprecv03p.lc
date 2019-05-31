@@ -1,0 +1,45 @@
+#include    "unp.h"##  1 ##src/oob/tcprecv03p.c##
+
+int##  2 ##src/oob/tcprecv03p.c##
+main(int argc, char **argv)##  3 ##src/oob/tcprecv03p.c##
+{##  4 ##src/oob/tcprecv03p.c##
+    int     listenfd, connfd, n, justreadoob = 0;##  5 ##src/oob/tcprecv03p.c##
+    char    buff[100];##  6 ##src/oob/tcprecv03p.c##
+    struct pollfd pollfd[1];##  7 ##src/oob/tcprecv03p.c##
+
+    if (argc == 2)##  8 ##src/oob/tcprecv03p.c##
+        listenfd = Tcp_listen(NULL, argv[1], NULL);##  9 ##src/oob/tcprecv03p.c##
+    else if (argc == 3)## 10 ##src/oob/tcprecv03p.c##
+        listenfd = Tcp_listen(argv[1], argv[2], NULL);## 11 ##src/oob/tcprecv03p.c##
+    else## 12 ##src/oob/tcprecv03p.c##
+        err_quit("usage: tcprecv03p [ <host> ] <port#>");## 13 ##src/oob/tcprecv03p.c##
+
+    connfd = Accept(listenfd, NULL, NULL);## 14 ##src/oob/tcprecv03p.c##
+
+    pollfd[0].fd = connfd;## 15 ##src/oob/tcprecv03p.c##
+    pollfd[0].events = POLLRDNORM;## 16 ##src/oob/tcprecv03p.c##
+    for (;;) {## 17 ##src/oob/tcprecv03p.c##
+        if (justreadoob == 0)## 18 ##src/oob/tcprecv03p.c##
+            pollfd[0].events |= POLLRDBAND;## 19 ##src/oob/tcprecv03p.c##
+
+        Poll(pollfd, 1, INFTIM);## 20 ##src/oob/tcprecv03p.c##
+
+        if (pollfd[0].revents & POLLRDBAND) {## 21 ##src/oob/tcprecv03p.c##
+            n = Recv(connfd, buff, sizeof(buff) - 1, MSG_OOB);## 22 ##src/oob/tcprecv03p.c##
+            buff[n] = 0;        /* null terminate */## 23 ##src/oob/tcprecv03p.c##
+            printf("read %d OOB byte: %s\n", n, buff);## 24 ##src/oob/tcprecv03p.c##
+            justreadoob = 1;## 25 ##src/oob/tcprecv03p.c##
+            pollfd[0].events &= ~POLLRDBAND;    /* turn bit off */## 26 ##src/oob/tcprecv03p.c##
+        }## 27 ##src/oob/tcprecv03p.c##
+
+        if (pollfd[0].revents & POLLRDNORM) {## 28 ##src/oob/tcprecv03p.c##
+            if ((n = Read(connfd, buff, sizeof(buff) - 1)) == 0) {## 29 ##src/oob/tcprecv03p.c##
+                printf("received EOF\n");## 30 ##src/oob/tcprecv03p.c##
+                exit(0);## 31 ##src/oob/tcprecv03p.c##
+            }## 32 ##src/oob/tcprecv03p.c##
+            buff[n] = 0;        /* null terminate */## 33 ##src/oob/tcprecv03p.c##
+            printf("read %d bytes: %s\n", n, buff);## 34 ##src/oob/tcprecv03p.c##
+            justreadoob = 0;## 35 ##src/oob/tcprecv03p.c##
+        }## 36 ##src/oob/tcprecv03p.c##
+    }## 37 ##src/oob/tcprecv03p.c##
+}## 38 ##src/oob/tcprecv03p.c##

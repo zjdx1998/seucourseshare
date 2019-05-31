@@ -1,0 +1,62 @@
+/* include icmpd1 */
+#include    "icmpd.h"##  1 ##src/icmpd/icmpd.c##
+
+int##  2 ##src/icmpd/icmpd.c##
+main(int argc, char **argv)##  3 ##src/icmpd/icmpd.c##
+{##  4 ##src/icmpd/icmpd.c##
+    int     i, sockfd;##  5 ##src/icmpd/icmpd.c##
+
+    if (argc != 1)##  6 ##src/icmpd/icmpd.c##
+        err_quit("usage: icmpd");##  7 ##src/icmpd/icmpd.c##
+
+    maxi = -1;                  /* index into client[] array */##  8 ##src/icmpd/icmpd.c##
+    for (i = 0; i < FD_SETSIZE; i++)##  9 ##src/icmpd/icmpd.c##
+        client[i].connfd = -1;  /* -1 indicates available entry */## 10 ##src/icmpd/icmpd.c##
+    FD_ZERO(&allset);## 11 ##src/icmpd/icmpd.c##
+
+    fd4 = Socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);## 12 ##src/icmpd/icmpd.c##
+    FD_SET(fd4, &allset);## 13 ##src/icmpd/icmpd.c##
+    maxfd = fd4;## 14 ##src/icmpd/icmpd.c##
+
+#ifdef  IPV6## 15 ##src/icmpd/icmpd.c##
+    fd6 = Socket(AF_INET6, SOCK_RAW, IPPROTO_ICMPV6);## 16 ##src/icmpd/icmpd.c##
+    FD_SET(fd6, &allset);## 17 ##src/icmpd/icmpd.c##
+    maxfd = max(maxfd, fd6);## 18 ##src/icmpd/icmpd.c##
+#endif## 19 ##src/icmpd/icmpd.c##
+
+    listenfd = Tcp_listen("/unix", ICMPD_PATH, &addrlen);## 20 ##src/icmpd/icmpd.c##
+    FD_SET(listenfd, &allset);## 21 ##src/icmpd/icmpd.c##
+    maxfd = max(maxfd, listenfd);## 22 ##src/icmpd/icmpd.c##
+    cliaddr = Malloc(addrlen);## 23 ##src/icmpd/icmpd.c##
+/* end icmpd1 */
+
+/* include icmpd2 */
+    for (;;) {## 24 ##src/icmpd/icmpd.c##
+        rset = allset;## 25 ##src/icmpd/icmpd.c##
+        nready = Select(maxfd + 1, &rset, NULL, NULL, NULL);## 26 ##src/icmpd/icmpd.c##
+
+        if (FD_ISSET(listenfd, &rset))## 27 ##src/icmpd/icmpd.c##
+            if (readable_listen() <= 0)## 28 ##src/icmpd/icmpd.c##
+                continue;## 29 ##src/icmpd/icmpd.c##
+
+        if (FD_ISSET(fd4, &rset))## 30 ##src/icmpd/icmpd.c##
+            if (readable_v4() <= 0)## 31 ##src/icmpd/icmpd.c##
+                continue;## 32 ##src/icmpd/icmpd.c##
+
+#ifdef  IPV6## 33 ##src/icmpd/icmpd.c##
+        if (FD_ISSET(fd6, &rset))## 34 ##src/icmpd/icmpd.c##
+            if (readable_v6() <= 0)## 35 ##src/icmpd/icmpd.c##
+                continue;## 36 ##src/icmpd/icmpd.c##
+#endif## 37 ##src/icmpd/icmpd.c##
+
+        for (i = 0; i <= maxi; i++) {   /* check all clients for data */## 38 ##src/icmpd/icmpd.c##
+            if ((sockfd = client[i].connfd) < 0)## 39 ##src/icmpd/icmpd.c##
+                continue;## 40 ##src/icmpd/icmpd.c##
+            if (FD_ISSET(sockfd, &rset))## 41 ##src/icmpd/icmpd.c##
+                if (readable_conn(i) <= 0)## 42 ##src/icmpd/icmpd.c##
+                    break;      /* no more readable descriptors */## 43 ##src/icmpd/icmpd.c##
+        }## 44 ##src/icmpd/icmpd.c##
+    }## 45 ##src/icmpd/icmpd.c##
+    exit(0);## 46 ##src/icmpd/icmpd.c##
+}## 47 ##src/icmpd/icmpd.c##
+/* end icmpd2 */

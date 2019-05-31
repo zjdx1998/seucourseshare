@@ -1,0 +1,79 @@
+/* include fig01 */
+#include    "unp.h"##  1 ##src/tcpcliserv/tcpservselect01.c##
+
+int##  2 ##src/tcpcliserv/tcpservselect01.c##
+main(int argc, char **argv)##  3 ##src/tcpcliserv/tcpservselect01.c##
+{##  4 ##src/tcpcliserv/tcpservselect01.c##
+    int     i, maxi, maxfd, listenfd, connfd, sockfd;##  5 ##src/tcpcliserv/tcpservselect01.c##
+    int     nready, client[FD_SETSIZE];##  6 ##src/tcpcliserv/tcpservselect01.c##
+    ssize_t n;##  7 ##src/tcpcliserv/tcpservselect01.c##
+    fd_set  rset, allset;##  8 ##src/tcpcliserv/tcpservselect01.c##
+    char    line[MAXLINE];##  9 ##src/tcpcliserv/tcpservselect01.c##
+    socklen_t clilen;## 10 ##src/tcpcliserv/tcpservselect01.c##
+    struct sockaddr_in cliaddr, servaddr;## 11 ##src/tcpcliserv/tcpservselect01.c##
+
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);## 12 ##src/tcpcliserv/tcpservselect01.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 13 ##src/tcpcliserv/tcpservselect01.c##
+    servaddr.sin_family = AF_INET;## 14 ##src/tcpcliserv/tcpservselect01.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 15 ##src/tcpcliserv/tcpservselect01.c##
+    servaddr.sin_port = htons(SERV_PORT);## 16 ##src/tcpcliserv/tcpservselect01.c##
+
+    Bind(listenfd, (SA *) &servaddr, sizeof(servaddr));## 17 ##src/tcpcliserv/tcpservselect01.c##
+
+    Listen(listenfd, LISTENQ);## 18 ##src/tcpcliserv/tcpservselect01.c##
+
+    maxfd = listenfd;           /* initialize */## 19 ##src/tcpcliserv/tcpservselect01.c##
+    maxi = -1;                  /* index into client[] array */## 20 ##src/tcpcliserv/tcpservselect01.c##
+    for (i = 0; i < FD_SETSIZE; i++)## 21 ##src/tcpcliserv/tcpservselect01.c##
+        client[i] = -1;         /* -1 indicates available entry */## 22 ##src/tcpcliserv/tcpservselect01.c##
+    FD_ZERO(&allset);## 23 ##src/tcpcliserv/tcpservselect01.c##
+    FD_SET(listenfd, &allset);## 24 ##src/tcpcliserv/tcpservselect01.c##
+/* end fig01 */
+
+/* include fig02 */
+    for (;;) {## 25 ##src/tcpcliserv/tcpservselect01.c##
+        rset = allset;          /* structure assignment */## 26 ##src/tcpcliserv/tcpservselect01.c##
+        nready = Select(maxfd + 1, &rset, NULL, NULL, NULL);## 27 ##src/tcpcliserv/tcpservselect01.c##
+
+        if (FD_ISSET(listenfd, &rset)) {    /* new client connection */## 28 ##src/tcpcliserv/tcpservselect01.c##
+            clilen = sizeof(cliaddr);## 29 ##src/tcpcliserv/tcpservselect01.c##
+            connfd = Accept(listenfd, (SA *) &cliaddr, &clilen);## 30 ##src/tcpcliserv/tcpservselect01.c##
+
+            for (i = 0; i < FD_SETSIZE; i++)## 31 ##src/tcpcliserv/tcpservselect01.c##
+                if (client[i] < 0) {## 32 ##src/tcpcliserv/tcpservselect01.c##
+                    client[i] = connfd; /* save descriptor */## 33 ##src/tcpcliserv/tcpservselect01.c##
+                    break;## 34 ##src/tcpcliserv/tcpservselect01.c##
+                }## 35 ##src/tcpcliserv/tcpservselect01.c##
+            if (i == FD_SETSIZE)## 36 ##src/tcpcliserv/tcpservselect01.c##
+                err_quit("too many clients");## 37 ##src/tcpcliserv/tcpservselect01.c##
+
+            FD_SET(connfd, &allset);    /* add new descriptor to set */## 38 ##src/tcpcliserv/tcpservselect01.c##
+            if (connfd > maxfd)## 39 ##src/tcpcliserv/tcpservselect01.c##
+                maxfd = connfd; /* for select */## 40 ##src/tcpcliserv/tcpservselect01.c##
+            if (i > maxi)## 41 ##src/tcpcliserv/tcpservselect01.c##
+                maxi = i;       /* max index in client[] array */## 42 ##src/tcpcliserv/tcpservselect01.c##
+
+            if (--nready <= 0)## 43 ##src/tcpcliserv/tcpservselect01.c##
+                continue;       /* no more readable descriptors */## 44 ##src/tcpcliserv/tcpservselect01.c##
+        }## 45 ##src/tcpcliserv/tcpservselect01.c##
+
+        for (i = 0; i <= maxi; i++) {   /* check all clients for data */## 46 ##src/tcpcliserv/tcpservselect01.c##
+            if ((sockfd = client[i]) < 0)## 47 ##src/tcpcliserv/tcpservselect01.c##
+                continue;## 48 ##src/tcpcliserv/tcpservselect01.c##
+            if (FD_ISSET(sockfd, &rset)) {## 49 ##src/tcpcliserv/tcpservselect01.c##
+                if ((n = Readline(sockfd, line, MAXLINE)) == 0) {## 50 ##src/tcpcliserv/tcpservselect01.c##
+                    /* 4connection closed by client */## 51 ##src/tcpcliserv/tcpservselect01.c##
+                    Close(sockfd);## 52 ##src/tcpcliserv/tcpservselect01.c##
+                    FD_CLR(sockfd, &allset);## 53 ##src/tcpcliserv/tcpservselect01.c##
+                    client[i] = -1;## 54 ##src/tcpcliserv/tcpservselect01.c##
+                } else## 55 ##src/tcpcliserv/tcpservselect01.c##
+                    Writen(sockfd, line, n);## 56 ##src/tcpcliserv/tcpservselect01.c##
+
+                if (--nready <= 0)## 57 ##src/tcpcliserv/tcpservselect01.c##
+                    break;      /* no more readable descriptors */## 58 ##src/tcpcliserv/tcpservselect01.c##
+            }## 59 ##src/tcpcliserv/tcpservselect01.c##
+        }## 60 ##src/tcpcliserv/tcpservselect01.c##
+    }## 61 ##src/tcpcliserv/tcpservselect01.c##
+}## 62 ##src/tcpcliserv/tcpservselect01.c##
+/* end fig02 */

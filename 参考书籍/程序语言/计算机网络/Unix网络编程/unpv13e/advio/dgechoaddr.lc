@@ -1,0 +1,59 @@
+#include    "unpifi.h"##  1 ##src/advio/dgechoaddr.c##
+
+#undef  MAXLINE##  2 ##src/advio/dgechoaddr.c##
+#define MAXLINE 20              /* to see datagram truncation */##  3 ##src/advio/dgechoaddr.c##
+
+void##  4 ##src/advio/dgechoaddr.c##
+dg_echo(int sockfd, SA *pcliaddr, socklen_t clilen)##  5 ##src/advio/dgechoaddr.c##
+{##  6 ##src/advio/dgechoaddr.c##
+    int     flags;##  7 ##src/advio/dgechoaddr.c##
+    const int on = 1;##  8 ##src/advio/dgechoaddr.c##
+    socklen_t len;##  9 ##src/advio/dgechoaddr.c##
+    ssize_t n;## 10 ##src/advio/dgechoaddr.c##
+    char    mesg[MAXLINE], str[INET6_ADDRSTRLEN], ifname[IFNAMSIZ];## 11 ##src/advio/dgechoaddr.c##
+    struct in_addr in_zero;## 12 ##src/advio/dgechoaddr.c##
+    struct in_pktinfo pktinfo;## 13 ##src/advio/dgechoaddr.c##
+
+#ifdef  IP_RECVDSTADDR## 14 ##src/advio/dgechoaddr.c##
+    if (setsockopt(sockfd, IPPROTO_IP, IP_RECVDSTADDR, &on, sizeof(on)) < 0)## 15 ##src/advio/dgechoaddr.c##
+        err_ret("setsockopt of IP_RECVDSTADDR");## 16 ##src/advio/dgechoaddr.c##
+#endif## 17 ##src/advio/dgechoaddr.c##
+#ifdef  IP_RECVIF## 18 ##src/advio/dgechoaddr.c##
+    if (setsockopt(sockfd, IPPROTO_IP, IP_RECVIF, &on, sizeof(on)) < 0)## 19 ##src/advio/dgechoaddr.c##
+        err_ret("setsockopt of IP_RECVIF");## 20 ##src/advio/dgechoaddr.c##
+#endif## 21 ##src/advio/dgechoaddr.c##
+    bzero(&in_zero, sizeof(struct in_addr));    /* all 0 IPv4 address */## 22 ##src/advio/dgechoaddr.c##
+
+    for (;;) {## 23 ##src/advio/dgechoaddr.c##
+        len = clilen;## 24 ##src/advio/dgechoaddr.c##
+        flags = 0;## 25 ##src/advio/dgechoaddr.c##
+        n = Recvfrom_flags(sockfd, mesg, MAXLINE, &flags,## 26 ##src/advio/dgechoaddr.c##
+                           pcliaddr, &len, &pktinfo);## 27 ##src/advio/dgechoaddr.c##
+        printf("%d-byte datagram from %s", n, Sock_ntop(pcliaddr, len));## 28 ##src/advio/dgechoaddr.c##
+        if (memcmp(&pktinfo.ipi_addr, &in_zero, sizeof(in_zero)) != 0)## 29 ##src/advio/dgechoaddr.c##
+            printf(", to %s", Inet_ntop(AF_INET, &pktinfo.ipi_addr,## 30 ##src/advio/dgechoaddr.c##
+                                        str, sizeof(str)));## 31 ##src/advio/dgechoaddr.c##
+        if (pktinfo.ipi_ifindex > 0)## 32 ##src/advio/dgechoaddr.c##
+            printf(", recv i/f = %s",## 33 ##src/advio/dgechoaddr.c##
+                   If_indextoname(pktinfo.ipi_ifindex, ifname));## 34 ##src/advio/dgechoaddr.c##
+#ifdef  MSG_TRUNC## 35 ##src/advio/dgechoaddr.c##
+        if (flags & MSG_TRUNC)## 36 ##src/advio/dgechoaddr.c##
+            printf(" (datagram truncated)");## 37 ##src/advio/dgechoaddr.c##
+#endif## 38 ##src/advio/dgechoaddr.c##
+#ifdef  MSG_CTRUNC## 39 ##src/advio/dgechoaddr.c##
+        if (flags & MSG_CTRUNC)## 40 ##src/advio/dgechoaddr.c##
+            printf(" (control info truncated)");## 41 ##src/advio/dgechoaddr.c##
+#endif## 42 ##src/advio/dgechoaddr.c##
+#ifdef  MSG_BCAST## 43 ##src/advio/dgechoaddr.c##
+        if (flags & MSG_BCAST)## 44 ##src/advio/dgechoaddr.c##
+            printf(" (broadcast)");## 45 ##src/advio/dgechoaddr.c##
+#endif## 46 ##src/advio/dgechoaddr.c##
+#ifdef  MSG_MCAST## 47 ##src/advio/dgechoaddr.c##
+        if (flags & MSG_MCAST)## 48 ##src/advio/dgechoaddr.c##
+            printf(" (multicast)");## 49 ##src/advio/dgechoaddr.c##
+#endif## 50 ##src/advio/dgechoaddr.c##
+        printf("\n");## 51 ##src/advio/dgechoaddr.c##
+
+        Sendto(sockfd, mesg, n, 0, pcliaddr, len);## 52 ##src/advio/dgechoaddr.c##
+    }## 53 ##src/advio/dgechoaddr.c##
+}## 54 ##src/advio/dgechoaddr.c##

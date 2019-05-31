@@ -1,0 +1,189 @@
+/* include get_ifi_info1 */
+#include    "unpifi.h"##  1 ##src/lib/get_ifi_info.c##
+
+struct ifi_info *##  2 ##src/lib/get_ifi_info.c##
+get_ifi_info(int family, int doaliases)##  3 ##src/lib/get_ifi_info.c##
+{##  4 ##src/lib/get_ifi_info.c##
+    struct ifi_info *ifi, *ifihead, **ifipnext;##  5 ##src/lib/get_ifi_info.c##
+    int     sockfd, len, lastlen, flags, myflags, idx = 0, hlen = 0;##  6 ##src/lib/get_ifi_info.c##
+    char   *ptr, *buf, lastname[IFNAMSIZ], *cptr, *haddr;##  7 ##src/lib/get_ifi_info.c##
+    struct ifconf ifc;##  8 ##src/lib/get_ifi_info.c##
+    struct ifreq *ifr, ifrcopy;##  9 ##src/lib/get_ifi_info.c##
+    struct sockaddr_in *sinptr;## 10 ##src/lib/get_ifi_info.c##
+    struct sockaddr_in6 *sin6ptr;## 11 ##src/lib/get_ifi_info.c##
+
+    sockfd = Socket(AF_INET, SOCK_DGRAM, 0);## 12 ##src/lib/get_ifi_info.c##
+
+    lastlen = 0;## 13 ##src/lib/get_ifi_info.c##
+    len = 100 * sizeof(struct ifreq);   /* initial buffer size guess */## 14 ##src/lib/get_ifi_info.c##
+    for (;;) {## 15 ##src/lib/get_ifi_info.c##
+        buf = Malloc(len);## 16 ##src/lib/get_ifi_info.c##
+        ifc.ifc_len = len;## 17 ##src/lib/get_ifi_info.c##
+        ifc.ifc_buf = buf;## 18 ##src/lib/get_ifi_info.c##
+        if (ioctl(sockfd, SIOCGIFCONF, &ifc) < 0) {## 19 ##src/lib/get_ifi_info.c##
+            if (errno != EINVAL || lastlen != 0)## 20 ##src/lib/get_ifi_info.c##
+                err_sys("ioctl error");## 21 ##src/lib/get_ifi_info.c##
+        } else {## 22 ##src/lib/get_ifi_info.c##
+            if (ifc.ifc_len == lastlen)## 23 ##src/lib/get_ifi_info.c##
+                break;          /* success, len has not changed */## 24 ##src/lib/get_ifi_info.c##
+            lastlen = ifc.ifc_len;## 25 ##src/lib/get_ifi_info.c##
+        }## 26 ##src/lib/get_ifi_info.c##
+        len += 10 * sizeof(struct ifreq);   /* increment */## 27 ##src/lib/get_ifi_info.c##
+        free(buf);## 28 ##src/lib/get_ifi_info.c##
+    }## 29 ##src/lib/get_ifi_info.c##
+    ifihead = NULL;## 30 ##src/lib/get_ifi_info.c##
+    ifipnext = &ifihead;## 31 ##src/lib/get_ifi_info.c##
+    lastname[0] = 0;## 32 ##src/lib/get_ifi_info.c##
+/* end get_ifi_info1 */
+
+/* include get_ifi_info2 */
+    for (ptr = buf; ptr < buf + ifc.ifc_len;) {## 33 ##src/lib/get_ifi_info.c##
+        ifr = (struct ifreq *) ptr;## 34 ##src/lib/get_ifi_info.c##
+
+#ifdef  HAVE_SOCKADDR_SA_LEN## 35 ##src/lib/get_ifi_info.c##
+        len = max(sizeof(struct sockaddr), ifr->ifr_addr.sa_len);## 36 ##src/lib/get_ifi_info.c##
+#else## 37 ##src/lib/get_ifi_info.c##
+        switch (ifr->ifr_addr.sa_family) {## 38 ##src/lib/get_ifi_info.c##
+#ifdef  IPV6## 39 ##src/lib/get_ifi_info.c##
+        case AF_INET6:## 40 ##src/lib/get_ifi_info.c##
+            len = sizeof(struct sockaddr_in6);## 41 ##src/lib/get_ifi_info.c##
+            break;## 42 ##src/lib/get_ifi_info.c##
+#endif## 43 ##src/lib/get_ifi_info.c##
+        case AF_INET:## 44 ##src/lib/get_ifi_info.c##
+        default:## 45 ##src/lib/get_ifi_info.c##
+            len = sizeof(struct sockaddr);## 46 ##src/lib/get_ifi_info.c##
+            break;## 47 ##src/lib/get_ifi_info.c##
+        }## 48 ##src/lib/get_ifi_info.c##
+#endif  /* HAVE_SOCKADDR_SA_LEN */## 49 ##src/lib/get_ifi_info.c##
+        ptr += sizeof(ifr->ifr_name) + len; /* for next one in buffer */## 50 ##src/lib/get_ifi_info.c##
+
+#ifdef  HAVE_SOCKADDR_DL## 51 ##src/lib/get_ifi_info.c##
+        /* assumes that AF_LINK precedes AF_INET or AF_INET6 */## 52 ##src/lib/get_ifi_info.c##
+        if (ifr->ifr_addr.sa_family == AF_LINK) {## 53 ##src/lib/get_ifi_info.c##
+            struct sockaddr_dl *sdl = (struct sockaddr_dl *) &ifr->ifr_addr;## 54 ##src/lib/get_ifi_info.c##
+            idx = sdl->sdl_index;## 55 ##src/lib/get_ifi_info.c##
+            haddr = sdl->sdl_data + sdl->sdl_nlen;## 56 ##src/lib/get_ifi_info.c##
+            hlen = sdl->sdl_alen;## 57 ##src/lib/get_ifi_info.c##
+        }## 58 ##src/lib/get_ifi_info.c##
+#endif## 59 ##src/lib/get_ifi_info.c##
+
+        if (ifr->ifr_addr.sa_family != family)## 60 ##src/lib/get_ifi_info.c##
+            continue;           /* ignore if not desired address family */## 61 ##src/lib/get_ifi_info.c##
+
+        myflags = 0;## 62 ##src/lib/get_ifi_info.c##
+        if ((cptr = strchr(ifr->ifr_name, ':')) != NULL)## 63 ##src/lib/get_ifi_info.c##
+            *cptr = 0;          /* replace colon with null */## 64 ##src/lib/get_ifi_info.c##
+        if (strncmp(lastname, ifr->ifr_name, IFNAMSIZ) == 0) {## 65 ##src/lib/get_ifi_info.c##
+            if (doaliases == 0)## 66 ##src/lib/get_ifi_info.c##
+                continue;       /* already processed this interface */## 67 ##src/lib/get_ifi_info.c##
+            myflags = IFI_ALIAS;## 68 ##src/lib/get_ifi_info.c##
+        }## 69 ##src/lib/get_ifi_info.c##
+        memcpy(lastname, ifr->ifr_name, IFNAMSIZ);## 70 ##src/lib/get_ifi_info.c##
+
+        ifrcopy = *ifr;## 71 ##src/lib/get_ifi_info.c##
+        Ioctl(sockfd, SIOCGIFFLAGS, &ifrcopy);## 72 ##src/lib/get_ifi_info.c##
+        flags = ifrcopy.ifr_flags;## 73 ##src/lib/get_ifi_info.c##
+        if ((flags & IFF_UP) == 0)## 74 ##src/lib/get_ifi_info.c##
+            continue;           /* ignore if interface not up */## 75 ##src/lib/get_ifi_info.c##
+
+        ifi = Calloc(1, sizeof(struct ifi_info));## 76 ##src/lib/get_ifi_info.c##
+        *ifipnext = ifi;        /* prev points to this new one */## 77 ##src/lib/get_ifi_info.c##
+        ifipnext = &ifi->ifi_next;  /* pointer to next one goes here */## 78 ##src/lib/get_ifi_info.c##
+
+        ifi->ifi_flags = flags; /* IFF_xxx values */## 79 ##src/lib/get_ifi_info.c##
+        ifi->ifi_myflags = myflags; /* IFI_xxx values */## 80 ##src/lib/get_ifi_info.c##
+        ifi->ifi_index = idx;## 81 ##src/lib/get_ifi_info.c##
+        memcpy(ifi->ifi_name, ifr->ifr_name, IFI_NAME);## 82 ##src/lib/get_ifi_info.c##
+        ifi->ifi_hlen = hlen;## 83 ##src/lib/get_ifi_info.c##
+        if (ifi->ifi_hlen > IFI_HADDR)## 84 ##src/lib/get_ifi_info.c##
+            ifi->ifi_hlen = IFI_HADDR;## 85 ##src/lib/get_ifi_info.c##
+        memcpy(ifi->ifi_haddr, haddr, ifi->ifi_hlen);## 86 ##src/lib/get_ifi_info.c##
+        ifi->ifi_name[IFI_NAME - 1] = '\0';## 87 ##src/lib/get_ifi_info.c##
+        idx = hlen = 0;## 88 ##src/lib/get_ifi_info.c##
+/* end get_ifi_info2 */
+/* include get_ifi_info3 */
+        switch (ifr->ifr_addr.sa_family) {## 89 ##src/lib/get_ifi_info.c##
+        case AF_INET:## 90 ##src/lib/get_ifi_info.c##
+            sinptr = (struct sockaddr_in *) &ifr->ifr_addr;## 91 ##src/lib/get_ifi_info.c##
+            if (ifi->ifi_addr == NULL) {## 92 ##src/lib/get_ifi_info.c##
+                ifi->ifi_addr = Calloc(1, sizeof(struct sockaddr_in));## 93 ##src/lib/get_ifi_info.c##
+                memcpy(ifi->ifi_addr, sinptr, sizeof(struct sockaddr_in));## 94 ##src/lib/get_ifi_info.c##
+
+#ifdef  SIOCGIFBRDADDR## 95 ##src/lib/get_ifi_info.c##
+                if (flags & IFF_BROADCAST) {## 96 ##src/lib/get_ifi_info.c##
+                    Ioctl(sockfd, SIOCGIFBRDADDR, &ifrcopy);## 97 ##src/lib/get_ifi_info.c##
+                    sinptr = (struct sockaddr_in *) &ifrcopy.ifr_broadaddr;## 98 ##src/lib/get_ifi_info.c##
+                    ifi->ifi_brdaddr = Calloc(1, sizeof(struct sockaddr_in));## 99 ##src/lib/get_ifi_info.c##
+                    memcpy(ifi->ifi_brdaddr, sinptr,##100 ##src/lib/get_ifi_info.c##
+                           sizeof(struct sockaddr_in));##101 ##src/lib/get_ifi_info.c##
+                }##102 ##src/lib/get_ifi_info.c##
+#endif##103 ##src/lib/get_ifi_info.c##
+
+#ifdef  SIOCGIFDSTADDR##104 ##src/lib/get_ifi_info.c##
+                if (flags & IFF_POINTOPOINT) {##105 ##src/lib/get_ifi_info.c##
+                    Ioctl(sockfd, SIOCGIFDSTADDR, &ifrcopy);##106 ##src/lib/get_ifi_info.c##
+                    sinptr = (struct sockaddr_in *) &ifrcopy.ifr_dstaddr;##107 ##src/lib/get_ifi_info.c##
+                    ifi->ifi_dstaddr = Calloc(1, sizeof(struct sockaddr_in));##108 ##src/lib/get_ifi_info.c##
+                    memcpy(ifi->ifi_dstaddr, sinptr,##109 ##src/lib/get_ifi_info.c##
+                           sizeof(struct sockaddr_in));##110 ##src/lib/get_ifi_info.c##
+                }##111 ##src/lib/get_ifi_info.c##
+#endif##112 ##src/lib/get_ifi_info.c##
+            }##113 ##src/lib/get_ifi_info.c##
+            break;##114 ##src/lib/get_ifi_info.c##
+
+        case AF_INET6:##115 ##src/lib/get_ifi_info.c##
+            sin6ptr = (struct sockaddr_in6 *) &ifr->ifr_addr;##116 ##src/lib/get_ifi_info.c##
+            if (ifi->ifi_addr == NULL) {##117 ##src/lib/get_ifi_info.c##
+                ifi->ifi_addr = Calloc(1, sizeof(struct sockaddr_in6));##118 ##src/lib/get_ifi_info.c##
+                memcpy(ifi->ifi_addr, sin6ptr, sizeof(struct sockaddr_in6));##119 ##src/lib/get_ifi_info.c##
+
+#ifdef  SIOCGIFDSTADDR##120 ##src/lib/get_ifi_info.c##
+                if (flags & IFF_POINTOPOINT) {##121 ##src/lib/get_ifi_info.c##
+                    Ioctl(sockfd, SIOCGIFDSTADDR, &ifrcopy);##122 ##src/lib/get_ifi_info.c##
+                    sin6ptr = (struct sockaddr_in6 *) &ifrcopy.ifr_dstaddr;##123 ##src/lib/get_ifi_info.c##
+                    ifi->ifi_dstaddr =##124 ##src/lib/get_ifi_info.c##
+                        Calloc(1, sizeof(struct sockaddr_in6));##125 ##src/lib/get_ifi_info.c##
+                    memcpy(ifi->ifi_dstaddr, sin6ptr,##126 ##src/lib/get_ifi_info.c##
+                           sizeof(struct sockaddr_in6));##127 ##src/lib/get_ifi_info.c##
+                }##128 ##src/lib/get_ifi_info.c##
+#endif##129 ##src/lib/get_ifi_info.c##
+            }##130 ##src/lib/get_ifi_info.c##
+            break;##131 ##src/lib/get_ifi_info.c##
+
+        default:##132 ##src/lib/get_ifi_info.c##
+            break;##133 ##src/lib/get_ifi_info.c##
+        }##134 ##src/lib/get_ifi_info.c##
+    }##135 ##src/lib/get_ifi_info.c##
+    free(buf);##136 ##src/lib/get_ifi_info.c##
+    return (ifihead);           /* pointer to first structure in linked list */##137 ##src/lib/get_ifi_info.c##
+}##138 ##src/lib/get_ifi_info.c##
+/* end get_ifi_info3 */
+
+/* include free_ifi_info */
+void##139 ##src/lib/get_ifi_info.c##
+free_ifi_info(struct ifi_info *ifihead)##140 ##src/lib/get_ifi_info.c##
+{##141 ##src/lib/get_ifi_info.c##
+    struct ifi_info *ifi, *ifinext;##142 ##src/lib/get_ifi_info.c##
+
+    for (ifi = ifihead; ifi != NULL; ifi = ifinext) {##143 ##src/lib/get_ifi_info.c##
+        if (ifi->ifi_addr != NULL)##144 ##src/lib/get_ifi_info.c##
+            free(ifi->ifi_addr);##145 ##src/lib/get_ifi_info.c##
+        if (ifi->ifi_brdaddr != NULL)##146 ##src/lib/get_ifi_info.c##
+            free(ifi->ifi_brdaddr);##147 ##src/lib/get_ifi_info.c##
+        if (ifi->ifi_dstaddr != NULL)##148 ##src/lib/get_ifi_info.c##
+            free(ifi->ifi_dstaddr);##149 ##src/lib/get_ifi_info.c##
+        ifinext = ifi->ifi_next;    /* can't fetch ifi_next after free() */##150 ##src/lib/get_ifi_info.c##
+        free(ifi);              /* the ifi_info{} itself */##151 ##src/lib/get_ifi_info.c##
+    }##152 ##src/lib/get_ifi_info.c##
+}##153 ##src/lib/get_ifi_info.c##
+/* end free_ifi_info */
+
+struct ifi_info *##154 ##src/lib/get_ifi_info.c##
+Get_ifi_info(int family, int doaliases)##155 ##src/lib/get_ifi_info.c##
+{##156 ##src/lib/get_ifi_info.c##
+    struct ifi_info *ifi;##157 ##src/lib/get_ifi_info.c##
+
+    if ((ifi = get_ifi_info(family, doaliases)) == NULL)##158 ##src/lib/get_ifi_info.c##
+        err_quit("get_ifi_info error");##159 ##src/lib/get_ifi_info.c##
+    return (ifi);##160 ##src/lib/get_ifi_info.c##
+}##161 ##src/lib/get_ifi_info.c##

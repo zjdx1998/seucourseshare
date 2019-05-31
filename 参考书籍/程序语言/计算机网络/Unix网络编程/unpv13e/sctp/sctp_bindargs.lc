@@ -1,0 +1,28 @@
+
+int##  1 ##src/sctp/sctp_bindargs.c##
+sctp_bind_arg_list(int sock_fd, char **argv, int argc)##  2 ##src/sctp/sctp_bindargs.c##
+{##  3 ##src/sctp/sctp_bindargs.c##
+    struct addrinfo *addr;##  4 ##src/sctp/sctp_bindargs.c##
+    struct sockaddr_storage *at;##  5 ##src/sctp/sctp_bindargs.c##
+
+    char   *bindbuf, portbuf[10];##  6 ##src/sctp/sctp_bindargs.c##
+    int     addrcnt = 0;##  7 ##src/sctp/sctp_bindargs.c##
+    int     i, sz;##  8 ##src/sctp/sctp_bindargs.c##
+
+    sz = argc * sizeof(struct sockaddr_storage);##  9 ##src/sctp/sctp_bindargs.c##
+    bindbuf = (char *) Malloc(sz);## 10 ##src/sctp/sctp_bindargs.c##
+    bzero(bindbuf, sz);## 11 ##src/sctp/sctp_bindargs.c##
+    at = (struct sockaddr_storage *) bindbuf;## 12 ##src/sctp/sctp_bindargs.c##
+    sprintf(portbuf, "%d", SERV_PORT);## 13 ##src/sctp/sctp_bindargs.c##
+    for (i = 0; i < argc; i++) {## 14 ##src/sctp/sctp_bindargs.c##
+        addr = Host_serv(argv[i], portbuf, AF_UNSPEC, SOCK_SEQPACKET);## 15 ##src/sctp/sctp_bindargs.c##
+        memcpy(at, addr->ai_addr, addr->ai_addrlen);## 16 ##src/sctp/sctp_bindargs.c##
+        freeaddrinfo(addr);## 17 ##src/sctp/sctp_bindargs.c##
+        addrcnt++;## 18 ##src/sctp/sctp_bindargs.c##
+        at++;## 19 ##src/sctp/sctp_bindargs.c##
+    }## 20 ##src/sctp/sctp_bindargs.c##
+    at = (struct sockaddr_storage *) bindbuf;## 21 ##src/sctp/sctp_bindargs.c##
+    Sctp_bindx(sock_fd, at, addrcnt, SCTP_BINDX_ADD_ADDR);## 22 ##src/sctp/sctp_bindargs.c##
+    free(bindbuf);## 23 ##src/sctp/sctp_bindargs.c##
+    return (0);## 24 ##src/sctp/sctp_bindargs.c##
+}## 25 ##src/sctp/sctp_bindargs.c##

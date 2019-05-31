@@ -1,0 +1,38 @@
+/* include mcast_set_loop */
+#include    "unp.h"##  1 ##src/lib/mcast_set_loop.c##
+
+int##  2 ##src/lib/mcast_set_loop.c##
+mcast_set_loop(int sockfd, int onoff)##  3 ##src/lib/mcast_set_loop.c##
+{##  4 ##src/lib/mcast_set_loop.c##
+    switch (sockfd_to_family(sockfd)) {##  5 ##src/lib/mcast_set_loop.c##
+    case AF_INET:{##  6 ##src/lib/mcast_set_loop.c##
+            u_char  flag;##  7 ##src/lib/mcast_set_loop.c##
+
+            flag = onoff;##  8 ##src/lib/mcast_set_loop.c##
+            return (setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_LOOP,##  9 ##src/lib/mcast_set_loop.c##
+                               &flag, sizeof(flag)));## 10 ##src/lib/mcast_set_loop.c##
+        }## 11 ##src/lib/mcast_set_loop.c##
+
+#ifdef  IPV6## 12 ##src/lib/mcast_set_loop.c##
+    case AF_INET6:{## 13 ##src/lib/mcast_set_loop.c##
+            u_int   flag;## 14 ##src/lib/mcast_set_loop.c##
+
+            flag = onoff;## 15 ##src/lib/mcast_set_loop.c##
+            return (setsockopt(sockfd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP,## 16 ##src/lib/mcast_set_loop.c##
+                               &flag, sizeof(flag)));## 17 ##src/lib/mcast_set_loop.c##
+        }## 18 ##src/lib/mcast_set_loop.c##
+#endif## 19 ##src/lib/mcast_set_loop.c##
+
+    default:## 20 ##src/lib/mcast_set_loop.c##
+        errno = EPROTONOSUPPORT;## 21 ##src/lib/mcast_set_loop.c##
+        return (-1);## 22 ##src/lib/mcast_set_loop.c##
+    }## 23 ##src/lib/mcast_set_loop.c##
+}## 24 ##src/lib/mcast_set_loop.c##
+/* end mcast_set_loop */
+
+void## 25 ##src/lib/mcast_set_loop.c##
+Mcast_set_loop(int sockfd, int onoff)## 26 ##src/lib/mcast_set_loop.c##
+{## 27 ##src/lib/mcast_set_loop.c##
+    if (mcast_set_loop(sockfd, onoff) < 0)## 28 ##src/lib/mcast_set_loop.c##
+        err_sys("mcast_set_loop error");## 29 ##src/lib/mcast_set_loop.c##
+}## 30 ##src/lib/mcast_set_loop.c##

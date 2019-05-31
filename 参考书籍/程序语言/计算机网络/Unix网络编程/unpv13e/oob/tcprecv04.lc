@@ -1,0 +1,32 @@
+#include    "unp.h"##  1 ##src/oob/tcprecv04.c##
+
+int##  2 ##src/oob/tcprecv04.c##
+main(int argc, char **argv)##  3 ##src/oob/tcprecv04.c##
+{##  4 ##src/oob/tcprecv04.c##
+    int     listenfd, connfd, n, on = 1;##  5 ##src/oob/tcprecv04.c##
+    char    buff[100];##  6 ##src/oob/tcprecv04.c##
+
+    if (argc == 2)##  7 ##src/oob/tcprecv04.c##
+        listenfd = Tcp_listen(NULL, argv[1], NULL);##  8 ##src/oob/tcprecv04.c##
+    else if (argc == 3)##  9 ##src/oob/tcprecv04.c##
+        listenfd = Tcp_listen(argv[1], argv[2], NULL);## 10 ##src/oob/tcprecv04.c##
+    else## 11 ##src/oob/tcprecv04.c##
+        err_quit("usage: tcprecv04 [ <host> ] <port#>");## 12 ##src/oob/tcprecv04.c##
+
+    Setsockopt(listenfd, SOL_SOCKET, SO_OOBINLINE, &on, sizeof(on));## 13 ##src/oob/tcprecv04.c##
+
+    connfd = Accept(listenfd, NULL, NULL);## 14 ##src/oob/tcprecv04.c##
+    sleep(5);## 15 ##src/oob/tcprecv04.c##
+
+    for (;;) {## 16 ##src/oob/tcprecv04.c##
+        if (Sockatmark(connfd))## 17 ##src/oob/tcprecv04.c##
+            printf("at OOB mark\n");## 18 ##src/oob/tcprecv04.c##
+
+        if ((n = Read(connfd, buff, sizeof(buff) - 1)) == 0) {## 19 ##src/oob/tcprecv04.c##
+            printf("received EOF\n");## 20 ##src/oob/tcprecv04.c##
+            exit(0);## 21 ##src/oob/tcprecv04.c##
+        }## 22 ##src/oob/tcprecv04.c##
+        buff[n] = 0;            /* null terminate */## 23 ##src/oob/tcprecv04.c##
+        printf("read %d bytes: %s\n", n, buff);## 24 ##src/oob/tcprecv04.c##
+    }## 25 ##src/oob/tcprecv04.c##
+}## 26 ##src/oob/tcprecv04.c##

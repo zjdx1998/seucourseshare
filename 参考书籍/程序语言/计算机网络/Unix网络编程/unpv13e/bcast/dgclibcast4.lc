@@ -1,0 +1,57 @@
+#include    "unp.h"##  1 ##src/bcast/dgclibcast4.c##
+
+static void recvfrom_alarm(int);##  2 ##src/bcast/dgclibcast4.c##
+
+void##  3 ##src/bcast/dgclibcast4.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  4 ##src/bcast/dgclibcast4.c##
+{##  5 ##src/bcast/dgclibcast4.c##
+    int     n;##  6 ##src/bcast/dgclibcast4.c##
+    const int on = 1;##  7 ##src/bcast/dgclibcast4.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  8 ##src/bcast/dgclibcast4.c##
+    fd_set  rset;##  9 ##src/bcast/dgclibcast4.c##
+    sigset_t sigset_alrm, sigset_empty;## 10 ##src/bcast/dgclibcast4.c##
+    socklen_t len;## 11 ##src/bcast/dgclibcast4.c##
+    struct sockaddr *preply_addr;## 12 ##src/bcast/dgclibcast4.c##
+
+    preply_addr = Malloc(servlen);## 13 ##src/bcast/dgclibcast4.c##
+
+    Setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on));## 14 ##src/bcast/dgclibcast4.c##
+
+    FD_ZERO(&rset);## 15 ##src/bcast/dgclibcast4.c##
+
+    Sigemptyset(&sigset_empty);## 16 ##src/bcast/dgclibcast4.c##
+    Sigemptyset(&sigset_alrm);## 17 ##src/bcast/dgclibcast4.c##
+    Sigaddset(&sigset_alrm, SIGALRM);## 18 ##src/bcast/dgclibcast4.c##
+
+    Signal(SIGALRM, recvfrom_alarm);## 19 ##src/bcast/dgclibcast4.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {## 20 ##src/bcast/dgclibcast4.c##
+        Sendto(sockfd, sendline, strlen(sendline), 0, pservaddr, servlen);## 21 ##src/bcast/dgclibcast4.c##
+
+        Sigprocmask(SIG_BLOCK, &sigset_alrm, NULL);## 22 ##src/bcast/dgclibcast4.c##
+        alarm(5);## 23 ##src/bcast/dgclibcast4.c##
+        for (;;) {## 24 ##src/bcast/dgclibcast4.c##
+            FD_SET(sockfd, &rset);## 25 ##src/bcast/dgclibcast4.c##
+            n = pselect(sockfd + 1, &rset, NULL, NULL, NULL, &sigset_empty);## 26 ##src/bcast/dgclibcast4.c##
+            if (n < 0) {## 27 ##src/bcast/dgclibcast4.c##
+                if (errno == EINTR)## 28 ##src/bcast/dgclibcast4.c##
+                    break;## 29 ##src/bcast/dgclibcast4.c##
+                else## 30 ##src/bcast/dgclibcast4.c##
+                    err_sys("pselect error");## 31 ##src/bcast/dgclibcast4.c##
+            } else if (n != 1)## 32 ##src/bcast/dgclibcast4.c##
+                err_sys("pselect error: returned %d", n);## 33 ##src/bcast/dgclibcast4.c##
+
+            len = servlen;## 34 ##src/bcast/dgclibcast4.c##
+            n = Recvfrom(sockfd, recvline, MAXLINE, 0, preply_addr, &len);## 35 ##src/bcast/dgclibcast4.c##
+            recvline[n] = 0;    /* null terminate */## 36 ##src/bcast/dgclibcast4.c##
+            printf("from %s: %s",## 37 ##src/bcast/dgclibcast4.c##
+                   Sock_ntop_host(preply_addr, len), recvline);## 38 ##src/bcast/dgclibcast4.c##
+        }## 39 ##src/bcast/dgclibcast4.c##
+    }## 40 ##src/bcast/dgclibcast4.c##
+}## 41 ##src/bcast/dgclibcast4.c##
+
+static void## 42 ##src/bcast/dgclibcast4.c##
+recvfrom_alarm(int signo)## 43 ##src/bcast/dgclibcast4.c##
+{## 44 ##src/bcast/dgclibcast4.c##
+    return;                     /* just interrupt the recvfrom() */## 45 ##src/bcast/dgclibcast4.c##
+}## 46 ##src/bcast/dgclibcast4.c##

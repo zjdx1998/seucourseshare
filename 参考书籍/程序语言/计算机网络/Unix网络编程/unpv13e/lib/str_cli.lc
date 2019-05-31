@@ -1,0 +1,17 @@
+#include    "unp.h"##  1 ##src/lib/str_cli.c##
+
+void##  2 ##src/lib/str_cli.c##
+str_cli(FILE *fp, int sockfd)##  3 ##src/lib/str_cli.c##
+{##  4 ##src/lib/str_cli.c##
+    char    sendline[MAXLINE], recvline[MAXLINE];##  5 ##src/lib/str_cli.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {##  6 ##src/lib/str_cli.c##
+
+        Writen(sockfd, sendline, strlen(sendline));##  7 ##src/lib/str_cli.c##
+
+        if (Readline(sockfd, recvline, MAXLINE) == 0)##  8 ##src/lib/str_cli.c##
+            err_quit("str_cli: server terminated prematurely");##  9 ##src/lib/str_cli.c##
+
+        Fputs(recvline, stdout);## 10 ##src/lib/str_cli.c##
+    }## 11 ##src/lib/str_cli.c##
+}## 12 ##src/lib/str_cli.c##

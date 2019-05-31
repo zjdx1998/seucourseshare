@@ -1,0 +1,42 @@
+/* include readline */
+#include    "unp.h"##  1 ##src/test/readline1.c##
+
+ssize_t##  2 ##src/test/readline1.c##
+readline(int fd, void *vptr, size_t maxlen)##  3 ##src/test/readline1.c##
+{##  4 ##src/test/readline1.c##
+    ssize_t n, rc;##  5 ##src/test/readline1.c##
+    char    c, *ptr;##  6 ##src/test/readline1.c##
+
+    ptr = vptr;##  7 ##src/test/readline1.c##
+    for (n = 1; n < maxlen; n++) {##  8 ##src/test/readline1.c##
+      again:##  9 ##src/test/readline1.c##
+        if ((rc = read(fd, &c, 1)) == 1) {## 10 ##src/test/readline1.c##
+            *ptr++ = c;## 11 ##src/test/readline1.c##
+            if (c == '\n')## 12 ##src/test/readline1.c##
+                break;          /* newline is stored, like fgets() */## 13 ##src/test/readline1.c##
+        } else if (rc == 0) {## 14 ##src/test/readline1.c##
+            if (n == 1)## 15 ##src/test/readline1.c##
+                return (0);     /* EOF, no data read */## 16 ##src/test/readline1.c##
+            else## 17 ##src/test/readline1.c##
+                break;          /* EOF, some data was read */## 18 ##src/test/readline1.c##
+        } else {## 19 ##src/test/readline1.c##
+            if (errno == EINTR)## 20 ##src/test/readline1.c##
+                goto again;## 21 ##src/test/readline1.c##
+            return (-1);        /* error, errno set by read() */## 22 ##src/test/readline1.c##
+        }## 23 ##src/test/readline1.c##
+    }## 24 ##src/test/readline1.c##
+
+    *ptr = 0;                   /* null terminate like fgets() */## 25 ##src/test/readline1.c##
+    return (n);## 26 ##src/test/readline1.c##
+}## 27 ##src/test/readline1.c##
+/* end readline */
+
+ssize_t## 28 ##src/test/readline1.c##
+Readline(int fd, void *ptr, size_t maxlen)## 29 ##src/test/readline1.c##
+{## 30 ##src/test/readline1.c##
+    ssize_t n;## 31 ##src/test/readline1.c##
+
+    if ((n = readline(fd, ptr, maxlen)) < 0)## 32 ##src/test/readline1.c##
+        err_sys("readline error");## 33 ##src/test/readline1.c##
+    return (n);## 34 ##src/test/readline1.c##
+}## 35 ##src/test/readline1.c##

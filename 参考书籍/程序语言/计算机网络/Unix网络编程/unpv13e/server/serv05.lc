@@ -1,0 +1,105 @@
+/* include serv05a */
+#include    "unp.h"##  1 ##src/server/serv05.c##
+#include    "child.h"##  2 ##src/server/serv05.c##
+
+static int nchildren;##  3 ##src/server/serv05.c##
+
+int##  4 ##src/server/serv05.c##
+main(int argc, char **argv)##  5 ##src/server/serv05.c##
+{##  6 ##src/server/serv05.c##
+    int     listenfd, i, navail, maxfd, nsel, connfd, rc;##  7 ##src/server/serv05.c##
+    void    sig_int(int);##  8 ##src/server/serv05.c##
+    pid_t   child_make(int, int, int);##  9 ##src/server/serv05.c##
+    ssize_t n;## 10 ##src/server/serv05.c##
+    fd_set  rset, masterset;## 11 ##src/server/serv05.c##
+    socklen_t addrlen, clilen;## 12 ##src/server/serv05.c##
+    struct sockaddr *cliaddr;## 13 ##src/server/serv05.c##
+
+    if (argc == 3)## 14 ##src/server/serv05.c##
+        listenfd = Tcp_listen(NULL, argv[1], &addrlen);## 15 ##src/server/serv05.c##
+    else if (argc == 4)## 16 ##src/server/serv05.c##
+        listenfd = Tcp_listen(argv[1], argv[2], &addrlen);## 17 ##src/server/serv05.c##
+    else## 18 ##src/server/serv05.c##
+        err_quit("usage: serv05 [ <host> ] <port#> <#children>");## 19 ##src/server/serv05.c##
+
+    FD_ZERO(&masterset);## 20 ##src/server/serv05.c##
+    FD_SET(listenfd, &masterset);## 21 ##src/server/serv05.c##
+    maxfd = listenfd;## 22 ##src/server/serv05.c##
+    cliaddr = Malloc(addrlen);## 23 ##src/server/serv05.c##
+
+    nchildren = atoi(argv[argc - 1]);## 24 ##src/server/serv05.c##
+    navail = nchildren;## 25 ##src/server/serv05.c##
+    cptr = Calloc(nchildren, sizeof(Child));## 26 ##src/server/serv05.c##
+
+    /* 4prefork all the children */## 27 ##src/server/serv05.c##
+    for (i = 0; i < nchildren; i++) {## 28 ##src/server/serv05.c##
+        child_make(i, listenfd, addrlen);   /* parent returns */## 29 ##src/server/serv05.c##
+        FD_SET(cptr[i].child_pipefd, &masterset);## 30 ##src/server/serv05.c##
+        maxfd = max(maxfd, cptr[i].child_pipefd);## 31 ##src/server/serv05.c##
+    }## 32 ##src/server/serv05.c##
+
+    Signal(SIGINT, sig_int);## 33 ##src/server/serv05.c##
+
+    for (;;) {## 34 ##src/server/serv05.c##
+        rset = masterset;## 35 ##src/server/serv05.c##
+        if (navail <= 0)## 36 ##src/server/serv05.c##
+            FD_CLR(listenfd, &rset);    /* turn off if no available children */## 37 ##src/server/serv05.c##
+        nsel = Select(maxfd + 1, &rset, NULL, NULL, NULL);## 38 ##src/server/serv05.c##
+
+        /* 4check for new connections */## 39 ##src/server/serv05.c##
+        if (FD_ISSET(listenfd, &rset)) {## 40 ##src/server/serv05.c##
+            clilen = addrlen;## 41 ##src/server/serv05.c##
+            connfd = Accept(listenfd, cliaddr, &clilen);## 42 ##src/server/serv05.c##
+
+            for (i = 0; i < nchildren; i++)## 43 ##src/server/serv05.c##
+                if (cptr[i].child_status == 0)## 44 ##src/server/serv05.c##
+                    break;      /* available */## 45 ##src/server/serv05.c##
+
+            if (i == nchildren)## 46 ##src/server/serv05.c##
+                err_quit("no available children");## 47 ##src/server/serv05.c##
+            cptr[i].child_status = 1;   /* mark child as busy */## 48 ##src/server/serv05.c##
+            cptr[i].child_count++;## 49 ##src/server/serv05.c##
+            navail--;## 50 ##src/server/serv05.c##
+
+            n = Write_fd(cptr[i].child_pipefd, "", 1, connfd);## 51 ##src/server/serv05.c##
+            Close(connfd);## 52 ##src/server/serv05.c##
+            if (--nsel == 0)## 53 ##src/server/serv05.c##
+                continue;       /* all done with select() results */## 54 ##src/server/serv05.c##
+        }## 55 ##src/server/serv05.c##
+
+        /* 4find any newly-available children */## 56 ##src/server/serv05.c##
+        for (i = 0; i < nchildren; i++) {## 57 ##src/server/serv05.c##
+            if (FD_ISSET(cptr[i].child_pipefd, &rset)) {## 58 ##src/server/serv05.c##
+                if ((n = Read(cptr[i].child_pipefd, &rc, 1)) == 0)## 59 ##src/server/serv05.c##
+                    err_quit("child %d terminated unexpectedly", i);## 60 ##src/server/serv05.c##
+                cptr[i].child_status = 0;## 61 ##src/server/serv05.c##
+                navail++;## 62 ##src/server/serv05.c##
+                if (--nsel == 0)## 63 ##src/server/serv05.c##
+                    break;      /* all done with select() results */## 64 ##src/server/serv05.c##
+            }## 65 ##src/server/serv05.c##
+        }## 66 ##src/server/serv05.c##
+    }## 67 ##src/server/serv05.c##
+}## 68 ##src/server/serv05.c##
+/* end serv05a */
+
+void## 69 ##src/server/serv05.c##
+sig_int(int signo)## 70 ##src/server/serv05.c##
+{## 71 ##src/server/serv05.c##
+    int     i;## 72 ##src/server/serv05.c##
+    void    pr_cpu_time(void);## 73 ##src/server/serv05.c##
+
+    /* 4terminate all children */## 74 ##src/server/serv05.c##
+    for (i = 0; i < nchildren; i++)## 75 ##src/server/serv05.c##
+        kill(cptr[i].child_pid, SIGTERM);## 76 ##src/server/serv05.c##
+    while (wait(NULL) > 0)      /* wait for all children */## 77 ##src/server/serv05.c##
+        ;## 78 ##src/server/serv05.c##
+    if (errno != ECHILD)## 79 ##src/server/serv05.c##
+        err_sys("wait error");## 80 ##src/server/serv05.c##
+
+    pr_cpu_time();## 81 ##src/server/serv05.c##
+
+    for (i = 0; i < nchildren; i++)## 82 ##src/server/serv05.c##
+        printf("child %d, %ld connections\n", i, cptr[i].child_count);## 83 ##src/server/serv05.c##
+
+    exit(0);## 84 ##src/server/serv05.c##
+}## 85 ##src/server/serv05.c##

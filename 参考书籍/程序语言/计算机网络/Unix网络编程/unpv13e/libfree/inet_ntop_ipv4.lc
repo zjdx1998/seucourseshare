@@ -1,0 +1,30 @@
+#include    <sys/types.h>##  1 ##src/libfree/inet_ntop_ipv4.c##
+#include    <sys/socket.h>##  2 ##src/libfree/inet_ntop_ipv4.c##
+#include    <errno.h>##  3 ##src/libfree/inet_ntop_ipv4.c##
+#include    <stdio.h>##  4 ##src/libfree/inet_ntop_ipv4.c##
+
+#ifndef INET_ADDRSTRLEN##  5 ##src/libfree/inet_ntop_ipv4.c##
+#define INET_ADDRSTRLEN     16##  6 ##src/libfree/inet_ntop_ipv4.c##
+#endif##  7 ##src/libfree/inet_ntop_ipv4.c##
+
+/* include inet_ntop */
+const char *##  8 ##src/libfree/inet_ntop_ipv4.c##
+inet_ntop(int family, const void *addrptr, char *strptr, size_t len)##  9 ##src/libfree/inet_ntop_ipv4.c##
+{## 10 ##src/libfree/inet_ntop_ipv4.c##
+    const u_char *p = (const u_char *) addrptr;## 11 ##src/libfree/inet_ntop_ipv4.c##
+
+    if (family == AF_INET) {## 12 ##src/libfree/inet_ntop_ipv4.c##
+        char    temp[INET_ADDRSTRLEN];## 13 ##src/libfree/inet_ntop_ipv4.c##
+
+        snprintf(temp, sizeof(temp), "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);## 14 ##src/libfree/inet_ntop_ipv4.c##
+        if (strlen(temp) >= len) {## 15 ##src/libfree/inet_ntop_ipv4.c##
+            errno = ENOSPC;## 16 ##src/libfree/inet_ntop_ipv4.c##
+            return (NULL);## 17 ##src/libfree/inet_ntop_ipv4.c##
+        }## 18 ##src/libfree/inet_ntop_ipv4.c##
+        strcpy(strptr, temp);## 19 ##src/libfree/inet_ntop_ipv4.c##
+        return (strptr);## 20 ##src/libfree/inet_ntop_ipv4.c##
+    }## 21 ##src/libfree/inet_ntop_ipv4.c##
+    errno = EAFNOSUPPORT;## 22 ##src/libfree/inet_ntop_ipv4.c##
+    return (NULL);## 23 ##src/libfree/inet_ntop_ipv4.c##
+}## 24 ##src/libfree/inet_ntop_ipv4.c##
+/* end inet_ntop */

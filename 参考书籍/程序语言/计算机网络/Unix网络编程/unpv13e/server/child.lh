@@ -1,0 +1,8 @@
+typedef struct {##  1 ##src/server/child.h##
+    pid_t   child_pid;          /* process ID */##  2 ##src/server/child.h##
+    int     child_pipefd;       /* parent's stream pipe to/from child */##  3 ##src/server/child.h##
+    int     child_status;       /* 0 = ready */##  4 ##src/server/child.h##
+    long    child_count;        /* #connections handled */##  5 ##src/server/child.h##
+} Child;##  6 ##src/server/child.h##
+
+Child  *cptr;                   /* array of Child structures; calloc'ed */##  7 ##src/server/child.h##

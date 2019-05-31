@@ -1,0 +1,10 @@
+#include    "ping.h"##  1 ##src/ping/sig_alrm.c##
+
+void##  2 ##src/ping/sig_alrm.c##
+sig_alrm(int signo)##  3 ##src/ping/sig_alrm.c##
+{##  4 ##src/ping/sig_alrm.c##
+    (*pr->fsend) ();##  5 ##src/ping/sig_alrm.c##
+
+    alarm(1);##  6 ##src/ping/sig_alrm.c##
+    return;                     /* probably interrupts recvfrom() */##  7 ##src/ping/sig_alrm.c##
+}##  8 ##src/ping/sig_alrm.c##

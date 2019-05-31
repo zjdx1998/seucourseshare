@@ -1,0 +1,6 @@
+#!/bin/sh
+
+tar -cvf addrinfo.tar README.getaddrinfo addrinfo.h getaddrinfo.c \
+			getnameinfo.c test_addrinfo.c inet_ntop.c inet_pton.c
+
+compress addrinfo.tar

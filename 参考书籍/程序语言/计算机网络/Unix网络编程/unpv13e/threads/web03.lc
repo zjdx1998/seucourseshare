@@ -1,0 +1,164 @@
+#include    "unpthread.h"##  1 ##src/threads/web03.c##
+#include    <thread.h>          /* Solaris threads */##  2 ##src/threads/web03.c##
+
+#define MAXFILES    20##  3 ##src/threads/web03.c##
+#define SERV        "80"        /* port number or service name */##  4 ##src/threads/web03.c##
+
+struct file {##  5 ##src/threads/web03.c##
+    char   *f_name;             /* filename */##  6 ##src/threads/web03.c##
+    char   *f_host;             /* hostname or IP address */##  7 ##src/threads/web03.c##
+    int     f_fd;               /* descriptor */##  8 ##src/threads/web03.c##
+    int     f_flags;            /* F_xxx below */##  9 ##src/threads/web03.c##
+    pthread_t f_tid;            /* thread ID */## 10 ##src/threads/web03.c##
+} file[MAXFILES];## 11 ##src/threads/web03.c##
+#define F_CONNECTING    1       /* connect() in progress */## 12 ##src/threads/web03.c##
+#define F_READING       2       /* connect() complete; now reading */## 13 ##src/threads/web03.c##
+#define F_DONE          4       /* all done */## 14 ##src/threads/web03.c##
+#define F_JOINED        8       /* main has pthread_join'ed */## 15 ##src/threads/web03.c##
+
+#define GET_CMD     "GET %s HTTP/1.0\r\n\r\n"## 16 ##src/threads/web03.c##
+
+int     nconn, nfiles, nlefttoconn, nlefttoread;## 17 ##src/threads/web03.c##
+
+int     ndone;                  /* number of terminated threads */## 18 ##src/threads/web03.c##
+pthread_mutex_t ndone_mutex = PTHREAD_MUTEX_INITIALIZER;## 19 ##src/threads/web03.c##
+pthread_cond_t ndone_cond = PTHREAD_COND_INITIALIZER;## 20 ##src/threads/web03.c##
+
+void   *do_get_read(void *);## 21 ##src/threads/web03.c##
+void    home_page(const char *, const char *);## 22 ##src/threads/web03.c##
+void    write_get_cmd(struct file *);## 23 ##src/threads/web03.c##
+
+int## 24 ##src/threads/web03.c##
+main(int argc, char **argv)## 25 ##src/threads/web03.c##
+{## 26 ##src/threads/web03.c##
+    int     i, maxnconn;## 27 ##src/threads/web03.c##
+    pthread_t tid;## 28 ##src/threads/web03.c##
+    struct file *fptr;## 29 ##src/threads/web03.c##
+
+    if (argc < 5)## 30 ##src/threads/web03.c##
+        err_quit("usage: web <#conns> <IPaddr> <homepage> file1 ...");## 31 ##src/threads/web03.c##
+    maxnconn = atoi(argv[1]);## 32 ##src/threads/web03.c##
+
+    nfiles = min(argc - 4, MAXFILES);## 33 ##src/threads/web03.c##
+    for (i = 0; i < nfiles; i++) {## 34 ##src/threads/web03.c##
+        file[i].f_name = argv[i + 4];## 35 ##src/threads/web03.c##
+        file[i].f_host = argv[2];## 36 ##src/threads/web03.c##
+        file[i].f_flags = 0;## 37 ##src/threads/web03.c##
+    }## 38 ##src/threads/web03.c##
+    printf("nfiles = %d\n", nfiles);## 39 ##src/threads/web03.c##
+
+    home_page(argv[2], argv[3]);## 40 ##src/threads/web03.c##
+
+    nlefttoread = nlefttoconn = nfiles;## 41 ##src/threads/web03.c##
+    nconn = 0;## 42 ##src/threads/web03.c##
+/* include web2 */
+    while (nlefttoread > 0) {## 43 ##src/threads/web03.c##
+        while (nconn < maxnconn && nlefttoconn > 0) {## 44 ##src/threads/web03.c##
+            /* 4find a file to read */## 45 ##src/threads/web03.c##
+            for (i = 0; i < nfiles; i++)## 46 ##src/threads/web03.c##
+                if (file[i].f_flags == 0)## 47 ##src/threads/web03.c##
+                    break;## 48 ##src/threads/web03.c##
+            if (i == nfiles)## 49 ##src/threads/web03.c##
+                err_quit("nlefttoconn = %d but nothing found", nlefttoconn);## 50 ##src/threads/web03.c##
+
+            file[i].f_flags = F_CONNECTING;## 51 ##src/threads/web03.c##
+            Pthread_create(&tid, NULL, &do_get_read, &file[i]);## 52 ##src/threads/web03.c##
+            file[i].f_tid = tid;## 53 ##src/threads/web03.c##
+            nconn++;## 54 ##src/threads/web03.c##
+            nlefttoconn--;## 55 ##src/threads/web03.c##
+        }## 56 ##src/threads/web03.c##
+
+        /* 4Wait for one of the threads to terminate */## 57 ##src/threads/web03.c##
+        Pthread_mutex_lock(&ndone_mutex);## 58 ##src/threads/web03.c##
+        while (ndone == 0)## 59 ##src/threads/web03.c##
+            Pthread_cond_wait(&ndone_cond, &ndone_mutex);## 60 ##src/threads/web03.c##
+
+        for (i = 0; i < nfiles; i++) {## 61 ##src/threads/web03.c##
+            if (file[i].f_flags & F_DONE) {## 62 ##src/threads/web03.c##
+                Pthread_join(file[i].f_tid, (void **) &fptr);## 63 ##src/threads/web03.c##
+
+                if (&file[i] != fptr)## 64 ##src/threads/web03.c##
+                    err_quit("file[i] != fptr");## 65 ##src/threads/web03.c##
+                fptr->f_flags = F_JOINED;   /* clears F_DONE */## 66 ##src/threads/web03.c##
+                ndone--;## 67 ##src/threads/web03.c##
+                nconn--;## 68 ##src/threads/web03.c##
+                nlefttoread--;## 69 ##src/threads/web03.c##
+                printf("thread %d for %s done\n", fptr->f_tid, fptr->f_name);## 70 ##src/threads/web03.c##
+            }## 71 ##src/threads/web03.c##
+        }## 72 ##src/threads/web03.c##
+        Pthread_mutex_unlock(&ndone_mutex);## 73 ##src/threads/web03.c##
+    }## 74 ##src/threads/web03.c##
+
+    exit(0);## 75 ##src/threads/web03.c##
+}## 76 ##src/threads/web03.c##
+/* end web2 */
+
+void   *## 77 ##src/threads/web03.c##
+do_get_read(void *vptr)## 78 ##src/threads/web03.c##
+{## 79 ##src/threads/web03.c##
+    int     fd, n;## 80 ##src/threads/web03.c##
+    char    line[MAXLINE];## 81 ##src/threads/web03.c##
+    struct file *fptr;## 82 ##src/threads/web03.c##
+
+    fptr = (struct file *) vptr;## 83 ##src/threads/web03.c##
+
+    fd = Tcp_connect(fptr->f_host, SERV);## 84 ##src/threads/web03.c##
+    fptr->f_fd = fd;## 85 ##src/threads/web03.c##
+    printf("do_get_read for %s, fd %d, thread %d\n",## 86 ##src/threads/web03.c##
+           fptr->f_name, fd, fptr->f_tid);## 87 ##src/threads/web03.c##
+
+    write_get_cmd(fptr);        /* write() the GET command */## 88 ##src/threads/web03.c##
+
+    /* 4Read server's reply */## 89 ##src/threads/web03.c##
+    for (;;) {## 90 ##src/threads/web03.c##
+        if ((n = Read(fd, line, MAXLINE)) == 0)## 91 ##src/threads/web03.c##
+            break;              /* server closed connection */## 92 ##src/threads/web03.c##
+
+        printf("read %d bytes from %s\n", n, fptr->f_name);## 93 ##src/threads/web03.c##
+    }## 94 ##src/threads/web03.c##
+    printf("end-of-file on %s\n", fptr->f_name);## 95 ##src/threads/web03.c##
+    Close(fd);## 96 ##src/threads/web03.c##
+    fptr->f_flags = F_DONE;     /* clears F_READING */## 97 ##src/threads/web03.c##
+
+    Pthread_mutex_lock(&ndone_mutex);## 98 ##src/threads/web03.c##
+    ndone++;## 99 ##src/threads/web03.c##
+    Pthread_cond_signal(&ndone_cond);##100 ##src/threads/web03.c##
+    Pthread_mutex_unlock(&ndone_mutex);##101 ##src/threads/web03.c##
+
+    return (fptr);              /* terminate thread */##102 ##src/threads/web03.c##
+}##103 ##src/threads/web03.c##
+
+void##104 ##src/threads/web03.c##
+write_get_cmd(struct file *fptr)##105 ##src/threads/web03.c##
+{##106 ##src/threads/web03.c##
+    int     n;##107 ##src/threads/web03.c##
+    char    line[MAXLINE];##108 ##src/threads/web03.c##
+
+    n = snprintf(line, sizeof(line), GET_CMD, fptr->f_name);##109 ##src/threads/web03.c##
+    Writen(fptr->f_fd, line, n);##110 ##src/threads/web03.c##
+    printf("wrote %d bytes for %s\n", n, fptr->f_name);##111 ##src/threads/web03.c##
+
+    fptr->f_flags = F_READING;  /* clears F_CONNECTING */##112 ##src/threads/web03.c##
+}##113 ##src/threads/web03.c##
+
+void##114 ##src/threads/web03.c##
+home_page(const char *host, const char *fname)##115 ##src/threads/web03.c##
+{##116 ##src/threads/web03.c##
+    int     fd, n;##117 ##src/threads/web03.c##
+    char    line[MAXLINE];##118 ##src/threads/web03.c##
+
+    fd = Tcp_connect(host, SERV);   /* blocking connect() */##119 ##src/threads/web03.c##
+
+    n = snprintf(line, sizeof(line), GET_CMD, fname);##120 ##src/threads/web03.c##
+    Writen(fd, line, n);##121 ##src/threads/web03.c##
+
+    for (;;) {##122 ##src/threads/web03.c##
+        if ((n = Read(fd, line, MAXLINE)) == 0)##123 ##src/threads/web03.c##
+            break;              /* server closed connection */##124 ##src/threads/web03.c##
+
+        printf("read %d bytes of home page\n", n);##125 ##src/threads/web03.c##
+        /* do whatever with data */##126 ##src/threads/web03.c##
+    }##127 ##src/threads/web03.c##
+    printf("end-of-file on home page\n");##128 ##src/threads/web03.c##
+    Close(fd);##129 ##src/threads/web03.c##
+}##130 ##src/threads/web03.c##

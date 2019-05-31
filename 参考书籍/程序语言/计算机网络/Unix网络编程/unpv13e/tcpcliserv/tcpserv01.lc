@@ -1,0 +1,33 @@
+#include    "unp.h"##  1 ##src/tcpcliserv/tcpserv01.c##
+
+int##  2 ##src/tcpcliserv/tcpserv01.c##
+main(int argc, char **argv)##  3 ##src/tcpcliserv/tcpserv01.c##
+{##  4 ##src/tcpcliserv/tcpserv01.c##
+    int     listenfd, connfd;##  5 ##src/tcpcliserv/tcpserv01.c##
+    pid_t   childpid;##  6 ##src/tcpcliserv/tcpserv01.c##
+    socklen_t clilen;##  7 ##src/tcpcliserv/tcpserv01.c##
+    struct sockaddr_in cliaddr, servaddr;##  8 ##src/tcpcliserv/tcpserv01.c##
+
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);##  9 ##src/tcpcliserv/tcpserv01.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 10 ##src/tcpcliserv/tcpserv01.c##
+    servaddr.sin_family = AF_INET;## 11 ##src/tcpcliserv/tcpserv01.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 12 ##src/tcpcliserv/tcpserv01.c##
+    servaddr.sin_port = htons(SERV_PORT);## 13 ##src/tcpcliserv/tcpserv01.c##
+
+    Bind(listenfd, (SA *) &servaddr, sizeof(servaddr));## 14 ##src/tcpcliserv/tcpserv01.c##
+
+    Listen(listenfd, LISTENQ);## 15 ##src/tcpcliserv/tcpserv01.c##
+
+    for (;;) {## 16 ##src/tcpcliserv/tcpserv01.c##
+        clilen = sizeof(cliaddr);## 17 ##src/tcpcliserv/tcpserv01.c##
+        connfd = Accept(listenfd, (SA *) &cliaddr, &clilen);## 18 ##src/tcpcliserv/tcpserv01.c##
+
+        if ((childpid = Fork()) == 0) { /* child process */## 19 ##src/tcpcliserv/tcpserv01.c##
+            Close(listenfd);    /* close listening socket */## 20 ##src/tcpcliserv/tcpserv01.c##
+            str_echo(connfd);   /* process the request */## 21 ##src/tcpcliserv/tcpserv01.c##
+            exit(0);## 22 ##src/tcpcliserv/tcpserv01.c##
+        }## 23 ##src/tcpcliserv/tcpserv01.c##
+        Close(connfd);          /* parent closes connected socket */## 24 ##src/tcpcliserv/tcpserv01.c##
+    }## 25 ##src/tcpcliserv/tcpserv01.c##
+}## 26 ##src/tcpcliserv/tcpserv01.c##

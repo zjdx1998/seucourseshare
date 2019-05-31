@@ -1,0 +1,35 @@
+#include    "unp.h"##  1 ##src/advio/dgclitimeo3.c##
+
+static void sig_alrm(int);##  2 ##src/advio/dgclitimeo3.c##
+
+void##  3 ##src/advio/dgclitimeo3.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  4 ##src/advio/dgclitimeo3.c##
+{##  5 ##src/advio/dgclitimeo3.c##
+    int     n;##  6 ##src/advio/dgclitimeo3.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  7 ##src/advio/dgclitimeo3.c##
+
+    Signal(SIGALRM, sig_alrm);##  8 ##src/advio/dgclitimeo3.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {##  9 ##src/advio/dgclitimeo3.c##
+
+        Sendto(sockfd, sendline, strlen(sendline), 0, pservaddr, servlen);## 10 ##src/advio/dgclitimeo3.c##
+
+        alarm(5);## 11 ##src/advio/dgclitimeo3.c##
+        if ((n = recvfrom(sockfd, recvline, MAXLINE, 0, NULL, NULL)) < 0) {## 12 ##src/advio/dgclitimeo3.c##
+            if (errno == EINTR)## 13 ##src/advio/dgclitimeo3.c##
+                fprintf(stderr, "socket timeout\n");## 14 ##src/advio/dgclitimeo3.c##
+            else## 15 ##src/advio/dgclitimeo3.c##
+                err_sys("recvfrom error");## 16 ##src/advio/dgclitimeo3.c##
+        } else {## 17 ##src/advio/dgclitimeo3.c##
+            alarm(0);## 18 ##src/advio/dgclitimeo3.c##
+            recvline[n] = 0;    /* null terminate */## 19 ##src/advio/dgclitimeo3.c##
+            Fputs(recvline, stdout);## 20 ##src/advio/dgclitimeo3.c##
+        }## 21 ##src/advio/dgclitimeo3.c##
+    }## 22 ##src/advio/dgclitimeo3.c##
+}## 23 ##src/advio/dgclitimeo3.c##
+
+static void## 24 ##src/advio/dgclitimeo3.c##
+sig_alrm(int signo)## 25 ##src/advio/dgclitimeo3.c##
+{## 26 ##src/advio/dgclitimeo3.c##
+    return;                     /* just interrupt the recvfrom() */## 27 ##src/advio/dgclitimeo3.c##
+}## 28 ##src/advio/dgclitimeo3.c##

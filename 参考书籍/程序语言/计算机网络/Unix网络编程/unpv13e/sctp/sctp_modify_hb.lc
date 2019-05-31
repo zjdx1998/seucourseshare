@@ -1,0 +1,27 @@
+
+int##  1 ##src/sctp/sctp_modify_hb.c##
+heartbeat_action(int sock_fd, struct sockaddr *sa, socklen_t salen,##  2 ##src/sctp/sctp_modify_hb.c##
+                 int action, u_int value)##  3 ##src/sctp/sctp_modify_hb.c##
+{##  4 ##src/sctp/sctp_modify_hb.c##
+    struct sctp_paddrparams sp;##  5 ##src/sctp/sctp_modify_hb.c##
+    int     siz;##  6 ##src/sctp/sctp_modify_hb.c##
+    bzero(&sp, sizeof(sp));##  7 ##src/sctp/sctp_modify_hb.c##
+    if (action == SCTP_ON_DEMAND_HB) {##  8 ##src/sctp/sctp_modify_hb.c##
+        sp.spp_hbinterval = SCTP_ISSUE_HB;##  9 ##src/sctp/sctp_modify_hb.c##
+    } else if (action == SCTP_SET_HB_INTERVAL) {## 10 ##src/sctp/sctp_modify_hb.c##
+        if ((value == SCTP_NO_HB) || (value == SCTP_ISSUE_HB)) {## 11 ##src/sctp/sctp_modify_hb.c##
+            errno = EINVAL;## 12 ##src/sctp/sctp_modify_hb.c##
+            return (-1);## 13 ##src/sctp/sctp_modify_hb.c##
+        }## 14 ##src/sctp/sctp_modify_hb.c##
+        sp.spp_hbinterval = value;## 15 ##src/sctp/sctp_modify_hb.c##
+    } else if (action == SCTP_DISABLE_HB) {## 16 ##src/sctp/sctp_modify_hb.c##
+        sp.spp_hbinterval = SCTP_NO_HB;## 17 ##src/sctp/sctp_modify_hb.c##
+    } else {## 18 ##src/sctp/sctp_modify_hb.c##
+        errno = EINVAL;## 19 ##src/sctp/sctp_modify_hb.c##
+        return (-1);## 20 ##src/sctp/sctp_modify_hb.c##
+    }## 21 ##src/sctp/sctp_modify_hb.c##
+    siz = sizeof(struct sctp_paddrparams);## 22 ##src/sctp/sctp_modify_hb.c##
+    memcpy((caddr_t) & sp.spp_address, sa, salen);## 23 ##src/sctp/sctp_modify_hb.c##
+    Setsockopt(sock_fd, IPPROTO_SCTP, SCTP_PEER_ADDR_PARAMS, &sp, siz);## 24 ##src/sctp/sctp_modify_hb.c##
+    return (0);## 25 ##src/sctp/sctp_modify_hb.c##
+}## 26 ##src/sctp/sctp_modify_hb.c##

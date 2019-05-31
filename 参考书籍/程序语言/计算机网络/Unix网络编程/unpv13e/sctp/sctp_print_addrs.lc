@@ -1,0 +1,31 @@
+#include    "unp.h"##  1 ##src/sctp/sctp_print_addrs.c##
+
+void##  2 ##src/sctp/sctp_print_addrs.c##
+sctp_print_addresses(struct sockaddr_storage *addrs, int num)##  3 ##src/sctp/sctp_print_addrs.c##
+{##  4 ##src/sctp/sctp_print_addrs.c##
+    struct sockaddr_storage *ss;##  5 ##src/sctp/sctp_print_addrs.c##
+    int     i, salen;##  6 ##src/sctp/sctp_print_addrs.c##
+
+    ss = addrs;##  7 ##src/sctp/sctp_print_addrs.c##
+    for (i = 0; i < num; i++) {##  8 ##src/sctp/sctp_print_addrs.c##
+        printf("%s\n", Sock_ntop((SA *) ss, salen));##  9 ##src/sctp/sctp_print_addrs.c##
+#ifdef HAVE_SOCKADDR_SA_LEN## 10 ##src/sctp/sctp_print_addrs.c##
+        salen = ss->ss_len;## 11 ##src/sctp/sctp_print_addrs.c##
+#else## 12 ##src/sctp/sctp_print_addrs.c##
+        switch (ss->ss_family) {## 13 ##src/sctp/sctp_print_addrs.c##
+        case AF_INET:## 14 ##src/sctp/sctp_print_addrs.c##
+            salen = sizeof(struct sockaddr_in);## 15 ##src/sctp/sctp_print_addrs.c##
+            break;## 16 ##src/sctp/sctp_print_addrs.c##
+#ifdef IPV6## 17 ##src/sctp/sctp_print_addrs.c##
+        case AF_INET6:## 18 ##src/sctp/sctp_print_addrs.c##
+            salen = sizeof(struct sockaddr_in6);## 19 ##src/sctp/sctp_print_addrs.c##
+            break;## 20 ##src/sctp/sctp_print_addrs.c##
+#endif## 21 ##src/sctp/sctp_print_addrs.c##
+        default:## 22 ##src/sctp/sctp_print_addrs.c##
+            err_quit("sctp_print_addresses: unknown AF");## 23 ##src/sctp/sctp_print_addrs.c##
+            break;## 24 ##src/sctp/sctp_print_addrs.c##
+        }## 25 ##src/sctp/sctp_print_addrs.c##
+#endif## 26 ##src/sctp/sctp_print_addrs.c##
+        ss = (struct sockaddr_storage *) ((char *) ss + salen);## 27 ##src/sctp/sctp_print_addrs.c##
+    }## 28 ##src/sctp/sctp_print_addrs.c##
+}## 29 ##src/sctp/sctp_print_addrs.c##

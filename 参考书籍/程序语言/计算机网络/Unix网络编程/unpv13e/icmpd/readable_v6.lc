@@ -1,0 +1,98 @@
+/* include readable_v61 */
+#include    "icmpd.h"##  1 ##src/icmpd/readable_v6.c##
+#include    <netinet/in_systm.h>##  2 ##src/icmpd/readable_v6.c##
+#include    <netinet/ip.h>##  3 ##src/icmpd/readable_v6.c##
+#include    <netinet/ip_icmp.h>##  4 ##src/icmpd/readable_v6.c##
+#include    <netinet/udp.h>##  5 ##src/icmpd/readable_v6.c##
+
+#ifdef  IPV6##  6 ##src/icmpd/readable_v6.c##
+#include    <netinet/ip6.h>##  7 ##src/icmpd/readable_v6.c##
+#include    <netinet/icmp6.h>##  8 ##src/icmpd/readable_v6.c##
+#endif##  9 ##src/icmpd/readable_v6.c##
+
+int## 10 ##src/icmpd/readable_v6.c##
+readable_v6(void)## 11 ##src/icmpd/readable_v6.c##
+{## 12 ##src/icmpd/readable_v6.c##
+#ifdef  IPV6## 13 ##src/icmpd/readable_v6.c##
+    int     i, hlen1, hlen2, icmp6len, sport;## 14 ##src/icmpd/readable_v6.c##
+    char    buf[MAXLINE];## 15 ##src/icmpd/readable_v6.c##
+    char    srcstr[INET6_ADDRSTRLEN], dststr[INET6_ADDRSTRLEN];## 16 ##src/icmpd/readable_v6.c##
+    ssize_t n;## 17 ##src/icmpd/readable_v6.c##
+    socklen_t len;## 18 ##src/icmpd/readable_v6.c##
+    struct ip6_hdr *ip6, *hip6;## 19 ##src/icmpd/readable_v6.c##
+    struct icmp6_hdr *icmp6;## 20 ##src/icmpd/readable_v6.c##
+    struct udphdr *udp;## 21 ##src/icmpd/readable_v6.c##
+    struct sockaddr_in6 from, dest;## 22 ##src/icmpd/readable_v6.c##
+    struct icmpd_err icmpd_err;## 23 ##src/icmpd/readable_v6.c##
+
+    len = sizeof(from);## 24 ##src/icmpd/readable_v6.c##
+    n = Recvfrom(fd6, buf, MAXLINE, 0, (SA *) &from, &len);## 25 ##src/icmpd/readable_v6.c##
+
+    printf("%d bytes ICMPv6 from %s:", n, Sock_ntop_host((SA *) &from, len));## 26 ##src/icmpd/readable_v6.c##
+
+    ip6 = (struct ip6_hdr *) buf;   /* start of IPv6 header */## 27 ##src/icmpd/readable_v6.c##
+    hlen1 = sizeof(struct ip6_hdr);## 28 ##src/icmpd/readable_v6.c##
+    if (ip6->ip6_nxt != IPPROTO_ICMPV6)## 29 ##src/icmpd/readable_v6.c##
+        err_quit("next header not IPPROTO_ICMPV6");## 30 ##src/icmpd/readable_v6.c##
+
+    icmp6 = (struct icmp6_hdr *) (buf + hlen1);## 31 ##src/icmpd/readable_v6.c##
+    if ((icmp6len = n - hlen1) < 8)## 32 ##src/icmpd/readable_v6.c##
+        err_quit("icmp6len (%d) < 8", icmp6len);## 33 ##src/icmpd/readable_v6.c##
+
+    printf(" type = %d, code = %d\n", icmp6->icmp6_type, icmp6->icmp6_code);## 34 ##src/icmpd/readable_v6.c##
+/* end readable_v61 */
+
+/* include readable_v62 */
+    if (icmp6->icmp6_type == ICMP6_DST_UNREACH ||## 35 ##src/icmpd/readable_v6.c##
+        icmp6->icmp6_type == ICMP6_PACKET_TOO_BIG ||## 36 ##src/icmpd/readable_v6.c##
+        icmp6->icmp6_type == ICMP6_TIME_EXCEEDED) {## 37 ##src/icmpd/readable_v6.c##
+        if (icmp6len < 8 + 40 + 8)## 38 ##src/icmpd/readable_v6.c##
+            err_quit("icmp6len (%d) < 8 + 40 + 8", icmp6len);## 39 ##src/icmpd/readable_v6.c##
+
+        hip6 = (struct ip6_hdr *) (buf + hlen1 + 8);## 40 ##src/icmpd/readable_v6.c##
+        hlen2 = sizeof(struct ip6_hdr);## 41 ##src/icmpd/readable_v6.c##
+        printf("\tsrcip = %s, dstip = %s, next hdr = %d\n",## 42 ##src/icmpd/readable_v6.c##
+               Inet_ntop(AF_INET6, &hip6->ip6_src, srcstr, sizeof(srcstr)),## 43 ##src/icmpd/readable_v6.c##
+               Inet_ntop(AF_INET6, &hip6->ip6_dst, dststr, sizeof(dststr)),## 44 ##src/icmpd/readable_v6.c##
+               hip6->ip6_nxt);## 45 ##src/icmpd/readable_v6.c##
+        if (hip6->ip6_nxt == IPPROTO_UDP) {## 46 ##src/icmpd/readable_v6.c##
+            udp = (struct udphdr *) (buf + hlen1 + 8 + hlen2);## 47 ##src/icmpd/readable_v6.c##
+            sport = udp->uh_sport;## 48 ##src/icmpd/readable_v6.c##
+
+            /* 4find client's Unix domain socket, send headers */## 49 ##src/icmpd/readable_v6.c##
+            for (i = 0; i <= maxi; i++) {## 50 ##src/icmpd/readable_v6.c##
+                if (client[i].connfd >= 0 &&## 51 ##src/icmpd/readable_v6.c##
+                    client[i].family == AF_INET6 &&## 52 ##src/icmpd/readable_v6.c##
+                    client[i].lport == sport) {## 53 ##src/icmpd/readable_v6.c##
+
+                    bzero(&dest, sizeof(dest));## 54 ##src/icmpd/readable_v6.c##
+                    dest.sin6_family = AF_INET6;## 55 ##src/icmpd/readable_v6.c##
+#ifdef  HAVE_SOCKADDR_SA_LEN## 56 ##src/icmpd/readable_v6.c##
+                    dest.sin6_len = sizeof(dest);## 57 ##src/icmpd/readable_v6.c##
+#endif## 58 ##src/icmpd/readable_v6.c##
+                    memcpy(&dest.sin6_addr, &hip6->ip6_dst,## 59 ##src/icmpd/readable_v6.c##
+                           sizeof(struct in6_addr));## 60 ##src/icmpd/readable_v6.c##
+                    dest.sin6_port = udp->uh_dport;## 61 ##src/icmpd/readable_v6.c##
+
+                    icmpd_err.icmpd_type = icmp6->icmp6_type;## 62 ##src/icmpd/readable_v6.c##
+                    icmpd_err.icmpd_code = icmp6->icmp6_code;## 63 ##src/icmpd/readable_v6.c##
+                    icmpd_err.icmpd_len = sizeof(struct sockaddr_in6);## 64 ##src/icmpd/readable_v6.c##
+                    memcpy(&icmpd_err.icmpd_dest, &dest, sizeof(dest));## 65 ##src/icmpd/readable_v6.c##
+
+                    /* 4convert type & code to reasonable errno value */## 66 ##src/icmpd/readable_v6.c##
+                    icmpd_err.icmpd_errno = EHOSTUNREACH;   /* default */## 67 ##src/icmpd/readable_v6.c##
+                    if (icmp6->icmp6_type == ICMP6_DST_UNREACH) {## 68 ##src/icmpd/readable_v6.c##
+                        if (icmp6->icmp6_code == ICMP_UNREACH_PORT)## 69 ##src/icmpd/readable_v6.c##
+                            icmpd_err.icmpd_errno = ECONNREFUSED;## 70 ##src/icmpd/readable_v6.c##
+                        else if (icmp6->icmp6_code == ICMP_UNREACH_NEEDFRAG)## 71 ##src/icmpd/readable_v6.c##
+                            icmpd_err.icmpd_errno = EMSGSIZE;## 72 ##src/icmpd/readable_v6.c##
+                    }## 73 ##src/icmpd/readable_v6.c##
+                    Write(client[i].connfd, &icmpd_err, sizeof(icmpd_err));## 74 ##src/icmpd/readable_v6.c##
+                }## 75 ##src/icmpd/readable_v6.c##
+            }## 76 ##src/icmpd/readable_v6.c##
+        }## 77 ##src/icmpd/readable_v6.c##
+    }## 78 ##src/icmpd/readable_v6.c##
+    return (--nready);## 79 ##src/icmpd/readable_v6.c##
+#endif## 80 ##src/icmpd/readable_v6.c##
+}## 81 ##src/icmpd/readable_v6.c##
+/* end readable_v62 */

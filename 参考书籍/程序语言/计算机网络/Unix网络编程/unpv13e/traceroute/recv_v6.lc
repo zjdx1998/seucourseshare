@@ -1,0 +1,76 @@
+#include    "trace.h"##  1 ##src/traceroute/recv_v6.c##
+
+/*##  2 ##src/traceroute/recv_v6.c##
+ * Return: -3 on timeout##  3 ##src/traceroute/recv_v6.c##
+ *         -2 on ICMP time exceeded in transit (caller keeps going)##  4 ##src/traceroute/recv_v6.c##
+ *         -1 on ICMP port unreachable (caller is done)##  5 ##src/traceroute/recv_v6.c##
+ *       >= 0 return value is some other ICMP unreachable code##  6 ##src/traceroute/recv_v6.c##
+ */##  7 ##src/traceroute/recv_v6.c##
+
+int##  8 ##src/traceroute/recv_v6.c##
+recv_v6(int seq, struct timeval *tv)##  9 ##src/traceroute/recv_v6.c##
+{## 10 ##src/traceroute/recv_v6.c##
+#ifdef  IPV6## 11 ##src/traceroute/recv_v6.c##
+    int     hlen1, hlen2, icmp6len;## 12 ##src/traceroute/recv_v6.c##
+    ssize_t n;## 13 ##src/traceroute/recv_v6.c##
+    socklen_t len;## 14 ##src/traceroute/recv_v6.c##
+    struct ip6_hdr *ip6, *hip6;## 15 ##src/traceroute/recv_v6.c##
+    struct icmp6_hdr *icmp6;## 16 ##src/traceroute/recv_v6.c##
+    struct udphdr *udp;## 17 ##src/traceroute/recv_v6.c##
+
+    alarm(3);## 18 ##src/traceroute/recv_v6.c##
+    for (;;) {## 19 ##src/traceroute/recv_v6.c##
+        len = pr->salen;## 20 ##src/traceroute/recv_v6.c##
+        n = recvfrom(recvfd, recvbuf, sizeof(recvbuf), 0, pr->sarecv, &len);## 21 ##src/traceroute/recv_v6.c##
+        if (n < 0) {## 22 ##src/traceroute/recv_v6.c##
+            if (errno == EINTR)## 23 ##src/traceroute/recv_v6.c##
+                return (-3);    /* alarm expired */## 24 ##src/traceroute/recv_v6.c##
+            else## 25 ##src/traceroute/recv_v6.c##
+                err_sys("recvfrom error");## 26 ##src/traceroute/recv_v6.c##
+        }## 27 ##src/traceroute/recv_v6.c##
+        Gettimeofday(tv, NULL); /* get time of packet arrival */## 28 ##src/traceroute/recv_v6.c##
+
+        ip6 = (struct ip6_hdr *) recvbuf;   /* start of IPv6 header */## 29 ##src/traceroute/recv_v6.c##
+        hlen1 = sizeof(struct ip6_hdr);## 30 ##src/traceroute/recv_v6.c##
+
+        icmp6 = (struct icmp6_hdr *) (recvbuf + hlen1); /* ICMP hdr */## 31 ##src/traceroute/recv_v6.c##
+        if ((icmp6len = n - hlen1) < 8)## 32 ##src/traceroute/recv_v6.c##
+            err_quit("icmp6len (%d) < 8", icmp6len);## 33 ##src/traceroute/recv_v6.c##
+
+        if (icmp6->icmp6_type == ICMP6_TIME_EXCEEDED &&## 34 ##src/traceroute/recv_v6.c##
+            icmp6->icmp6_code == ICMP6_TIME_EXCEED_TRANSIT) {## 35 ##src/traceroute/recv_v6.c##
+            if (icmp6len < 8 + 40 + 8)## 36 ##src/traceroute/recv_v6.c##
+                err_quit("icmp6len (%d) < 8 + 40 + 8", icmp6len);## 37 ##src/traceroute/recv_v6.c##
+
+            hip6 = (struct ip6_hdr *) (recvbuf + hlen1 + 8);## 38 ##src/traceroute/recv_v6.c##
+            hlen2 = sizeof(struct ip6_hdr);## 39 ##src/traceroute/recv_v6.c##
+            udp = (struct udphdr *) (recvbuf + hlen1 + 8 + hlen2);## 40 ##src/traceroute/recv_v6.c##
+            if (hip6->ip6_nxt == IPPROTO_UDP &&## 41 ##src/traceroute/recv_v6.c##
+                udp->uh_sport == htons(sport) &&## 42 ##src/traceroute/recv_v6.c##
+                udp->uh_dport == htons(dport + seq))## 43 ##src/traceroute/recv_v6.c##
+                return (-2);    /* we hit an intermediate router */## 44 ##src/traceroute/recv_v6.c##
+
+        } else if (icmp6->icmp6_type == ICMP6_DST_UNREACH) {## 45 ##src/traceroute/recv_v6.c##
+            if (icmp6len < 8 + 40 + 8)## 46 ##src/traceroute/recv_v6.c##
+                err_quit("icmp6len (%d) < 8 + 40 + 8", icmp6len);## 47 ##src/traceroute/recv_v6.c##
+
+            hip6 = (struct ip6_hdr *) (recvbuf + hlen1 + 8);## 48 ##src/traceroute/recv_v6.c##
+            hlen2 = 40;## 49 ##src/traceroute/recv_v6.c##
+            udp = (struct udphdr *) (recvbuf + hlen1 + 8 + hlen2);## 50 ##src/traceroute/recv_v6.c##
+            if (hip6->ip6_nxt == IPPROTO_UDP &&## 51 ##src/traceroute/recv_v6.c##
+                udp->uh_sport == htons(sport) &&## 52 ##src/traceroute/recv_v6.c##
+                udp->uh_dport == htons(dport + seq)) {## 53 ##src/traceroute/recv_v6.c##
+                if (icmp6->icmp6_code == ICMP6_DST_UNREACH_NOPORT)## 54 ##src/traceroute/recv_v6.c##
+                    return (-1);    /* have reached destination */## 55 ##src/traceroute/recv_v6.c##
+                else## 56 ##src/traceroute/recv_v6.c##
+                    return (icmp6->icmp6_code); /* 0, 1, 2, ... */## 57 ##src/traceroute/recv_v6.c##
+            }## 58 ##src/traceroute/recv_v6.c##
+        } else if (verbose) {## 59 ##src/traceroute/recv_v6.c##
+            printf(" (from %s: type = %d, code = %d)\n",## 60 ##src/traceroute/recv_v6.c##
+                   Sock_ntop_host(pr->sarecv, pr->salen),## 61 ##src/traceroute/recv_v6.c##
+                   icmp6->icmp6_type, icmp6->icmp6_code);## 62 ##src/traceroute/recv_v6.c##
+        }## 63 ##src/traceroute/recv_v6.c##
+        /* Some other ICMP error, recvfrom() again */## 64 ##src/traceroute/recv_v6.c##
+    }## 65 ##src/traceroute/recv_v6.c##
+#endif## 66 ##src/traceroute/recv_v6.c##
+}## 67 ##src/traceroute/recv_v6.c##

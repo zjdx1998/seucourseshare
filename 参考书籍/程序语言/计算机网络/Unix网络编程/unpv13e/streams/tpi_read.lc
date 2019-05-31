@@ -1,0 +1,32 @@
+#include    "tpi_daytime.h"##  1 ##src/streams/tpi_read.c##
+
+ssize_t##  2 ##src/streams/tpi_read.c##
+tpi_read(int fd, void *buf, size_t len)##  3 ##src/streams/tpi_read.c##
+{##  4 ##src/streams/tpi_read.c##
+    struct strbuf ctlbuf;##  5 ##src/streams/tpi_read.c##
+    struct strbuf datbuf;##  6 ##src/streams/tpi_read.c##
+    union T_primitives rcvbuf;##  7 ##src/streams/tpi_read.c##
+    int     flags;##  8 ##src/streams/tpi_read.c##
+
+    ctlbuf.maxlen = sizeof(union T_primitives);##  9 ##src/streams/tpi_read.c##
+    ctlbuf.buf = (char *) &rcvbuf;## 10 ##src/streams/tpi_read.c##
+
+    datbuf.maxlen = len;## 11 ##src/streams/tpi_read.c##
+    datbuf.buf = buf;## 12 ##src/streams/tpi_read.c##
+    datbuf.len = 0;## 13 ##src/streams/tpi_read.c##
+
+    flags = 0;## 14 ##src/streams/tpi_read.c##
+    Getmsg(fd, &ctlbuf, &datbuf, &flags);## 15 ##src/streams/tpi_read.c##
+
+    if (ctlbuf.len >= (int) sizeof(long)) {## 16 ##src/streams/tpi_read.c##
+        if (rcvbuf.type == T_DATA_IND)## 17 ##src/streams/tpi_read.c##
+            return (datbuf.len);## 18 ##src/streams/tpi_read.c##
+        else if (rcvbuf.type == T_ORDREL_IND)## 19 ##src/streams/tpi_read.c##
+            return (0);## 20 ##src/streams/tpi_read.c##
+        else## 21 ##src/streams/tpi_read.c##
+            err_quit("tpi_read: unexpected type %d", rcvbuf.type);## 22 ##src/streams/tpi_read.c##
+    } else if (ctlbuf.len == -1)## 23 ##src/streams/tpi_read.c##
+        return (datbuf.len);## 24 ##src/streams/tpi_read.c##
+    else## 25 ##src/streams/tpi_read.c##
+        err_quit("tpi_read: bad length from getmsg");## 26 ##src/streams/tpi_read.c##
+}## 27 ##src/streams/tpi_read.c##

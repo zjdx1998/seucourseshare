@@ -1,0 +1,99 @@
+/* include recvfrom_flags1 */
+#include    "unp.h"##  1 ##src/advio/recvfromflags.c##
+#include    <sys/param.h>       /* ALIGN macro for CMSG_NXTHDR() macro */##  2 ##src/advio/recvfromflags.c##
+
+#ifdef  HAVE_SOCKADDR_DL_STRUCT##  3 ##src/advio/recvfromflags.c##
+# include   <net/if_dl.h>##  4 ##src/advio/recvfromflags.c##
+#endif##  5 ##src/advio/recvfromflags.c##
+
+ssize_t##  6 ##src/advio/recvfromflags.c##
+recvfrom_flags(int fd, void *ptr, size_t nbytes, int *flagsp,##  7 ##src/advio/recvfromflags.c##
+               SA *sa, socklen_t *salenptr, struct in_pktinfo *pktp)##  8 ##src/advio/recvfromflags.c##
+{##  9 ##src/advio/recvfromflags.c##
+    struct msghdr msg;## 10 ##src/advio/recvfromflags.c##
+    struct iovec iov[1];## 11 ##src/advio/recvfromflags.c##
+    ssize_t n;## 12 ##src/advio/recvfromflags.c##
+
+#ifdef  HAVE_MSGHDR_MSG_CONTROL## 13 ##src/advio/recvfromflags.c##
+    struct cmsghdr *cmptr;## 14 ##src/advio/recvfromflags.c##
+    union {## 15 ##src/advio/recvfromflags.c##
+        struct cmsghdr cm;## 16 ##src/advio/recvfromflags.c##
+        char    control[CMSG_SPACE(sizeof(struct in_addr)) +## 17 ##src/advio/recvfromflags.c##
+                        CMSG_SPACE(sizeof(struct in_pktinfo))];## 18 ##src/advio/recvfromflags.c##
+    } control_un;## 19 ##src/advio/recvfromflags.c##
+
+    msg.msg_control = control_un.control;## 20 ##src/advio/recvfromflags.c##
+    msg.msg_controllen = sizeof(control_un.control);## 21 ##src/advio/recvfromflags.c##
+    msg.msg_flags = 0;## 22 ##src/advio/recvfromflags.c##
+#else## 23 ##src/advio/recvfromflags.c##
+    bzero(&msg, sizeof(msg));   /* make certain msg_accrightslen = 0 */## 24 ##src/advio/recvfromflags.c##
+#endif## 25 ##src/advio/recvfromflags.c##
+
+    msg.msg_name = sa;## 26 ##src/advio/recvfromflags.c##
+    msg.msg_namelen = *salenptr;## 27 ##src/advio/recvfromflags.c##
+    iov[0].iov_base = ptr;## 28 ##src/advio/recvfromflags.c##
+    iov[0].iov_len = nbytes;## 29 ##src/advio/recvfromflags.c##
+    msg.msg_iov = iov;## 30 ##src/advio/recvfromflags.c##
+    msg.msg_iovlen = 1;## 31 ##src/advio/recvfromflags.c##
+
+    if ((n = recvmsg(fd, &msg, *flagsp)) < 0)## 32 ##src/advio/recvfromflags.c##
+        return (n);## 33 ##src/advio/recvfromflags.c##
+
+    *salenptr = msg.msg_namelen;    /* pass back results */## 34 ##src/advio/recvfromflags.c##
+    if (pktp)## 35 ##src/advio/recvfromflags.c##
+        bzero(pktp, sizeof(struct in_pktinfo)); /* 0.0.0.0, i/f = 0 */## 36 ##src/advio/recvfromflags.c##
+/* end recvfrom_flags1 */
+
+/* include recvfrom_flags2 */
+#ifndef HAVE_MSGHDR_MSG_CONTROL## 37 ##src/advio/recvfromflags.c##
+    *flagsp = 0;                /* pass back results */## 38 ##src/advio/recvfromflags.c##
+    return (n);## 39 ##src/advio/recvfromflags.c##
+#else## 40 ##src/advio/recvfromflags.c##
+
+    *flagsp = msg.msg_flags;    /* pass back results */## 41 ##src/advio/recvfromflags.c##
+    if (msg.msg_controllen < sizeof(struct cmsghdr) ||## 42 ##src/advio/recvfromflags.c##
+        (msg.msg_flags & MSG_CTRUNC) || pktp == NULL)## 43 ##src/advio/recvfromflags.c##
+        return (n);## 44 ##src/advio/recvfromflags.c##
+
+    for (cmptr = CMSG_FIRSTHDR(&msg); cmptr != NULL;## 45 ##src/advio/recvfromflags.c##
+         cmptr = CMSG_NXTHDR(&msg, cmptr)) {## 46 ##src/advio/recvfromflags.c##
+
+#ifdef  IP_RECVDSTADDR## 47 ##src/advio/recvfromflags.c##
+        if (cmptr->cmsg_level == IPPROTO_IP &&## 48 ##src/advio/recvfromflags.c##
+            cmptr->cmsg_type == IP_RECVDSTADDR) {## 49 ##src/advio/recvfromflags.c##
+
+            memcpy(&pktp->ipi_addr, CMSG_DATA(cmptr),## 50 ##src/advio/recvfromflags.c##
+                   sizeof(struct in_addr));## 51 ##src/advio/recvfromflags.c##
+            continue;## 52 ##src/advio/recvfromflags.c##
+        }## 53 ##src/advio/recvfromflags.c##
+#endif## 54 ##src/advio/recvfromflags.c##
+
+#ifdef  IP_RECVIF## 55 ##src/advio/recvfromflags.c##
+        if (cmptr->cmsg_level == IPPROTO_IP && cmptr->cmsg_type == IP_RECVIF) {## 56 ##src/advio/recvfromflags.c##
+            struct sockaddr_dl *sdl;## 57 ##src/advio/recvfromflags.c##
+
+            sdl = (struct sockaddr_dl *) CMSG_DATA(cmptr);## 58 ##src/advio/recvfromflags.c##
+            pktp->ipi_ifindex = sdl->sdl_index;## 59 ##src/advio/recvfromflags.c##
+            continue;## 60 ##src/advio/recvfromflags.c##
+        }## 61 ##src/advio/recvfromflags.c##
+#endif## 62 ##src/advio/recvfromflags.c##
+        err_quit("unknown ancillary data, len = %d, level = %d, type = %d",## 63 ##src/advio/recvfromflags.c##
+                 cmptr->cmsg_len, cmptr->cmsg_level, cmptr->cmsg_type);## 64 ##src/advio/recvfromflags.c##
+    }## 65 ##src/advio/recvfromflags.c##
+    return (n);## 66 ##src/advio/recvfromflags.c##
+#endif  /* HAVE_MSGHDR_MSG_CONTROL */## 67 ##src/advio/recvfromflags.c##
+}## 68 ##src/advio/recvfromflags.c##
+/* end recvfrom_flags2 */
+
+ssize_t## 69 ##src/advio/recvfromflags.c##
+Recvfrom_flags(int fd, void *ptr, size_t nbytes, int *flagsp,## 70 ##src/advio/recvfromflags.c##
+               SA *sa, socklen_t *salenptr, struct in_pktinfo *pktp)## 71 ##src/advio/recvfromflags.c##
+{## 72 ##src/advio/recvfromflags.c##
+    ssize_t n;## 73 ##src/advio/recvfromflags.c##
+
+    n = recvfrom_flags(fd, ptr, nbytes, flagsp, sa, salenptr, pktp);## 74 ##src/advio/recvfromflags.c##
+    if (n < 0)## 75 ##src/advio/recvfromflags.c##
+        err_quit("recvfrom_flags error");## 76 ##src/advio/recvfromflags.c##
+
+    return (n);## 77 ##src/advio/recvfromflags.c##
+}## 78 ##src/advio/recvfromflags.c##

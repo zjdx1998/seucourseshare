@@ -1,0 +1,65 @@
+/* include getrt1 */
+#include    "unproute.h"##  1 ##src/route/getrt.c##
+
+#define BUFLEN  (sizeof(struct rt_msghdr) + 512)##  2 ##src/route/getrt.c##
+                    /* sizeof(struct sockaddr_in6) * 8 = 192 */##  3 ##src/route/getrt.c##
+#define SEQ     9999##  4 ##src/route/getrt.c##
+
+int##  5 ##src/route/getrt.c##
+main(int argc, char **argv)##  6 ##src/route/getrt.c##
+{##  7 ##src/route/getrt.c##
+    int     sockfd;##  8 ##src/route/getrt.c##
+    char   *buf;##  9 ##src/route/getrt.c##
+    pid_t   pid;## 10 ##src/route/getrt.c##
+    ssize_t n;## 11 ##src/route/getrt.c##
+    struct rt_msghdr *rtm;## 12 ##src/route/getrt.c##
+    struct sockaddr *sa, *rti_info[RTAX_MAX];## 13 ##src/route/getrt.c##
+    struct sockaddr_in *sin;## 14 ##src/route/getrt.c##
+
+    if (argc != 2)## 15 ##src/route/getrt.c##
+        err_quit("usage: getrt <IPaddress>");## 16 ##src/route/getrt.c##
+
+    sockfd = Socket(AF_ROUTE, SOCK_RAW, 0); /* need superuser privileges */## 17 ##src/route/getrt.c##
+
+    buf = Calloc(1, BUFLEN);    /* and initialized to 0 */## 18 ##src/route/getrt.c##
+
+    rtm = (struct rt_msghdr *) buf;## 19 ##src/route/getrt.c##
+    rtm->rtm_msglen = sizeof(struct rt_msghdr) + sizeof(struct sockaddr_in);## 20 ##src/route/getrt.c##
+    rtm->rtm_version = RTM_VERSION;## 21 ##src/route/getrt.c##
+    rtm->rtm_type = RTM_GET;## 22 ##src/route/getrt.c##
+    rtm->rtm_addrs = RTA_DST;## 23 ##src/route/getrt.c##
+    rtm->rtm_pid = pid = getpid();## 24 ##src/route/getrt.c##
+    rtm->rtm_seq = SEQ;## 25 ##src/route/getrt.c##
+
+    sin = (struct sockaddr_in *) (rtm + 1);## 26 ##src/route/getrt.c##
+    sin->sin_len = sizeof(struct sockaddr_in);## 27 ##src/route/getrt.c##
+    sin->sin_family = AF_INET;## 28 ##src/route/getrt.c##
+    Inet_pton(AF_INET, argv[1], &sin->sin_addr);## 29 ##src/route/getrt.c##
+
+    Write(sockfd, rtm, rtm->rtm_msglen);## 30 ##src/route/getrt.c##
+
+    do {## 31 ##src/route/getrt.c##
+        n = Read(sockfd, rtm, BUFLEN);## 32 ##src/route/getrt.c##
+    } while (rtm->rtm_type != RTM_GET || rtm->rtm_seq != SEQ ||## 33 ##src/route/getrt.c##
+             rtm->rtm_pid != pid);## 34 ##src/route/getrt.c##
+/* end getrt1 */
+
+/* include getrt2 */
+    rtm = (struct rt_msghdr *) buf;## 35 ##src/route/getrt.c##
+    sa = (struct sockaddr *) (rtm + 1);## 36 ##src/route/getrt.c##
+    get_rtaddrs(rtm->rtm_addrs, sa, rti_info);## 37 ##src/route/getrt.c##
+    if ((sa = rti_info[RTAX_DST]) != NULL)## 38 ##src/route/getrt.c##
+        printf("dest: %s\n", Sock_ntop_host(sa, sa->sa_len));## 39 ##src/route/getrt.c##
+
+    if ((sa = rti_info[RTAX_GATEWAY]) != NULL)## 40 ##src/route/getrt.c##
+        printf("gateway: %s\n", Sock_ntop_host(sa, sa->sa_len));## 41 ##src/route/getrt.c##
+
+    if ((sa = rti_info[RTAX_NETMASK]) != NULL)## 42 ##src/route/getrt.c##
+        printf("netmask: %s\n", Sock_masktop(sa, sa->sa_len));## 43 ##src/route/getrt.c##
+
+    if ((sa = rti_info[RTAX_GENMASK]) != NULL)## 44 ##src/route/getrt.c##
+        printf("genmask: %s\n", Sock_masktop(sa, sa->sa_len));## 45 ##src/route/getrt.c##
+
+    exit(0);## 46 ##src/route/getrt.c##
+}## 47 ##src/route/getrt.c##
+/* end getrt2 */

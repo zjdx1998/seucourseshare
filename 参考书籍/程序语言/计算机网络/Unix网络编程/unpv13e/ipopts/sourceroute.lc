@@ -1,0 +1,83 @@
+/* include inet_srcrt_init */
+#include    "unp.h"##  1 ##src/ipopts/sourceroute.c##
+#include    <netinet/in_systm.h>##  2 ##src/ipopts/sourceroute.c##
+#include    <netinet/ip.h>##  3 ##src/ipopts/sourceroute.c##
+
+static u_char *optr;            /* pointer into options being formed */##  4 ##src/ipopts/sourceroute.c##
+static u_char *lenptr;          /* pointer to length byte in SRR option */##  5 ##src/ipopts/sourceroute.c##
+static int ocnt;                /* count of # addresses */##  6 ##src/ipopts/sourceroute.c##
+
+u_char *##  7 ##src/ipopts/sourceroute.c##
+inet_srcrt_init(void)##  8 ##src/ipopts/sourceroute.c##
+{##  9 ##src/ipopts/sourceroute.c##
+    optr = Malloc(44);          /* NOP, code, len, ptr, up to 10 addresses */## 10 ##src/ipopts/sourceroute.c##
+    bzero(optr, 44);            /* guarantees EOLs at end */## 11 ##src/ipopts/sourceroute.c##
+    ocnt = 0;## 12 ##src/ipopts/sourceroute.c##
+    return (optr);              /* pointer for setsockopt() */## 13 ##src/ipopts/sourceroute.c##
+}## 14 ##src/ipopts/sourceroute.c##
+/* end inet_srcrt_init */
+
+/* include inet_srcrt_add */
+int## 15 ##src/ipopts/sourceroute.c##
+inet_srcrt_add(char *hostptr, int type)## 16 ##src/ipopts/sourceroute.c##
+{## 17 ##src/ipopts/sourceroute.c##
+    int     len;## 18 ##src/ipopts/sourceroute.c##
+    struct addrinfo *ai;## 19 ##src/ipopts/sourceroute.c##
+    struct sockaddr_in *sin;## 20 ##src/ipopts/sourceroute.c##
+
+    if (ocnt > 9)## 21 ##src/ipopts/sourceroute.c##
+        err_quit("too many source routes with: %s", hostptr);## 22 ##src/ipopts/sourceroute.c##
+
+    if (ocnt == 0) {## 23 ##src/ipopts/sourceroute.c##
+        *optr++ = IPOPT_NOP;    /* NOP for alignment */## 24 ##src/ipopts/sourceroute.c##
+        *optr++ = type ? IPOPT_SSRR : IPOPT_LSRR;## 25 ##src/ipopts/sourceroute.c##
+        lenptr = optr++;        /* we fill in the length later */## 26 ##src/ipopts/sourceroute.c##
+        *optr++ = 4;            /* offset to first address */## 27 ##src/ipopts/sourceroute.c##
+    }## 28 ##src/ipopts/sourceroute.c##
+
+    ai = Host_serv(hostptr, "", AF_INET, 0);## 29 ##src/ipopts/sourceroute.c##
+    sin = (struct sockaddr_in *) ai->ai_addr;## 30 ##src/ipopts/sourceroute.c##
+    memcpy(optr, &sin->sin_addr, sizeof(struct in_addr));## 31 ##src/ipopts/sourceroute.c##
+    freeaddrinfo(ai);## 32 ##src/ipopts/sourceroute.c##
+
+    optr += sizeof(struct in_addr);## 33 ##src/ipopts/sourceroute.c##
+    ocnt++;## 34 ##src/ipopts/sourceroute.c##
+    len = 3 + (ocnt * sizeof(struct in_addr));## 35 ##src/ipopts/sourceroute.c##
+    *lenptr = len;## 36 ##src/ipopts/sourceroute.c##
+    return (len + 1);           /* size for setsockopt() */## 37 ##src/ipopts/sourceroute.c##
+}## 38 ##src/ipopts/sourceroute.c##
+/* end inet_srcrt_add */
+
+/* include inet_srcrt_print */
+void## 39 ##src/ipopts/sourceroute.c##
+inet_srcrt_print(u_char *ptr, int len)## 40 ##src/ipopts/sourceroute.c##
+{## 41 ##src/ipopts/sourceroute.c##
+    u_char  c;## 42 ##src/ipopts/sourceroute.c##
+    char    str[INET_ADDRSTRLEN];## 43 ##src/ipopts/sourceroute.c##
+    struct in_addr hop1;## 44 ##src/ipopts/sourceroute.c##
+
+    memcpy(&hop1, ptr, sizeof(struct in_addr));## 45 ##src/ipopts/sourceroute.c##
+    ptr += sizeof(struct in_addr);## 46 ##src/ipopts/sourceroute.c##
+
+    while ((c = *ptr++) == IPOPT_NOP) ; /* skip any leading NOPs */## 47 ##src/ipopts/sourceroute.c##
+
+    if (c == IPOPT_LSRR)## 48 ##src/ipopts/sourceroute.c##
+        printf("received LSRR: ");## 49 ##src/ipopts/sourceroute.c##
+    else if (c == IPOPT_SSRR)## 50 ##src/ipopts/sourceroute.c##
+        printf("received SSRR: ");## 51 ##src/ipopts/sourceroute.c##
+    else {## 52 ##src/ipopts/sourceroute.c##
+        printf("received option type %d\n", c);## 53 ##src/ipopts/sourceroute.c##
+        return;## 54 ##src/ipopts/sourceroute.c##
+    }## 55 ##src/ipopts/sourceroute.c##
+    printf("%s ", Inet_ntop(AF_INET, &hop1, str, sizeof(str)));## 56 ##src/ipopts/sourceroute.c##
+
+    len = *ptr++ - sizeof(struct in_addr);  /* subtract dest IP addr */## 57 ##src/ipopts/sourceroute.c##
+    ptr++;                      /* skip over pointer */## 58 ##src/ipopts/sourceroute.c##
+    while (len > 0) {## 59 ##src/ipopts/sourceroute.c##
+        printf("%s ", Inet_ntop(AF_INET, ptr, str, sizeof(str)));## 60 ##src/ipopts/sourceroute.c##
+        ptr += sizeof(struct in_addr);## 61 ##src/ipopts/sourceroute.c##
+        len -= sizeof(struct in_addr);## 62 ##src/ipopts/sourceroute.c##
+    }## 63 ##src/ipopts/sourceroute.c##
+    printf("\n");## 64 ##src/ipopts/sourceroute.c##
+}## 65 ##src/ipopts/sourceroute.c##
+/* end inet_srcrt_print */

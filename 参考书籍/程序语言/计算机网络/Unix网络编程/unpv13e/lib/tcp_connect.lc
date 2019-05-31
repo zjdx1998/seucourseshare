@@ -1,0 +1,49 @@
+/* include tcp_connect */
+#include    "unp.h"##  1 ##src/lib/tcp_connect.c##
+
+int##  2 ##src/lib/tcp_connect.c##
+tcp_connect(const char *host, const char *serv)##  3 ##src/lib/tcp_connect.c##
+{##  4 ##src/lib/tcp_connect.c##
+    int     sockfd, n;##  5 ##src/lib/tcp_connect.c##
+    struct addrinfo hints, *res, *ressave;##  6 ##src/lib/tcp_connect.c##
+
+    bzero(&hints, sizeof(struct addrinfo));##  7 ##src/lib/tcp_connect.c##
+    hints.ai_family = AF_UNSPEC;##  8 ##src/lib/tcp_connect.c##
+    hints.ai_socktype = SOCK_STREAM;##  9 ##src/lib/tcp_connect.c##
+
+    if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)## 10 ##src/lib/tcp_connect.c##
+        err_quit("tcp_connect error for %s, %s: %s",## 11 ##src/lib/tcp_connect.c##
+                 host, serv, gai_strerror(n));## 12 ##src/lib/tcp_connect.c##
+    ressave = res;## 13 ##src/lib/tcp_connect.c##
+
+    do {## 14 ##src/lib/tcp_connect.c##
+        sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);## 15 ##src/lib/tcp_connect.c##
+        if (sockfd < 0)## 16 ##src/lib/tcp_connect.c##
+            continue;           /* ignore this one */## 17 ##src/lib/tcp_connect.c##
+
+        if (connect(sockfd, res->ai_addr, res->ai_addrlen) == 0)## 18 ##src/lib/tcp_connect.c##
+            break;              /* success */## 19 ##src/lib/tcp_connect.c##
+
+        Close(sockfd);          /* ignore this one */## 20 ##src/lib/tcp_connect.c##
+    } while ((res = res->ai_next) != NULL);## 21 ##src/lib/tcp_connect.c##
+
+    if (res == NULL)            /* errno set from final connect() */## 22 ##src/lib/tcp_connect.c##
+        err_sys("tcp_connect error for %s, %s", host, serv);## 23 ##src/lib/tcp_connect.c##
+
+    freeaddrinfo(ressave);## 24 ##src/lib/tcp_connect.c##
+
+    return (sockfd);## 25 ##src/lib/tcp_connect.c##
+}## 26 ##src/lib/tcp_connect.c##
+/* end tcp_connect */
+
+/*## 27 ##src/lib/tcp_connect.c##
+ * We place the wrapper function here, not in wraplib.c, because some## 28 ##src/lib/tcp_connect.c##
+ * XTI programs need to include wraplib.c, and it also defines## 29 ##src/lib/tcp_connect.c##
+ * a Tcp_connect() function.## 30 ##src/lib/tcp_connect.c##
+ */## 31 ##src/lib/tcp_connect.c##
+
+int## 32 ##src/lib/tcp_connect.c##
+Tcp_connect(const char *host, const char *serv)## 33 ##src/lib/tcp_connect.c##
+{## 34 ##src/lib/tcp_connect.c##
+    return (tcp_connect(host, serv));## 35 ##src/lib/tcp_connect.c##
+}## 36 ##src/lib/tcp_connect.c##

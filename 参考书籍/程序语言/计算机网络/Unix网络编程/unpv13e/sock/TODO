@@ -1,0 +1,4 @@
+- With -v print IP address after gethostbyname returns.
+
+- First, option to write() in small chunks.  Then option to use writev()
+  instead of write().  See what happens, with and without TCO_NODELAY.

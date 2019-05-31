@@ -1,0 +1,28 @@
+#include    "unproute.h"##  1 ##src/libroute/get_rtaddrs.c##
+
+/*##  2 ##src/libroute/get_rtaddrs.c##
+ * Round up 'a' to next multiple of 'size'##  3 ##src/libroute/get_rtaddrs.c##
+ */##  4 ##src/libroute/get_rtaddrs.c##
+#define ROUNDUP(a, size) (((a) & ((size)-1)) ? (1 + ((a) | ((size)-1))) : (a))##  5 ##src/libroute/get_rtaddrs.c##
+
+/*##  6 ##src/libroute/get_rtaddrs.c##
+ * Step to next socket address structure;##  7 ##src/libroute/get_rtaddrs.c##
+ * if sa_len is 0, assume it is sizeof(u_long).##  8 ##src/libroute/get_rtaddrs.c##
+ */##  9 ##src/libroute/get_rtaddrs.c##
+#define NEXT_SA(ap) ap = (SA *) \## 10 ##src/libroute/get_rtaddrs.c##
+    ((caddr_t) ap + (ap->sa_len ? ROUNDUP(ap->sa_len, sizeof (u_long)) : \## 11 ##src/libroute/get_rtaddrs.c##
+                                    sizeof(u_long)))## 12 ##src/libroute/get_rtaddrs.c##
+
+void## 13 ##src/libroute/get_rtaddrs.c##
+get_rtaddrs(int addrs, SA *sa, SA **rti_info)## 14 ##src/libroute/get_rtaddrs.c##
+{## 15 ##src/libroute/get_rtaddrs.c##
+    int     i;## 16 ##src/libroute/get_rtaddrs.c##
+
+    for (i = 0; i < RTAX_MAX; i++) {## 17 ##src/libroute/get_rtaddrs.c##
+        if (addrs & (1 << i)) {## 18 ##src/libroute/get_rtaddrs.c##
+            rti_info[i] = sa;## 19 ##src/libroute/get_rtaddrs.c##
+            NEXT_SA(sa);## 20 ##src/libroute/get_rtaddrs.c##
+        } else## 21 ##src/libroute/get_rtaddrs.c##
+            rti_info[i] = NULL;## 22 ##src/libroute/get_rtaddrs.c##
+    }## 23 ##src/libroute/get_rtaddrs.c##
+}## 24 ##src/libroute/get_rtaddrs.c##

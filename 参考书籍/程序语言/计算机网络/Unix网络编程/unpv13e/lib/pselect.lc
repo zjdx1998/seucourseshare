@@ -1,0 +1,31 @@
+/*##  1 ##src/lib/pselect.c##
+ * This is *not* a complete implementation of the Posix.1g pselect()##  2 ##src/lib/pselect.c##
+ * function.  For atomicity this must be implemented within the kernel,##  3 ##src/lib/pselect.c##
+ * with the sigprocmask/select/sigprocmask performed as a single atomic##  4 ##src/lib/pselect.c##
+ * operation.##  5 ##src/lib/pselect.c##
+ * This is just a quick hack to allow simple programs using it to compile.##  6 ##src/lib/pselect.c##
+ * Using such programs with this hack will probably lead to race conditions.##  7 ##src/lib/pselect.c##
+ */##  8 ##src/lib/pselect.c##
+/* include pselect */
+#include    "unp.h"##  9 ##src/lib/pselect.c##
+
+int## 10 ##src/lib/pselect.c##
+pselect(int nfds, fd_set *rset, fd_set *wset, fd_set *xset,## 11 ##src/lib/pselect.c##
+        const struct timespec *ts, const sigset_t *sigmask)## 12 ##src/lib/pselect.c##
+{## 13 ##src/lib/pselect.c##
+    int     n;## 14 ##src/lib/pselect.c##
+    struct timeval tv;## 15 ##src/lib/pselect.c##
+    sigset_t savemask;## 16 ##src/lib/pselect.c##
+
+    if (ts != NULL) {## 17 ##src/lib/pselect.c##
+        tv.tv_sec = ts->tv_sec;## 18 ##src/lib/pselect.c##
+        tv.tv_usec = ts->tv_nsec / 1000;    /* nanosec -> microsec */## 19 ##src/lib/pselect.c##
+    }## 20 ##src/lib/pselect.c##
+
+    sigprocmask(SIG_SETMASK, sigmask, &savemask);   /* caller's mask */## 21 ##src/lib/pselect.c##
+    n = select(nfds, rset, wset, xset, (ts == NULL) ? NULL : &tv);## 22 ##src/lib/pselect.c##
+    sigprocmask(SIG_SETMASK, &savemask, NULL);  /* restore mask */## 23 ##src/lib/pselect.c##
+
+    return (n);## 24 ##src/lib/pselect.c##
+}## 25 ##src/lib/pselect.c##
+/* end pselect */

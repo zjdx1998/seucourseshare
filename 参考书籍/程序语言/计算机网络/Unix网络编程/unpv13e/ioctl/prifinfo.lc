@@ -1,0 +1,53 @@
+#include    "unpifi.h"##  1 ##src/ioctl/prifinfo.c##
+
+int##  2 ##src/ioctl/prifinfo.c##
+main(int argc, char **argv)##  3 ##src/ioctl/prifinfo.c##
+{##  4 ##src/ioctl/prifinfo.c##
+    struct ifi_info *ifi, *ifihead;##  5 ##src/ioctl/prifinfo.c##
+    struct sockaddr *sa;##  6 ##src/ioctl/prifinfo.c##
+    u_char *ptr;##  7 ##src/ioctl/prifinfo.c##
+    int     i, family, doaliases;##  8 ##src/ioctl/prifinfo.c##
+
+    if (argc != 3)##  9 ##src/ioctl/prifinfo.c##
+        err_quit("usage: prifinfo <inet4|inet6> <doaliases>");## 10 ##src/ioctl/prifinfo.c##
+
+    if (strcmp(argv[1], "inet4") == 0)## 11 ##src/ioctl/prifinfo.c##
+        family = AF_INET;## 12 ##src/ioctl/prifinfo.c##
+#ifdef  IPV6## 13 ##src/ioctl/prifinfo.c##
+    else if (strcmp(argv[1], "inet6") == 0)## 14 ##src/ioctl/prifinfo.c##
+        family = AF_INET6;## 15 ##src/ioctl/prifinfo.c##
+#endif## 16 ##src/ioctl/prifinfo.c##
+    else## 17 ##src/ioctl/prifinfo.c##
+        err_quit("invalid <address-family>");## 18 ##src/ioctl/prifinfo.c##
+    doaliases = atoi(argv[2]);## 19 ##src/ioctl/prifinfo.c##
+
+    for (ifihead = ifi = Get_ifi_info(family, doaliases);## 20 ##src/ioctl/prifinfo.c##
+         ifi != NULL; ifi = ifi->ifi_next) {## 21 ##src/ioctl/prifinfo.c##
+        printf("%s: (%d) <", ifi->ifi_name, ifi->ifi_index);## 22 ##src/ioctl/prifinfo.c##
+        if (ifi->ifi_flags & IFF_UP)            printf("UP ");## 23 ##src/ioctl/prifinfo.c##
+        if (ifi->ifi_flags & IFF_BROADCAST)     printf("BCAST ");## 24 ##src/ioctl/prifinfo.c##
+        if (ifi->ifi_flags & IFF_MULTICAST)     printf("MCAST ");## 25 ##src/ioctl/prifinfo.c##
+        if (ifi->ifi_flags & IFF_LOOPBACK)      printf("LOOP ");## 26 ##src/ioctl/prifinfo.c##
+        if (ifi->ifi_flags & IFF_POINTOPOINT)   printf("P2P ");## 27 ##src/ioctl/prifinfo.c##
+        printf(">\n");## 28 ##src/ioctl/prifinfo.c##
+
+        if ((i = ifi->ifi_hlen) > 0) {## 29 ##src/ioctl/prifinfo.c##
+            ptr = ifi->ifi_haddr;## 30 ##src/ioctl/prifinfo.c##
+            do {## 31 ##src/ioctl/prifinfo.c##
+                printf("%s%x", (i == ifi->ifi_hlen) ? "  " : ":", *ptr++);## 32 ##src/ioctl/prifinfo.c##
+            } while (--i > 0);## 33 ##src/ioctl/prifinfo.c##
+            printf("\n");## 34 ##src/ioctl/prifinfo.c##
+        }## 35 ##src/ioctl/prifinfo.c##
+
+        if ((sa = ifi->ifi_addr) != NULL)## 36 ##src/ioctl/prifinfo.c##
+            printf("  IP addr: %s\n", Sock_ntop_host(sa, sizeof(*sa)));## 37 ##src/ioctl/prifinfo.c##
+        if ((sa = ifi->ifi_brdaddr) != NULL)## 38 ##src/ioctl/prifinfo.c##
+            printf("  broadcast addr: %s\n",## 39 ##src/ioctl/prifinfo.c##
+                   Sock_ntop_host(sa, sizeof(*sa)));## 40 ##src/ioctl/prifinfo.c##
+        if ((sa = ifi->ifi_dstaddr) != NULL)## 41 ##src/ioctl/prifinfo.c##
+            printf("  destination addr: %s\n",## 42 ##src/ioctl/prifinfo.c##
+                   Sock_ntop_host(sa, sizeof(*sa)));## 43 ##src/ioctl/prifinfo.c##
+    }## 44 ##src/ioctl/prifinfo.c##
+    free_ifi_info(ifihead);## 45 ##src/ioctl/prifinfo.c##
+    exit(0);## 46 ##src/ioctl/prifinfo.c##
+}## 47 ##src/ioctl/prifinfo.c##

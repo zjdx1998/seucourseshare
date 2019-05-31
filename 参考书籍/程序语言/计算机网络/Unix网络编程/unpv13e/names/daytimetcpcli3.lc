@@ -1,0 +1,58 @@
+#include    "unp.h"##  1 ##src/names/daytimetcpcli3.c##
+
+int##  2 ##src/names/daytimetcpcli3.c##
+main(int argc, char **argv)##  3 ##src/names/daytimetcpcli3.c##
+{##  4 ##src/names/daytimetcpcli3.c##
+    int     sockfd, n;##  5 ##src/names/daytimetcpcli3.c##
+    char    recvline[MAXLINE + 1];##  6 ##src/names/daytimetcpcli3.c##
+    struct sockaddr_in servaddr;##  7 ##src/names/daytimetcpcli3.c##
+    struct sockaddr_in6 servaddr6;##  8 ##src/names/daytimetcpcli3.c##
+    struct sockaddr *sa;##  9 ##src/names/daytimetcpcli3.c##
+    socklen_t salen;## 10 ##src/names/daytimetcpcli3.c##
+    struct in_addr **pptr;## 11 ##src/names/daytimetcpcli3.c##
+    struct hostent *hp;## 12 ##src/names/daytimetcpcli3.c##
+    struct servent *sp;## 13 ##src/names/daytimetcpcli3.c##
+
+    if (argc != 3)## 14 ##src/names/daytimetcpcli3.c##
+        err_quit("usage: daytimetcpcli3 <hostname> <service>");## 15 ##src/names/daytimetcpcli3.c##
+
+    if ((hp = gethostbyname(argv[1])) == NULL)## 16 ##src/names/daytimetcpcli3.c##
+        err_quit("hostname error for %s: %s", argv[1], hstrerror(h_errno));## 17 ##src/names/daytimetcpcli3.c##
+
+    if ((sp = getservbyname(argv[2], "tcp")) == NULL)## 18 ##src/names/daytimetcpcli3.c##
+        err_quit("getservbyname error for %s", argv[2]);## 19 ##src/names/daytimetcpcli3.c##
+
+    pptr = (struct in_addr **) hp->h_addr_list;## 20 ##src/names/daytimetcpcli3.c##
+    for (; *pptr != NULL; pptr++) {## 21 ##src/names/daytimetcpcli3.c##
+        sockfd = Socket(hp->h_addrtype, SOCK_STREAM, 0);## 22 ##src/names/daytimetcpcli3.c##
+
+        if (hp->h_addrtype == AF_INET) {## 23 ##src/names/daytimetcpcli3.c##
+            sa = (SA *) &servaddr;## 24 ##src/names/daytimetcpcli3.c##
+            salen = sizeof(servaddr);## 25 ##src/names/daytimetcpcli3.c##
+        } else if (hp->h_addrtype == AF_INET6) {## 26 ##src/names/daytimetcpcli3.c##
+            sa = (SA *) &servaddr6;## 27 ##src/names/daytimetcpcli3.c##
+            salen = sizeof(servaddr6);## 28 ##src/names/daytimetcpcli3.c##
+        } else## 29 ##src/names/daytimetcpcli3.c##
+            err_quit("unknown addrtype %d", hp->h_addrtype);## 30 ##src/names/daytimetcpcli3.c##
+
+        bzero(sa, salen);## 31 ##src/names/daytimetcpcli3.c##
+        sa->sa_family = hp->h_addrtype;## 32 ##src/names/daytimetcpcli3.c##
+        sock_set_port(sa, salen, sp->s_port);## 33 ##src/names/daytimetcpcli3.c##
+        sock_set_addr(sa, salen, *pptr);## 34 ##src/names/daytimetcpcli3.c##
+
+        printf("trying %s\n", Sock_ntop(sa, salen));## 35 ##src/names/daytimetcpcli3.c##
+
+        if (connect(sockfd, sa, salen) == 0)## 36 ##src/names/daytimetcpcli3.c##
+            break;              /* success */## 37 ##src/names/daytimetcpcli3.c##
+        err_ret("connect error");## 38 ##src/names/daytimetcpcli3.c##
+        close(sockfd);## 39 ##src/names/daytimetcpcli3.c##
+    }## 40 ##src/names/daytimetcpcli3.c##
+    if (*pptr == NULL)## 41 ##src/names/daytimetcpcli3.c##
+        err_quit("unable to connect");## 42 ##src/names/daytimetcpcli3.c##
+
+    while ((n = Read(sockfd, recvline, MAXLINE)) > 0) {## 43 ##src/names/daytimetcpcli3.c##
+        recvline[n] = 0;        /* null terminate */## 44 ##src/names/daytimetcpcli3.c##
+        Fputs(recvline, stdout);## 45 ##src/names/daytimetcpcli3.c##
+    }## 46 ##src/names/daytimetcpcli3.c##
+    exit(0);## 47 ##src/names/daytimetcpcli3.c##
+}## 48 ##src/names/daytimetcpcli3.c##

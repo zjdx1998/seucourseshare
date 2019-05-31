@@ -1,0 +1,12 @@
+#include    "unp.h"##  1 ##src/tcpcliserv/sigchldwait.c##
+
+void##  2 ##src/tcpcliserv/sigchldwait.c##
+sig_chld(int signo)##  3 ##src/tcpcliserv/sigchldwait.c##
+{##  4 ##src/tcpcliserv/sigchldwait.c##
+    pid_t   pid;##  5 ##src/tcpcliserv/sigchldwait.c##
+    int     stat;##  6 ##src/tcpcliserv/sigchldwait.c##
+
+    pid = wait(&stat);##  7 ##src/tcpcliserv/sigchldwait.c##
+    printf("child %d terminated\n", pid);##  8 ##src/tcpcliserv/sigchldwait.c##
+    return;##  9 ##src/tcpcliserv/sigchldwait.c##
+}## 10 ##src/tcpcliserv/sigchldwait.c##

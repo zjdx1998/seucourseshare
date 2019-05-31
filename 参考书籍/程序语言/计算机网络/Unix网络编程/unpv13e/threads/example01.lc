@@ -1,0 +1,41 @@
+#include    "unpthread.h"##  1 ##src/threads/example01.c##
+
+#define NLOOP 5000##  2 ##src/threads/example01.c##
+
+int     counter;                /* this is incremented by the threads */##  3 ##src/threads/example01.c##
+
+void   *doit(void *);##  4 ##src/threads/example01.c##
+
+int##  5 ##src/threads/example01.c##
+main(int argc, char **argv)##  6 ##src/threads/example01.c##
+{##  7 ##src/threads/example01.c##
+    pthread_t tidA, tidB;##  8 ##src/threads/example01.c##
+
+    Pthread_create(&tidA, NULL, &doit, NULL);##  9 ##src/threads/example01.c##
+    Pthread_create(&tidB, NULL, &doit, NULL);## 10 ##src/threads/example01.c##
+
+    /* 4wait for both threads to terminate */## 11 ##src/threads/example01.c##
+    Pthread_join(tidA, NULL);## 12 ##src/threads/example01.c##
+    Pthread_join(tidB, NULL);## 13 ##src/threads/example01.c##
+
+    exit(0);## 14 ##src/threads/example01.c##
+}## 15 ##src/threads/example01.c##
+
+void   *## 16 ##src/threads/example01.c##
+doit(void *vptr)## 17 ##src/threads/example01.c##
+{## 18 ##src/threads/example01.c##
+    int     i, val;## 19 ##src/threads/example01.c##
+
+    /* ## 20 ##src/threads/example01.c##
+     * Each thread fetches, prints, and increments the counter NLOOP times.## 21 ##src/threads/example01.c##
+     * The value of the counter should increase monotonically.## 22 ##src/threads/example01.c##
+     */## 23 ##src/threads/example01.c##
+
+    for (i = 0; i < NLOOP; i++) {## 24 ##src/threads/example01.c##
+        val = counter;## 25 ##src/threads/example01.c##
+        printf("%d: %d\n", pthread_self(), val + 1);## 26 ##src/threads/example01.c##
+        counter = val + 1;## 27 ##src/threads/example01.c##
+    }## 28 ##src/threads/example01.c##
+
+    return (NULL);## 29 ##src/threads/example01.c##
+}## 30 ##src/threads/example01.c##

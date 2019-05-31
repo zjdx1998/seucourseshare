@@ -1,0 +1,30 @@
+#include    "unp.h"##  1 ##src/advio/dgclitimeo2.c##
+
+void##  2 ##src/advio/dgclitimeo2.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  3 ##src/advio/dgclitimeo2.c##
+{##  4 ##src/advio/dgclitimeo2.c##
+    int     n;##  5 ##src/advio/dgclitimeo2.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  6 ##src/advio/dgclitimeo2.c##
+    struct timeval tv;##  7 ##src/advio/dgclitimeo2.c##
+
+    tv.tv_sec = 5;##  8 ##src/advio/dgclitimeo2.c##
+    tv.tv_usec = 0;##  9 ##src/advio/dgclitimeo2.c##
+    Setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));## 10 ##src/advio/dgclitimeo2.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {## 11 ##src/advio/dgclitimeo2.c##
+
+        Sendto(sockfd, sendline, strlen(sendline), 0, pservaddr, servlen);## 12 ##src/advio/dgclitimeo2.c##
+
+        n = recvfrom(sockfd, recvline, MAXLINE, 0, NULL, NULL);## 13 ##src/advio/dgclitimeo2.c##
+        if (n < 0) {## 14 ##src/advio/dgclitimeo2.c##
+            if (errno == EWOULDBLOCK) {## 15 ##src/advio/dgclitimeo2.c##
+                fprintf(stderr, "socket timeout\n");## 16 ##src/advio/dgclitimeo2.c##
+                continue;## 17 ##src/advio/dgclitimeo2.c##
+            } else## 18 ##src/advio/dgclitimeo2.c##
+                err_sys("recvfrom error");## 19 ##src/advio/dgclitimeo2.c##
+        }## 20 ##src/advio/dgclitimeo2.c##
+
+        recvline[n] = 0;        /* null terminate */## 21 ##src/advio/dgclitimeo2.c##
+        Fputs(recvline, stdout);## 22 ##src/advio/dgclitimeo2.c##
+    }## 23 ##src/advio/dgclitimeo2.c##
+}## 24 ##src/advio/dgclitimeo2.c##

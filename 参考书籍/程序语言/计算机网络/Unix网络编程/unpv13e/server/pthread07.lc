@@ -1,0 +1,34 @@
+#include    "unpthread.h"##  1 ##src/server/pthread07.c##
+#include    "pthread07.h"##  2 ##src/server/pthread07.c##
+
+void##  3 ##src/server/pthread07.c##
+thread_make(int i)##  4 ##src/server/pthread07.c##
+{##  5 ##src/server/pthread07.c##
+    void   *thread_main(void *);##  6 ##src/server/pthread07.c##
+
+    Pthread_create(&tptr[i].thread_tid, NULL, &thread_main, (void *) i);##  7 ##src/server/pthread07.c##
+    return;                     /* main thread returns */##  8 ##src/server/pthread07.c##
+}##  9 ##src/server/pthread07.c##
+
+void   *## 10 ##src/server/pthread07.c##
+thread_main(void *arg)## 11 ##src/server/pthread07.c##
+{## 12 ##src/server/pthread07.c##
+    int     connfd;## 13 ##src/server/pthread07.c##
+    void    web_child(int);## 14 ##src/server/pthread07.c##
+    socklen_t clilen;## 15 ##src/server/pthread07.c##
+    struct sockaddr *cliaddr;## 16 ##src/server/pthread07.c##
+
+    cliaddr = Malloc(addrlen);## 17 ##src/server/pthread07.c##
+
+    printf("thread %d starting\n", (int) arg);## 18 ##src/server/pthread07.c##
+    for (;;) {## 19 ##src/server/pthread07.c##
+        clilen = addrlen;## 20 ##src/server/pthread07.c##
+        Pthread_mutex_lock(&mlock);## 21 ##src/server/pthread07.c##
+        connfd = Accept(listenfd, cliaddr, &clilen);## 22 ##src/server/pthread07.c##
+        Pthread_mutex_unlock(&mlock);## 23 ##src/server/pthread07.c##
+        tptr[(int) arg].thread_count++;## 24 ##src/server/pthread07.c##
+
+        web_child(connfd);      /* process the request */## 25 ##src/server/pthread07.c##
+        Close(connfd);## 26 ##src/server/pthread07.c##
+    }## 27 ##src/server/pthread07.c##
+}## 28 ##src/server/pthread07.c##

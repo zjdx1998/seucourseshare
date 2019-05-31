@@ -1,0 +1,20 @@
+#include    "unp.h"##  1 ##src/udpcliserv/dgcliconnect.c##
+
+void##  2 ##src/udpcliserv/dgcliconnect.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  3 ##src/udpcliserv/dgcliconnect.c##
+{##  4 ##src/udpcliserv/dgcliconnect.c##
+    int     n;##  5 ##src/udpcliserv/dgcliconnect.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  6 ##src/udpcliserv/dgcliconnect.c##
+
+    Connect(sockfd, (SA *) pservaddr, servlen);##  7 ##src/udpcliserv/dgcliconnect.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {##  8 ##src/udpcliserv/dgcliconnect.c##
+
+        Write(sockfd, sendline, strlen(sendline));##  9 ##src/udpcliserv/dgcliconnect.c##
+
+        n = Read(sockfd, recvline, MAXLINE);## 10 ##src/udpcliserv/dgcliconnect.c##
+
+        recvline[n] = 0;        /* null terminate */## 11 ##src/udpcliserv/dgcliconnect.c##
+        Fputs(recvline, stdout);## 12 ##src/udpcliserv/dgcliconnect.c##
+    }## 13 ##src/udpcliserv/dgcliconnect.c##
+}## 14 ##src/udpcliserv/dgcliconnect.c##

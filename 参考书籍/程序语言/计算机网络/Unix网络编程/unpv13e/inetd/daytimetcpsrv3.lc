@@ -1,0 +1,25 @@
+#include    "unp.h"##  1 ##src/inetd/daytimetcpsrv3.c##
+#include    <time.h>##  2 ##src/inetd/daytimetcpsrv3.c##
+
+int##  3 ##src/inetd/daytimetcpsrv3.c##
+main(int argc, char **argv)##  4 ##src/inetd/daytimetcpsrv3.c##
+{##  5 ##src/inetd/daytimetcpsrv3.c##
+    socklen_t len;##  6 ##src/inetd/daytimetcpsrv3.c##
+    struct sockaddr *cliaddr;##  7 ##src/inetd/daytimetcpsrv3.c##
+    char    buff[MAXLINE];##  8 ##src/inetd/daytimetcpsrv3.c##
+    time_t  ticks;##  9 ##src/inetd/daytimetcpsrv3.c##
+
+    daemon_inetd(argv[0], 0);## 10 ##src/inetd/daytimetcpsrv3.c##
+
+    cliaddr = Malloc(MAXSOCKADDR);## 11 ##src/inetd/daytimetcpsrv3.c##
+    len = MAXSOCKADDR;## 12 ##src/inetd/daytimetcpsrv3.c##
+    Getpeername(0, cliaddr, &len);## 13 ##src/inetd/daytimetcpsrv3.c##
+    err_msg("connection from %s", Sock_ntop(cliaddr, len));## 14 ##src/inetd/daytimetcpsrv3.c##
+
+    ticks = time(NULL);## 15 ##src/inetd/daytimetcpsrv3.c##
+    snprintf(buff, sizeof(buff), "%.24s\r\n", ctime(&ticks));## 16 ##src/inetd/daytimetcpsrv3.c##
+    Write(0, buff, strlen(buff));## 17 ##src/inetd/daytimetcpsrv3.c##
+
+    Close(0);                   /* close TCP connection */## 18 ##src/inetd/daytimetcpsrv3.c##
+    exit(0);## 19 ##src/inetd/daytimetcpsrv3.c##
+}## 20 ##src/inetd/daytimetcpsrv3.c##

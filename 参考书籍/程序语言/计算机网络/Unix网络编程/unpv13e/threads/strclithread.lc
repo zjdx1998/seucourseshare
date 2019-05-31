@@ -1,0 +1,35 @@
+#include    "unpthread.h"##  1 ##src/threads/strclithread.c##
+
+void   *copyto(void *);##  2 ##src/threads/strclithread.c##
+
+static int sockfd;              /* global for both threads to access */##  3 ##src/threads/strclithread.c##
+static FILE *fp;##  4 ##src/threads/strclithread.c##
+
+void##  5 ##src/threads/strclithread.c##
+str_cli(FILE *fp_arg, int sockfd_arg)##  6 ##src/threads/strclithread.c##
+{##  7 ##src/threads/strclithread.c##
+    char    recvline[MAXLINE];##  8 ##src/threads/strclithread.c##
+    pthread_t tid;##  9 ##src/threads/strclithread.c##
+
+    sockfd = sockfd_arg;        /* copy arguments to externals */## 10 ##src/threads/strclithread.c##
+    fp = fp_arg;## 11 ##src/threads/strclithread.c##
+
+    Pthread_create(&tid, NULL, copyto, NULL);## 12 ##src/threads/strclithread.c##
+
+    while (Readline(sockfd, recvline, MAXLINE) > 0)## 13 ##src/threads/strclithread.c##
+        Fputs(recvline, stdout);## 14 ##src/threads/strclithread.c##
+}## 15 ##src/threads/strclithread.c##
+
+void   *## 16 ##src/threads/strclithread.c##
+copyto(void *arg)## 17 ##src/threads/strclithread.c##
+{## 18 ##src/threads/strclithread.c##
+    char    sendline[MAXLINE];## 19 ##src/threads/strclithread.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL)## 20 ##src/threads/strclithread.c##
+        Writen(sockfd, sendline, strlen(sendline));## 21 ##src/threads/strclithread.c##
+
+    Shutdown(sockfd, SHUT_WR);  /* EOF on stdin, send FIN */## 22 ##src/threads/strclithread.c##
+
+    return (NULL);## 23 ##src/threads/strclithread.c##
+    /* 4return (i.e., thread terminates) when end-of-file on stdin */## 24 ##src/threads/strclithread.c##
+}## 25 ##src/threads/strclithread.c##

@@ -1,0 +1,68 @@
+/* include readline */
+#include    "unp.h"##  1 ##src/lib/readline.c##
+
+static int read_cnt;##  2 ##src/lib/readline.c##
+static char *read_ptr;##  3 ##src/lib/readline.c##
+static char read_buf[MAXLINE];##  4 ##src/lib/readline.c##
+
+static ssize_t##  5 ##src/lib/readline.c##
+my_read(int fd, char *ptr)##  6 ##src/lib/readline.c##
+{##  7 ##src/lib/readline.c##
+
+    if (read_cnt <= 0) {##  8 ##src/lib/readline.c##
+      again:##  9 ##src/lib/readline.c##
+        if ((read_cnt = read(fd, read_buf, sizeof(read_buf))) < 0) {## 10 ##src/lib/readline.c##
+            if (errno == EINTR)## 11 ##src/lib/readline.c##
+                goto again;## 12 ##src/lib/readline.c##
+            return (-1);## 13 ##src/lib/readline.c##
+        } else if (read_cnt == 0)## 14 ##src/lib/readline.c##
+            return (0);## 15 ##src/lib/readline.c##
+        read_ptr = read_buf;## 16 ##src/lib/readline.c##
+    }## 17 ##src/lib/readline.c##
+
+    read_cnt--;## 18 ##src/lib/readline.c##
+    *ptr = *read_ptr++;## 19 ##src/lib/readline.c##
+    return (1);## 20 ##src/lib/readline.c##
+}## 21 ##src/lib/readline.c##
+
+ssize_t## 22 ##src/lib/readline.c##
+readline(int fd, void *vptr, size_t maxlen)## 23 ##src/lib/readline.c##
+{## 24 ##src/lib/readline.c##
+    ssize_t n, rc;## 25 ##src/lib/readline.c##
+    char    c, *ptr;## 26 ##src/lib/readline.c##
+
+    ptr = vptr;## 27 ##src/lib/readline.c##
+    for (n = 1; n < maxlen; n++) {## 28 ##src/lib/readline.c##
+        if ((rc = my_read(fd, &c)) == 1) {## 29 ##src/lib/readline.c##
+            *ptr++ = c;## 30 ##src/lib/readline.c##
+            if (c == '\n')## 31 ##src/lib/readline.c##
+                break;          /* newline is stored, like fgets() */## 32 ##src/lib/readline.c##
+        } else if (rc == 0) {## 33 ##src/lib/readline.c##
+            *ptr = 0;## 34 ##src/lib/readline.c##
+            return (n - 1);     /* EOF, n - 1 bytes were read */## 35 ##src/lib/readline.c##
+        } else## 36 ##src/lib/readline.c##
+            return (-1);        /* error, errno set by read() */## 37 ##src/lib/readline.c##
+    }## 38 ##src/lib/readline.c##
+
+    *ptr = 0;                   /* null terminate like fgets() */## 39 ##src/lib/readline.c##
+    return (n);## 40 ##src/lib/readline.c##
+}## 41 ##src/lib/readline.c##
+
+ssize_t## 42 ##src/lib/readline.c##
+readlinebuf(void **vptrptr)## 43 ##src/lib/readline.c##
+{## 44 ##src/lib/readline.c##
+    if (read_cnt)## 45 ##src/lib/readline.c##
+        *vptrptr = read_ptr;## 46 ##src/lib/readline.c##
+    return (read_cnt);## 47 ##src/lib/readline.c##
+}## 48 ##src/lib/readline.c##
+/* end readline */
+
+ssize_t## 49 ##src/lib/readline.c##
+Readline(int fd, void *ptr, size_t maxlen)## 50 ##src/lib/readline.c##
+{## 51 ##src/lib/readline.c##
+    ssize_t n;## 52 ##src/lib/readline.c##
+
+    if ((n = readline(fd, ptr, maxlen)) < 0)## 53 ##src/lib/readline.c##
+        err_sys("readline error");## 54 ##src/lib/readline.c##
+    return (n);## 55 ##src/lib/readline.c##
+}## 56 ##src/lib/readline.c##

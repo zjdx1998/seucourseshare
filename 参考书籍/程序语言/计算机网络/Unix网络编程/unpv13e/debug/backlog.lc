@@ -1,0 +1,99 @@
+#include    "unp.h"##  1 ##src/debug/backlog.c##
+
+#define PORT        9999##  2 ##src/debug/backlog.c##
+#define ADDR        "127.0.0.1"##  3 ##src/debug/backlog.c##
+#define MAXBACKLOG  100##  4 ##src/debug/backlog.c##
+
+            /* globals */##  5 ##src/debug/backlog.c##
+struct sockaddr_in serv;##  6 ##src/debug/backlog.c##
+pid_t   pid;                    /* of child */##  7 ##src/debug/backlog.c##
+
+int     pipefd[2];##  8 ##src/debug/backlog.c##
+#define pfd pipefd[1]           /* parent's end */##  9 ##src/debug/backlog.c##
+#define cfd pipefd[0]           /* child's end */## 10 ##src/debug/backlog.c##
+
+            /* function prototypes */## 11 ##src/debug/backlog.c##
+void    do_parent(void);## 12 ##src/debug/backlog.c##
+void    do_child(void);## 13 ##src/debug/backlog.c##
+
+int## 14 ##src/debug/backlog.c##
+main(int argc, char **argv)## 15 ##src/debug/backlog.c##
+{## 16 ##src/debug/backlog.c##
+    if (argc != 1)## 17 ##src/debug/backlog.c##
+        err_quit("usage: backlog");## 18 ##src/debug/backlog.c##
+
+    Socketpair(AF_UNIX, SOCK_STREAM, 0, pipefd);## 19 ##src/debug/backlog.c##
+
+    bzero(&serv, sizeof(serv));## 20 ##src/debug/backlog.c##
+    serv.sin_family = AF_INET;## 21 ##src/debug/backlog.c##
+    serv.sin_port = htons(PORT);## 22 ##src/debug/backlog.c##
+    Inet_pton(AF_INET, ADDR, &serv.sin_addr);## 23 ##src/debug/backlog.c##
+
+    if ((pid = Fork()) == 0)## 24 ##src/debug/backlog.c##
+        do_child();## 25 ##src/debug/backlog.c##
+    else## 26 ##src/debug/backlog.c##
+        do_parent();## 27 ##src/debug/backlog.c##
+
+    exit(0);## 28 ##src/debug/backlog.c##
+}## 29 ##src/debug/backlog.c##
+
+void## 30 ##src/debug/backlog.c##
+parent_alrm(int signo)## 31 ##src/debug/backlog.c##
+{## 32 ##src/debug/backlog.c##
+    return;                     /* just interrupt blocked connect() */## 33 ##src/debug/backlog.c##
+}## 34 ##src/debug/backlog.c##
+
+void## 35 ##src/debug/backlog.c##
+do_parent(void)## 36 ##src/debug/backlog.c##
+{## 37 ##src/debug/backlog.c##
+    int     backlog, j, k, junk, fd[MAXBACKLOG + 1];## 38 ##src/debug/backlog.c##
+
+    Close(cfd);## 39 ##src/debug/backlog.c##
+    Signal(SIGALRM, parent_alrm);## 40 ##src/debug/backlog.c##
+
+    for (backlog = 0; backlog <= 14; backlog++) {## 41 ##src/debug/backlog.c##
+        printf("backlog = %d: ", backlog);## 42 ##src/debug/backlog.c##
+        Write(pfd, &backlog, sizeof(int));  /* tell child value */## 43 ##src/debug/backlog.c##
+        Read(pfd, &junk, sizeof(int));  /* wait for child */## 44 ##src/debug/backlog.c##
+
+        for (j = 1; j <= MAXBACKLOG; j++) {## 45 ##src/debug/backlog.c##
+            fd[j] = Socket(AF_INET, SOCK_STREAM, 0);## 46 ##src/debug/backlog.c##
+            alarm(2);## 47 ##src/debug/backlog.c##
+            if (connect(fd[j], (SA *) &serv, sizeof(serv)) < 0) {## 48 ##src/debug/backlog.c##
+                if (errno != EINTR)## 49 ##src/debug/backlog.c##
+                    err_sys("connect error, j = %d", j);## 50 ##src/debug/backlog.c##
+                printf("timeout, %d connections completed\n", j - 1);## 51 ##src/debug/backlog.c##
+                for (k = 1; k <= j; k++)## 52 ##src/debug/backlog.c##
+                    Close(fd[k]);## 53 ##src/debug/backlog.c##
+                break;          /* next value of backlog */## 54 ##src/debug/backlog.c##
+            }## 55 ##src/debug/backlog.c##
+            alarm(0);## 56 ##src/debug/backlog.c##
+        }## 57 ##src/debug/backlog.c##
+        if (j > MAXBACKLOG)## 58 ##src/debug/backlog.c##
+            printf("%d connections?\n", MAXBACKLOG);## 59 ##src/debug/backlog.c##
+    }## 60 ##src/debug/backlog.c##
+    backlog = -1;               /* tell child we're all done */## 61 ##src/debug/backlog.c##
+    Write(pfd, &backlog, sizeof(int));## 62 ##src/debug/backlog.c##
+}## 63 ##src/debug/backlog.c##
+
+void## 64 ##src/debug/backlog.c##
+do_child(void)## 65 ##src/debug/backlog.c##
+{## 66 ##src/debug/backlog.c##
+    int     listenfd, backlog, junk;## 67 ##src/debug/backlog.c##
+    const int on = 1;## 68 ##src/debug/backlog.c##
+
+    Close(pfd);## 69 ##src/debug/backlog.c##
+
+    Read(cfd, &backlog, sizeof(int));   /* wait for parent */## 70 ##src/debug/backlog.c##
+    while (backlog >= 0) {## 71 ##src/debug/backlog.c##
+        listenfd = Socket(AF_INET, SOCK_STREAM, 0);## 72 ##src/debug/backlog.c##
+        Setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));## 73 ##src/debug/backlog.c##
+        Bind(listenfd, (SA *) &serv, sizeof(serv));## 74 ##src/debug/backlog.c##
+        Listen(listenfd, backlog);  /* start the listen */## 75 ##src/debug/backlog.c##
+
+        Write(cfd, &junk, sizeof(int)); /* tell parent */## 76 ##src/debug/backlog.c##
+
+        Read(cfd, &backlog, sizeof(int));   /* just wait for parent */## 77 ##src/debug/backlog.c##
+        Close(listenfd);        /* closes all queued connections too */## 78 ##src/debug/backlog.c##
+    }## 79 ##src/debug/backlog.c##
+}## 80 ##src/debug/backlog.c##

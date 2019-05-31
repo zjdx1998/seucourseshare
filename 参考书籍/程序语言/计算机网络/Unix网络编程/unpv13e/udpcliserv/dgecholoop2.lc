@@ -1,0 +1,31 @@
+#include    "unp.h"##  1 ##src/udpcliserv/dgecholoop2.c##
+
+static void recvfrom_int(int);##  2 ##src/udpcliserv/dgecholoop2.c##
+static int count;##  3 ##src/udpcliserv/dgecholoop2.c##
+
+void##  4 ##src/udpcliserv/dgecholoop2.c##
+dg_echo(int sockfd, SA *pcliaddr, socklen_t clilen)##  5 ##src/udpcliserv/dgecholoop2.c##
+{##  6 ##src/udpcliserv/dgecholoop2.c##
+    int     n;##  7 ##src/udpcliserv/dgecholoop2.c##
+    socklen_t len;##  8 ##src/udpcliserv/dgecholoop2.c##
+    char    mesg[MAXLINE];##  9 ##src/udpcliserv/dgecholoop2.c##
+
+    Signal(SIGINT, recvfrom_int);## 10 ##src/udpcliserv/dgecholoop2.c##
+
+    n = 240 * 1024;## 11 ##src/udpcliserv/dgecholoop2.c##
+    Setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));## 12 ##src/udpcliserv/dgecholoop2.c##
+
+    for (;;) {## 13 ##src/udpcliserv/dgecholoop2.c##
+        len = clilen;## 14 ##src/udpcliserv/dgecholoop2.c##
+        Recvfrom(sockfd, mesg, MAXLINE, 0, pcliaddr, &len);## 15 ##src/udpcliserv/dgecholoop2.c##
+
+        count++;## 16 ##src/udpcliserv/dgecholoop2.c##
+    }## 17 ##src/udpcliserv/dgecholoop2.c##
+}## 18 ##src/udpcliserv/dgecholoop2.c##
+
+static void## 19 ##src/udpcliserv/dgecholoop2.c##
+recvfrom_int(int signo)## 20 ##src/udpcliserv/dgecholoop2.c##
+{## 21 ##src/udpcliserv/dgecholoop2.c##
+    printf("\nreceived %d datagrams\n", count);## 22 ##src/udpcliserv/dgecholoop2.c##
+    exit(0);## 23 ##src/udpcliserv/dgecholoop2.c##
+}## 24 ##src/udpcliserv/dgecholoop2.c##

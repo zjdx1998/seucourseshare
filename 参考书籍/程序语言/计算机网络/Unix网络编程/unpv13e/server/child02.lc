@@ -1,0 +1,37 @@
+/* include child_make */
+#include    "unp.h"##  1 ##src/server/child02.c##
+
+pid_t##  2 ##src/server/child02.c##
+child_make(int i, int listenfd, int addrlen)##  3 ##src/server/child02.c##
+{##  4 ##src/server/child02.c##
+    pid_t   pid;##  5 ##src/server/child02.c##
+    void    child_main(int, int, int);##  6 ##src/server/child02.c##
+
+    if ((pid = Fork()) > 0)##  7 ##src/server/child02.c##
+        return (pid);           /* parent */##  8 ##src/server/child02.c##
+
+    child_main(i, listenfd, addrlen);   /* never returns */##  9 ##src/server/child02.c##
+}## 10 ##src/server/child02.c##
+/* end child_make */
+
+/* include child_main */
+void## 11 ##src/server/child02.c##
+child_main(int i, int listenfd, int addrlen)## 12 ##src/server/child02.c##
+{## 13 ##src/server/child02.c##
+    int     connfd;## 14 ##src/server/child02.c##
+    void    web_child(int);## 15 ##src/server/child02.c##
+    socklen_t clilen;## 16 ##src/server/child02.c##
+    struct sockaddr *cliaddr;## 17 ##src/server/child02.c##
+
+    cliaddr = Malloc(addrlen);## 18 ##src/server/child02.c##
+
+    printf("child %ld starting\n", (long) getpid());## 19 ##src/server/child02.c##
+    for (;;) {## 20 ##src/server/child02.c##
+        clilen = addrlen;## 21 ##src/server/child02.c##
+        connfd = Accept(listenfd, cliaddr, &clilen);## 22 ##src/server/child02.c##
+
+        web_child(connfd);      /* process the request */## 23 ##src/server/child02.c##
+        Close(connfd);## 24 ##src/server/child02.c##
+    }## 25 ##src/server/child02.c##
+}## 26 ##src/server/child02.c##
+/* end child_main */

@@ -1,0 +1,24 @@
+#include    "unp.h"##  1 ##src/tcpcliserv/tcpcli01.c##
+
+int##  2 ##src/tcpcliserv/tcpcli01.c##
+main(int argc, char **argv)##  3 ##src/tcpcliserv/tcpcli01.c##
+{##  4 ##src/tcpcliserv/tcpcli01.c##
+    int     sockfd;##  5 ##src/tcpcliserv/tcpcli01.c##
+    struct sockaddr_in servaddr;##  6 ##src/tcpcliserv/tcpcli01.c##
+
+    if (argc != 2)##  7 ##src/tcpcliserv/tcpcli01.c##
+        err_quit("usage: tcpcli <IPaddress>");##  8 ##src/tcpcliserv/tcpcli01.c##
+
+    sockfd = Socket(AF_INET, SOCK_STREAM, 0);##  9 ##src/tcpcliserv/tcpcli01.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 10 ##src/tcpcliserv/tcpcli01.c##
+    servaddr.sin_family = AF_INET;## 11 ##src/tcpcliserv/tcpcli01.c##
+    servaddr.sin_port = htons(SERV_PORT);## 12 ##src/tcpcliserv/tcpcli01.c##
+    Inet_pton(AF_INET, argv[1], &servaddr.sin_addr);## 13 ##src/tcpcliserv/tcpcli01.c##
+
+    Connect(sockfd, (SA *) &servaddr, sizeof(servaddr));## 14 ##src/tcpcliserv/tcpcli01.c##
+
+    str_cli(stdin, sockfd);     /* do it all */## 15 ##src/tcpcliserv/tcpcli01.c##
+
+    exit(0);## 16 ##src/tcpcliserv/tcpcli01.c##
+}## 17 ##src/tcpcliserv/tcpcli01.c##

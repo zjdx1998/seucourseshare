@@ -1,0 +1,29 @@
+/* include readable_timeo */
+#include    "unp.h"##  1 ##src/lib/readable_timeo.c##
+
+int##  2 ##src/lib/readable_timeo.c##
+readable_timeo(int fd, int sec)##  3 ##src/lib/readable_timeo.c##
+{##  4 ##src/lib/readable_timeo.c##
+    fd_set  rset;##  5 ##src/lib/readable_timeo.c##
+    struct timeval tv;##  6 ##src/lib/readable_timeo.c##
+
+    FD_ZERO(&rset);##  7 ##src/lib/readable_timeo.c##
+    FD_SET(fd, &rset);##  8 ##src/lib/readable_timeo.c##
+
+    tv.tv_sec = sec;##  9 ##src/lib/readable_timeo.c##
+    tv.tv_usec = 0;## 10 ##src/lib/readable_timeo.c##
+
+    return (select(fd + 1, &rset, NULL, NULL, &tv));## 11 ##src/lib/readable_timeo.c##
+    /* 4> 0 if descriptor is readable */## 12 ##src/lib/readable_timeo.c##
+}## 13 ##src/lib/readable_timeo.c##
+/* end readable_timeo */
+
+int## 14 ##src/lib/readable_timeo.c##
+Readable_timeo(int fd, int sec)## 15 ##src/lib/readable_timeo.c##
+{## 16 ##src/lib/readable_timeo.c##
+    int     n;## 17 ##src/lib/readable_timeo.c##
+
+    if ((n = readable_timeo(fd, sec)) < 0)## 18 ##src/lib/readable_timeo.c##
+        err_sys("readable_timeo error");## 19 ##src/lib/readable_timeo.c##
+    return (n);## 20 ##src/lib/readable_timeo.c##
+}## 21 ##src/lib/readable_timeo.c##

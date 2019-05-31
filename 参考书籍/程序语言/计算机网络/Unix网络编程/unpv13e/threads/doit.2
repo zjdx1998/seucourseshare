@@ -1,0 +1,17 @@
+#!/bin/sh
+
+ClientP=/nfs/kohala/home/rstevens/doc/unp/src/tcpcliserv/tcpcli01 # client prog
+ServerH="206.62.226.33"			# server host
+Infile=/usr/share/misc/zipcodes		# big BSD/OS text file
+
+$ClientP $ServerH < $Infile > temp.1 &
+$ClientP $ServerH < $Infile > temp.2 &
+$ClientP $ServerH < $Infile > temp.3 &
+# $ClientP $ServerH < $Infile > temp.4 &
+# $ClientP $ServerH < $Infile > temp.5 &
+# $ClientP $ServerH < $Infile > temp.6 &
+# $ClientP $ServerH < $Infile > temp.7 &
+# $ClientP $ServerH < $Infile > temp.8 &
+# $ClientP $ServerH < $Infile > temp.9 &
+
+wait

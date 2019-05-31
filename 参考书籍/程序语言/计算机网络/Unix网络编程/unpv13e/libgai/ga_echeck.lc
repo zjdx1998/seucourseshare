@@ -1,0 +1,45 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/ga_echeck.c##
+
+/*##  2 ##src/libgai/ga_echeck.c##
+ * Basic error checking of flags, family, socket type, and protocol.##  3 ##src/libgai/ga_echeck.c##
+ */##  4 ##src/libgai/ga_echeck.c##
+
+/* include ga_echeck */
+int##  5 ##src/libgai/ga_echeck.c##
+ga_echeck(const char *hostname, const char *servname,##  6 ##src/libgai/ga_echeck.c##
+          int flags, int family, int socktype, int protocol)##  7 ##src/libgai/ga_echeck.c##
+{##  8 ##src/libgai/ga_echeck.c##
+    if (flags & ~(AI_PASSIVE | AI_CANONNAME))##  9 ##src/libgai/ga_echeck.c##
+        return (EAI_BADFLAGS);  /* unknown flag bits */## 10 ##src/libgai/ga_echeck.c##
+
+    if (hostname == NULL || hostname[0] == '\0') {## 11 ##src/libgai/ga_echeck.c##
+        if (servname == NULL || servname[0] == '\0')## 12 ##src/libgai/ga_echeck.c##
+            return (EAI_NONAME);    /* host or service must be specified */## 13 ##src/libgai/ga_echeck.c##
+    }## 14 ##src/libgai/ga_echeck.c##
+
+    switch (family) {## 15 ##src/libgai/ga_echeck.c##
+    case AF_UNSPEC:## 16 ##src/libgai/ga_echeck.c##
+        break;## 17 ##src/libgai/ga_echeck.c##
+    case AF_INET:## 18 ##src/libgai/ga_echeck.c##
+        if (socktype != 0 &&## 19 ##src/libgai/ga_echeck.c##
+            (socktype != SOCK_STREAM &&## 20 ##src/libgai/ga_echeck.c##
+             socktype != SOCK_DGRAM && socktype != SOCK_RAW))## 21 ##src/libgai/ga_echeck.c##
+            return (EAI_SOCKTYPE);  /* invalid socket type */## 22 ##src/libgai/ga_echeck.c##
+        break;## 23 ##src/libgai/ga_echeck.c##
+    case AF_INET6:## 24 ##src/libgai/ga_echeck.c##
+        if (socktype != 0 &&## 25 ##src/libgai/ga_echeck.c##
+            (socktype != SOCK_STREAM &&## 26 ##src/libgai/ga_echeck.c##
+             socktype != SOCK_DGRAM && socktype != SOCK_RAW))## 27 ##src/libgai/ga_echeck.c##
+            return (EAI_SOCKTYPE);  /* invalid socket type */## 28 ##src/libgai/ga_echeck.c##
+        break;## 29 ##src/libgai/ga_echeck.c##
+    case AF_LOCAL:## 30 ##src/libgai/ga_echeck.c##
+        if (socktype != 0 &&## 31 ##src/libgai/ga_echeck.c##
+            (socktype != SOCK_STREAM && socktype != SOCK_DGRAM))## 32 ##src/libgai/ga_echeck.c##
+            return (EAI_SOCKTYPE);  /* invalid socket type */## 33 ##src/libgai/ga_echeck.c##
+        break;## 34 ##src/libgai/ga_echeck.c##
+    default:## 35 ##src/libgai/ga_echeck.c##
+        return (EAI_FAMILY);    /* unknown protocol family */## 36 ##src/libgai/ga_echeck.c##
+    }## 37 ##src/libgai/ga_echeck.c##
+    return (0);## 38 ##src/libgai/ga_echeck.c##
+}## 39 ##src/libgai/ga_echeck.c##
+/* end ga_echeck */

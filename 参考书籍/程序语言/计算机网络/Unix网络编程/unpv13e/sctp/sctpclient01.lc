@@ -1,0 +1,37 @@
+#include    "unp.h"##  1 ##src/sctp/sctpclient01.c##
+
+int##  2 ##src/sctp/sctpclient01.c##
+main(int argc, char **argv)##  3 ##src/sctp/sctpclient01.c##
+{##  4 ##src/sctp/sctpclient01.c##
+    int     sock_fd;##  5 ##src/sctp/sctpclient01.c##
+    struct sockaddr_in servaddr;##  6 ##src/sctp/sctpclient01.c##
+    struct sctp_event_subscribe evnts;##  7 ##src/sctp/sctpclient01.c##
+    int     echo_to_all = 0;##  8 ##src/sctp/sctpclient01.c##
+
+    if (argc < 2)##  9 ##src/sctp/sctpclient01.c##
+        err_quit("Missing host argument - use '%s host [echo]'\n", argv[0]);## 10 ##src/sctp/sctpclient01.c##
+    if (argc > 2) {## 11 ##src/sctp/sctpclient01.c##
+        printf("Echoing messages to all streams\n");## 12 ##src/sctp/sctpclient01.c##
+        echo_to_all = 1;## 13 ##src/sctp/sctpclient01.c##
+    }## 14 ##src/sctp/sctpclient01.c##
+    sock_fd = Socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);## 15 ##src/sctp/sctpclient01.c##
+    bzero(&servaddr, sizeof(servaddr));## 16 ##src/sctp/sctpclient01.c##
+    servaddr.sin_family = AF_INET;## 17 ##src/sctp/sctpclient01.c##
+#ifdef HAVE_SOCKADDR_SA_LEN## 18 ##src/sctp/sctpclient01.c##
+    servaddr.sin_len = sizeof(servaddr);## 19 ##src/sctp/sctpclient01.c##
+#endif## 20 ##src/sctp/sctpclient01.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 21 ##src/sctp/sctpclient01.c##
+    servaddr.sin_port = htons(SERV_PORT);## 22 ##src/sctp/sctpclient01.c##
+    Inet_pton(AF_INET, argv[1], &servaddr.sin_addr);## 23 ##src/sctp/sctpclient01.c##
+
+    bzero(&evnts, sizeof(evnts));## 24 ##src/sctp/sctpclient01.c##
+    evnts.sctp_data_io_event = 1;## 25 ##src/sctp/sctpclient01.c##
+    Setsockopt(sock_fd, IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts));## 26 ##src/sctp/sctpclient01.c##
+    if (echo_to_all == 0)## 27 ##src/sctp/sctpclient01.c##
+        sctpstr_cli(stdin, sock_fd, (SA *) &servaddr, sizeof(servaddr));## 28 ##src/sctp/sctpclient01.c##
+    else## 29 ##src/sctp/sctpclient01.c##
+        sctpstr_cli_echoall(stdin, sock_fd, (SA *) &servaddr,## 30 ##src/sctp/sctpclient01.c##
+                            sizeof(servaddr));## 31 ##src/sctp/sctpclient01.c##
+    Close(sock_fd);## 32 ##src/sctp/sctpclient01.c##
+    return (0);## 33 ##src/sctp/sctpclient01.c##
+}## 34 ##src/sctp/sctpclient01.c##

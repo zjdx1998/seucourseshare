@@ -1,0 +1,47 @@
+/* include udp_server */
+#include    "unp.h"##  1 ##src/lib/udp_server.c##
+
+int##  2 ##src/lib/udp_server.c##
+udp_server(const char *host, const char *serv, socklen_t *addrlenp)##  3 ##src/lib/udp_server.c##
+{##  4 ##src/lib/udp_server.c##
+    int     sockfd, n;##  5 ##src/lib/udp_server.c##
+    struct addrinfo hints, *res, *ressave;##  6 ##src/lib/udp_server.c##
+
+    bzero(&hints, sizeof(struct addrinfo));##  7 ##src/lib/udp_server.c##
+    hints.ai_flags = AI_PASSIVE;##  8 ##src/lib/udp_server.c##
+    hints.ai_family = AF_UNSPEC;##  9 ##src/lib/udp_server.c##
+    hints.ai_socktype = SOCK_DGRAM;## 10 ##src/lib/udp_server.c##
+
+    if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)## 11 ##src/lib/udp_server.c##
+        err_quit("udp_server error for %s, %s: %s",## 12 ##src/lib/udp_server.c##
+                 host, serv, gai_strerror(n));## 13 ##src/lib/udp_server.c##
+    ressave = res;## 14 ##src/lib/udp_server.c##
+
+    do {## 15 ##src/lib/udp_server.c##
+        sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);## 16 ##src/lib/udp_server.c##
+        if (sockfd < 0)## 17 ##src/lib/udp_server.c##
+            continue;           /* error, try next one */## 18 ##src/lib/udp_server.c##
+
+        if (bind(sockfd, res->ai_addr, res->ai_addrlen) == 0)## 19 ##src/lib/udp_server.c##
+            break;              /* success */## 20 ##src/lib/udp_server.c##
+
+        Close(sockfd);          /* bind error, close and try next one */## 21 ##src/lib/udp_server.c##
+    } while ((res = res->ai_next) != NULL);## 22 ##src/lib/udp_server.c##
+
+    if (res == NULL)            /* errno from final socket() or bind() */## 23 ##src/lib/udp_server.c##
+        err_sys("udp_server error for %s, %s", host, serv);## 24 ##src/lib/udp_server.c##
+
+    if (addrlenp)## 25 ##src/lib/udp_server.c##
+        *addrlenp = res->ai_addrlen;    /* return size of protocol address */## 26 ##src/lib/udp_server.c##
+
+    freeaddrinfo(ressave);## 27 ##src/lib/udp_server.c##
+
+    return (sockfd);## 28 ##src/lib/udp_server.c##
+}## 29 ##src/lib/udp_server.c##
+/* end udp_server */
+
+int## 30 ##src/lib/udp_server.c##
+Udp_server(const char *host, const char *serv, socklen_t *addrlenp)## 31 ##src/lib/udp_server.c##
+{## 32 ##src/lib/udp_server.c##
+    return (udp_server(host, serv, addrlenp));## 33 ##src/lib/udp_server.c##
+}## 34 ##src/lib/udp_server.c##

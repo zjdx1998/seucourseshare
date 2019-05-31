@@ -1,0 +1,102 @@
+execve("./daytimetcpcli", 0x08047BA8, 0x08047BB4)  argc = 2
+open("/usr/lib/libsocket.so.2", O_RDONLY, 0)	= 3
+fxstat(2, 3, 0x0804794C)			= 0
+mmap(0x00000000, 4096, PROT_READ, MAP_SHARED, 3, 0) = 0xBFF9E000
+mmap(0x00000000, 98280, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0xBFF85000
+mmap(0xBFF9A000, 6888, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 81920) = 0xBFF9A000
+open("/dev/zero", O_RDONLY, 027777756064)	= 4
+mmap(0xBFF9C000, 4072, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 4, 0) = 0xBFF9C000
+close(3)					= 0
+munmap(0xBFF9E000, 4096)			= 0
+open("/usr/lib/libresolv.so.1", O_RDONLY, 0)	= 3
+fxstat(2, 3, 0x0804794C)			= 0
+mmap(0x00000000, 4096, PROT_READ, MAP_SHARED, 3, 0) = 0xBFF9E000
+mmap(0x00000000, 31060, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0xBFF7C000
+mmap(0xBFF82000, 3604, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 20480) = 0xBFF82000
+mmap(0xBFF83000, 2388, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 4, 0) = 0xBFF83000
+close(3)					= 0
+munmap(0xBFF9E000, 4096)			= 0
+open("/usr/lib/libnsl.so.1", O_RDONLY, 0)	= 3
+fxstat(2, 3, 0x0804794C)			= 0
+mmap(0x00000000, 4096, PROT_READ, MAP_SHARED, 3, 0) = 0xBFF9E000
+mmap(0x00000000, 248004, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0xBFF3E000
+mmap(0xBFF77000, 6456, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 3, 229376) = 0xBFF77000
+mmap(0xBFF79000, 6340, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, 4, 0) = 0xBFF79000
+close(3)					= 0
+munmap(0xBFF9E000, 4096)			= 0
+mmap(0x00000000, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE, 4, 0) = 0xBFF9E000
+open("/usr/lib/libnsl.so.1", O_RDONLY, 0)	= 3
+fxstat(2, 3, 0x0804794C)			= 0
+close(3)					= 0
+open("/usr/lib/libsocket.so.2", O_RDONLY, 0)	= 3
+fxstat(2, 3, 0x0804794C)			= 0
+close(3)					= 0
+open("/usr/lib/libnsl.so.1", O_RDONLY, 0)	= 3
+fxstat(2, 3, 0x0804794C)			= 0
+close(3)					= 0
+close(4)					= 0
+brk(0x0804B52C)					= 0
+open("/etc/netconfig", O_RDONLY, 0666)		= 3
+ioctl(3, TCGETA, 0x080465E6)			Err#25 ENOTTY
+ioctl(3, I_GETTP, 0x00000000)			Err#25 ENOTTY
+fxstat(2, 3, 0x08046614)			= 0
+brk(0x0804E52C)					= 0
+read(3, " t c p\t t p i _ c o t s".., 8192)	= 806
+read(3, 0x0804A6B8, 8192)			= 0
+lseek(3, 0, 0)					= 0
+read(3, " t c p\t t p i _ c o t s".., 8192)	= 806
+brk(0x0804F52C)					= 0
+brk(0x0805052C)					= 0
+read(3, 0x0804A6B8, 8192)			= 0
+close(3)					= 0
+open("/dev/tcp", O_RDWR, 027776333624)		= 3
+ioctl(3, I_FIND, "sockmod")			= 0
+ioctl(3, I_PUSH, "sockmod")			= 0
+ioctl(3, I_SETCLTIME, 0x08046B50)		= 0
+ioctl(3, I_SWROPT, 0x00000002)			= 0
+sigfillset(0xBFFFEBE4)				= 0
+sigprocmask(SIG_BLOCK, 0x08046AD8, 0x08046AE8)	= 0
+ioctl(3, I_STR, 0x08046AA0)			= 0
+	cmd=(('I'<<8)|101) timout=-1 len=28 dp=0x08046AF8
+  \0 @\0\010\0\0\0 h01\0\080\0\0\002\0\0\0\0\0\0\0\0\0\0\0
+sigprocmask(SIG_SETMASK, 0x08046AE8, 0x00000000) = 0
+ioctl(3, I_GETSIG, 0x08046B18)			Err#22 EINVAL
+sigprocmask(SIG_BLOCK, 0x08046B20, 0x08046B30)	= 0
+ioctl(3, I_STR, 0x08046AE0)			= 0
+	cmd=TI_OPTMGMT timout=-1 len=32 dp=0x0804ABA8
+  16\0\0\010\0\0\010\0\0\004\0\0\0FFFF\0\00110\0\004\0\0\0\0 `\0\0
+sigprocmask(SIG_SETMASK, 0x08046B30, 0x00000000) = 0
+sigprocmask(SIG_BLOCK, 0x08046B0C, 0x08046B1C)	= 0
+ioctl(3, I_STR, 0x08046ACC)			= 0
+	cmd=TI_OPTMGMT timout=-1 len=32 dp=0x0804ABA8
+  16\0\0\010\0\0\010\0\0\004\0\0\0FFFF\0\00210\0\004\0\0\0\0 `\0\0
+sigprocmask(SIG_SETMASK, 0x08046B1C, 0x00000000) = 0
+fcntl(3, F_GETFL, 0x00000000)			= 2
+sigprocmask(SIG_BLOCK, 0x08046828, 0x08046838)	= 0
+ioctl(3, I_STR, 0x080467E4)			= 0
+	cmd=TI_BIND timout=-1 len=32 dp=0x0804ABA8
+  11\0\0\010\0\0\010\0\0\0\0\0\0\002\004 1\0\0\0\0\0\0\0\0\0\0\0\0
+sigprocmask(SIG_SETMASK, 0x08046838, 0x00000000) = 0
+sigprocmask(SIG_BLOCK, 0x080469B0, 0x080469C0)	= 0
+putmsg(3, 0x08046958, 0x00000000, 0)		= 0
+	ctl:  maxlen=428  len=36   buf=0x0804ABA8
+fcntl(3, F_GETFL, 0x00000000)			= 2
+getmsg(3, 0x08046924, 0x08046918, 0x08046934)	= 0
+	ctl:  maxlen=428  len=8    buf=0x0804ABA8
+	dat:  maxlen=128  len=-1   buf=0x08046898
+fcntl(3, F_GETFL, 0x00000000)			= 2
+getmsg(3, 0x08046964, 0x08046958, 0x0804697C)	= 0
+	ctl:  maxlen=428  len=56   buf=0x0804ABA8
+	dat:  maxlen=128  len=-1   buf=0x080468D8
+sigprocmask(SIG_SETMASK, 0x080469C0, 0x00000000) = 0
+getmsg(3, 0x08046AEC, 0x08046AE0, 0x08046B14)	= 0
+	ctl:  maxlen=428  len=8    buf=0x0804ABA8
+	dat:  maxlen=4096 len=26   buf=0x08046BB0
+ioctl(1, TCGETA, 0x08046A9A)			= 0
+	iflag=0002406 oflag=0000005 cflag=0002275 lflag=0000053 line=0
+	    cc:  177 034 010 025 004 000 000 000
+write(1, " F r i   A p r     4   0".., 26)	= 26
+getmsg(3, 0x08046AEC, 0x08046AE0, 0x08046B14)	= 0
+	ctl:  maxlen=428  len=-1   buf=0x0804ABA8
+	dat:  maxlen=4096 len=0    buf=0x08046BB0
+_exit(0)

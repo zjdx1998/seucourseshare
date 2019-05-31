@@ -1,0 +1,31 @@
+#include    "unp.h"##  1 ##src/sctp/sctp_strcli.c##
+
+void##  2 ##src/sctp/sctp_strcli.c##
+sctpstr_cli(FILE *fp, int sock_fd, struct sockaddr *to, socklen_t tolen)##  3 ##src/sctp/sctp_strcli.c##
+{##  4 ##src/sctp/sctp_strcli.c##
+    struct sockaddr_in peeraddr;##  5 ##src/sctp/sctp_strcli.c##
+    struct sctp_sndrcvinfo sri;##  6 ##src/sctp/sctp_strcli.c##
+    char    sendline[MAXLINE], recvline[MAXLINE];##  7 ##src/sctp/sctp_strcli.c##
+    socklen_t len;##  8 ##src/sctp/sctp_strcli.c##
+    int     out_sz, rd_sz;##  9 ##src/sctp/sctp_strcli.c##
+    int     msg_flags;## 10 ##src/sctp/sctp_strcli.c##
+
+    bzero(&sri, sizeof(sri));## 11 ##src/sctp/sctp_strcli.c##
+    while (fgets(sendline, MAXLINE, fp) != NULL) {## 12 ##src/sctp/sctp_strcli.c##
+        if (sendline[0] != '[') {## 13 ##src/sctp/sctp_strcli.c##
+            printf("Error, line must be of the form '[streamnum]text'\n");## 14 ##src/sctp/sctp_strcli.c##
+            continue;## 15 ##src/sctp/sctp_strcli.c##
+        }## 16 ##src/sctp/sctp_strcli.c##
+        sri.sinfo_stream = strtol(&sendline[1], NULL, 0);## 17 ##src/sctp/sctp_strcli.c##
+        out_sz = strlen(sendline);## 18 ##src/sctp/sctp_strcli.c##
+        Sctp_sendmsg(sock_fd, sendline, out_sz,## 19 ##src/sctp/sctp_strcli.c##
+                     to, tolen, 0, 0, sri.sinfo_stream, 0, 0);## 20 ##src/sctp/sctp_strcli.c##
+
+        len = sizeof(peeraddr);## 21 ##src/sctp/sctp_strcli.c##
+        rd_sz = Sctp_recvmsg(sock_fd, recvline, sizeof(recvline),## 22 ##src/sctp/sctp_strcli.c##
+                             (SA *) &peeraddr, &len, &sri, &msg_flags);## 23 ##src/sctp/sctp_strcli.c##
+        printf("From str:%d seq:%d (assoc:0x%x):",## 24 ##src/sctp/sctp_strcli.c##
+               sri.sinfo_stream, sri.sinfo_ssn, (u_int) sri.sinfo_assoc_id);## 25 ##src/sctp/sctp_strcli.c##
+        printf("%.*s", rd_sz, recvline);## 26 ##src/sctp/sctp_strcli.c##
+    }## 27 ##src/sctp/sctp_strcli.c##
+}## 28 ##src/sctp/sctp_strcli.c##

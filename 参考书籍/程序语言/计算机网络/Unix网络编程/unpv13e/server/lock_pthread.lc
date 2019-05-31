@@ -1,0 +1,37 @@
+/* include my_lock_init */
+#include    "unpthread.h"##  1 ##src/server/lock_pthread.c##
+#include    <sys/mman.h>##  2 ##src/server/lock_pthread.c##
+
+static pthread_mutex_t *mptr;   /* actual mutex will be in shared memory */##  3 ##src/server/lock_pthread.c##
+
+void##  4 ##src/server/lock_pthread.c##
+my_lock_init(char *pathname)##  5 ##src/server/lock_pthread.c##
+{##  6 ##src/server/lock_pthread.c##
+    int     fd;##  7 ##src/server/lock_pthread.c##
+    pthread_mutexattr_t mattr;##  8 ##src/server/lock_pthread.c##
+
+    fd = Open("/dev/zero", O_RDWR, 0);##  9 ##src/server/lock_pthread.c##
+
+    mptr = Mmap(0, sizeof(pthread_mutex_t), PROT_READ | PROT_WRITE,## 10 ##src/server/lock_pthread.c##
+                MAP_SHARED, fd, 0);## 11 ##src/server/lock_pthread.c##
+    Close(fd);## 12 ##src/server/lock_pthread.c##
+
+    Pthread_mutexattr_init(&mattr);## 13 ##src/server/lock_pthread.c##
+    Pthread_mutexattr_setpshared(&mattr, PTHREAD_PROCESS_SHARED);## 14 ##src/server/lock_pthread.c##
+    Pthread_mutex_init(mptr, &mattr);## 15 ##src/server/lock_pthread.c##
+}## 16 ##src/server/lock_pthread.c##
+/* end my_lock_init */
+
+/* include my_lock_wait */
+void## 17 ##src/server/lock_pthread.c##
+my_lock_wait()## 18 ##src/server/lock_pthread.c##
+{## 19 ##src/server/lock_pthread.c##
+    Pthread_mutex_lock(mptr);## 20 ##src/server/lock_pthread.c##
+}## 21 ##src/server/lock_pthread.c##
+
+void## 22 ##src/server/lock_pthread.c##
+my_lock_release()## 23 ##src/server/lock_pthread.c##
+{## 24 ##src/server/lock_pthread.c##
+    Pthread_mutex_unlock(mptr);## 25 ##src/server/lock_pthread.c##
+}## 26 ##src/server/lock_pthread.c##
+/* end my_lock_wait */

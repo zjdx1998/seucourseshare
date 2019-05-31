@@ -1,0 +1,102 @@
+#include    "unpifi.h"##  1 ##src/advio/udpserv04.c##
+
+void    mydg_echo(int, SA *, socklen_t);##  2 ##src/advio/udpserv04.c##
+
+int##  3 ##src/advio/udpserv04.c##
+main(int argc, char **argv)##  4 ##src/advio/udpserv04.c##
+{##  5 ##src/advio/udpserv04.c##
+    int     sockfd, family, port;##  6 ##src/advio/udpserv04.c##
+    const int on = 1;##  7 ##src/advio/udpserv04.c##
+    pid_t   pid;##  8 ##src/advio/udpserv04.c##
+    socklen_t salen;##  9 ##src/advio/udpserv04.c##
+    struct sockaddr *sa, *wild;## 10 ##src/advio/udpserv04.c##
+    struct ifi_info *ifi, *ifihead;## 11 ##src/advio/udpserv04.c##
+
+    if (argc == 2)## 12 ##src/advio/udpserv04.c##
+        sockfd = Udp_client(NULL, argv[1], (void **) &sa, &salen);## 13 ##src/advio/udpserv04.c##
+    else if (argc == 3)## 14 ##src/advio/udpserv04.c##
+        sockfd = Udp_client(argv[1], argv[2], (void **) &sa, &salen);## 15 ##src/advio/udpserv04.c##
+    else## 16 ##src/advio/udpserv04.c##
+        err_quit("usage: udpserv04 [ <host> ] <service or port>");## 17 ##src/advio/udpserv04.c##
+    family = sa->sa_family;## 18 ##src/advio/udpserv04.c##
+    port = sock_get_port(sa, salen);## 19 ##src/advio/udpserv04.c##
+    Close(sockfd);              /* we just want family, port, salen */## 20 ##src/advio/udpserv04.c##
+
+    for (ifihead = ifi = Get_ifi_info(family, 1);## 21 ##src/advio/udpserv04.c##
+         ifi != NULL; ifi = ifi->ifi_next) {## 22 ##src/advio/udpserv04.c##
+
+        /* 4bind unicast address */## 23 ##src/advio/udpserv04.c##
+        sockfd = Socket(family, SOCK_DGRAM, 0);## 24 ##src/advio/udpserv04.c##
+        Setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));## 25 ##src/advio/udpserv04.c##
+
+        sock_set_port(ifi->ifi_addr, salen, port);## 26 ##src/advio/udpserv04.c##
+        Bind(sockfd, ifi->ifi_addr, salen);## 27 ##src/advio/udpserv04.c##
+        printf("bound %s\n", Sock_ntop(ifi->ifi_addr, salen));## 28 ##src/advio/udpserv04.c##
+
+        if ((pid = Fork()) == 0) {  /* child */## 29 ##src/advio/udpserv04.c##
+            mydg_echo(sockfd, ifi->ifi_addr, salen);## 30 ##src/advio/udpserv04.c##
+            exit(0);            /* never executed */## 31 ##src/advio/udpserv04.c##
+        }## 32 ##src/advio/udpserv04.c##
+
+        if (ifi->ifi_flags & IFF_BROADCAST) {## 33 ##src/advio/udpserv04.c##
+            /* 4try to bind broadcast address */## 34 ##src/advio/udpserv04.c##
+            sockfd = Socket(family, SOCK_DGRAM, 0);## 35 ##src/advio/udpserv04.c##
+            Setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));## 36 ##src/advio/udpserv04.c##
+
+            sock_set_port(ifi->ifi_brdaddr, salen, port);## 37 ##src/advio/udpserv04.c##
+            if (bind(sockfd, ifi->ifi_brdaddr, salen) < 0) {## 38 ##src/advio/udpserv04.c##
+                if (errno == EADDRINUSE) {## 39 ##src/advio/udpserv04.c##
+                    printf("EADDRINUSE: %s\n",## 40 ##src/advio/udpserv04.c##
+                           Sock_ntop(ifi->ifi_brdaddr, salen));## 41 ##src/advio/udpserv04.c##
+                    Close(sockfd);## 42 ##src/advio/udpserv04.c##
+                    continue;## 43 ##src/advio/udpserv04.c##
+                } else## 44 ##src/advio/udpserv04.c##
+                    err_sys("bind error for %s",## 45 ##src/advio/udpserv04.c##
+                            Sock_ntop(ifi->ifi_brdaddr, salen));## 46 ##src/advio/udpserv04.c##
+            }## 47 ##src/advio/udpserv04.c##
+            printf("bound %s\n", Sock_ntop(ifi->ifi_brdaddr, salen));## 48 ##src/advio/udpserv04.c##
+
+            if ((pid = Fork()) == 0) {  /* child */## 49 ##src/advio/udpserv04.c##
+                mydg_echo(sockfd, ifi->ifi_brdaddr, salen);## 50 ##src/advio/udpserv04.c##
+                exit(0);        /* never executed */## 51 ##src/advio/udpserv04.c##
+            }## 52 ##src/advio/udpserv04.c##
+        }## 53 ##src/advio/udpserv04.c##
+    }## 54 ##src/advio/udpserv04.c##
+
+    /* 4bind wildcard address */## 55 ##src/advio/udpserv04.c##
+    sockfd = Socket(family, SOCK_DGRAM, 0);## 56 ##src/advio/udpserv04.c##
+    Setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));## 57 ##src/advio/udpserv04.c##
+
+    wild = Malloc(salen);## 58 ##src/advio/udpserv04.c##
+    memcpy(wild, sa, salen);    /* copy family and port */## 59 ##src/advio/udpserv04.c##
+    sock_set_wild(wild, salen);## 60 ##src/advio/udpserv04.c##
+
+    Bind(sockfd, wild, salen);## 61 ##src/advio/udpserv04.c##
+    printf("bound %s\n", Sock_ntop(wild, salen));## 62 ##src/advio/udpserv04.c##
+
+    if ((pid = Fork()) == 0) {  /* child */## 63 ##src/advio/udpserv04.c##
+        mydg_echo(sockfd, wild, salen);## 64 ##src/advio/udpserv04.c##
+        exit(0);                /* never executed */## 65 ##src/advio/udpserv04.c##
+    }## 66 ##src/advio/udpserv04.c##
+    exit(0);## 67 ##src/advio/udpserv04.c##
+}## 68 ##src/advio/udpserv04.c##
+
+void## 69 ##src/advio/udpserv04.c##
+mydg_echo(int sockfd, SA *myaddr, socklen_t salen)## 70 ##src/advio/udpserv04.c##
+{## 71 ##src/advio/udpserv04.c##
+    int     n;## 72 ##src/advio/udpserv04.c##
+    char    mesg[MAXLINE];## 73 ##src/advio/udpserv04.c##
+    socklen_t len;## 74 ##src/advio/udpserv04.c##
+    struct sockaddr *cli;## 75 ##src/advio/udpserv04.c##
+
+    cli = Malloc(salen);## 76 ##src/advio/udpserv04.c##
+
+    for (;;) {## 77 ##src/advio/udpserv04.c##
+        len = salen;## 78 ##src/advio/udpserv04.c##
+        n = Recvfrom(sockfd, mesg, MAXLINE, 0, cli, &len);## 79 ##src/advio/udpserv04.c##
+        printf("child %d, datagram from %s", getpid(), Sock_ntop(cli, len));## 80 ##src/advio/udpserv04.c##
+        printf(", to %s\n", Sock_ntop(myaddr, salen));## 81 ##src/advio/udpserv04.c##
+
+        Sendto(sockfd, mesg, n, 0, cli, len);## 82 ##src/advio/udpserv04.c##
+    }## 83 ##src/advio/udpserv04.c##
+}## 84 ##src/advio/udpserv04.c##

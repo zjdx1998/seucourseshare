@@ -1,0 +1,28 @@
+#include    <sys/types.h>##  1 ##src/libfree/inet_pton_ipv4.c##
+#include    <sys/socket.h>##  2 ##src/libfree/inet_pton_ipv4.c##
+#include    <netinet/in.h>##  3 ##src/libfree/inet_pton_ipv4.c##
+#include    <arpa/inet.h>##  4 ##src/libfree/inet_pton_ipv4.c##
+#include    <errno.h>##  5 ##src/libfree/inet_pton_ipv4.c##
+#include    <string.h>##  6 ##src/libfree/inet_pton_ipv4.c##
+
+/* Delete following line if your system's headers already define this##  7 ##src/libfree/inet_pton_ipv4.c##
+   function prototype */##  8 ##src/libfree/inet_pton_ipv4.c##
+int     inet_aton(const char *, struct in_addr *);##  9 ##src/libfree/inet_pton_ipv4.c##
+
+/* include inet_pton */
+int## 10 ##src/libfree/inet_pton_ipv4.c##
+inet_pton(int family, const char *strptr, void *addrptr)## 11 ##src/libfree/inet_pton_ipv4.c##
+{## 12 ##src/libfree/inet_pton_ipv4.c##
+    if (family == AF_INET) {## 13 ##src/libfree/inet_pton_ipv4.c##
+        struct in_addr in_val;## 14 ##src/libfree/inet_pton_ipv4.c##
+
+        if (inet_aton(strptr, &in_val)) {## 15 ##src/libfree/inet_pton_ipv4.c##
+            memcpy(addrptr, &in_val, sizeof(struct in_addr));## 16 ##src/libfree/inet_pton_ipv4.c##
+            return (1);## 17 ##src/libfree/inet_pton_ipv4.c##
+        }## 18 ##src/libfree/inet_pton_ipv4.c##
+        return (0);## 19 ##src/libfree/inet_pton_ipv4.c##
+    }## 20 ##src/libfree/inet_pton_ipv4.c##
+    errno = EAFNOSUPPORT;## 21 ##src/libfree/inet_pton_ipv4.c##
+    return (-1);## 22 ##src/libfree/inet_pton_ipv4.c##
+}## 23 ##src/libfree/inet_pton_ipv4.c##
+/* end inet_pton */

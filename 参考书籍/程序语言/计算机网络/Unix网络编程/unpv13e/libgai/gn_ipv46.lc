@@ -1,0 +1,50 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/gn_ipv46.c##
+
+/*##  2 ##src/libgai/gn_ipv46.c##
+ * Handle either an IPv4 or an IPv6 address and port.##  3 ##src/libgai/gn_ipv46.c##
+ */##  4 ##src/libgai/gn_ipv46.c##
+
+/* include gn_ipv46 */
+int##  5 ##src/libgai/gn_ipv46.c##
+gn_ipv46(char *host, size_t hostlen, char *serv, size_t servlen,##  6 ##src/libgai/gn_ipv46.c##
+         void *aptr, size_t alen, int family, int port, int flags)##  7 ##src/libgai/gn_ipv46.c##
+{##  8 ##src/libgai/gn_ipv46.c##
+    char   *ptr;##  9 ##src/libgai/gn_ipv46.c##
+    struct hostent *hptr;## 10 ##src/libgai/gn_ipv46.c##
+    struct servent *sptr;## 11 ##src/libgai/gn_ipv46.c##
+
+    if (hostlen > 0) {## 12 ##src/libgai/gn_ipv46.c##
+        if (flags & NI_NUMERICHOST) {## 13 ##src/libgai/gn_ipv46.c##
+            if (inet_ntop(family, aptr, host, hostlen) == NULL)## 14 ##src/libgai/gn_ipv46.c##
+                return (1);## 15 ##src/libgai/gn_ipv46.c##
+        } else {## 16 ##src/libgai/gn_ipv46.c##
+            hptr = gethostbyaddr(aptr, alen, family);## 17 ##src/libgai/gn_ipv46.c##
+            if (hptr != NULL && hptr->h_name != NULL) {## 18 ##src/libgai/gn_ipv46.c##
+                if (flags & NI_NOFQDN) {## 19 ##src/libgai/gn_ipv46.c##
+                    if ((ptr = strchr(hptr->h_name, '.')) != NULL)## 20 ##src/libgai/gn_ipv46.c##
+                        *ptr = 0;   /* overwrite first dot */## 21 ##src/libgai/gn_ipv46.c##
+                }## 22 ##src/libgai/gn_ipv46.c##
+                snprintf(host, hostlen, "%s", hptr->h_name);## 23 ##src/libgai/gn_ipv46.c##
+            } else {## 24 ##src/libgai/gn_ipv46.c##
+                if (flags & NI_NAMEREQD)## 25 ##src/libgai/gn_ipv46.c##
+                    return (1);## 26 ##src/libgai/gn_ipv46.c##
+                if (inet_ntop(family, aptr, host, hostlen) == NULL)## 27 ##src/libgai/gn_ipv46.c##
+                    return (1);## 28 ##src/libgai/gn_ipv46.c##
+            }## 29 ##src/libgai/gn_ipv46.c##
+        }## 30 ##src/libgai/gn_ipv46.c##
+    }## 31 ##src/libgai/gn_ipv46.c##
+
+    if (servlen > 0) {## 32 ##src/libgai/gn_ipv46.c##
+        if (flags & NI_NUMERICSERV) {## 33 ##src/libgai/gn_ipv46.c##
+            snprintf(serv, servlen, "%d", ntohs(port));## 34 ##src/libgai/gn_ipv46.c##
+        } else {## 35 ##src/libgai/gn_ipv46.c##
+            sptr = getservbyport(port, (flags & NI_DGRAM) ? "udp" : NULL);## 36 ##src/libgai/gn_ipv46.c##
+            if (sptr != NULL && sptr->s_name != NULL)## 37 ##src/libgai/gn_ipv46.c##
+                snprintf(serv, servlen, "%s", sptr->s_name);## 38 ##src/libgai/gn_ipv46.c##
+            else## 39 ##src/libgai/gn_ipv46.c##
+                snprintf(serv, servlen, "%d", ntohs(port));## 40 ##src/libgai/gn_ipv46.c##
+        }## 41 ##src/libgai/gn_ipv46.c##
+    }## 42 ##src/libgai/gn_ipv46.c##
+    return (0);## 43 ##src/libgai/gn_ipv46.c##
+}## 44 ##src/libgai/gn_ipv46.c##
+/* end gn_ipv46 */

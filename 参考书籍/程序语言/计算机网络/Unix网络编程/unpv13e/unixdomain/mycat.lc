@@ -1,0 +1,21 @@
+#include    "unp.h"##  1 ##src/unixdomain/mycat.c##
+
+int     my_open(const char *, int);##  2 ##src/unixdomain/mycat.c##
+
+int##  3 ##src/unixdomain/mycat.c##
+main(int argc, char **argv)##  4 ##src/unixdomain/mycat.c##
+{##  5 ##src/unixdomain/mycat.c##
+    int     fd, n;##  6 ##src/unixdomain/mycat.c##
+    char    buff[BUFFSIZE];##  7 ##src/unixdomain/mycat.c##
+
+    if (argc != 2)##  8 ##src/unixdomain/mycat.c##
+        err_quit("usage: mycat <pathname>");##  9 ##src/unixdomain/mycat.c##
+
+    if ((fd = my_open(argv[1], O_RDONLY)) < 0)## 10 ##src/unixdomain/mycat.c##
+        err_sys("cannot open %s", argv[1]);## 11 ##src/unixdomain/mycat.c##
+
+    while ((n = Read(fd, buff, BUFFSIZE)) > 0)## 12 ##src/unixdomain/mycat.c##
+        Write(STDOUT_FILENO, buff, n);## 13 ##src/unixdomain/mycat.c##
+
+    exit(0);## 14 ##src/unixdomain/mycat.c##
+}## 15 ##src/unixdomain/mycat.c##

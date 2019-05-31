@@ -1,0 +1,38 @@
+#include    "ping.h"##  1 ##src/ping/proc_v4.c##
+
+void##  2 ##src/ping/proc_v4.c##
+proc_v4(char *ptr, ssize_t len, struct timeval *tvrecv)##  3 ##src/ping/proc_v4.c##
+{##  4 ##src/ping/proc_v4.c##
+    int     hlen1, icmplen;##  5 ##src/ping/proc_v4.c##
+    double  rtt;##  6 ##src/ping/proc_v4.c##
+    struct ip *ip;##  7 ##src/ping/proc_v4.c##
+    struct icmp *icmp;##  8 ##src/ping/proc_v4.c##
+    struct timeval *tvsend;##  9 ##src/ping/proc_v4.c##
+
+    ip = (struct ip *) ptr;     /* start of IP header */## 10 ##src/ping/proc_v4.c##
+    hlen1 = ip->ip_hl << 2;     /* length of IP header */## 11 ##src/ping/proc_v4.c##
+
+    icmp = (struct icmp *) (ptr + hlen1);   /* start of ICMP header */## 12 ##src/ping/proc_v4.c##
+    if ((icmplen = len - hlen1) < 8)## 13 ##src/ping/proc_v4.c##
+        err_quit("icmplen (%d) < 8", icmplen);## 14 ##src/ping/proc_v4.c##
+
+    if (icmp->icmp_type == ICMP_ECHOREPLY) {## 15 ##src/ping/proc_v4.c##
+        if (icmp->icmp_id != pid)## 16 ##src/ping/proc_v4.c##
+            return;             /* not a response to our ECHO_REQUEST */## 17 ##src/ping/proc_v4.c##
+        if (icmplen < 16)## 18 ##src/ping/proc_v4.c##
+            err_quit("icmplen (%d) < 16", icmplen);## 19 ##src/ping/proc_v4.c##
+
+        tvsend = (struct timeval *) icmp->icmp_data;## 20 ##src/ping/proc_v4.c##
+        tv_sub(tvrecv, tvsend);## 21 ##src/ping/proc_v4.c##
+        rtt = tvrecv->tv_sec * 1000.0 + tvrecv->tv_usec / 1000.0;## 22 ##src/ping/proc_v4.c##
+
+        printf("%d bytes from %s: seq=%u, ttl=%d, rtt=%.3f ms\n",## 23 ##src/ping/proc_v4.c##
+               icmplen, Sock_ntop_host(pr->sarecv, pr->salen),## 24 ##src/ping/proc_v4.c##
+               icmp->icmp_seq, ip->ip_ttl, rtt);## 25 ##src/ping/proc_v4.c##
+
+    } else if (verbose) {## 26 ##src/ping/proc_v4.c##
+        printf("  %d bytes from %s: type = %d, code = %d\n",## 27 ##src/ping/proc_v4.c##
+               icmplen, Sock_ntop_host(pr->sarecv, pr->salen),## 28 ##src/ping/proc_v4.c##
+               icmp->icmp_type, icmp->icmp_code);## 29 ##src/ping/proc_v4.c##
+    }## 30 ##src/ping/proc_v4.c##
+}## 31 ##src/ping/proc_v4.c##

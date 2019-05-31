@@ -1,0 +1,21 @@
+#include    "udpcksum.h"##  1 ##src/udpcksum/cleanup.c##
+
+/* include cleanup */
+void##  2 ##src/udpcksum/cleanup.c##
+cleanup(int signo)##  3 ##src/udpcksum/cleanup.c##
+{##  4 ##src/udpcksum/cleanup.c##
+    struct pcap_stat stat;##  5 ##src/udpcksum/cleanup.c##
+
+    fflush(stdout);##  6 ##src/udpcksum/cleanup.c##
+    putc('\n', stdout);##  7 ##src/udpcksum/cleanup.c##
+
+    if (verbose) {##  8 ##src/udpcksum/cleanup.c##
+        if (pcap_stats(pd, &stat) < 0)##  9 ##src/udpcksum/cleanup.c##
+            err_quit("pcap_stats: %s\n", pcap_geterr(pd));## 10 ##src/udpcksum/cleanup.c##
+        printf("%d packets received by filter\n", stat.ps_recv);## 11 ##src/udpcksum/cleanup.c##
+        printf("%d packets dropped by kernel\n", stat.ps_drop);## 12 ##src/udpcksum/cleanup.c##
+    }## 13 ##src/udpcksum/cleanup.c##
+
+    exit(0);## 14 ##src/udpcksum/cleanup.c##
+}## 15 ##src/udpcksum/cleanup.c##
+/* end cleanup */

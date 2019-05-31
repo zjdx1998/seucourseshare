@@ -1,0 +1,26 @@
+/* include sockfd_to_family */
+#include    "unp.h"##  1 ##src/lib/sockfd_to_family.c##
+
+int##  2 ##src/lib/sockfd_to_family.c##
+sockfd_to_family(int sockfd)##  3 ##src/lib/sockfd_to_family.c##
+{##  4 ##src/lib/sockfd_to_family.c##
+    struct sockaddr_storage ss;##  5 ##src/lib/sockfd_to_family.c##
+    socklen_t len;##  6 ##src/lib/sockfd_to_family.c##
+
+    len = sizeof(ss);##  7 ##src/lib/sockfd_to_family.c##
+    if (getsockname(sockfd, (SA *) &ss, &len) < 0)##  8 ##src/lib/sockfd_to_family.c##
+        return (-1);##  9 ##src/lib/sockfd_to_family.c##
+    return (ss.ss_family);## 10 ##src/lib/sockfd_to_family.c##
+}## 11 ##src/lib/sockfd_to_family.c##
+/* end sockfd_to_family */
+
+int## 12 ##src/lib/sockfd_to_family.c##
+Sockfd_to_family(int sockfd)## 13 ##src/lib/sockfd_to_family.c##
+{## 14 ##src/lib/sockfd_to_family.c##
+    int     rc;## 15 ##src/lib/sockfd_to_family.c##
+
+    if ((rc = sockfd_to_family(sockfd)) < 0)## 16 ##src/lib/sockfd_to_family.c##
+        err_sys("sockfd_to_family error");## 17 ##src/lib/sockfd_to_family.c##
+
+    return (rc);## 18 ##src/lib/sockfd_to_family.c##
+}## 19 ##src/lib/sockfd_to_family.c##

@@ -1,0 +1,48 @@
+
+int##  1 ##src/sctp/sctpserv07.c##
+main(int argc, char **argv)##  2 ##src/sctp/sctpserv07.c##
+{##  3 ##src/sctp/sctpserv07.c##
+    int     sock_fd, msg_flags;##  4 ##src/sctp/sctpserv07.c##
+    char    readbuf[BUFFSIZE];##  5 ##src/sctp/sctpserv07.c##
+    struct sockaddr_in cliaddr;##  6 ##src/sctp/sctpserv07.c##
+    struct sctp_sndrcvinfo sri;##  7 ##src/sctp/sctpserv07.c##
+    struct sctp_event_subscribe evnts;##  8 ##src/sctp/sctpserv07.c##
+    socklen_t len;##  9 ##src/sctp/sctpserv07.c##
+    size_t  rd_sz;## 10 ##src/sctp/sctpserv07.c##
+    /* include mod_serv07 */## 11 ##src/sctp/sctpserv07.c##
+    if (argc < 2)## 12 ##src/sctp/sctpserv07.c##
+        err_quit("Error, use %s [list of addresses to bind]\n", argv[0]);## 13 ##src/sctp/sctpserv07.c##
+    sock_fd = Socket(AF_INET6, SOCK_SEQPACKET, IPPROTO_SCTP);## 14 ##src/sctp/sctpserv07.c##
+
+    if (sctp_bind_arg_list(sock_fd, argv + 1, argc - 1))## 15 ##src/sctp/sctpserv07.c##
+        err_sys("Can't bind the address set");## 16 ##src/sctp/sctpserv07.c##
+
+    bzero(&evnts, sizeof(evnts));## 17 ##src/sctp/sctpserv07.c##
+    evnts.sctp_data_io_event = 1;## 18 ##src/sctp/sctpserv07.c##
+    /* end mod_serv07 */## 19 ##src/sctp/sctpserv07.c##
+    evnts.sctp_association_event = 1;## 20 ##src/sctp/sctpserv07.c##
+    evnts.sctp_address_event = 1;## 21 ##src/sctp/sctpserv07.c##
+    evnts.sctp_send_failure_event = 1;## 22 ##src/sctp/sctpserv07.c##
+    evnts.sctp_peer_error_event = 1;## 23 ##src/sctp/sctpserv07.c##
+    evnts.sctp_shutdown_event = 1;## 24 ##src/sctp/sctpserv07.c##
+    evnts.sctp_partial_delivery_event = 1;## 25 ##src/sctp/sctpserv07.c##
+    evnts.sctp_adaption_layer_event = 1;## 26 ##src/sctp/sctpserv07.c##
+    Setsockopt(sock_fd, IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts));## 27 ##src/sctp/sctpserv07.c##
+
+    Listen(sock_fd, LISTENQ);## 28 ##src/sctp/sctpserv07.c##
+
+    for (;;) {## 29 ##src/sctp/sctpserv07.c##
+        len = sizeof(struct sockaddr_in);## 30 ##src/sctp/sctpserv07.c##
+        rd_sz = Sctp_recvmsg(sock_fd, readbuf, sizeof(readbuf),## 31 ##src/sctp/sctpserv07.c##
+                             (SA *) &cliaddr, &len, &sri, &msg_flags);## 32 ##src/sctp/sctpserv07.c##
+        if (msg_flags & MSG_NOTIFICATION) {## 33 ##src/sctp/sctpserv07.c##
+            print_notification(readbuf);## 34 ##src/sctp/sctpserv07.c##
+            continue;## 35 ##src/sctp/sctpserv07.c##
+        }## 36 ##src/sctp/sctpserv07.c##
+        Sctp_sendmsg(sock_fd, readbuf, rd_sz,## 37 ##src/sctp/sctpserv07.c##
+                     (SA *) &cliaddr, len,## 38 ##src/sctp/sctpserv07.c##
+                     sri.sinfo_ppid,## 39 ##src/sctp/sctpserv07.c##
+                     sri.sinfo_flags, sri.sinfo_stream, 0, 0);## 40 ##src/sctp/sctpserv07.c##
+    }## 41 ##src/sctp/sctpserv07.c##
+
+}## 42 ##src/sctp/sctpserv07.c##

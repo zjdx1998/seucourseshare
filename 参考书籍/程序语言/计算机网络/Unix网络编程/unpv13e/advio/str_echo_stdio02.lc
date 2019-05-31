@@ -1,0 +1,14 @@
+#include    "unp.h"##  1 ##src/advio/str_echo_stdio02.c##
+
+void##  2 ##src/advio/str_echo_stdio02.c##
+str_echo(int sockfd)##  3 ##src/advio/str_echo_stdio02.c##
+{##  4 ##src/advio/str_echo_stdio02.c##
+    char    line[MAXLINE];##  5 ##src/advio/str_echo_stdio02.c##
+    FILE   *fpin, *fpout;##  6 ##src/advio/str_echo_stdio02.c##
+
+    fpin = Fdopen(sockfd, "r");##  7 ##src/advio/str_echo_stdio02.c##
+    fpout = Fdopen(sockfd, "w");##  8 ##src/advio/str_echo_stdio02.c##
+
+    while (Fgets(line, MAXLINE, fpin) != NULL)##  9 ##src/advio/str_echo_stdio02.c##
+        Fputs(line, fpout);## 10 ##src/advio/str_echo_stdio02.c##
+}## 11 ##src/advio/str_echo_stdio02.c##

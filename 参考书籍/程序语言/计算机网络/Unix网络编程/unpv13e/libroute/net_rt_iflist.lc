@@ -1,0 +1,38 @@
+/* include net_rt_iflist */
+#include    "unproute.h"##  1 ##src/libroute/net_rt_iflist.c##
+
+char   *##  2 ##src/libroute/net_rt_iflist.c##
+net_rt_iflist(int family, int flags, size_t *lenp)##  3 ##src/libroute/net_rt_iflist.c##
+{##  4 ##src/libroute/net_rt_iflist.c##
+    int     mib[6];##  5 ##src/libroute/net_rt_iflist.c##
+    char   *buf;##  6 ##src/libroute/net_rt_iflist.c##
+
+    mib[0] = CTL_NET;##  7 ##src/libroute/net_rt_iflist.c##
+    mib[1] = AF_ROUTE;##  8 ##src/libroute/net_rt_iflist.c##
+    mib[2] = 0;##  9 ##src/libroute/net_rt_iflist.c##
+    mib[3] = family;            /* only addresses of this family */## 10 ##src/libroute/net_rt_iflist.c##
+    mib[4] = NET_RT_IFLIST;## 11 ##src/libroute/net_rt_iflist.c##
+    mib[5] = flags;             /* interface index, or 0 */## 12 ##src/libroute/net_rt_iflist.c##
+    if (sysctl(mib, 6, NULL, lenp, NULL, 0) < 0)## 13 ##src/libroute/net_rt_iflist.c##
+        return (NULL);## 14 ##src/libroute/net_rt_iflist.c##
+
+    if ((buf = malloc(*lenp)) == NULL)## 15 ##src/libroute/net_rt_iflist.c##
+        return (NULL);## 16 ##src/libroute/net_rt_iflist.c##
+    if (sysctl(mib, 6, buf, lenp, NULL, 0) < 0) {## 17 ##src/libroute/net_rt_iflist.c##
+        free(buf);## 18 ##src/libroute/net_rt_iflist.c##
+        return (NULL);## 19 ##src/libroute/net_rt_iflist.c##
+    }## 20 ##src/libroute/net_rt_iflist.c##
+
+    return (buf);## 21 ##src/libroute/net_rt_iflist.c##
+}## 22 ##src/libroute/net_rt_iflist.c##
+/* end net_rt_iflist */
+
+char   *## 23 ##src/libroute/net_rt_iflist.c##
+Net_rt_iflist(int family, int flags, size_t *lenp)## 24 ##src/libroute/net_rt_iflist.c##
+{## 25 ##src/libroute/net_rt_iflist.c##
+    char   *ptr;## 26 ##src/libroute/net_rt_iflist.c##
+
+    if ((ptr = net_rt_iflist(family, flags, lenp)) == NULL)## 27 ##src/libroute/net_rt_iflist.c##
+        err_sys("net_rt_iflist error");## 28 ##src/libroute/net_rt_iflist.c##
+    return (ptr);## 29 ##src/libroute/net_rt_iflist.c##
+}## 30 ##src/libroute/net_rt_iflist.c##

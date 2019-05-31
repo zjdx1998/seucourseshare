@@ -1,0 +1,27 @@
+#include    "unp.h"##  1 ##src/unixdomain/unixbind.c##
+
+int##  2 ##src/unixdomain/unixbind.c##
+main(int argc, char **argv)##  3 ##src/unixdomain/unixbind.c##
+{##  4 ##src/unixdomain/unixbind.c##
+    int     sockfd;##  5 ##src/unixdomain/unixbind.c##
+    socklen_t len;##  6 ##src/unixdomain/unixbind.c##
+    struct sockaddr_un addr1, addr2;##  7 ##src/unixdomain/unixbind.c##
+
+    if (argc != 2)##  8 ##src/unixdomain/unixbind.c##
+        err_quit("usage: unixbind <pathname>");##  9 ##src/unixdomain/unixbind.c##
+
+    sockfd = Socket(AF_LOCAL, SOCK_STREAM, 0);## 10 ##src/unixdomain/unixbind.c##
+
+    unlink(argv[1]);            /* OK if this fails */## 11 ##src/unixdomain/unixbind.c##
+
+    bzero(&addr1, sizeof(addr1));## 12 ##src/unixdomain/unixbind.c##
+    addr1.sun_family = AF_LOCAL;## 13 ##src/unixdomain/unixbind.c##
+    strncpy(addr1.sun_path, argv[1], sizeof(addr1.sun_path) - 1);## 14 ##src/unixdomain/unixbind.c##
+    Bind(sockfd, (SA *) &addr1, SUN_LEN(&addr1));## 15 ##src/unixdomain/unixbind.c##
+
+    len = sizeof(addr2);## 16 ##src/unixdomain/unixbind.c##
+    Getsockname(sockfd, (SA *) &addr2, &len);## 17 ##src/unixdomain/unixbind.c##
+    printf("bound name = %s, returned len = %d\n", addr2.sun_path, len);## 18 ##src/unixdomain/unixbind.c##
+
+    exit(0);## 19 ##src/unixdomain/unixbind.c##
+}## 20 ##src/unixdomain/unixbind.c##

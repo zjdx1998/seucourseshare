@@ -1,0 +1,41 @@
+#include    "unp.h"##  1 ##src/select/strcliselect02.c##
+
+void##  2 ##src/select/strcliselect02.c##
+str_cli(FILE *fp, int sockfd)##  3 ##src/select/strcliselect02.c##
+{##  4 ##src/select/strcliselect02.c##
+    int     maxfdp1, stdineof;##  5 ##src/select/strcliselect02.c##
+    fd_set  rset;##  6 ##src/select/strcliselect02.c##
+    char    sendline[MAXLINE], recvline[MAXLINE];##  7 ##src/select/strcliselect02.c##
+
+    stdineof = 0;##  8 ##src/select/strcliselect02.c##
+    FD_ZERO(&rset);##  9 ##src/select/strcliselect02.c##
+    for (;;) {## 10 ##src/select/strcliselect02.c##
+        if (stdineof == 0)## 11 ##src/select/strcliselect02.c##
+            FD_SET(fileno(fp), &rset);## 12 ##src/select/strcliselect02.c##
+        FD_SET(sockfd, &rset);## 13 ##src/select/strcliselect02.c##
+        maxfdp1 = max(fileno(fp), sockfd) + 1;## 14 ##src/select/strcliselect02.c##
+        Select(maxfdp1, &rset, NULL, NULL, NULL);## 15 ##src/select/strcliselect02.c##
+
+        if (FD_ISSET(sockfd, &rset)) {  /* socket is readable */## 16 ##src/select/strcliselect02.c##
+            if (Readline(sockfd, recvline, MAXLINE) == 0) {## 17 ##src/select/strcliselect02.c##
+                if (stdineof == 1)## 18 ##src/select/strcliselect02.c##
+                    return;     /* normal termination */## 19 ##src/select/strcliselect02.c##
+                else## 20 ##src/select/strcliselect02.c##
+                    err_quit("str_cli: server terminated prematurely");## 21 ##src/select/strcliselect02.c##
+            }## 22 ##src/select/strcliselect02.c##
+
+            Fputs(recvline, stdout);## 23 ##src/select/strcliselect02.c##
+        }## 24 ##src/select/strcliselect02.c##
+
+        if (FD_ISSET(fileno(fp), &rset)) {  /* input is readable */## 25 ##src/select/strcliselect02.c##
+            if (Fgets(sendline, MAXLINE, fp) == NULL) {## 26 ##src/select/strcliselect02.c##
+                stdineof = 1;## 27 ##src/select/strcliselect02.c##
+                Shutdown(sockfd, SHUT_WR);  /* send FIN */## 28 ##src/select/strcliselect02.c##
+                FD_CLR(fileno(fp), &rset);## 29 ##src/select/strcliselect02.c##
+                continue;## 30 ##src/select/strcliselect02.c##
+            }## 31 ##src/select/strcliselect02.c##
+
+            Writen(sockfd, sendline, strlen(sendline));## 32 ##src/select/strcliselect02.c##
+        }## 33 ##src/select/strcliselect02.c##
+    }## 34 ##src/select/strcliselect02.c##
+}## 35 ##src/select/strcliselect02.c##

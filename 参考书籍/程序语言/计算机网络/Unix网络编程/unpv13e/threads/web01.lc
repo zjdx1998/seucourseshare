@@ -1,0 +1,149 @@
+/* include web1 */
+#include    "unpthread.h"##  1 ##src/threads/web01.c##
+#include    <thread.h>          /* Solaris threads */##  2 ##src/threads/web01.c##
+
+#define MAXFILES    20##  3 ##src/threads/web01.c##
+#define SERV        "80"        /* port number or service name */##  4 ##src/threads/web01.c##
+
+struct file {##  5 ##src/threads/web01.c##
+    char   *f_name;             /* filename */##  6 ##src/threads/web01.c##
+    char   *f_host;             /* hostname or IP address */##  7 ##src/threads/web01.c##
+    int     f_fd;               /* descriptor */##  8 ##src/threads/web01.c##
+    int     f_flags;            /* F_xxx below */##  9 ##src/threads/web01.c##
+    pthread_t f_tid;            /* thread ID */## 10 ##src/threads/web01.c##
+} file[MAXFILES];## 11 ##src/threads/web01.c##
+#define F_CONNECTING    1       /* connect() in progress */## 12 ##src/threads/web01.c##
+#define F_READING       2       /* connect() complete; now reading */## 13 ##src/threads/web01.c##
+#define F_DONE          4       /* all done */## 14 ##src/threads/web01.c##
+
+#define GET_CMD     "GET %s HTTP/1.0\r\n\r\n"## 15 ##src/threads/web01.c##
+
+int     nconn, nfiles, nlefttoconn, nlefttoread;## 16 ##src/threads/web01.c##
+
+void   *do_get_read(void *);## 17 ##src/threads/web01.c##
+void    home_page(const char *, const char *);## 18 ##src/threads/web01.c##
+void    write_get_cmd(struct file *);## 19 ##src/threads/web01.c##
+
+int## 20 ##src/threads/web01.c##
+main(int argc, char **argv)## 21 ##src/threads/web01.c##
+{## 22 ##src/threads/web01.c##
+    int     i, n, maxnconn;## 23 ##src/threads/web01.c##
+    pthread_t tid;## 24 ##src/threads/web01.c##
+    struct file *fptr;## 25 ##src/threads/web01.c##
+
+    if (argc < 5)## 26 ##src/threads/web01.c##
+        err_quit("usage: web <#conns> <IPaddr> <homepage> file1 ...");## 27 ##src/threads/web01.c##
+    maxnconn = atoi(argv[1]);## 28 ##src/threads/web01.c##
+
+    nfiles = min(argc - 4, MAXFILES);## 29 ##src/threads/web01.c##
+    for (i = 0; i < nfiles; i++) {## 30 ##src/threads/web01.c##
+        file[i].f_name = argv[i + 4];## 31 ##src/threads/web01.c##
+        file[i].f_host = argv[2];## 32 ##src/threads/web01.c##
+        file[i].f_flags = 0;## 33 ##src/threads/web01.c##
+    }## 34 ##src/threads/web01.c##
+    printf("nfiles = %d\n", nfiles);## 35 ##src/threads/web01.c##
+
+    home_page(argv[2], argv[3]);## 36 ##src/threads/web01.c##
+
+    nlefttoread = nlefttoconn = nfiles;## 37 ##src/threads/web01.c##
+    nconn = 0;## 38 ##src/threads/web01.c##
+/* end web1 */
+/* include web2 */
+    while (nlefttoread > 0) {## 39 ##src/threads/web01.c##
+        while (nconn < maxnconn && nlefttoconn > 0) {## 40 ##src/threads/web01.c##
+            /* 4find a file to read */## 41 ##src/threads/web01.c##
+            for (i = 0; i < nfiles; i++)## 42 ##src/threads/web01.c##
+                if (file[i].f_flags == 0)## 43 ##src/threads/web01.c##
+                    break;## 44 ##src/threads/web01.c##
+            if (i == nfiles)## 45 ##src/threads/web01.c##
+                err_quit("nlefttoconn = %d but nothing found", nlefttoconn);## 46 ##src/threads/web01.c##
+
+            file[i].f_flags = F_CONNECTING;## 47 ##src/threads/web01.c##
+            Pthread_create(&tid, NULL, &do_get_read, &file[i]);## 48 ##src/threads/web01.c##
+            file[i].f_tid = tid;## 49 ##src/threads/web01.c##
+            nconn++;## 50 ##src/threads/web01.c##
+            nlefttoconn--;## 51 ##src/threads/web01.c##
+        }## 52 ##src/threads/web01.c##
+
+        if ((n = thr_join(0, &tid, (void **) &fptr)) != 0)## 53 ##src/threads/web01.c##
+            errno = n, err_sys("thr_join error");## 54 ##src/threads/web01.c##
+
+        nconn--;## 55 ##src/threads/web01.c##
+        nlefttoread--;## 56 ##src/threads/web01.c##
+        printf("thread id %d for %s done\n", tid, fptr->f_name);## 57 ##src/threads/web01.c##
+    }## 58 ##src/threads/web01.c##
+
+    exit(0);## 59 ##src/threads/web01.c##
+}## 60 ##src/threads/web01.c##
+/* end web2 */
+
+/* include do_get_read */
+void   *## 61 ##src/threads/web01.c##
+do_get_read(void *vptr)## 62 ##src/threads/web01.c##
+{## 63 ##src/threads/web01.c##
+    int     fd, n;## 64 ##src/threads/web01.c##
+    char    line[MAXLINE];## 65 ##src/threads/web01.c##
+    struct file *fptr;## 66 ##src/threads/web01.c##
+
+    fptr = (struct file *) vptr;## 67 ##src/threads/web01.c##
+
+    fd = Tcp_connect(fptr->f_host, SERV);## 68 ##src/threads/web01.c##
+    fptr->f_fd = fd;## 69 ##src/threads/web01.c##
+    printf("do_get_read for %s, fd %d, thread %d\n",## 70 ##src/threads/web01.c##
+           fptr->f_name, fd, fptr->f_tid);## 71 ##src/threads/web01.c##
+
+    write_get_cmd(fptr);        /* write() the GET command */## 72 ##src/threads/web01.c##
+
+    /* 4Read server's reply */## 73 ##src/threads/web01.c##
+    for (;;) {## 74 ##src/threads/web01.c##
+        if ((n = Read(fd, line, MAXLINE)) == 0)## 75 ##src/threads/web01.c##
+            break;              /* server closed connection */## 76 ##src/threads/web01.c##
+
+        printf("read %d bytes from %s\n", n, fptr->f_name);## 77 ##src/threads/web01.c##
+    }## 78 ##src/threads/web01.c##
+    printf("end-of-file on %s\n", fptr->f_name);## 79 ##src/threads/web01.c##
+    Close(fd);## 80 ##src/threads/web01.c##
+    fptr->f_flags = F_DONE;     /* clears F_READING */## 81 ##src/threads/web01.c##
+
+    return (fptr);              /* terminate thread */## 82 ##src/threads/web01.c##
+}## 83 ##src/threads/web01.c##
+/* end do_get_read */
+
+/* include write_get_cmd */
+void## 84 ##src/threads/web01.c##
+write_get_cmd(struct file *fptr)## 85 ##src/threads/web01.c##
+{## 86 ##src/threads/web01.c##
+    int     n;## 87 ##src/threads/web01.c##
+    char    line[MAXLINE];## 88 ##src/threads/web01.c##
+
+    n = snprintf(line, sizeof(line), GET_CMD, fptr->f_name);## 89 ##src/threads/web01.c##
+    Writen(fptr->f_fd, line, n);## 90 ##src/threads/web01.c##
+    printf("wrote %d bytes for %s\n", n, fptr->f_name);## 91 ##src/threads/web01.c##
+
+    fptr->f_flags = F_READING;  /* clears F_CONNECTING */## 92 ##src/threads/web01.c##
+}## 93 ##src/threads/web01.c##
+/* end write_get_cmd */
+
+/* include home_page */
+void## 94 ##src/threads/web01.c##
+home_page(const char *host, const char *fname)## 95 ##src/threads/web01.c##
+{## 96 ##src/threads/web01.c##
+    int     fd, n;## 97 ##src/threads/web01.c##
+    char    line[MAXLINE];## 98 ##src/threads/web01.c##
+
+    fd = Tcp_connect(host, SERV);   /* blocking connect() */## 99 ##src/threads/web01.c##
+
+    n = snprintf(line, sizeof(line), GET_CMD, fname);##100 ##src/threads/web01.c##
+    Writen(fd, line, n);##101 ##src/threads/web01.c##
+
+    for (;;) {##102 ##src/threads/web01.c##
+        if ((n = Read(fd, line, MAXLINE)) == 0)##103 ##src/threads/web01.c##
+            break;              /* server closed connection */##104 ##src/threads/web01.c##
+
+        printf("read %d bytes of home page\n", n);##105 ##src/threads/web01.c##
+        /* do whatever with data */##106 ##src/threads/web01.c##
+    }##107 ##src/threads/web01.c##
+    printf("end-of-file on home page\n");##108 ##src/threads/web01.c##
+    Close(fd);##109 ##src/threads/web01.c##
+}##110 ##src/threads/web01.c##
+/* end home_page */

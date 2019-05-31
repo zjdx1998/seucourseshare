@@ -1,0 +1,64 @@
+/* include readable_conn1 */
+#include    "icmpd.h"##  1 ##src/icmpd/readable_conn.c##
+
+int##  2 ##src/icmpd/readable_conn.c##
+readable_conn(int i)##  3 ##src/icmpd/readable_conn.c##
+{##  4 ##src/icmpd/readable_conn.c##
+    int     unixfd, recvfd;##  5 ##src/icmpd/readable_conn.c##
+    char    c;##  6 ##src/icmpd/readable_conn.c##
+    ssize_t n;##  7 ##src/icmpd/readable_conn.c##
+    socklen_t len;##  8 ##src/icmpd/readable_conn.c##
+    union {##  9 ##src/icmpd/readable_conn.c##
+        char    buf[MAXSOCKADDR];## 10 ##src/icmpd/readable_conn.c##
+        struct sockaddr sock;## 11 ##src/icmpd/readable_conn.c##
+    } un;## 12 ##src/icmpd/readable_conn.c##
+
+    unixfd = client[i].connfd;## 13 ##src/icmpd/readable_conn.c##
+    recvfd = -1;## 14 ##src/icmpd/readable_conn.c##
+    if ((n = Read_fd(unixfd, &c, 1, &recvfd)) == 0) {## 15 ##src/icmpd/readable_conn.c##
+        err_msg("client %d terminated, recvfd = %d", i, recvfd);## 16 ##src/icmpd/readable_conn.c##
+        goto clientdone;        /* client probably terminated */## 17 ##src/icmpd/readable_conn.c##
+    }## 18 ##src/icmpd/readable_conn.c##
+
+    /* 4data from client; should be descriptor */## 19 ##src/icmpd/readable_conn.c##
+    if (recvfd < 0) {## 20 ##src/icmpd/readable_conn.c##
+        err_msg("read_fd did not return descriptor");## 21 ##src/icmpd/readable_conn.c##
+        goto clienterr;## 22 ##src/icmpd/readable_conn.c##
+    }## 23 ##src/icmpd/readable_conn.c##
+/* end readable_conn1 */
+
+/* include readable_conn2 */
+    len = sizeof(un.buf);## 24 ##src/icmpd/readable_conn.c##
+    if (getsockname(recvfd, (SA *) un.buf, &len) < 0) {## 25 ##src/icmpd/readable_conn.c##
+        err_ret("getsockname error");## 26 ##src/icmpd/readable_conn.c##
+        goto clienterr;## 27 ##src/icmpd/readable_conn.c##
+    }## 28 ##src/icmpd/readable_conn.c##
+
+    client[i].family = un.sock.sa_family;## 29 ##src/icmpd/readable_conn.c##
+    if ((client[i].lport = sock_get_port(&un.sock, len)) == 0) {## 30 ##src/icmpd/readable_conn.c##
+        client[i].lport = sock_bind_wild(recvfd, client[i].family);## 31 ##src/icmpd/readable_conn.c##
+        if (client[i].lport <= 0) {## 32 ##src/icmpd/readable_conn.c##
+            err_ret("error binding ephemeral port");## 33 ##src/icmpd/readable_conn.c##
+            goto clienterr;## 34 ##src/icmpd/readable_conn.c##
+        }## 35 ##src/icmpd/readable_conn.c##
+    }## 36 ##src/icmpd/readable_conn.c##
+    Write(unixfd, "1", 1);      /* tell client all OK */## 37 ##src/icmpd/readable_conn.c##
+    FD_SET(unixfd, &allset);## 38 ##src/icmpd/readable_conn.c##
+    if (unixfd > maxfd)## 39 ##src/icmpd/readable_conn.c##
+        maxfd = unixfd;## 40 ##src/icmpd/readable_conn.c##
+    if (i > maxi)## 41 ##src/icmpd/readable_conn.c##
+        maxi = i;## 42 ##src/icmpd/readable_conn.c##
+    Close(recvfd);              /* all done with client's UDP socket */## 43 ##src/icmpd/readable_conn.c##
+    return (--nready);## 44 ##src/icmpd/readable_conn.c##
+
+  clienterr:## 45 ##src/icmpd/readable_conn.c##
+    Write(unixfd, "0", 1);      /* tell client error occurred */## 46 ##src/icmpd/readable_conn.c##
+  clientdone:## 47 ##src/icmpd/readable_conn.c##
+    Close(unixfd);## 48 ##src/icmpd/readable_conn.c##
+    if (recvfd >= 0)## 49 ##src/icmpd/readable_conn.c##
+        Close(recvfd);## 50 ##src/icmpd/readable_conn.c##
+    FD_CLR(unixfd, &allset);## 51 ##src/icmpd/readable_conn.c##
+    client[i].connfd = -1;## 52 ##src/icmpd/readable_conn.c##
+    return (--nready);## 53 ##src/icmpd/readable_conn.c##
+}## 54 ##src/icmpd/readable_conn.c##
+/* end readable_conn2 */

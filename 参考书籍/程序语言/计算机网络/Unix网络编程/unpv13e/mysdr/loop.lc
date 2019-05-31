@@ -1,0 +1,28 @@
+#include    "unp.h"##  1 ##src/mysdr/loop.c##
+
+void##  2 ##src/mysdr/loop.c##
+loop(int sockfd, socklen_t salen)##  3 ##src/mysdr/loop.c##
+{##  4 ##src/mysdr/loop.c##
+    char    buf[MAXLINE + 1];##  5 ##src/mysdr/loop.c##
+    socklen_t len;##  6 ##src/mysdr/loop.c##
+    ssize_t n;##  7 ##src/mysdr/loop.c##
+    struct sockaddr *sa;##  8 ##src/mysdr/loop.c##
+    struct sap_packet {##  9 ##src/mysdr/loop.c##
+        uint32_t sap_header;## 10 ##src/mysdr/loop.c##
+        uint32_t sap_src;## 11 ##src/mysdr/loop.c##
+        char    sap_data[1];## 12 ##src/mysdr/loop.c##
+    }      *sapptr;## 13 ##src/mysdr/loop.c##
+
+    sa = Malloc(salen);## 14 ##src/mysdr/loop.c##
+
+    for (;;) {## 15 ##src/mysdr/loop.c##
+        len = salen;## 16 ##src/mysdr/loop.c##
+        n = Recvfrom(sockfd, buf, MAXLINE, 0, sa, &len);## 17 ##src/mysdr/loop.c##
+        buf[n] = 0;             /* null terminate */## 18 ##src/mysdr/loop.c##
+
+        sapptr = (struct sap_packet *) buf;## 19 ##src/mysdr/loop.c##
+        if ((n -= 2 * sizeof(uint32_t)) <= 0)## 20 ##src/mysdr/loop.c##
+            err_quit("n = %d", n);## 21 ##src/mysdr/loop.c##
+        printf("From %s\n%s\n", Sock_ntop(sa, len), sapptr->sap_data);## 22 ##src/mysdr/loop.c##
+    }## 23 ##src/mysdr/loop.c##
+}## 24 ##src/mysdr/loop.c##

@@ -1,0 +1,76 @@
+/* include udpservselect01 */
+#include    "unp.h"##  1 ##src/udpcliserv/udpservselect01.c##
+
+int##  2 ##src/udpcliserv/udpservselect01.c##
+main(int argc, char **argv)##  3 ##src/udpcliserv/udpservselect01.c##
+{##  4 ##src/udpcliserv/udpservselect01.c##
+    int     listenfd, connfd, udpfd, nready, maxfdp1;##  5 ##src/udpcliserv/udpservselect01.c##
+    char    mesg[MAXLINE];##  6 ##src/udpcliserv/udpservselect01.c##
+    pid_t   childpid;##  7 ##src/udpcliserv/udpservselect01.c##
+    fd_set  rset;##  8 ##src/udpcliserv/udpservselect01.c##
+    ssize_t n;##  9 ##src/udpcliserv/udpservselect01.c##
+    socklen_t len;## 10 ##src/udpcliserv/udpservselect01.c##
+    const int on = 1;## 11 ##src/udpcliserv/udpservselect01.c##
+    struct sockaddr_in cliaddr, servaddr;## 12 ##src/udpcliserv/udpservselect01.c##
+    void    sig_chld(int);## 13 ##src/udpcliserv/udpservselect01.c##
+
+    /* 4create listening TCP socket */## 14 ##src/udpcliserv/udpservselect01.c##
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);## 15 ##src/udpcliserv/udpservselect01.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 16 ##src/udpcliserv/udpservselect01.c##
+    servaddr.sin_family = AF_INET;## 17 ##src/udpcliserv/udpservselect01.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 18 ##src/udpcliserv/udpservselect01.c##
+    servaddr.sin_port = htons(SERV_PORT);## 19 ##src/udpcliserv/udpservselect01.c##
+
+    Setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));## 20 ##src/udpcliserv/udpservselect01.c##
+    Bind(listenfd, (SA *) &servaddr, sizeof(servaddr));## 21 ##src/udpcliserv/udpservselect01.c##
+
+    Listen(listenfd, LISTENQ);## 22 ##src/udpcliserv/udpservselect01.c##
+
+    /* 4create UDP socket */## 23 ##src/udpcliserv/udpservselect01.c##
+    udpfd = Socket(AF_INET, SOCK_DGRAM, 0);## 24 ##src/udpcliserv/udpservselect01.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 25 ##src/udpcliserv/udpservselect01.c##
+    servaddr.sin_family = AF_INET;## 26 ##src/udpcliserv/udpservselect01.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 27 ##src/udpcliserv/udpservselect01.c##
+    servaddr.sin_port = htons(SERV_PORT);## 28 ##src/udpcliserv/udpservselect01.c##
+
+    Bind(udpfd, (SA *) &servaddr, sizeof(servaddr));## 29 ##src/udpcliserv/udpservselect01.c##
+/* end udpservselect01 */
+
+/* include udpservselect02 */
+    Signal(SIGCHLD, sig_chld);  /* must call waitpid() */## 30 ##src/udpcliserv/udpservselect01.c##
+
+    FD_ZERO(&rset);## 31 ##src/udpcliserv/udpservselect01.c##
+    maxfdp1 = max(listenfd, udpfd) + 1;## 32 ##src/udpcliserv/udpservselect01.c##
+    for (;;) {## 33 ##src/udpcliserv/udpservselect01.c##
+        FD_SET(listenfd, &rset);## 34 ##src/udpcliserv/udpservselect01.c##
+        FD_SET(udpfd, &rset);## 35 ##src/udpcliserv/udpservselect01.c##
+        if ((nready = select(maxfdp1, &rset, NULL, NULL, NULL)) < 0) {## 36 ##src/udpcliserv/udpservselect01.c##
+            if (errno == EINTR)## 37 ##src/udpcliserv/udpservselect01.c##
+                continue;       /* back to for() */## 38 ##src/udpcliserv/udpservselect01.c##
+            else## 39 ##src/udpcliserv/udpservselect01.c##
+                err_sys("select error");## 40 ##src/udpcliserv/udpservselect01.c##
+        }## 41 ##src/udpcliserv/udpservselect01.c##
+
+        if (FD_ISSET(listenfd, &rset)) {## 42 ##src/udpcliserv/udpservselect01.c##
+            len = sizeof(cliaddr);## 43 ##src/udpcliserv/udpservselect01.c##
+            connfd = Accept(listenfd, (SA *) &cliaddr, &len);## 44 ##src/udpcliserv/udpservselect01.c##
+
+            if ((childpid = Fork()) == 0) { /* child process */## 45 ##src/udpcliserv/udpservselect01.c##
+                Close(listenfd);    /* close listening socket */## 46 ##src/udpcliserv/udpservselect01.c##
+                str_echo(connfd);   /* process the request */## 47 ##src/udpcliserv/udpservselect01.c##
+                exit(0);## 48 ##src/udpcliserv/udpservselect01.c##
+            }## 49 ##src/udpcliserv/udpservselect01.c##
+            Close(connfd);      /* parent closes connected socket */## 50 ##src/udpcliserv/udpservselect01.c##
+        }## 51 ##src/udpcliserv/udpservselect01.c##
+
+        if (FD_ISSET(udpfd, &rset)) {## 52 ##src/udpcliserv/udpservselect01.c##
+            len = sizeof(cliaddr);## 53 ##src/udpcliserv/udpservselect01.c##
+            n = Recvfrom(udpfd, mesg, MAXLINE, 0, (SA *) &cliaddr, &len);## 54 ##src/udpcliserv/udpservselect01.c##
+
+            Sendto(udpfd, mesg, n, 0, (SA *) &cliaddr, len);## 55 ##src/udpcliserv/udpservselect01.c##
+        }## 56 ##src/udpcliserv/udpservselect01.c##
+    }## 57 ##src/udpcliserv/udpservselect01.c##
+}## 58 ##src/udpcliserv/udpservselect01.c##
+/* end udpservselect02 */

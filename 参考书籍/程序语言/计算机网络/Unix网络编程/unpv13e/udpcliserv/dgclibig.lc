@@ -1,0 +1,22 @@
+#include    "unp.h"##  1 ##src/udpcliserv/dgclibig.c##
+
+#undef  MAXLINE##  2 ##src/udpcliserv/dgclibig.c##
+#define MAXLINE 65507##  3 ##src/udpcliserv/dgclibig.c##
+
+void##  4 ##src/udpcliserv/dgclibig.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  5 ##src/udpcliserv/dgclibig.c##
+{##  6 ##src/udpcliserv/dgclibig.c##
+    int     size;##  7 ##src/udpcliserv/dgclibig.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  8 ##src/udpcliserv/dgclibig.c##
+    ssize_t n;##  9 ##src/udpcliserv/dgclibig.c##
+
+    size = 70000;## 10 ##src/udpcliserv/dgclibig.c##
+    Setsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, &size, sizeof(size));## 11 ##src/udpcliserv/dgclibig.c##
+    Setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, &size, sizeof(size));## 12 ##src/udpcliserv/dgclibig.c##
+
+    Sendto(sockfd, sendline, MAXLINE, 0, pservaddr, servlen);## 13 ##src/udpcliserv/dgclibig.c##
+
+    n = Recvfrom(sockfd, recvline, MAXLINE, 0, NULL, NULL);## 14 ##src/udpcliserv/dgclibig.c##
+
+    printf("received %d bytes\n", n);## 15 ##src/udpcliserv/dgclibig.c##
+}## 16 ##src/udpcliserv/dgclibig.c##

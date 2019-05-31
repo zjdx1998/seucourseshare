@@ -1,0 +1,52 @@
+/* include serv01 */
+#include    "unp.h"##  1 ##src/server/serv01.c##
+
+int##  2 ##src/server/serv01.c##
+main(int argc, char **argv)##  3 ##src/server/serv01.c##
+{##  4 ##src/server/serv01.c##
+    int     listenfd, connfd;##  5 ##src/server/serv01.c##
+    pid_t   childpid;##  6 ##src/server/serv01.c##
+    void    sig_chld(int), sig_int(int), web_child(int);##  7 ##src/server/serv01.c##
+    socklen_t clilen, addrlen;##  8 ##src/server/serv01.c##
+    struct sockaddr *cliaddr;##  9 ##src/server/serv01.c##
+
+    if (argc == 2)## 10 ##src/server/serv01.c##
+        listenfd = Tcp_listen(NULL, argv[1], &addrlen);## 11 ##src/server/serv01.c##
+    else if (argc == 3)## 12 ##src/server/serv01.c##
+        listenfd = Tcp_listen(argv[1], argv[2], &addrlen);## 13 ##src/server/serv01.c##
+    else## 14 ##src/server/serv01.c##
+        err_quit("usage: serv01 [ <host> ] <port#>");## 15 ##src/server/serv01.c##
+    cliaddr = Malloc(addrlen);## 16 ##src/server/serv01.c##
+
+    Signal(SIGCHLD, sig_chld);## 17 ##src/server/serv01.c##
+    Signal(SIGINT, sig_int);## 18 ##src/server/serv01.c##
+
+    for (;;) {## 19 ##src/server/serv01.c##
+        clilen = addrlen;## 20 ##src/server/serv01.c##
+        if ((connfd = accept(listenfd, cliaddr, &clilen)) < 0) {## 21 ##src/server/serv01.c##
+            if (errno == EINTR)## 22 ##src/server/serv01.c##
+                continue;       /* back to for() */## 23 ##src/server/serv01.c##
+            else## 24 ##src/server/serv01.c##
+                err_sys("accept error");## 25 ##src/server/serv01.c##
+        }## 26 ##src/server/serv01.c##
+
+        if ((childpid = Fork()) == 0) { /* child process */## 27 ##src/server/serv01.c##
+            Close(listenfd);    /* close listening socket */## 28 ##src/server/serv01.c##
+            web_child(connfd);  /* process the request */## 29 ##src/server/serv01.c##
+            exit(0);## 30 ##src/server/serv01.c##
+        }## 31 ##src/server/serv01.c##
+        Close(connfd);          /* parent closes connected socket */## 32 ##src/server/serv01.c##
+    }## 33 ##src/server/serv01.c##
+}## 34 ##src/server/serv01.c##
+/* end serv01 */
+
+/* include sigint */
+void## 35 ##src/server/serv01.c##
+sig_int(int signo)## 36 ##src/server/serv01.c##
+{## 37 ##src/server/serv01.c##
+    void    pr_cpu_time(void);## 38 ##src/server/serv01.c##
+
+    pr_cpu_time();## 39 ##src/server/serv01.c##
+    exit(0);## 40 ##src/server/serv01.c##
+}## 41 ##src/server/serv01.c##
+/* end sigint */

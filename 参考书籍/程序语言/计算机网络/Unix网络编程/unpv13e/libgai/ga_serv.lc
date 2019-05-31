@@ -1,0 +1,58 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/ga_serv.c##
+
+/*##  2 ##src/libgai/ga_serv.c##
+ * This function handles the service string.##  3 ##src/libgai/ga_serv.c##
+ */##  4 ##src/libgai/ga_serv.c##
+
+/* include ga_serv */
+int##  5 ##src/libgai/ga_serv.c##
+ga_serv(struct addrinfo *aihead, const struct addrinfo *hintsp,##  6 ##src/libgai/ga_serv.c##
+        const char *serv)##  7 ##src/libgai/ga_serv.c##
+{##  8 ##src/libgai/ga_serv.c##
+    int     port, rc, nfound;##  9 ##src/libgai/ga_serv.c##
+    struct servent *sptr;## 10 ##src/libgai/ga_serv.c##
+
+    nfound = 0;## 11 ##src/libgai/ga_serv.c##
+    if (isdigit(serv[0])) {     /* check for port number string first */## 12 ##src/libgai/ga_serv.c##
+        port = htons(atoi(serv));## 13 ##src/libgai/ga_serv.c##
+        if (hintsp->ai_socktype) {## 14 ##src/libgai/ga_serv.c##
+            /* 4caller specifies socket type */## 15 ##src/libgai/ga_serv.c##
+            if ((rc = ga_port(aihead, port, hintsp->ai_socktype)) < 0)## 16 ##src/libgai/ga_serv.c##
+                return (EAI_MEMORY);## 17 ##src/libgai/ga_serv.c##
+            nfound += rc;## 18 ##src/libgai/ga_serv.c##
+        } else {## 19 ##src/libgai/ga_serv.c##
+            /* 4caller does not specify socket type */## 20 ##src/libgai/ga_serv.c##
+            if ((rc = ga_port(aihead, port, SOCK_STREAM)) < 0)## 21 ##src/libgai/ga_serv.c##
+                return (EAI_MEMORY);## 22 ##src/libgai/ga_serv.c##
+            nfound += rc;## 23 ##src/libgai/ga_serv.c##
+            if ((rc = ga_port(aihead, port, SOCK_DGRAM)) < 0)## 24 ##src/libgai/ga_serv.c##
+                return (EAI_MEMORY);## 25 ##src/libgai/ga_serv.c##
+            nfound += rc;## 26 ##src/libgai/ga_serv.c##
+        }## 27 ##src/libgai/ga_serv.c##
+    } else {## 28 ##src/libgai/ga_serv.c##
+        /* 4try service name, TCP then UDP */## 29 ##src/libgai/ga_serv.c##
+        if (hintsp->ai_socktype == 0 || hintsp->ai_socktype == SOCK_STREAM) {## 30 ##src/libgai/ga_serv.c##
+            if ((sptr = getservbyname(serv, "tcp")) != NULL) {## 31 ##src/libgai/ga_serv.c##
+                if ((rc = ga_port(aihead, sptr->s_port, SOCK_STREAM)) < 0)## 32 ##src/libgai/ga_serv.c##
+                    return (EAI_MEMORY);## 33 ##src/libgai/ga_serv.c##
+                nfound += rc;## 34 ##src/libgai/ga_serv.c##
+            }## 35 ##src/libgai/ga_serv.c##
+        }## 36 ##src/libgai/ga_serv.c##
+        if (hintsp->ai_socktype == 0 || hintsp->ai_socktype == SOCK_DGRAM) {## 37 ##src/libgai/ga_serv.c##
+            if ((sptr = getservbyname(serv, "udp")) != NULL) {## 38 ##src/libgai/ga_serv.c##
+                if ((rc = ga_port(aihead, sptr->s_port, SOCK_DGRAM)) < 0)## 39 ##src/libgai/ga_serv.c##
+                    return (EAI_MEMORY);## 40 ##src/libgai/ga_serv.c##
+                nfound += rc;## 41 ##src/libgai/ga_serv.c##
+            }## 42 ##src/libgai/ga_serv.c##
+        }## 43 ##src/libgai/ga_serv.c##
+    }## 44 ##src/libgai/ga_serv.c##
+
+    if (nfound == 0) {## 45 ##src/libgai/ga_serv.c##
+        if (hintsp->ai_socktype == 0)## 46 ##src/libgai/ga_serv.c##
+            return (EAI_NONAME);    /* all calls to getservbyname() failed */## 47 ##src/libgai/ga_serv.c##
+        else## 48 ##src/libgai/ga_serv.c##
+            return (EAI_SERVICE);   /* service not supported for socket type */## 49 ##src/libgai/ga_serv.c##
+    }## 50 ##src/libgai/ga_serv.c##
+    return (0);## 51 ##src/libgai/ga_serv.c##
+}## 52 ##src/libgai/ga_serv.c##
+/* end ga_serv */

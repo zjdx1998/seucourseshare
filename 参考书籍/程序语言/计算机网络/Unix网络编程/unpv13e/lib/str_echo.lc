@@ -1,0 +1,17 @@
+#include    "unp.h"##  1 ##src/lib/str_echo.c##
+
+void##  2 ##src/lib/str_echo.c##
+str_echo(int sockfd)##  3 ##src/lib/str_echo.c##
+{##  4 ##src/lib/str_echo.c##
+    ssize_t n;##  5 ##src/lib/str_echo.c##
+    char    buf[MAXLINE];##  6 ##src/lib/str_echo.c##
+
+  again:##  7 ##src/lib/str_echo.c##
+    while ((n = read(sockfd, buf, MAXLINE)) > 0)##  8 ##src/lib/str_echo.c##
+        Writen(sockfd, buf, n);##  9 ##src/lib/str_echo.c##
+
+    if (n < 0 && errno == EINTR)## 10 ##src/lib/str_echo.c##
+        goto again;## 11 ##src/lib/str_echo.c##
+    else if (n < 0)## 12 ##src/lib/str_echo.c##
+        err_sys("str_echo: read error");## 13 ##src/lib/str_echo.c##
+}## 14 ##src/lib/str_echo.c##

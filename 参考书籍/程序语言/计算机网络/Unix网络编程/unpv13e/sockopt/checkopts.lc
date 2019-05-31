@@ -1,0 +1,131 @@
+/* include checkopts1 */
+#include    "unp.h"##  1 ##src/sockopt/checkopts.c##
+#include    <netinet/tcp.h>     /* for TCP_xxx defines */##  2 ##src/sockopt/checkopts.c##
+
+union val {##  3 ##src/sockopt/checkopts.c##
+  int               i_val;##  4 ##src/sockopt/checkopts.c##
+  long              l_val;##  5 ##src/sockopt/checkopts.c##
+  char              c_val[10];##  6 ##src/sockopt/checkopts.c##
+  struct linger     linger_val;##  7 ##src/sockopt/checkopts.c##
+  struct timeval    timeval_val;##  8 ##src/sockopt/checkopts.c##
+} val;##  9 ##src/sockopt/checkopts.c##
+
+static char *sock_str_flag(union val *, int);## 10 ##src/sockopt/checkopts.c##
+static char *sock_str_int(union val *, int);## 11 ##src/sockopt/checkopts.c##
+static char *sock_str_linger(union val *, int);## 12 ##src/sockopt/checkopts.c##
+static char *sock_str_timeval(union val *, int);## 13 ##src/sockopt/checkopts.c##
+
+struct sock_opts {## 14 ##src/sockopt/checkopts.c##
+  char     *opt_str;## 15 ##src/sockopt/checkopts.c##
+  int       opt_level;## 16 ##src/sockopt/checkopts.c##
+  int       opt_name;## 17 ##src/sockopt/checkopts.c##
+  char   *(*opt_val_str)(union val *, int);## 18 ##src/sockopt/checkopts.c##
+} sock_opts[] = {## 19 ##src/sockopt/checkopts.c##
+    "SO_BROADCAST",     SOL_SOCKET, SO_BROADCAST,   sock_str_flag,## 20 ##src/sockopt/checkopts.c##
+    "SO_DEBUG",         SOL_SOCKET, SO_DEBUG,       sock_str_flag,## 21 ##src/sockopt/checkopts.c##
+    "SO_DONTROUTE",     SOL_SOCKET, SO_DONTROUTE,   sock_str_flag,## 22 ##src/sockopt/checkopts.c##
+    "SO_ERROR",         SOL_SOCKET, SO_ERROR,       sock_str_int,## 23 ##src/sockopt/checkopts.c##
+    "SO_KEEPALIVE",     SOL_SOCKET, SO_KEEPALIVE,   sock_str_flag,## 24 ##src/sockopt/checkopts.c##
+    "SO_LINGER",        SOL_SOCKET, SO_LINGER,      sock_str_linger,## 25 ##src/sockopt/checkopts.c##
+    "SO_OOBINLINE",     SOL_SOCKET, SO_OOBINLINE,   sock_str_flag,## 26 ##src/sockopt/checkopts.c##
+    "SO_RCVBUF",        SOL_SOCKET, SO_RCVBUF,      sock_str_int,## 27 ##src/sockopt/checkopts.c##
+    "SO_SNDBUF",        SOL_SOCKET, SO_SNDBUF,      sock_str_int,## 28 ##src/sockopt/checkopts.c##
+    "SO_RCVLOWAT",      SOL_SOCKET, SO_RCVLOWAT,    sock_str_int,## 29 ##src/sockopt/checkopts.c##
+    "SO_SNDLOWAT",      SOL_SOCKET, SO_SNDLOWAT,    sock_str_int,## 30 ##src/sockopt/checkopts.c##
+    "SO_RCVTIMEO",      SOL_SOCKET, SO_RCVTIMEO,    sock_str_timeval,## 31 ##src/sockopt/checkopts.c##
+    "SO_SNDTIMEO",      SOL_SOCKET, SO_SNDTIMEO,    sock_str_timeval,## 32 ##src/sockopt/checkopts.c##
+    "SO_REUSEADDR",     SOL_SOCKET, SO_REUSEADDR,   sock_str_flag,## 33 ##src/sockopt/checkopts.c##
+#ifdef  SO_REUSEPORT## 34 ##src/sockopt/checkopts.c##
+    "SO_REUSEPORT",     SOL_SOCKET, SO_REUSEPORT,   sock_str_flag,## 35 ##src/sockopt/checkopts.c##
+#else## 36 ##src/sockopt/checkopts.c##
+    "SO_REUSEPORT",     0,          0,              NULL,## 37 ##src/sockopt/checkopts.c##
+#endif## 38 ##src/sockopt/checkopts.c##
+    "SO_TYPE",          SOL_SOCKET, SO_TYPE,        sock_str_int,## 39 ##src/sockopt/checkopts.c##
+    "SO_USELOOPBACK",   SOL_SOCKET, SO_USELOOPBACK, sock_str_flag,## 40 ##src/sockopt/checkopts.c##
+    "IP_TOS",           IPPROTO_IP, IP_TOS,         sock_str_int,## 41 ##src/sockopt/checkopts.c##
+    "IP_TTL",           IPPROTO_IP, IP_TTL,         sock_str_int,## 42 ##src/sockopt/checkopts.c##
+    "TCP_MAXSEG",       IPPROTO_TCP,TCP_MAXSEG,     sock_str_int,## 43 ##src/sockopt/checkopts.c##
+    "TCP_NODELAY",      IPPROTO_TCP,TCP_NODELAY,    sock_str_flag,## 44 ##src/sockopt/checkopts.c##
+    NULL,               0,          0,              NULL## 45 ##src/sockopt/checkopts.c##
+};## 46 ##src/sockopt/checkopts.c##
+/* end checkopts1 */
+
+/* include checkopts2 */
+int## 47 ##src/sockopt/checkopts.c##
+main(int argc, char **argv)## 48 ##src/sockopt/checkopts.c##
+{## 49 ##src/sockopt/checkopts.c##
+    int     fd, len;## 50 ##src/sockopt/checkopts.c##
+    struct sock_opts *ptr;## 51 ##src/sockopt/checkopts.c##
+
+    fd = Socket(AF_INET, SOCK_STREAM, 0);## 52 ##src/sockopt/checkopts.c##
+
+    for (ptr = sock_opts; ptr->opt_str != NULL; ptr++) {## 53 ##src/sockopt/checkopts.c##
+        printf("%s: ", ptr->opt_str);## 54 ##src/sockopt/checkopts.c##
+        if (ptr->opt_val_str == NULL)## 55 ##src/sockopt/checkopts.c##
+            printf("(undefined)\n");## 56 ##src/sockopt/checkopts.c##
+        else {## 57 ##src/sockopt/checkopts.c##
+            len = sizeof(val);## 58 ##src/sockopt/checkopts.c##
+            if (getsockopt(fd, ptr->opt_level, ptr->opt_name,## 59 ##src/sockopt/checkopts.c##
+                           &val, &len) == -1) {## 60 ##src/sockopt/checkopts.c##
+                err_ret("getsockopt error");## 61 ##src/sockopt/checkopts.c##
+            } else {## 62 ##src/sockopt/checkopts.c##
+                printf("default = %s\n", (*ptr->opt_val_str) (&val, len));## 63 ##src/sockopt/checkopts.c##
+            }## 64 ##src/sockopt/checkopts.c##
+        }## 65 ##src/sockopt/checkopts.c##
+    }## 66 ##src/sockopt/checkopts.c##
+    exit(0);## 67 ##src/sockopt/checkopts.c##
+}## 68 ##src/sockopt/checkopts.c##
+/* end checkopts2 */
+
+/* include checkopts3 */
+static char strres[128];## 69 ##src/sockopt/checkopts.c##
+
+static char *## 70 ##src/sockopt/checkopts.c##
+sock_str_flag(union val *ptr, int len)## 71 ##src/sockopt/checkopts.c##
+{## 72 ##src/sockopt/checkopts.c##
+    if (len != sizeof(int))## 73 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres), "size (%d) not sizeof(int)", len);## 74 ##src/sockopt/checkopts.c##
+    else## 75 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres),## 76 ##src/sockopt/checkopts.c##
+                 "%s", (ptr->i_val == 0) ? "off" : "on");## 77 ##src/sockopt/checkopts.c##
+    return(strres);## 78 ##src/sockopt/checkopts.c##
+}## 79 ##src/sockopt/checkopts.c##
+/* end checkopts3 */
+
+static char *## 80 ##src/sockopt/checkopts.c##
+sock_str_int(union val *ptr, int len)## 81 ##src/sockopt/checkopts.c##
+{## 82 ##src/sockopt/checkopts.c##
+    if (len != sizeof(int))## 83 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres), "size (%d) not sizeof(int)", len);## 84 ##src/sockopt/checkopts.c##
+    else## 85 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres), "%d", ptr->i_val);## 86 ##src/sockopt/checkopts.c##
+    return (strres);## 87 ##src/sockopt/checkopts.c##
+}## 88 ##src/sockopt/checkopts.c##
+
+static char *## 89 ##src/sockopt/checkopts.c##
+sock_str_linger(union val *ptr, int len)## 90 ##src/sockopt/checkopts.c##
+{## 91 ##src/sockopt/checkopts.c##
+    struct linger *lptr = &ptr->linger_val;## 92 ##src/sockopt/checkopts.c##
+
+    if (len != sizeof(struct linger))## 93 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres),## 94 ##src/sockopt/checkopts.c##
+                 "size (%d) not sizeof(struct linger)", len);## 95 ##src/sockopt/checkopts.c##
+    else## 96 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres), "l_onoff = %d, l_linger = %d",## 97 ##src/sockopt/checkopts.c##
+                 lptr->l_onoff, lptr->l_linger);## 98 ##src/sockopt/checkopts.c##
+    return (strres);## 99 ##src/sockopt/checkopts.c##
+}##100 ##src/sockopt/checkopts.c##
+
+static char *##101 ##src/sockopt/checkopts.c##
+sock_str_timeval(union val *ptr, int len)##102 ##src/sockopt/checkopts.c##
+{##103 ##src/sockopt/checkopts.c##
+    struct timeval *tvptr = &ptr->timeval_val;##104 ##src/sockopt/checkopts.c##
+
+    if (len != sizeof(struct timeval))##105 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres),##106 ##src/sockopt/checkopts.c##
+                 "size (%d) not sizeof(struct timeval)", len);##107 ##src/sockopt/checkopts.c##
+    else##108 ##src/sockopt/checkopts.c##
+        snprintf(strres, sizeof(strres), "%d sec, %d usec",##109 ##src/sockopt/checkopts.c##
+                 tvptr->tv_sec, tvptr->tv_usec);##110 ##src/sockopt/checkopts.c##
+    return (strres);##111 ##src/sockopt/checkopts.c##
+}##112 ##src/sockopt/checkopts.c##

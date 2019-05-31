@@ -1,0 +1,45 @@
+
+#define SCTP_MAXLINE    800##  1 ##src/sctp/sctp_strcliecho2.c##
+
+void##  2 ##src/sctp/sctp_strcliecho2.c##
+sctpstr_cli_echoall(FILE *fp, int sock_fd, struct sockaddr *to,##  3 ##src/sctp/sctp_strcliecho2.c##
+                    socklen_t tolen)##  4 ##src/sctp/sctp_strcliecho2.c##
+{##  5 ##src/sctp/sctp_strcliecho2.c##
+    struct sockaddr_in peeraddr;##  6 ##src/sctp/sctp_strcliecho2.c##
+    struct sctp_sndrcvinfo sri;##  7 ##src/sctp/sctp_strcliecho2.c##
+    char    sendline[SCTP_MAXLINE], recvline[SCTP_MAXLINE];##  8 ##src/sctp/sctp_strcliecho2.c##
+    socklen_t len;##  9 ##src/sctp/sctp_strcliecho2.c##
+    int     rd_sz, i, strsz;## 10 ##src/sctp/sctp_strcliecho2.c##
+    int     msg_flags;## 11 ##src/sctp/sctp_strcliecho2.c##
+
+    bzero(sendline, sizeof(sendline));## 12 ##src/sctp/sctp_strcliecho2.c##
+    bzero(&sri, sizeof(sri));## 13 ##src/sctp/sctp_strcliecho2.c##
+    while (fgets(sendline, SCTP_MAXLINE - 9, fp) != NULL) {## 14 ##src/sctp/sctp_strcliecho2.c##
+        strsz = strlen(sendline);## 15 ##src/sctp/sctp_strcliecho2.c##
+        if (sendline[strsz - 1] == '\n') {## 16 ##src/sctp/sctp_strcliecho2.c##
+            sendline[strsz - 1] = '\0';## 17 ##src/sctp/sctp_strcliecho2.c##
+            strsz--;## 18 ##src/sctp/sctp_strcliecho2.c##
+        }## 19 ##src/sctp/sctp_strcliecho2.c##
+        /* include modified_echo */## 20 ##src/sctp/sctp_strcliecho2.c##
+        for (i = 0; i < SERV_MAX_SCTP_STRM; i++) {## 21 ##src/sctp/sctp_strcliecho2.c##
+            snprintf(sendline + strsz, sizeof(sendline) - strsz,## 22 ##src/sctp/sctp_strcliecho2.c##
+                     ".msg.%d 1", i);## 23 ##src/sctp/sctp_strcliecho2.c##
+            Sctp_sendmsg(sock_fd, sendline, sizeof(sendline),## 24 ##src/sctp/sctp_strcliecho2.c##
+                         to, tolen, 0, 0, i, 0, 0);## 25 ##src/sctp/sctp_strcliecho2.c##
+            snprintf(sendline + strsz, sizeof(sendline) - strsz,## 26 ##src/sctp/sctp_strcliecho2.c##
+                     ".msg.%d 2", i);## 27 ##src/sctp/sctp_strcliecho2.c##
+            Sctp_sendmsg(sock_fd, sendline, sizeof(sendline),## 28 ##src/sctp/sctp_strcliecho2.c##
+                         to, tolen, 0, 0, i, 0, 0);## 29 ##src/sctp/sctp_strcliecho2.c##
+        }## 30 ##src/sctp/sctp_strcliecho2.c##
+        for (i = 0; i < SERV_MAX_SCTP_STRM * 2; i++) {## 31 ##src/sctp/sctp_strcliecho2.c##
+            len = sizeof(peeraddr);## 32 ##src/sctp/sctp_strcliecho2.c##
+            /* end modified_echo */## 33 ##src/sctp/sctp_strcliecho2.c##
+            rd_sz = Sctp_recvmsg(sock_fd, recvline, sizeof(recvline),## 34 ##src/sctp/sctp_strcliecho2.c##
+                                 (SA *) &peeraddr, &len, &sri, &msg_flags);## 35 ##src/sctp/sctp_strcliecho2.c##
+            printf("From str:%d seq:%d (assoc:0x%x):",## 36 ##src/sctp/sctp_strcliecho2.c##
+                   sri.sinfo_stream, sri.sinfo_ssn,## 37 ##src/sctp/sctp_strcliecho2.c##
+                   (u_int) sri.sinfo_assoc_id);## 38 ##src/sctp/sctp_strcliecho2.c##
+            printf("%.*s\n", rd_sz, recvline);## 39 ##src/sctp/sctp_strcliecho2.c##
+        }## 40 ##src/sctp/sctp_strcliecho2.c##
+    }## 41 ##src/sctp/sctp_strcliecho2.c##
+}## 42 ##src/sctp/sctp_strcliecho2.c##

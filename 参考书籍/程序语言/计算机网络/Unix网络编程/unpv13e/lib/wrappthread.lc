@@ -1,0 +1,188 @@
+/*##  1 ##src/lib/wrappthread.c##
+ * pthreads wrapper functions.##  2 ##src/lib/wrappthread.c##
+ */##  3 ##src/lib/wrappthread.c##
+
+#include    "unp.h"##  4 ##src/lib/wrappthread.c##
+#include    "unpthread.h"##  5 ##src/lib/wrappthread.c##
+
+void##  6 ##src/lib/wrappthread.c##
+Pthread_create(pthread_t * tid, const pthread_attr_t * attr,##  7 ##src/lib/wrappthread.c##
+               void *(*func) (void *), void *arg)##  8 ##src/lib/wrappthread.c##
+{##  9 ##src/lib/wrappthread.c##
+    int     n;## 10 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_create(tid, attr, func, arg)) == 0)## 11 ##src/lib/wrappthread.c##
+        return;## 12 ##src/lib/wrappthread.c##
+    errno = n;## 13 ##src/lib/wrappthread.c##
+    err_sys("pthread_create error");## 14 ##src/lib/wrappthread.c##
+}## 15 ##src/lib/wrappthread.c##
+
+void## 16 ##src/lib/wrappthread.c##
+Pthread_join(pthread_t tid, void **status)## 17 ##src/lib/wrappthread.c##
+{## 18 ##src/lib/wrappthread.c##
+    int     n;## 19 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_join(tid, status)) == 0)## 20 ##src/lib/wrappthread.c##
+        return;## 21 ##src/lib/wrappthread.c##
+    errno = n;## 22 ##src/lib/wrappthread.c##
+    err_sys("pthread_join error");## 23 ##src/lib/wrappthread.c##
+}## 24 ##src/lib/wrappthread.c##
+
+void## 25 ##src/lib/wrappthread.c##
+Pthread_detach(pthread_t tid)## 26 ##src/lib/wrappthread.c##
+{## 27 ##src/lib/wrappthread.c##
+    int     n;## 28 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_detach(tid)) == 0)## 29 ##src/lib/wrappthread.c##
+        return;## 30 ##src/lib/wrappthread.c##
+    errno = n;## 31 ##src/lib/wrappthread.c##
+    err_sys("pthread_detach error");## 32 ##src/lib/wrappthread.c##
+}## 33 ##src/lib/wrappthread.c##
+
+void## 34 ##src/lib/wrappthread.c##
+Pthread_kill(pthread_t tid, int signo)## 35 ##src/lib/wrappthread.c##
+{## 36 ##src/lib/wrappthread.c##
+    int     n;## 37 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_kill(tid, signo)) == 0)## 38 ##src/lib/wrappthread.c##
+        return;## 39 ##src/lib/wrappthread.c##
+    errno = n;## 40 ##src/lib/wrappthread.c##
+    err_sys("pthread_kill error");## 41 ##src/lib/wrappthread.c##
+}## 42 ##src/lib/wrappthread.c##
+
+void## 43 ##src/lib/wrappthread.c##
+Pthread_mutexattr_init(pthread_mutexattr_t * attr)## 44 ##src/lib/wrappthread.c##
+{## 45 ##src/lib/wrappthread.c##
+    int     n;## 46 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_mutexattr_init(attr)) == 0)## 47 ##src/lib/wrappthread.c##
+        return;## 48 ##src/lib/wrappthread.c##
+    errno = n;## 49 ##src/lib/wrappthread.c##
+    err_sys("pthread_mutexattr_init error");## 50 ##src/lib/wrappthread.c##
+}## 51 ##src/lib/wrappthread.c##
+
+#ifdef  _POSIX_THREAD_PROCESS_SHARED## 52 ##src/lib/wrappthread.c##
+void## 53 ##src/lib/wrappthread.c##
+Pthread_mutexattr_setpshared(pthread_mutexattr_t * attr, int flag)## 54 ##src/lib/wrappthread.c##
+{## 55 ##src/lib/wrappthread.c##
+    int     n;## 56 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_mutexattr_setpshared(attr, flag)) == 0)## 57 ##src/lib/wrappthread.c##
+        return;## 58 ##src/lib/wrappthread.c##
+    errno = n;## 59 ##src/lib/wrappthread.c##
+    err_sys("pthread_mutexattr_setpshared error");## 60 ##src/lib/wrappthread.c##
+}## 61 ##src/lib/wrappthread.c##
+#endif## 62 ##src/lib/wrappthread.c##
+
+void## 63 ##src/lib/wrappthread.c##
+Pthread_mutex_init(pthread_mutex_t *mptr, pthread_mutexattr_t * attr)## 64 ##src/lib/wrappthread.c##
+{## 65 ##src/lib/wrappthread.c##
+    int     n;## 66 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_mutex_init(mptr, attr)) == 0)## 67 ##src/lib/wrappthread.c##
+        return;## 68 ##src/lib/wrappthread.c##
+    errno = n;## 69 ##src/lib/wrappthread.c##
+    err_sys("pthread_mutex_init error");## 70 ##src/lib/wrappthread.c##
+}## 71 ##src/lib/wrappthread.c##
+
+/* include Pthread_mutex_lock */
+void## 72 ##src/lib/wrappthread.c##
+Pthread_mutex_lock(pthread_mutex_t *mptr)## 73 ##src/lib/wrappthread.c##
+{## 74 ##src/lib/wrappthread.c##
+    int     n;## 75 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_mutex_lock(mptr)) == 0)## 76 ##src/lib/wrappthread.c##
+        return;## 77 ##src/lib/wrappthread.c##
+    errno = n;## 78 ##src/lib/wrappthread.c##
+    err_sys("pthread_mutex_lock error");## 79 ##src/lib/wrappthread.c##
+}## 80 ##src/lib/wrappthread.c##
+/* end Pthread_mutex_lock */
+
+void## 81 ##src/lib/wrappthread.c##
+Pthread_mutex_unlock(pthread_mutex_t *mptr)## 82 ##src/lib/wrappthread.c##
+{## 83 ##src/lib/wrappthread.c##
+    int     n;## 84 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_mutex_unlock(mptr)) == 0)## 85 ##src/lib/wrappthread.c##
+        return;## 86 ##src/lib/wrappthread.c##
+    errno = n;## 87 ##src/lib/wrappthread.c##
+    err_sys("pthread_mutex_unlock error");## 88 ##src/lib/wrappthread.c##
+}## 89 ##src/lib/wrappthread.c##
+
+void## 90 ##src/lib/wrappthread.c##
+Pthread_cond_broadcast(pthread_cond_t *cptr)## 91 ##src/lib/wrappthread.c##
+{## 92 ##src/lib/wrappthread.c##
+    int     n;## 93 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_cond_broadcast(cptr)) == 0)## 94 ##src/lib/wrappthread.c##
+        return;## 95 ##src/lib/wrappthread.c##
+    errno = n;## 96 ##src/lib/wrappthread.c##
+    err_sys("pthread_cond_broadcast error");## 97 ##src/lib/wrappthread.c##
+}## 98 ##src/lib/wrappthread.c##
+
+void## 99 ##src/lib/wrappthread.c##
+Pthread_cond_signal(pthread_cond_t *cptr)##100 ##src/lib/wrappthread.c##
+{##101 ##src/lib/wrappthread.c##
+    int     n;##102 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_cond_signal(cptr)) == 0)##103 ##src/lib/wrappthread.c##
+        return;##104 ##src/lib/wrappthread.c##
+    errno = n;##105 ##src/lib/wrappthread.c##
+    err_sys("pthread_cond_signal error");##106 ##src/lib/wrappthread.c##
+}##107 ##src/lib/wrappthread.c##
+
+void##108 ##src/lib/wrappthread.c##
+Pthread_cond_wait(pthread_cond_t *cptr, pthread_mutex_t *mptr)##109 ##src/lib/wrappthread.c##
+{##110 ##src/lib/wrappthread.c##
+    int     n;##111 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_cond_wait(cptr, mptr)) == 0)##112 ##src/lib/wrappthread.c##
+        return;##113 ##src/lib/wrappthread.c##
+    errno = n;##114 ##src/lib/wrappthread.c##
+    err_sys("pthread_cond_wait error");##115 ##src/lib/wrappthread.c##
+}##116 ##src/lib/wrappthread.c##
+
+void##117 ##src/lib/wrappthread.c##
+Pthread_cond_timedwait(pthread_cond_t *cptr, pthread_mutex_t *mptr,##118 ##src/lib/wrappthread.c##
+                       const struct timespec *tsptr)##119 ##src/lib/wrappthread.c##
+{##120 ##src/lib/wrappthread.c##
+    int     n;##121 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_cond_timedwait(cptr, mptr, tsptr)) == 0)##122 ##src/lib/wrappthread.c##
+        return;##123 ##src/lib/wrappthread.c##
+    errno = n;##124 ##src/lib/wrappthread.c##
+    err_sys("pthread_cond_timedwait error");##125 ##src/lib/wrappthread.c##
+}##126 ##src/lib/wrappthread.c##
+
+void##127 ##src/lib/wrappthread.c##
+Pthread_once(pthread_once_t * ptr, void (*func) (void))##128 ##src/lib/wrappthread.c##
+{##129 ##src/lib/wrappthread.c##
+    int     n;##130 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_once(ptr, func)) == 0)##131 ##src/lib/wrappthread.c##
+        return;##132 ##src/lib/wrappthread.c##
+    errno = n;##133 ##src/lib/wrappthread.c##
+    err_sys("pthread_once error");##134 ##src/lib/wrappthread.c##
+}##135 ##src/lib/wrappthread.c##
+
+void##136 ##src/lib/wrappthread.c##
+Pthread_key_create(pthread_key_t * key, void (*func) (void *))##137 ##src/lib/wrappthread.c##
+{##138 ##src/lib/wrappthread.c##
+    int     n;##139 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_key_create(key, func)) == 0)##140 ##src/lib/wrappthread.c##
+        return;##141 ##src/lib/wrappthread.c##
+    errno = n;##142 ##src/lib/wrappthread.c##
+    err_sys("pthread_key_create error");##143 ##src/lib/wrappthread.c##
+}##144 ##src/lib/wrappthread.c##
+
+void##145 ##src/lib/wrappthread.c##
+Pthread_setspecific(pthread_key_t key, const void *value)##146 ##src/lib/wrappthread.c##
+{##147 ##src/lib/wrappthread.c##
+    int     n;##148 ##src/lib/wrappthread.c##
+
+    if ((n = pthread_setspecific(key, value)) == 0)##149 ##src/lib/wrappthread.c##
+        return;##150 ##src/lib/wrappthread.c##
+    errno = n;##151 ##src/lib/wrappthread.c##
+    err_sys("pthread_setspecific error");##152 ##src/lib/wrappthread.c##
+}##153 ##src/lib/wrappthread.c##

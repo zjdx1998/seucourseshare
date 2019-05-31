@@ -1,0 +1,67 @@
+/* include if_nameindex */
+#include    "unpifi.h"##  1 ##src/libroute/if_nameindex.c##
+#include    "unproute.h"##  2 ##src/libroute/if_nameindex.c##
+
+struct if_nameindex *##  3 ##src/libroute/if_nameindex.c##
+if_nameindex(void)##  4 ##src/libroute/if_nameindex.c##
+{##  5 ##src/libroute/if_nameindex.c##
+    char   *buf, *next, *lim;##  6 ##src/libroute/if_nameindex.c##
+    size_t  len;##  7 ##src/libroute/if_nameindex.c##
+    struct if_msghdr *ifm;##  8 ##src/libroute/if_nameindex.c##
+    struct sockaddr *sa, *rti_info[RTAX_MAX];##  9 ##src/libroute/if_nameindex.c##
+    struct sockaddr_dl *sdl;## 10 ##src/libroute/if_nameindex.c##
+    struct if_nameindex *result, *ifptr;## 11 ##src/libroute/if_nameindex.c##
+    char   *namptr;## 12 ##src/libroute/if_nameindex.c##
+
+    if ((buf = net_rt_iflist(0, 0, &len)) == NULL)## 13 ##src/libroute/if_nameindex.c##
+        return (NULL);## 14 ##src/libroute/if_nameindex.c##
+
+    if ((result = malloc(len)) == NULL) /* overestimate */## 15 ##src/libroute/if_nameindex.c##
+        return (NULL);## 16 ##src/libroute/if_nameindex.c##
+    ifptr = result;## 17 ##src/libroute/if_nameindex.c##
+    namptr = (char *) result + len; /* names start at end of buffer */## 18 ##src/libroute/if_nameindex.c##
+
+    lim = buf + len;## 19 ##src/libroute/if_nameindex.c##
+    for (next = buf; next < lim; next += ifm->ifm_msglen) {## 20 ##src/libroute/if_nameindex.c##
+        ifm = (struct if_msghdr *) next;## 21 ##src/libroute/if_nameindex.c##
+        if (ifm->ifm_type == RTM_IFINFO) {## 22 ##src/libroute/if_nameindex.c##
+            sa = (struct sockaddr *) (ifm + 1);## 23 ##src/libroute/if_nameindex.c##
+            get_rtaddrs(ifm->ifm_addrs, sa, rti_info);## 24 ##src/libroute/if_nameindex.c##
+            if ((sa = rti_info[RTAX_IFP]) != NULL) {## 25 ##src/libroute/if_nameindex.c##
+                if (sa->sa_family == AF_LINK) {## 26 ##src/libroute/if_nameindex.c##
+                    sdl = (struct sockaddr_dl *) sa;## 27 ##src/libroute/if_nameindex.c##
+                    namptr -= sdl->sdl_nlen + 1;## 28 ##src/libroute/if_nameindex.c##
+                    strncpy(namptr, &sdl->sdl_data[0], sdl->sdl_nlen);## 29 ##src/libroute/if_nameindex.c##
+                    namptr[sdl->sdl_nlen] = 0;  /* null terminate */## 30 ##src/libroute/if_nameindex.c##
+                    ifptr->if_name = namptr;## 31 ##src/libroute/if_nameindex.c##
+                    ifptr->if_index = sdl->sdl_index;## 32 ##src/libroute/if_nameindex.c##
+                    ifptr++;## 33 ##src/libroute/if_nameindex.c##
+                }## 34 ##src/libroute/if_nameindex.c##
+            }## 35 ##src/libroute/if_nameindex.c##
+
+        }## 36 ##src/libroute/if_nameindex.c##
+    }## 37 ##src/libroute/if_nameindex.c##
+    ifptr->if_name = NULL;      /* mark end of array of structs */## 38 ##src/libroute/if_nameindex.c##
+    ifptr->if_index = 0;## 39 ##src/libroute/if_nameindex.c##
+    free(buf);## 40 ##src/libroute/if_nameindex.c##
+    return (result);            /* caller must free() this when done */## 41 ##src/libroute/if_nameindex.c##
+}## 42 ##src/libroute/if_nameindex.c##
+/* end if_nameindex */
+
+/* include if_freenameindex */
+void## 43 ##src/libroute/if_nameindex.c##
+if_freenameindex(struct if_nameindex *ptr)## 44 ##src/libroute/if_nameindex.c##
+{## 45 ##src/libroute/if_nameindex.c##
+    free(ptr);## 46 ##src/libroute/if_nameindex.c##
+}## 47 ##src/libroute/if_nameindex.c##
+/* end if_freenameindex */
+
+struct if_nameindex *## 48 ##src/libroute/if_nameindex.c##
+If_nameindex(void)## 49 ##src/libroute/if_nameindex.c##
+{## 50 ##src/libroute/if_nameindex.c##
+    struct if_nameindex *ifptr;## 51 ##src/libroute/if_nameindex.c##
+
+    if ((ifptr = if_nameindex()) == NULL)## 52 ##src/libroute/if_nameindex.c##
+        err_quit("if_nameindex error");## 53 ##src/libroute/if_nameindex.c##
+    return (ifptr);## 54 ##src/libroute/if_nameindex.c##
+}## 55 ##src/libroute/if_nameindex.c##

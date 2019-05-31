@@ -1,0 +1,36 @@
+#include    "unp.h"##  1 ##src/sctp/sctp_strcli1.c##
+
+void##  2 ##src/sctp/sctp_strcli1.c##
+sctpstr_cli(FILE *fp, int sock_fd, struct sockaddr *to, socklen_t tolen)##  3 ##src/sctp/sctp_strcli1.c##
+{##  4 ##src/sctp/sctp_strcli1.c##
+    struct sockaddr_in peeraddr;##  5 ##src/sctp/sctp_strcli1.c##
+    struct sctp_sndrcvinfo sri;##  6 ##src/sctp/sctp_strcli1.c##
+    char    sendline[MAXLINE], recvline[MAXLINE];##  7 ##src/sctp/sctp_strcli1.c##
+    socklen_t len;##  8 ##src/sctp/sctp_strcli1.c##
+    int     out_sz, rd_sz;##  9 ##src/sctp/sctp_strcli1.c##
+    int     msg_flags;## 10 ##src/sctp/sctp_strcli1.c##
+
+    bzero(&sri, sizeof(sri));## 11 ##src/sctp/sctp_strcli1.c##
+    while (fgets(sendline, MAXLINE, fp) != NULL) {## 12 ##src/sctp/sctp_strcli1.c##
+        if (sendline[0] != '[') {## 13 ##src/sctp/sctp_strcli1.c##
+            printf("Error, line must be of the form '[streamnum]text'\n");## 14 ##src/sctp/sctp_strcli1.c##
+            continue;## 15 ##src/sctp/sctp_strcli1.c##
+        }## 16 ##src/sctp/sctp_strcli1.c##
+        sri.sinfo_stream = strtol(&sendline[1], NULL, 0);## 17 ##src/sctp/sctp_strcli1.c##
+        out_sz = strlen(sendline);## 18 ##src/sctp/sctp_strcli1.c##
+        Sctp_sendmsg(sock_fd, sendline, out_sz,## 19 ##src/sctp/sctp_strcli1.c##
+                     to, tolen, 0, 0, sri.sinfo_stream, 0, 0);## 20 ##src/sctp/sctp_strcli1.c##
+        /* include mod_strcli1 */## 21 ##src/sctp/sctp_strcli1.c##
+        do {## 22 ##src/sctp/sctp_strcli1.c##
+            len = sizeof(peeraddr);## 23 ##src/sctp/sctp_strcli1.c##
+            rd_sz = Sctp_recvmsg(sock_fd, recvline, sizeof(recvline),## 24 ##src/sctp/sctp_strcli1.c##
+                                 (SA *) &peeraddr, &len, &sri, &msg_flags);## 25 ##src/sctp/sctp_strcli1.c##
+            if (msg_flags & MSG_NOTIFICATION)## 26 ##src/sctp/sctp_strcli1.c##
+                check_notification(sock_fd, recvline, rd_sz);## 27 ##src/sctp/sctp_strcli1.c##
+        } while (msg_flags & MSG_NOTIFICATION);## 28 ##src/sctp/sctp_strcli1.c##
+        printf("From str:%d seq:%d (assoc:0x%x):",## 29 ##src/sctp/sctp_strcli1.c##
+               sri.sinfo_stream, sri.sinfo_ssn, (u_int) sri.sinfo_assoc_id);## 30 ##src/sctp/sctp_strcli1.c##
+        printf("%.*s", rd_sz, recvline);## 31 ##src/sctp/sctp_strcli1.c##
+        /* end mod_strcli1 */## 32 ##src/sctp/sctp_strcli1.c##
+    }## 33 ##src/sctp/sctp_strcli1.c##
+}## 34 ##src/sctp/sctp_strcli1.c##

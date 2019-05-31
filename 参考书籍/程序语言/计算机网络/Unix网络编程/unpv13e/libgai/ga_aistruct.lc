@@ -1,0 +1,81 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/ga_aistruct.c##
+
+/*##  2 ##src/libgai/ga_aistruct.c##
+ * Create and fill in an addrinfo{}.##  3 ##src/libgai/ga_aistruct.c##
+ */##  4 ##src/libgai/ga_aistruct.c##
+
+/* include ga_aistruct1 */
+int##  5 ##src/libgai/ga_aistruct.c##
+ga_aistruct(struct addrinfo ***paipnext, const struct addrinfo *hintsp,##  6 ##src/libgai/ga_aistruct.c##
+            const void *addr, int family)##  7 ##src/libgai/ga_aistruct.c##
+{##  8 ##src/libgai/ga_aistruct.c##
+    struct addrinfo *ai;##  9 ##src/libgai/ga_aistruct.c##
+
+    if ((ai = calloc(1, sizeof(struct addrinfo))) == NULL)## 10 ##src/libgai/ga_aistruct.c##
+        return (EAI_MEMORY);## 11 ##src/libgai/ga_aistruct.c##
+    ai->ai_next = NULL;## 12 ##src/libgai/ga_aistruct.c##
+    ai->ai_canonname = NULL;## 13 ##src/libgai/ga_aistruct.c##
+    **paipnext = ai;## 14 ##src/libgai/ga_aistruct.c##
+    *paipnext = &ai->ai_next;## 15 ##src/libgai/ga_aistruct.c##
+
+    if ((ai->ai_socktype = hintsp->ai_socktype) == 0)## 16 ##src/libgai/ga_aistruct.c##
+        ai->ai_flags |= AI_CLONE;## 17 ##src/libgai/ga_aistruct.c##
+
+    ai->ai_protocol = hintsp->ai_protocol;## 18 ##src/libgai/ga_aistruct.c##
+/* end ga_aistruct1 */
+
+/* include ga_aistruct2 */
+    switch ((ai->ai_family = family)) {## 19 ##src/libgai/ga_aistruct.c##
+    case AF_INET:{## 20 ##src/libgai/ga_aistruct.c##
+            struct sockaddr_in *sinptr;## 21 ##src/libgai/ga_aistruct.c##
+
+            /* 4allocate sockaddr_in{} and fill in all but port */## 22 ##src/libgai/ga_aistruct.c##
+            if ((sinptr = calloc(1, sizeof(struct sockaddr_in))) == NULL)## 23 ##src/libgai/ga_aistruct.c##
+                return (EAI_MEMORY);## 24 ##src/libgai/ga_aistruct.c##
+#ifdef  HAVE_SOCKADDR_SA_LEN## 25 ##src/libgai/ga_aistruct.c##
+            sinptr->sin_len = sizeof(struct sockaddr_in);## 26 ##src/libgai/ga_aistruct.c##
+#endif## 27 ##src/libgai/ga_aistruct.c##
+            sinptr->sin_family = AF_INET;## 28 ##src/libgai/ga_aistruct.c##
+            memcpy(&sinptr->sin_addr, addr, sizeof(struct in_addr));## 29 ##src/libgai/ga_aistruct.c##
+            ai->ai_addr = (struct sockaddr *) sinptr;## 30 ##src/libgai/ga_aistruct.c##
+            ai->ai_addrlen = sizeof(struct sockaddr_in);## 31 ##src/libgai/ga_aistruct.c##
+            break;## 32 ##src/libgai/ga_aistruct.c##
+        }## 33 ##src/libgai/ga_aistruct.c##
+    case AF_INET6:{## 34 ##src/libgai/ga_aistruct.c##
+            struct sockaddr_in6 *sin6ptr;## 35 ##src/libgai/ga_aistruct.c##
+
+            /* 4allocate sockaddr_in6{} and fill in all but port */## 36 ##src/libgai/ga_aistruct.c##
+            if ((sin6ptr = calloc(1, sizeof(struct sockaddr_in6))) == NULL)## 37 ##src/libgai/ga_aistruct.c##
+                return (EAI_MEMORY);## 38 ##src/libgai/ga_aistruct.c##
+#ifdef  HAVE_SOCKADDR_SA_LEN## 39 ##src/libgai/ga_aistruct.c##
+            sin6ptr->sin6_len = sizeof(struct sockaddr_in6);## 40 ##src/libgai/ga_aistruct.c##
+#endif## 41 ##src/libgai/ga_aistruct.c##
+            sin6ptr->sin6_family = AF_INET6;## 42 ##src/libgai/ga_aistruct.c##
+            memcpy(&sin6ptr->sin6_addr, addr, sizeof(struct in6_addr));## 43 ##src/libgai/ga_aistruct.c##
+            ai->ai_addr = (struct sockaddr *) sin6ptr;## 44 ##src/libgai/ga_aistruct.c##
+            ai->ai_addrlen = sizeof(struct sockaddr_in6);## 45 ##src/libgai/ga_aistruct.c##
+            break;## 46 ##src/libgai/ga_aistruct.c##
+        }## 47 ##src/libgai/ga_aistruct.c##
+    case AF_LOCAL:{## 48 ##src/libgai/ga_aistruct.c##
+            struct sockaddr_un *unp;## 49 ##src/libgai/ga_aistruct.c##
+
+            /* 4allocate sockaddr_un{} and fill in */## 50 ##src/libgai/ga_aistruct.c##
+            if (strlen(addr) >= sizeof(unp->sun_path))## 51 ##src/libgai/ga_aistruct.c##
+                return(EAI_SERVICE);## 52 ##src/libgai/ga_aistruct.c##
+            if ( (unp = calloc(1, sizeof(struct sockaddr_un))) == NULL)## 53 ##src/libgai/ga_aistruct.c##
+                return(EAI_MEMORY);## 54 ##src/libgai/ga_aistruct.c##
+            unp->sun_family = AF_LOCAL;## 55 ##src/libgai/ga_aistruct.c##
+            strcpy(unp->sun_path, addr);## 56 ##src/libgai/ga_aistruct.c##
+#ifdef  HAVE_SOCKADDR_SA_LEN## 57 ##src/libgai/ga_aistruct.c##
+            unp->sun_len = SUN_LEN(unp);## 58 ##src/libgai/ga_aistruct.c##
+#endif## 59 ##src/libgai/ga_aistruct.c##
+            ai->ai_addr = (struct sockaddr *) unp;## 60 ##src/libgai/ga_aistruct.c##
+            ai->ai_addrlen = sizeof(struct sockaddr_un);## 61 ##src/libgai/ga_aistruct.c##
+            if (hintsp->ai_flags & AI_PASSIVE)## 62 ##src/libgai/ga_aistruct.c##
+                unlink(unp->sun_path);  /* OK if this fails */## 63 ##src/libgai/ga_aistruct.c##
+            break;## 64 ##src/libgai/ga_aistruct.c##
+        }## 65 ##src/libgai/ga_aistruct.c##
+    }## 66 ##src/libgai/ga_aistruct.c##
+    return (0);## 67 ##src/libgai/ga_aistruct.c##
+}## 68 ##src/libgai/ga_aistruct.c##
+/* end ga_aistruct2 */

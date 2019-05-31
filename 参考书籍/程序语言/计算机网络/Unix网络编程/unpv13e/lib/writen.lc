@@ -1,0 +1,33 @@
+/* include writen */
+#include    "unp.h"##  1 ##src/lib/writen.c##
+
+ssize_t                         /* Write "n" bytes to a descriptor. */##  2 ##src/lib/writen.c##
+writen(int fd, const void *vptr, size_t n)##  3 ##src/lib/writen.c##
+{##  4 ##src/lib/writen.c##
+    size_t  nleft;##  5 ##src/lib/writen.c##
+    ssize_t nwritten;##  6 ##src/lib/writen.c##
+    const char *ptr;##  7 ##src/lib/writen.c##
+
+    ptr = vptr;##  8 ##src/lib/writen.c##
+    nleft = n;##  9 ##src/lib/writen.c##
+    while (nleft > 0) {## 10 ##src/lib/writen.c##
+        if ((nwritten = write(fd, ptr, nleft)) <= 0) {## 11 ##src/lib/writen.c##
+            if (nwritten < 0 && errno == EINTR)## 12 ##src/lib/writen.c##
+                nwritten = 0;   /* and call write() again */## 13 ##src/lib/writen.c##
+            else## 14 ##src/lib/writen.c##
+                return (-1);    /* error */## 15 ##src/lib/writen.c##
+        }## 16 ##src/lib/writen.c##
+
+        nleft -= nwritten;## 17 ##src/lib/writen.c##
+        ptr += nwritten;## 18 ##src/lib/writen.c##
+    }## 19 ##src/lib/writen.c##
+    return (n);## 20 ##src/lib/writen.c##
+}## 21 ##src/lib/writen.c##
+/* end writen */
+
+void## 22 ##src/lib/writen.c##
+Writen(int fd, void *ptr, size_t nbytes)## 23 ##src/lib/writen.c##
+{## 24 ##src/lib/writen.c##
+    if (writen(fd, ptr, nbytes) != nbytes)## 25 ##src/lib/writen.c##
+        err_sys("writen error");## 26 ##src/lib/writen.c##
+}## 27 ##src/lib/writen.c##

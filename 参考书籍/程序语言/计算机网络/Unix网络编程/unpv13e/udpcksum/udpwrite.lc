@@ -1,0 +1,74 @@
+#include    "udpcksum.h"##  1 ##src/udpcksum/udpwrite.c##
+
+/* include open_output_raw */
+int     rawfd;                  /* raw socket to write on */##  2 ##src/udpcksum/udpwrite.c##
+
+void##  3 ##src/udpcksum/udpwrite.c##
+open_output(void)##  4 ##src/udpcksum/udpwrite.c##
+{##  5 ##src/udpcksum/udpwrite.c##
+    int     on = 1;##  6 ##src/udpcksum/udpwrite.c##
+    /* ##  7 ##src/udpcksum/udpwrite.c##
+     * Need a raw socket to write our own IP datagrams to.##  8 ##src/udpcksum/udpwrite.c##
+     * Process must have superuser privileges to create this socket.##  9 ##src/udpcksum/udpwrite.c##
+     * Also must set IP_HDRINCL so we can write our own IP headers.## 10 ##src/udpcksum/udpwrite.c##
+     */## 11 ##src/udpcksum/udpwrite.c##
+
+    rawfd = Socket(dest->sa_family, SOCK_RAW, 0);## 12 ##src/udpcksum/udpwrite.c##
+
+    Setsockopt(rawfd, IPPROTO_IP, IP_HDRINCL, &on, sizeof(on));## 13 ##src/udpcksum/udpwrite.c##
+}## 14 ##src/udpcksum/udpwrite.c##
+/* end open_output_raw */
+
+/*## 15 ##src/udpcksum/udpwrite.c##
+ * "buf" points to an empty IP/UDP header,## 16 ##src/udpcksum/udpwrite.c##
+ * followed by "ulen" bytes of user data.## 17 ##src/udpcksum/udpwrite.c##
+ */## 18 ##src/udpcksum/udpwrite.c##
+
+/* include udp_write */
+void## 19 ##src/udpcksum/udpwrite.c##
+udp_write(char *buf, int userlen)## 20 ##src/udpcksum/udpwrite.c##
+{## 21 ##src/udpcksum/udpwrite.c##
+    struct udpiphdr *ui;## 22 ##src/udpcksum/udpwrite.c##
+    struct ip *ip;## 23 ##src/udpcksum/udpwrite.c##
+
+    /* 4Fill in and checksum UDP header */## 24 ##src/udpcksum/udpwrite.c##
+    ip = (struct ip *) buf;## 25 ##src/udpcksum/udpwrite.c##
+    ui = (struct udpiphdr *) buf;## 26 ##src/udpcksum/udpwrite.c##
+    bzero(ui, sizeof(*ui));## 27 ##src/udpcksum/udpwrite.c##
+    /* 8add 8 to userlen for pseudo-header length */## 28 ##src/udpcksum/udpwrite.c##
+    ui->ui_len = htons((uint16_t) (sizeof(struct udphdr) + userlen));## 29 ##src/udpcksum/udpwrite.c##
+    /* 8then add 28 for IP datagram length */## 30 ##src/udpcksum/udpwrite.c##
+    userlen += sizeof(struct udpiphdr);## 31 ##src/udpcksum/udpwrite.c##
+
+    ui->ui_pr = IPPROTO_UDP;## 32 ##src/udpcksum/udpwrite.c##
+    ui->ui_src.s_addr = ((struct sockaddr_in *) local)->sin_addr.s_addr;## 33 ##src/udpcksum/udpwrite.c##
+    ui->ui_dst.s_addr = ((struct sockaddr_in *) dest)->sin_addr.s_addr;## 34 ##src/udpcksum/udpwrite.c##
+    ui->ui_sport = ((struct sockaddr_in *) local)->sin_port;## 35 ##src/udpcksum/udpwrite.c##
+    ui->ui_dport = ((struct sockaddr_in *) dest)->sin_port;## 36 ##src/udpcksum/udpwrite.c##
+    ui->ui_ulen = ui->ui_len;## 37 ##src/udpcksum/udpwrite.c##
+    if (zerosum == 0) {## 38 ##src/udpcksum/udpwrite.c##
+#if 1                           /* change to if 0 for Solaris 2.x, x < 6 */## 39 ##src/udpcksum/udpwrite.c##
+        if ((ui->ui_sum = in_cksum((u_int16_t *) ui, userlen)) == 0)## 40 ##src/udpcksum/udpwrite.c##
+            ui->ui_sum = 0xffff;## 41 ##src/udpcksum/udpwrite.c##
+#else## 42 ##src/udpcksum/udpwrite.c##
+        ui->ui_sum = ui->ui_len;## 43 ##src/udpcksum/udpwrite.c##
+#endif## 44 ##src/udpcksum/udpwrite.c##
+    }## 45 ##src/udpcksum/udpwrite.c##
+
+    /* 4Fill in rest of IP header; */## 46 ##src/udpcksum/udpwrite.c##
+    /* 4ip_output() calcuates & stores IP header checksum */## 47 ##src/udpcksum/udpwrite.c##
+    ip->ip_v = IPVERSION;## 48 ##src/udpcksum/udpwrite.c##
+    ip->ip_hl = sizeof(struct ip) >> 2;## 49 ##src/udpcksum/udpwrite.c##
+    ip->ip_tos = 0;## 50 ##src/udpcksum/udpwrite.c##
+#if defined(linux) || defined(__OpenBSD__)## 51 ##src/udpcksum/udpwrite.c##
+    ip->ip_len = htons(userlen);    /* network byte order */## 52 ##src/udpcksum/udpwrite.c##
+#else## 53 ##src/udpcksum/udpwrite.c##
+    ip->ip_len = userlen;       /* host byte order */## 54 ##src/udpcksum/udpwrite.c##
+#endif## 55 ##src/udpcksum/udpwrite.c##
+    ip->ip_id = 0;              /* let IP set this */## 56 ##src/udpcksum/udpwrite.c##
+    ip->ip_off = 0;             /* frag offset, MF and DF flags */## 57 ##src/udpcksum/udpwrite.c##
+    ip->ip_ttl = TTL_OUT;## 58 ##src/udpcksum/udpwrite.c##
+
+    Sendto(rawfd, buf, userlen, 0, dest, destlen);## 59 ##src/udpcksum/udpwrite.c##
+}## 60 ##src/udpcksum/udpwrite.c##
+/* end udp_write */

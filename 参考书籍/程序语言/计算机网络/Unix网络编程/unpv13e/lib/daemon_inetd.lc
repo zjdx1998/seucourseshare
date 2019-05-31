@@ -1,0 +1,11 @@
+#include    "unp.h"##  1 ##src/lib/daemon_inetd.c##
+#include    <syslog.h>##  2 ##src/lib/daemon_inetd.c##
+
+extern int daemon_proc;         /* defined in error.c */##  3 ##src/lib/daemon_inetd.c##
+
+void##  4 ##src/lib/daemon_inetd.c##
+daemon_inetd(const char *pname, int facility)##  5 ##src/lib/daemon_inetd.c##
+{##  6 ##src/lib/daemon_inetd.c##
+    daemon_proc = 1;            /* for our err_XXX() functions */##  7 ##src/lib/daemon_inetd.c##
+    openlog(pname, LOG_PID, facility);##  8 ##src/lib/daemon_inetd.c##
+}##  9 ##src/lib/daemon_inetd.c##

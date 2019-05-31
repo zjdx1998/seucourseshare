@@ -1,0 +1,63 @@
+/* include serv08 */
+#include    "unpthread.h"##  1 ##src/server/serv08.c##
+#include    "pthread08.h"##  2 ##src/server/serv08.c##
+
+static int nthreads;##  3 ##src/server/serv08.c##
+pthread_mutex_t clifd_mutex = PTHREAD_MUTEX_INITIALIZER;##  4 ##src/server/serv08.c##
+pthread_cond_t clifd_cond = PTHREAD_COND_INITIALIZER;##  5 ##src/server/serv08.c##
+
+int##  6 ##src/server/serv08.c##
+main(int argc, char **argv)##  7 ##src/server/serv08.c##
+{##  8 ##src/server/serv08.c##
+    int     i, listenfd, connfd;##  9 ##src/server/serv08.c##
+    void    sig_int(int), thread_make(int);## 10 ##src/server/serv08.c##
+    socklen_t addrlen, clilen;## 11 ##src/server/serv08.c##
+    struct sockaddr *cliaddr;## 12 ##src/server/serv08.c##
+
+    if (argc == 3)## 13 ##src/server/serv08.c##
+        listenfd = Tcp_listen(NULL, argv[1], &addrlen);## 14 ##src/server/serv08.c##
+    else if (argc == 4)## 15 ##src/server/serv08.c##
+        listenfd = Tcp_listen(argv[1], argv[2], &addrlen);## 16 ##src/server/serv08.c##
+    else## 17 ##src/server/serv08.c##
+        err_quit("usage: serv08 [ <host> ] <port#> <#threads>");## 18 ##src/server/serv08.c##
+    cliaddr = Malloc(addrlen);## 19 ##src/server/serv08.c##
+
+    nthreads = atoi(argv[argc - 1]);## 20 ##src/server/serv08.c##
+    tptr = Calloc(nthreads, sizeof(Thread));## 21 ##src/server/serv08.c##
+    iget = iput = 0;## 22 ##src/server/serv08.c##
+
+    /* 4create all the threads */## 23 ##src/server/serv08.c##
+    for (i = 0; i < nthreads; i++)## 24 ##src/server/serv08.c##
+        thread_make(i);         /* only main thread returns */## 25 ##src/server/serv08.c##
+
+    Signal(SIGINT, sig_int);## 26 ##src/server/serv08.c##
+
+    for (;;) {## 27 ##src/server/serv08.c##
+        clilen = addrlen;## 28 ##src/server/serv08.c##
+        connfd = Accept(listenfd, cliaddr, &clilen);## 29 ##src/server/serv08.c##
+
+        Pthread_mutex_lock(&clifd_mutex);## 30 ##src/server/serv08.c##
+        clifd[iput] = connfd;## 31 ##src/server/serv08.c##
+        if (++iput == MAXNCLI)## 32 ##src/server/serv08.c##
+            iput = 0;## 33 ##src/server/serv08.c##
+        if (iput == iget)## 34 ##src/server/serv08.c##
+            err_quit("iput = iget = %d", iput);## 35 ##src/server/serv08.c##
+        Pthread_cond_signal(&clifd_cond);## 36 ##src/server/serv08.c##
+        Pthread_mutex_unlock(&clifd_mutex);## 37 ##src/server/serv08.c##
+    }## 38 ##src/server/serv08.c##
+}## 39 ##src/server/serv08.c##
+/* end serv08 */
+
+void## 40 ##src/server/serv08.c##
+sig_int(int signo)## 41 ##src/server/serv08.c##
+{## 42 ##src/server/serv08.c##
+    int     i;## 43 ##src/server/serv08.c##
+    void    pr_cpu_time(void);## 44 ##src/server/serv08.c##
+
+    pr_cpu_time();## 45 ##src/server/serv08.c##
+
+    for (i = 0; i < nthreads; i++)## 46 ##src/server/serv08.c##
+        printf("thread %d, %ld connections\n", i, tptr[i].thread_count);## 47 ##src/server/serv08.c##
+
+    exit(0);## 48 ##src/server/serv08.c##
+}## 49 ##src/server/serv08.c##

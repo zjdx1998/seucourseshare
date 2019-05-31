@@ -1,0 +1,28 @@
+#include    "unp.h"##  1 ##src/nonblock/tcpcli03.c##
+
+int##  2 ##src/nonblock/tcpcli03.c##
+main(int argc, char **argv)##  3 ##src/nonblock/tcpcli03.c##
+{##  4 ##src/nonblock/tcpcli03.c##
+    int     sockfd;##  5 ##src/nonblock/tcpcli03.c##
+    struct linger ling;##  6 ##src/nonblock/tcpcli03.c##
+    struct sockaddr_in servaddr;##  7 ##src/nonblock/tcpcli03.c##
+
+    if (argc != 2)##  8 ##src/nonblock/tcpcli03.c##
+        err_quit("usage: tcpcli <IPaddress>");##  9 ##src/nonblock/tcpcli03.c##
+
+    sockfd = Socket(AF_INET, SOCK_STREAM, 0);## 10 ##src/nonblock/tcpcli03.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 11 ##src/nonblock/tcpcli03.c##
+    servaddr.sin_family = AF_INET;## 12 ##src/nonblock/tcpcli03.c##
+    servaddr.sin_port = htons(SERV_PORT);## 13 ##src/nonblock/tcpcli03.c##
+    Inet_pton(AF_INET, argv[1], &servaddr.sin_addr);## 14 ##src/nonblock/tcpcli03.c##
+
+    Connect(sockfd, (SA *) &servaddr, sizeof(servaddr));## 15 ##src/nonblock/tcpcli03.c##
+
+    ling.l_onoff = 1;           /* cause RST to be sent on close() */## 16 ##src/nonblock/tcpcli03.c##
+    ling.l_linger = 0;## 17 ##src/nonblock/tcpcli03.c##
+    Setsockopt(sockfd, SOL_SOCKET, SO_LINGER, &ling, sizeof(ling));## 18 ##src/nonblock/tcpcli03.c##
+    Close(sockfd);## 19 ##src/nonblock/tcpcli03.c##
+
+    exit(0);## 20 ##src/nonblock/tcpcli03.c##
+}## 21 ##src/nonblock/tcpcli03.c##

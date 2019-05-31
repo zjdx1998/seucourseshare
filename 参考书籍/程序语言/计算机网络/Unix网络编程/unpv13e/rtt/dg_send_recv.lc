@@ -1,0 +1,103 @@
+/* include dgsendrecv1 */
+#include    "unprtt.h"##  1 ##src/rtt/dg_send_recv.c##
+#include    <setjmp.h>##  2 ##src/rtt/dg_send_recv.c##
+
+#define RTT_DEBUG##  3 ##src/rtt/dg_send_recv.c##
+
+static struct rtt_info rttinfo;##  4 ##src/rtt/dg_send_recv.c##
+static int rttinit = 0;##  5 ##src/rtt/dg_send_recv.c##
+static struct msghdr msgsend, msgrecv;  /* assumed init to 0 */##  6 ##src/rtt/dg_send_recv.c##
+static struct hdr {##  7 ##src/rtt/dg_send_recv.c##
+    uint32_t seq;               /* sequence # */##  8 ##src/rtt/dg_send_recv.c##
+    uint32_t ts;                /* timestamp when sent */##  9 ##src/rtt/dg_send_recv.c##
+} sendhdr, recvhdr;## 10 ##src/rtt/dg_send_recv.c##
+
+static void sig_alrm(int signo);## 11 ##src/rtt/dg_send_recv.c##
+static sigjmp_buf jmpbuf;## 12 ##src/rtt/dg_send_recv.c##
+
+ssize_t## 13 ##src/rtt/dg_send_recv.c##
+dg_send_recv(int fd, const void *outbuff, size_t outbytes,## 14 ##src/rtt/dg_send_recv.c##
+             void *inbuff, size_t inbytes,## 15 ##src/rtt/dg_send_recv.c##
+             const SA *destaddr, socklen_t destlen)## 16 ##src/rtt/dg_send_recv.c##
+{## 17 ##src/rtt/dg_send_recv.c##
+    ssize_t n;## 18 ##src/rtt/dg_send_recv.c##
+    struct iovec iovsend[2], iovrecv[2];## 19 ##src/rtt/dg_send_recv.c##
+
+    if (rttinit == 0) {## 20 ##src/rtt/dg_send_recv.c##
+        rtt_init(&rttinfo);     /* first time we're called */## 21 ##src/rtt/dg_send_recv.c##
+        rttinit = 1;## 22 ##src/rtt/dg_send_recv.c##
+        rtt_d_flag = 1;## 23 ##src/rtt/dg_send_recv.c##
+    }## 24 ##src/rtt/dg_send_recv.c##
+
+    sendhdr.seq++;## 25 ##src/rtt/dg_send_recv.c##
+    msgsend.msg_name = destaddr;## 26 ##src/rtt/dg_send_recv.c##
+    msgsend.msg_namelen = destlen;## 27 ##src/rtt/dg_send_recv.c##
+    msgsend.msg_iov = iovsend;## 28 ##src/rtt/dg_send_recv.c##
+    msgsend.msg_iovlen = 2;## 29 ##src/rtt/dg_send_recv.c##
+    iovsend[0].iov_base = &sendhdr;## 30 ##src/rtt/dg_send_recv.c##
+    iovsend[0].iov_len = sizeof(struct hdr);## 31 ##src/rtt/dg_send_recv.c##
+    iovsend[1].iov_base = outbuff;## 32 ##src/rtt/dg_send_recv.c##
+    iovsend[1].iov_len = outbytes;## 33 ##src/rtt/dg_send_recv.c##
+
+    msgrecv.msg_name = NULL;## 34 ##src/rtt/dg_send_recv.c##
+    msgrecv.msg_namelen = 0;## 35 ##src/rtt/dg_send_recv.c##
+    msgrecv.msg_iov = iovrecv;## 36 ##src/rtt/dg_send_recv.c##
+    msgrecv.msg_iovlen = 2;## 37 ##src/rtt/dg_send_recv.c##
+    iovrecv[0].iov_base = &recvhdr;## 38 ##src/rtt/dg_send_recv.c##
+    iovrecv[0].iov_len = sizeof(struct hdr);## 39 ##src/rtt/dg_send_recv.c##
+    iovrecv[1].iov_base = inbuff;## 40 ##src/rtt/dg_send_recv.c##
+    iovrecv[1].iov_len = inbytes;## 41 ##src/rtt/dg_send_recv.c##
+/* end dgsendrecv1 */
+
+/* include dgsendrecv2 */
+    Signal(SIGALRM, sig_alrm);## 42 ##src/rtt/dg_send_recv.c##
+    rtt_newpack(&rttinfo);      /* initialize for this packet */## 43 ##src/rtt/dg_send_recv.c##
+
+  sendagain:## 44 ##src/rtt/dg_send_recv.c##
+    sendhdr.ts = rtt_ts(&rttinfo);## 45 ##src/rtt/dg_send_recv.c##
+    Sendmsg(fd, &msgsend, 0);## 46 ##src/rtt/dg_send_recv.c##
+
+    alarm(rtt_start(&rttinfo)); /* calc timeout value & start timer */## 47 ##src/rtt/dg_send_recv.c##
+
+    if (sigsetjmp(jmpbuf, 1) != 0) {## 48 ##src/rtt/dg_send_recv.c##
+        if (rtt_timeout(&rttinfo) < 0) {## 49 ##src/rtt/dg_send_recv.c##
+            err_msg("dg_send_recv: no response from server, giving up");## 50 ##src/rtt/dg_send_recv.c##
+            rttinit = 0;        /* reinit in case we're called again */## 51 ##src/rtt/dg_send_recv.c##
+            errno = ETIMEDOUT;## 52 ##src/rtt/dg_send_recv.c##
+            return (-1);## 53 ##src/rtt/dg_send_recv.c##
+        }## 54 ##src/rtt/dg_send_recv.c##
+        goto sendagain;## 55 ##src/rtt/dg_send_recv.c##
+    }## 56 ##src/rtt/dg_send_recv.c##
+
+    do {## 57 ##src/rtt/dg_send_recv.c##
+        n = Recvmsg(fd, &msgrecv, 0);## 58 ##src/rtt/dg_send_recv.c##
+    } while (n < sizeof(struct hdr) || recvhdr.seq != sendhdr.seq);## 59 ##src/rtt/dg_send_recv.c##
+
+    alarm(0);                   /* stop SIGALRM timer */## 60 ##src/rtt/dg_send_recv.c##
+    /* 4calculate & store new RTT estimator values */## 61 ##src/rtt/dg_send_recv.c##
+    rtt_stop(&rttinfo, rtt_ts(&rttinfo) - recvhdr.ts);## 62 ##src/rtt/dg_send_recv.c##
+
+    return (n - sizeof(struct hdr));    /* return size of received datagram */## 63 ##src/rtt/dg_send_recv.c##
+}## 64 ##src/rtt/dg_send_recv.c##
+
+static void## 65 ##src/rtt/dg_send_recv.c##
+sig_alrm(int signo)## 66 ##src/rtt/dg_send_recv.c##
+{## 67 ##src/rtt/dg_send_recv.c##
+    siglongjmp(jmpbuf, 1);## 68 ##src/rtt/dg_send_recv.c##
+}## 69 ##src/rtt/dg_send_recv.c##
+/* end dgsendrecv2 */
+
+ssize_t## 70 ##src/rtt/dg_send_recv.c##
+Dg_send_recv(int fd, const void *outbuff, size_t outbytes,## 71 ##src/rtt/dg_send_recv.c##
+             void *inbuff, size_t inbytes,## 72 ##src/rtt/dg_send_recv.c##
+             const SA *destaddr, socklen_t destlen)## 73 ##src/rtt/dg_send_recv.c##
+{## 74 ##src/rtt/dg_send_recv.c##
+    ssize_t n;## 75 ##src/rtt/dg_send_recv.c##
+
+    n = dg_send_recv(fd, outbuff, outbytes, inbuff, inbytes,## 76 ##src/rtt/dg_send_recv.c##
+                     destaddr, destlen);## 77 ##src/rtt/dg_send_recv.c##
+    if (n < 0)## 78 ##src/rtt/dg_send_recv.c##
+        err_quit("dg_send_recv error");## 79 ##src/rtt/dg_send_recv.c##
+
+    return (n);## 80 ##src/rtt/dg_send_recv.c##
+}## 81 ##src/rtt/dg_send_recv.c##

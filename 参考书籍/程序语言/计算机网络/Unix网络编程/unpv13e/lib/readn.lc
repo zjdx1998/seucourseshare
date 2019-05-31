@@ -1,0 +1,37 @@
+/* include readn */
+#include    "unp.h"##  1 ##src/lib/readn.c##
+
+ssize_t                         /* Read "n" bytes from a descriptor. */##  2 ##src/lib/readn.c##
+readn(int fd, void *vptr, size_t n)##  3 ##src/lib/readn.c##
+{##  4 ##src/lib/readn.c##
+    size_t  nleft;##  5 ##src/lib/readn.c##
+    ssize_t nread;##  6 ##src/lib/readn.c##
+    char   *ptr;##  7 ##src/lib/readn.c##
+
+    ptr = vptr;##  8 ##src/lib/readn.c##
+    nleft = n;##  9 ##src/lib/readn.c##
+    while (nleft > 0) {## 10 ##src/lib/readn.c##
+        if ((nread = read(fd, ptr, nleft)) < 0) {## 11 ##src/lib/readn.c##
+            if (errno == EINTR)## 12 ##src/lib/readn.c##
+                nread = 0;      /* and call read() again */## 13 ##src/lib/readn.c##
+            else## 14 ##src/lib/readn.c##
+                return (-1);## 15 ##src/lib/readn.c##
+        } else if (nread == 0)## 16 ##src/lib/readn.c##
+            break;              /* EOF */## 17 ##src/lib/readn.c##
+
+        nleft -= nread;## 18 ##src/lib/readn.c##
+        ptr += nread;## 19 ##src/lib/readn.c##
+    }## 20 ##src/lib/readn.c##
+    return (n - nleft);         /* return >= 0 */## 21 ##src/lib/readn.c##
+}## 22 ##src/lib/readn.c##
+/* end readn */
+
+ssize_t## 23 ##src/lib/readn.c##
+Readn(int fd, void *ptr, size_t nbytes)## 24 ##src/lib/readn.c##
+{## 25 ##src/lib/readn.c##
+    ssize_t n;## 26 ##src/lib/readn.c##
+
+    if ((n = readn(fd, ptr, nbytes)) < 0)## 27 ##src/lib/readn.c##
+        err_sys("readn error");## 28 ##src/lib/readn.c##
+    return (n);## 29 ##src/lib/readn.c##
+}## 30 ##src/lib/readn.c##

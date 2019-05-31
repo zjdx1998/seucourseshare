@@ -1,0 +1,58 @@
+/* include tcp_listen */
+#include    "unp.h"##  1 ##src/lib/tcp_listen.c##
+
+int##  2 ##src/lib/tcp_listen.c##
+tcp_listen(const char *host, const char *serv, socklen_t *addrlenp)##  3 ##src/lib/tcp_listen.c##
+{##  4 ##src/lib/tcp_listen.c##
+    int     listenfd, n;##  5 ##src/lib/tcp_listen.c##
+    const int on = 1;##  6 ##src/lib/tcp_listen.c##
+    struct addrinfo hints, *res, *ressave;##  7 ##src/lib/tcp_listen.c##
+
+    bzero(&hints, sizeof(struct addrinfo));##  8 ##src/lib/tcp_listen.c##
+    hints.ai_flags = AI_PASSIVE;##  9 ##src/lib/tcp_listen.c##
+    hints.ai_family = AF_UNSPEC;## 10 ##src/lib/tcp_listen.c##
+    hints.ai_socktype = SOCK_STREAM;## 11 ##src/lib/tcp_listen.c##
+
+    if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)## 12 ##src/lib/tcp_listen.c##
+        err_quit("tcp_listen error for %s, %s: %s",## 13 ##src/lib/tcp_listen.c##
+                 host, serv, gai_strerror(n));## 14 ##src/lib/tcp_listen.c##
+    ressave = res;## 15 ##src/lib/tcp_listen.c##
+
+    do {## 16 ##src/lib/tcp_listen.c##
+        listenfd =## 17 ##src/lib/tcp_listen.c##
+            socket(res->ai_family, res->ai_socktype, res->ai_protocol);## 18 ##src/lib/tcp_listen.c##
+        if (listenfd < 0)## 19 ##src/lib/tcp_listen.c##
+            continue;           /* error, try next one */## 20 ##src/lib/tcp_listen.c##
+
+        Setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));## 21 ##src/lib/tcp_listen.c##
+        if (bind(listenfd, res->ai_addr, res->ai_addrlen) == 0)## 22 ##src/lib/tcp_listen.c##
+            break;              /* success */## 23 ##src/lib/tcp_listen.c##
+
+        Close(listenfd);        /* bind error, close and try next one */## 24 ##src/lib/tcp_listen.c##
+    } while ((res = res->ai_next) != NULL);## 25 ##src/lib/tcp_listen.c##
+
+    if (res == NULL)            /* errno from final socket() or bind() */## 26 ##src/lib/tcp_listen.c##
+        err_sys("tcp_listen error for %s, %s", host, serv);## 27 ##src/lib/tcp_listen.c##
+
+    Listen(listenfd, LISTENQ);## 28 ##src/lib/tcp_listen.c##
+
+    if (addrlenp)## 29 ##src/lib/tcp_listen.c##
+        *addrlenp = res->ai_addrlen;    /* return size of protocol address */## 30 ##src/lib/tcp_listen.c##
+
+    freeaddrinfo(ressave);## 31 ##src/lib/tcp_listen.c##
+
+    return (listenfd);## 32 ##src/lib/tcp_listen.c##
+}## 33 ##src/lib/tcp_listen.c##
+/* end tcp_listen */
+
+/*## 34 ##src/lib/tcp_listen.c##
+ * We place the wrapper function here, not in wraplib.c, because some## 35 ##src/lib/tcp_listen.c##
+ * XTI programs need to include wraplib.c, and it also defines## 36 ##src/lib/tcp_listen.c##
+ * a Tcp_listen() function.## 37 ##src/lib/tcp_listen.c##
+ */## 38 ##src/lib/tcp_listen.c##
+
+int## 39 ##src/lib/tcp_listen.c##
+Tcp_listen(const char *host, const char *serv, socklen_t *addrlenp)## 40 ##src/lib/tcp_listen.c##
+{## 41 ##src/lib/tcp_listen.c##
+    return (tcp_listen(host, serv, addrlenp));## 42 ##src/lib/tcp_listen.c##
+}## 43 ##src/lib/tcp_listen.c##

@@ -1,0 +1,14 @@
+	The source files in this directory are all copyrighted (c) 1993 by
+W. Richard Stevens.  
+
+	This source files in this directory assume tab stops every 4 positions,
+not every 8 (the default).  Just ":set tabstop=4" in vi, for example.
+
+	If your system doesn't define the POSIX.1 ssize_t data type, then
+delete the appropriate #ifdef/#endif lines at the beginning of "ourhdr.h".
+
+	If your system's <stdlib.h> doesn't define the variables for getopt(),
+then delete the appropriate #ifdef/#endif lines at the beginning of "ourhdr.h".
+
+	If your system doesn't support send() and recv() (e.g., OSF/1) then
+delete the appropriate #ifdef/#endif lines at the beginning of "ourhdr.h".

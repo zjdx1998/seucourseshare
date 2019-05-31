@@ -1,0 +1,31 @@
+#include    "unp.h"##  1 ##src/mysdr/main.c##
+
+#define SAP_NAME    "sap.mcast.net" /* default group name and port */##  2 ##src/mysdr/main.c##
+#define SAP_PORT    "9875"##  3 ##src/mysdr/main.c##
+
+void    loop(int, socklen_t);##  4 ##src/mysdr/main.c##
+
+int##  5 ##src/mysdr/main.c##
+main(int argc, char **argv)##  6 ##src/mysdr/main.c##
+{##  7 ##src/mysdr/main.c##
+    int     sockfd;##  8 ##src/mysdr/main.c##
+    const int on = 1;##  9 ##src/mysdr/main.c##
+    socklen_t salen;## 10 ##src/mysdr/main.c##
+    struct sockaddr *sa;## 11 ##src/mysdr/main.c##
+
+    if (argc == 1)## 12 ##src/mysdr/main.c##
+        sockfd = Udp_client(SAP_NAME, SAP_PORT, (void **) &sa, &salen);## 13 ##src/mysdr/main.c##
+    else if (argc == 4)## 14 ##src/mysdr/main.c##
+        sockfd = Udp_client(argv[1], argv[2], (void **) &sa, &salen);## 15 ##src/mysdr/main.c##
+    else## 16 ##src/mysdr/main.c##
+        err_quit("usage: mysdr <mcast-addr> <port#> <interface-name>");## 17 ##src/mysdr/main.c##
+
+    Setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));## 18 ##src/mysdr/main.c##
+    Bind(sockfd, sa, salen);## 19 ##src/mysdr/main.c##
+
+    Mcast_join(sockfd, sa, salen, (argc == 4) ? argv[3] : NULL, 0);## 20 ##src/mysdr/main.c##
+
+    loop(sockfd, salen);        /* receive and print */## 21 ##src/mysdr/main.c##
+
+    exit(0);## 22 ##src/mysdr/main.c##
+}## 23 ##src/mysdr/main.c##

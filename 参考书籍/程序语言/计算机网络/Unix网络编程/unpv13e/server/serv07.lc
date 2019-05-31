@@ -1,0 +1,44 @@
+/* include serv07 */
+#include    "unpthread.h"##  1 ##src/server/serv07.c##
+#include    "pthread07.h"##  2 ##src/server/serv07.c##
+
+pthread_mutex_t mlock = PTHREAD_MUTEX_INITIALIZER;##  3 ##src/server/serv07.c##
+
+int##  4 ##src/server/serv07.c##
+main(int argc, char **argv)##  5 ##src/server/serv07.c##
+{##  6 ##src/server/serv07.c##
+    int     i;##  7 ##src/server/serv07.c##
+    void    sig_int(int), thread_make(int);##  8 ##src/server/serv07.c##
+
+    if (argc == 3)##  9 ##src/server/serv07.c##
+        listenfd = Tcp_listen(NULL, argv[1], &addrlen);## 10 ##src/server/serv07.c##
+    else if (argc == 4)## 11 ##src/server/serv07.c##
+        listenfd = Tcp_listen(argv[1], argv[2], &addrlen);## 12 ##src/server/serv07.c##
+    else## 13 ##src/server/serv07.c##
+        err_quit("usage: serv07 [ <host> ] <port#> <#threads>");## 14 ##src/server/serv07.c##
+    nthreads = atoi(argv[argc - 1]);## 15 ##src/server/serv07.c##
+    tptr = Calloc(nthreads, sizeof(Thread));## 16 ##src/server/serv07.c##
+
+    for (i = 0; i < nthreads; i++)## 17 ##src/server/serv07.c##
+        thread_make(i);         /* only main thread returns */## 18 ##src/server/serv07.c##
+
+    Signal(SIGINT, sig_int);## 19 ##src/server/serv07.c##
+
+    for (;;)## 20 ##src/server/serv07.c##
+        pause();                /* everything done by threads */## 21 ##src/server/serv07.c##
+}## 22 ##src/server/serv07.c##
+/* end serv07 */
+
+void## 23 ##src/server/serv07.c##
+sig_int(int signo)## 24 ##src/server/serv07.c##
+{## 25 ##src/server/serv07.c##
+    int     i;## 26 ##src/server/serv07.c##
+    void    pr_cpu_time(void);## 27 ##src/server/serv07.c##
+
+    pr_cpu_time();## 28 ##src/server/serv07.c##
+
+    for (i = 0; i < nthreads; i++)## 29 ##src/server/serv07.c##
+        printf("thread %d, %ld connections\n", i, tptr[i].thread_count);## 30 ##src/server/serv07.c##
+
+    exit(0);## 31 ##src/server/serv07.c##
+}## 32 ##src/server/serv07.c##

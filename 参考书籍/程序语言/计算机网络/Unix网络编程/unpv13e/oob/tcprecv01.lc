@@ -1,0 +1,45 @@
+#include    "unp.h"##  1 ##src/oob/tcprecv01.c##
+
+int     listenfd, connfd;##  2 ##src/oob/tcprecv01.c##
+
+void    sig_urg(int);##  3 ##src/oob/tcprecv01.c##
+
+int##  4 ##src/oob/tcprecv01.c##
+main(int argc, char **argv)##  5 ##src/oob/tcprecv01.c##
+{##  6 ##src/oob/tcprecv01.c##
+    int     n;##  7 ##src/oob/tcprecv01.c##
+    char    buff[100];##  8 ##src/oob/tcprecv01.c##
+
+    if (argc == 2)##  9 ##src/oob/tcprecv01.c##
+        listenfd = Tcp_listen(NULL, argv[1], NULL);## 10 ##src/oob/tcprecv01.c##
+    else if (argc == 3)## 11 ##src/oob/tcprecv01.c##
+        listenfd = Tcp_listen(argv[1], argv[2], NULL);## 12 ##src/oob/tcprecv01.c##
+    else## 13 ##src/oob/tcprecv01.c##
+        err_quit("usage: tcprecv01 [ <host> ] <port#>");## 14 ##src/oob/tcprecv01.c##
+
+    connfd = Accept(listenfd, NULL, NULL);## 15 ##src/oob/tcprecv01.c##
+
+    Signal(SIGURG, sig_urg);## 16 ##src/oob/tcprecv01.c##
+    Fcntl(connfd, F_SETOWN, getpid());## 17 ##src/oob/tcprecv01.c##
+
+    for (;;) {## 18 ##src/oob/tcprecv01.c##
+        if ((n = Read(connfd, buff, sizeof(buff) - 1)) == 0) {## 19 ##src/oob/tcprecv01.c##
+            printf("received EOF\n");## 20 ##src/oob/tcprecv01.c##
+            exit(0);## 21 ##src/oob/tcprecv01.c##
+        }## 22 ##src/oob/tcprecv01.c##
+        buff[n] = 0;            /* null terminate */## 23 ##src/oob/tcprecv01.c##
+        printf("read %d bytes: %s\n", n, buff);## 24 ##src/oob/tcprecv01.c##
+    }## 25 ##src/oob/tcprecv01.c##
+}## 26 ##src/oob/tcprecv01.c##
+
+void## 27 ##src/oob/tcprecv01.c##
+sig_urg(int signo)## 28 ##src/oob/tcprecv01.c##
+{## 29 ##src/oob/tcprecv01.c##
+    int     n;## 30 ##src/oob/tcprecv01.c##
+    char    buff[100];## 31 ##src/oob/tcprecv01.c##
+
+    printf("SIGURG received\n");## 32 ##src/oob/tcprecv01.c##
+    n = Recv(connfd, buff, sizeof(buff) - 1, MSG_OOB);## 33 ##src/oob/tcprecv01.c##
+    buff[n] = 0;                /* null terminate */## 34 ##src/oob/tcprecv01.c##
+    printf("read %d OOB byte: %s\n", n, buff);## 35 ##src/oob/tcprecv01.c##
+}## 36 ##src/oob/tcprecv01.c##

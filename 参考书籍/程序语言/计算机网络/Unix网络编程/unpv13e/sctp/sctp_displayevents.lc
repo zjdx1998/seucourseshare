@@ -1,0 +1,100 @@
+
+void##  1 ##src/sctp/sctp_displayevents.c##
+print_notification(char *notify_buf)##  2 ##src/sctp/sctp_displayevents.c##
+{##  3 ##src/sctp/sctp_displayevents.c##
+    union sctp_notification *snp;##  4 ##src/sctp/sctp_displayevents.c##
+    struct sctp_assoc_change *sac;##  5 ##src/sctp/sctp_displayevents.c##
+    struct sctp_paddr_change *spc;##  6 ##src/sctp/sctp_displayevents.c##
+    struct sctp_remote_error *sre;##  7 ##src/sctp/sctp_displayevents.c##
+    struct sctp_send_failed *ssf;##  8 ##src/sctp/sctp_displayevents.c##
+    struct sctp_shutdown_event *sse;##  9 ##src/sctp/sctp_displayevents.c##
+    struct sctp_adaption_event *ae;## 10 ##src/sctp/sctp_displayevents.c##
+    struct sctp_pdapi_event *pdapi;## 11 ##src/sctp/sctp_displayevents.c##
+    const char *str;## 12 ##src/sctp/sctp_displayevents.c##
+
+    snp = (union sctp_notification *) notify_buf;## 13 ##src/sctp/sctp_displayevents.c##
+    switch (snp->sn_header.sn_type) {## 14 ##src/sctp/sctp_displayevents.c##
+    case SCTP_ASSOC_CHANGE:## 15 ##src/sctp/sctp_displayevents.c##
+        sac = &snp->sn_assoc_change;## 16 ##src/sctp/sctp_displayevents.c##
+        switch (sac->sac_state) {## 17 ##src/sctp/sctp_displayevents.c##
+        case SCTP_COMM_UP:## 18 ##src/sctp/sctp_displayevents.c##
+            str = "COMMUNICATION UP";## 19 ##src/sctp/sctp_displayevents.c##
+            break;## 20 ##src/sctp/sctp_displayevents.c##
+        case SCTP_COMM_LOST:## 21 ##src/sctp/sctp_displayevents.c##
+            str = "COMMUNICATION LOST";## 22 ##src/sctp/sctp_displayevents.c##
+            break;## 23 ##src/sctp/sctp_displayevents.c##
+        case SCTP_RESTART:## 24 ##src/sctp/sctp_displayevents.c##
+            str = "RESTART";## 25 ##src/sctp/sctp_displayevents.c##
+            break;## 26 ##src/sctp/sctp_displayevents.c##
+        case SCTP_SHUTDOWN_COMP:## 27 ##src/sctp/sctp_displayevents.c##
+            str = "SHUTDOWN COMPLETE";## 28 ##src/sctp/sctp_displayevents.c##
+            break;## 29 ##src/sctp/sctp_displayevents.c##
+        case SCTP_CANT_STR_ASSOC:## 30 ##src/sctp/sctp_displayevents.c##
+            str = "CANT START ASSOC";## 31 ##src/sctp/sctp_displayevents.c##
+            break;## 32 ##src/sctp/sctp_displayevents.c##
+        default:## 33 ##src/sctp/sctp_displayevents.c##
+            str = "UNKNOWN";## 34 ##src/sctp/sctp_displayevents.c##
+            break;## 35 ##src/sctp/sctp_displayevents.c##
+        }                       /* end switch(sac->sac_state) */## 36 ##src/sctp/sctp_displayevents.c##
+        printf("SCTP_ASSOC_CHANGE: %s, assoc=0x%x\n", str,## 37 ##src/sctp/sctp_displayevents.c##
+               (uint32_t) sac->sac_assoc_id);## 38 ##src/sctp/sctp_displayevents.c##
+        break;## 39 ##src/sctp/sctp_displayevents.c##
+    case SCTP_PEER_ADDR_CHANGE:## 40 ##src/sctp/sctp_displayevents.c##
+        spc = &snp->sn_paddr_change;## 41 ##src/sctp/sctp_displayevents.c##
+        switch (spc->spc_state) {## 42 ##src/sctp/sctp_displayevents.c##
+        case SCTP_ADDR_AVAILABLE:## 43 ##src/sctp/sctp_displayevents.c##
+            str = "ADDRESS AVAILABLE";## 44 ##src/sctp/sctp_displayevents.c##
+            break;## 45 ##src/sctp/sctp_displayevents.c##
+        case SCTP_ADDR_UNREACHABLE:## 46 ##src/sctp/sctp_displayevents.c##
+            str = "ADDRESS UNAVAILABLE";## 47 ##src/sctp/sctp_displayevents.c##
+            break;## 48 ##src/sctp/sctp_displayevents.c##
+        case SCTP_ADDR_REMOVED:## 49 ##src/sctp/sctp_displayevents.c##
+            str = "ADDRESS REMOVED";## 50 ##src/sctp/sctp_displayevents.c##
+            break;## 51 ##src/sctp/sctp_displayevents.c##
+        case SCTP_ADDR_ADDED:## 52 ##src/sctp/sctp_displayevents.c##
+            str = "ADDRESS ADDED";## 53 ##src/sctp/sctp_displayevents.c##
+            break;## 54 ##src/sctp/sctp_displayevents.c##
+        case SCTP_ADDR_MADE_PRIM:## 55 ##src/sctp/sctp_displayevents.c##
+            str = "ADDRESS MADE PRIMARY";## 56 ##src/sctp/sctp_displayevents.c##
+            break;## 57 ##src/sctp/sctp_displayevents.c##
+        default:## 58 ##src/sctp/sctp_displayevents.c##
+            str = "UNKNOWN";## 59 ##src/sctp/sctp_displayevents.c##
+            break;## 60 ##src/sctp/sctp_displayevents.c##
+        }                       /* end switch(spc->spc_state) */## 61 ##src/sctp/sctp_displayevents.c##
+        printf("SCTP_PEER_ADDR_CHANGE: %s, addr=%s, assoc=0x%x\n", str,## 62 ##src/sctp/sctp_displayevents.c##
+               Sock_ntop((SA *) &spc->spc_aaddr, sizeof(spc->spc_aaddr)),## 63 ##src/sctp/sctp_displayevents.c##
+               (uint32_t) spc->spc_assoc_id);## 64 ##src/sctp/sctp_displayevents.c##
+        break;## 65 ##src/sctp/sctp_displayevents.c##
+    case SCTP_REMOTE_ERROR:## 66 ##src/sctp/sctp_displayevents.c##
+        sre = &snp->sn_remote_error;## 67 ##src/sctp/sctp_displayevents.c##
+        printf("SCTP_REMOTE_ERROR: assoc=0x%x\n",## 68 ##src/sctp/sctp_displayevents.c##
+               (uint32_t) sre->sre_assoc_id);## 69 ##src/sctp/sctp_displayevents.c##
+        break;## 70 ##src/sctp/sctp_displayevents.c##
+    case SCTP_SEND_FAILED:## 71 ##src/sctp/sctp_displayevents.c##
+        ssf = &snp->sn_send_failed;## 72 ##src/sctp/sctp_displayevents.c##
+        printf("SCTP_SEND_FAILED: assoc=0x%x\n",## 73 ##src/sctp/sctp_displayevents.c##
+               (uint32_t) ssf->ssf_assoc_id);## 74 ##src/sctp/sctp_displayevents.c##
+        break;## 75 ##src/sctp/sctp_displayevents.c##
+    case SCTP_ADAPTION_INDICATION:## 76 ##src/sctp/sctp_displayevents.c##
+        ae = &snp->sn_adaption_event;## 77 ##src/sctp/sctp_displayevents.c##
+        printf("SCTP_adaption_indication:0x%x\n",## 78 ##src/sctp/sctp_displayevents.c##
+               (u_int) ae->sai_adaption_ind);## 79 ##src/sctp/sctp_displayevents.c##
+        break;## 80 ##src/sctp/sctp_displayevents.c##
+    case SCTP_PARTIAL_DELIVERY_EVENT:## 81 ##src/sctp/sctp_displayevents.c##
+        pdapi = &snp->sn_pdapi_event;## 82 ##src/sctp/sctp_displayevents.c##
+        if (pdapi->pdapi_indication == SCTP_PARTIAL_DELIVERY_ABORTED)## 83 ##src/sctp/sctp_displayevents.c##
+            printf("SCTP_PD-API ABORTED\n");## 84 ##src/sctp/sctp_displayevents.c##
+        else## 85 ##src/sctp/sctp_displayevents.c##
+            printf("Unknown SCTP_PD-API EVENT 0x%x\n",## 86 ##src/sctp/sctp_displayevents.c##
+                   pdapi->pdapi_indication);## 87 ##src/sctp/sctp_displayevents.c##
+        break;## 88 ##src/sctp/sctp_displayevents.c##
+    case SCTP_SHUTDOWN_EVENT:## 89 ##src/sctp/sctp_displayevents.c##
+        sse = &snp->sn_shutdown_event;## 90 ##src/sctp/sctp_displayevents.c##
+        printf("SCTP_SHUTDOWN_EVENT: assoc=0x%x\n",## 91 ##src/sctp/sctp_displayevents.c##
+               (uint32_t) sse->sse_assoc_id);## 92 ##src/sctp/sctp_displayevents.c##
+        break;## 93 ##src/sctp/sctp_displayevents.c##
+    default:## 94 ##src/sctp/sctp_displayevents.c##
+        printf("Unknown notification event type=0x%x\n",## 95 ##src/sctp/sctp_displayevents.c##
+               snp->sn_header.sn_type);## 96 ##src/sctp/sctp_displayevents.c##
+    }## 97 ##src/sctp/sctp_displayevents.c##
+}## 98 ##src/sctp/sctp_displayevents.c##

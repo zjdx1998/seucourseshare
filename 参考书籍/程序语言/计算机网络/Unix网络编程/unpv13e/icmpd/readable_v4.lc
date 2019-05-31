@@ -1,0 +1,89 @@
+/* include readable_v41 */
+#include    "icmpd.h"##  1 ##src/icmpd/readable_v4.c##
+#include    <netinet/in_systm.h>##  2 ##src/icmpd/readable_v4.c##
+#include    <netinet/ip.h>##  3 ##src/icmpd/readable_v4.c##
+#include    <netinet/ip_icmp.h>##  4 ##src/icmpd/readable_v4.c##
+#include    <netinet/udp.h>##  5 ##src/icmpd/readable_v4.c##
+
+int##  6 ##src/icmpd/readable_v4.c##
+readable_v4(void)##  7 ##src/icmpd/readable_v4.c##
+{##  8 ##src/icmpd/readable_v4.c##
+    int     i, hlen1, hlen2, icmplen, sport;##  9 ##src/icmpd/readable_v4.c##
+    char    buf[MAXLINE];## 10 ##src/icmpd/readable_v4.c##
+    char    srcstr[INET_ADDRSTRLEN], dststr[INET_ADDRSTRLEN];## 11 ##src/icmpd/readable_v4.c##
+    ssize_t n;## 12 ##src/icmpd/readable_v4.c##
+    socklen_t len;## 13 ##src/icmpd/readable_v4.c##
+    struct ip *ip, *hip;## 14 ##src/icmpd/readable_v4.c##
+    struct icmp *icmp;## 15 ##src/icmpd/readable_v4.c##
+    struct udphdr *udp;## 16 ##src/icmpd/readable_v4.c##
+    struct sockaddr_in from, dest;## 17 ##src/icmpd/readable_v4.c##
+    struct icmpd_err icmpd_err;## 18 ##src/icmpd/readable_v4.c##
+
+    len = sizeof(from);## 19 ##src/icmpd/readable_v4.c##
+    n = Recvfrom(fd4, buf, MAXLINE, 0, (SA *) &from, &len);## 20 ##src/icmpd/readable_v4.c##
+
+    printf("%d bytes ICMPv4 from %s:", n, Sock_ntop_host((SA *) &from, len));## 21 ##src/icmpd/readable_v4.c##
+
+    ip = (struct ip *) buf;     /* start of IP header */## 22 ##src/icmpd/readable_v4.c##
+    hlen1 = ip->ip_hl << 2;     /* length of IP header */## 23 ##src/icmpd/readable_v4.c##
+
+    icmp = (struct icmp *) (buf + hlen1);   /* start of ICMP header */## 24 ##src/icmpd/readable_v4.c##
+    if ((icmplen = n - hlen1) < 8)## 25 ##src/icmpd/readable_v4.c##
+        err_quit("icmplen (%d) < 8", icmplen);## 26 ##src/icmpd/readable_v4.c##
+
+    printf(" type = %d, code = %d\n", icmp->icmp_type, icmp->icmp_code);## 27 ##src/icmpd/readable_v4.c##
+/* end readable_v41 */
+
+/* include readable_v42 */
+    if (icmp->icmp_type == ICMP_UNREACH ||## 28 ##src/icmpd/readable_v4.c##
+        icmp->icmp_type == ICMP_TIMXCEED ||## 29 ##src/icmpd/readable_v4.c##
+        icmp->icmp_type == ICMP_SOURCEQUENCH) {## 30 ##src/icmpd/readable_v4.c##
+        if (icmplen < 8 + 20 + 8)## 31 ##src/icmpd/readable_v4.c##
+            err_quit("icmplen (%d) < 8 + 20 + 8", icmplen);## 32 ##src/icmpd/readable_v4.c##
+
+        hip = (struct ip *) (buf + hlen1 + 8);## 33 ##src/icmpd/readable_v4.c##
+        hlen2 = hip->ip_hl << 2;## 34 ##src/icmpd/readable_v4.c##
+        printf("\tsrcip = %s, dstip = %s, proto = %d\n",## 35 ##src/icmpd/readable_v4.c##
+               Inet_ntop(AF_INET, &hip->ip_src, srcstr, sizeof(srcstr)),## 36 ##src/icmpd/readable_v4.c##
+               Inet_ntop(AF_INET, &hip->ip_dst, dststr, sizeof(dststr)),## 37 ##src/icmpd/readable_v4.c##
+               hip->ip_p);## 38 ##src/icmpd/readable_v4.c##
+        if (hip->ip_p == IPPROTO_UDP) {## 39 ##src/icmpd/readable_v4.c##
+            udp = (struct udphdr *) (buf + hlen1 + 8 + hlen2);## 40 ##src/icmpd/readable_v4.c##
+            sport = udp->uh_sport;## 41 ##src/icmpd/readable_v4.c##
+
+            /* 4find client's Unix domain socket, send headers */## 42 ##src/icmpd/readable_v4.c##
+            for (i = 0; i <= maxi; i++) {## 43 ##src/icmpd/readable_v4.c##
+                if (client[i].connfd >= 0 &&## 44 ##src/icmpd/readable_v4.c##
+                    client[i].family == AF_INET &&## 45 ##src/icmpd/readable_v4.c##
+                    client[i].lport == sport) {## 46 ##src/icmpd/readable_v4.c##
+
+                    bzero(&dest, sizeof(dest));## 47 ##src/icmpd/readable_v4.c##
+                    dest.sin_family = AF_INET;## 48 ##src/icmpd/readable_v4.c##
+#ifdef  HAVE_SOCKADDR_SA_LEN## 49 ##src/icmpd/readable_v4.c##
+                    dest.sin_len = sizeof(dest);## 50 ##src/icmpd/readable_v4.c##
+#endif## 51 ##src/icmpd/readable_v4.c##
+                    memcpy(&dest.sin_addr, &hip->ip_dst,## 52 ##src/icmpd/readable_v4.c##
+                           sizeof(struct in_addr));## 53 ##src/icmpd/readable_v4.c##
+                    dest.sin_port = udp->uh_dport;## 54 ##src/icmpd/readable_v4.c##
+
+                    icmpd_err.icmpd_type = icmp->icmp_type;## 55 ##src/icmpd/readable_v4.c##
+                    icmpd_err.icmpd_code = icmp->icmp_code;## 56 ##src/icmpd/readable_v4.c##
+                    icmpd_err.icmpd_len = sizeof(struct sockaddr_in);## 57 ##src/icmpd/readable_v4.c##
+                    memcpy(&icmpd_err.icmpd_dest, &dest, sizeof(dest));## 58 ##src/icmpd/readable_v4.c##
+
+                    /* 4convert type & code to reasonable errno value */## 59 ##src/icmpd/readable_v4.c##
+                    icmpd_err.icmpd_errno = EHOSTUNREACH;   /* default */## 60 ##src/icmpd/readable_v4.c##
+                    if (icmp->icmp_type == ICMP_UNREACH) {## 61 ##src/icmpd/readable_v4.c##
+                        if (icmp->icmp_code == ICMP_UNREACH_PORT)## 62 ##src/icmpd/readable_v4.c##
+                            icmpd_err.icmpd_errno = ECONNREFUSED;## 63 ##src/icmpd/readable_v4.c##
+                        else if (icmp->icmp_code == ICMP_UNREACH_NEEDFRAG)## 64 ##src/icmpd/readable_v4.c##
+                            icmpd_err.icmpd_errno = EMSGSIZE;## 65 ##src/icmpd/readable_v4.c##
+                    }## 66 ##src/icmpd/readable_v4.c##
+                    Write(client[i].connfd, &icmpd_err, sizeof(icmpd_err));## 67 ##src/icmpd/readable_v4.c##
+                }## 68 ##src/icmpd/readable_v4.c##
+            }## 69 ##src/icmpd/readable_v4.c##
+        }## 70 ##src/icmpd/readable_v4.c##
+    }## 71 ##src/icmpd/readable_v4.c##
+    return (--nready);## 72 ##src/icmpd/readable_v4.c##
+}## 73 ##src/icmpd/readable_v4.c##
+/* end readable_v42 */

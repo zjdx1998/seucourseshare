@@ -1,0 +1,54 @@
+#include    "unp.h"##  1 ##src/names/daytimetcpcli2.c##
+
+int##  2 ##src/names/daytimetcpcli2.c##
+main(int argc, char **argv)##  3 ##src/names/daytimetcpcli2.c##
+{##  4 ##src/names/daytimetcpcli2.c##
+    int     sockfd, n;##  5 ##src/names/daytimetcpcli2.c##
+    char    recvline[MAXLINE + 1];##  6 ##src/names/daytimetcpcli2.c##
+    struct sockaddr_in servaddr;##  7 ##src/names/daytimetcpcli2.c##
+    struct in_addr **pptr, *addrs[2];##  8 ##src/names/daytimetcpcli2.c##
+    struct hostent *hp;##  9 ##src/names/daytimetcpcli2.c##
+    struct servent *sp;## 10 ##src/names/daytimetcpcli2.c##
+
+    if (argc != 3)## 11 ##src/names/daytimetcpcli2.c##
+        err_quit("usage: daytimetcpcli2 <hostname> <service>");## 12 ##src/names/daytimetcpcli2.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 13 ##src/names/daytimetcpcli2.c##
+    servaddr.sin_family = AF_INET;## 14 ##src/names/daytimetcpcli2.c##
+
+    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) == 1) {## 15 ##src/names/daytimetcpcli2.c##
+        addrs[0] = &servaddr.sin_addr;## 16 ##src/names/daytimetcpcli2.c##
+        addrs[1] = NULL;## 17 ##src/names/daytimetcpcli2.c##
+        pptr = &addrs[0];## 18 ##src/names/daytimetcpcli2.c##
+    } else if ((hp = gethostbyname(argv[1])) != NULL) {## 19 ##src/names/daytimetcpcli2.c##
+        pptr = (struct in_addr **) hp->h_addr_list;## 20 ##src/names/daytimetcpcli2.c##
+    } else## 21 ##src/names/daytimetcpcli2.c##
+        err_quit("hostname error for %s: %s", argv[1], hstrerror(h_errno));## 22 ##src/names/daytimetcpcli2.c##
+
+    if ((n = atoi(argv[2])) > 0)## 23 ##src/names/daytimetcpcli2.c##
+        servaddr.sin_port = htons(n);## 24 ##src/names/daytimetcpcli2.c##
+    else if ((sp = getservbyname(argv[2], "tcp")) != NULL)## 25 ##src/names/daytimetcpcli2.c##
+        servaddr.sin_port = sp->s_port;## 26 ##src/names/daytimetcpcli2.c##
+    else## 27 ##src/names/daytimetcpcli2.c##
+        err_quit("getservbyname error for %s", argv[2]);## 28 ##src/names/daytimetcpcli2.c##
+
+    for (; *pptr != NULL; pptr++) {## 29 ##src/names/daytimetcpcli2.c##
+        sockfd = Socket(AF_INET, SOCK_STREAM, 0);## 30 ##src/names/daytimetcpcli2.c##
+
+        memmove(&servaddr.sin_addr, *pptr, sizeof(struct in_addr));## 31 ##src/names/daytimetcpcli2.c##
+        printf("trying %s\n", Sock_ntop((SA *) &servaddr, sizeof(servaddr)));## 32 ##src/names/daytimetcpcli2.c##
+
+        if (connect(sockfd, (SA *) &servaddr, sizeof(servaddr)) == 0)## 33 ##src/names/daytimetcpcli2.c##
+            break;              /* success */## 34 ##src/names/daytimetcpcli2.c##
+        err_ret("connect error");## 35 ##src/names/daytimetcpcli2.c##
+        close(sockfd);## 36 ##src/names/daytimetcpcli2.c##
+    }## 37 ##src/names/daytimetcpcli2.c##
+    if (*pptr == NULL)## 38 ##src/names/daytimetcpcli2.c##
+        err_quit("unable to connect");## 39 ##src/names/daytimetcpcli2.c##
+
+    while ((n = Read(sockfd, recvline, MAXLINE)) > 0) {## 40 ##src/names/daytimetcpcli2.c##
+        recvline[n] = 0;        /* null terminate */## 41 ##src/names/daytimetcpcli2.c##
+        Fputs(recvline, stdout);## 42 ##src/names/daytimetcpcli2.c##
+    }## 43 ##src/names/daytimetcpcli2.c##
+    exit(0);## 44 ##src/names/daytimetcpcli2.c##
+}## 45 ##src/names/daytimetcpcli2.c##

@@ -1,0 +1,13 @@
+
+sctp_assoc_t##  1 ##src/sctp/sctp_addr_to_associd.c##
+sctp_address_to_associd(int sock_fd, struct sockaddr *sa, socklen_t salen)##  2 ##src/sctp/sctp_addr_to_associd.c##
+{##  3 ##src/sctp/sctp_addr_to_associd.c##
+    struct sctp_paddrparams sp;##  4 ##src/sctp/sctp_addr_to_associd.c##
+    int     siz;##  5 ##src/sctp/sctp_addr_to_associd.c##
+
+    siz = sizeof(struct sctp_paddrparams);##  6 ##src/sctp/sctp_addr_to_associd.c##
+    bzero(&sp, siz);##  7 ##src/sctp/sctp_addr_to_associd.c##
+    memcpy(&sp.spp_address, sa, salen);##  8 ##src/sctp/sctp_addr_to_associd.c##
+    sctp_opt_info(sock_fd, 0, SCTP_PEER_ADDR_PARAMS, &sp, &siz);##  9 ##src/sctp/sctp_addr_to_associd.c##
+    return (sp.spp_assoc_id);## 10 ##src/sctp/sctp_addr_to_associd.c##
+}## 11 ##src/sctp/sctp_addr_to_associd.c##

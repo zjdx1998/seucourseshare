@@ -1,0 +1,41 @@
+#include    "unp.h"##  1 ##src/tcpcliserv/tcpserv04.c##
+
+int##  2 ##src/tcpcliserv/tcpserv04.c##
+main(int argc, char **argv)##  3 ##src/tcpcliserv/tcpserv04.c##
+{##  4 ##src/tcpcliserv/tcpserv04.c##
+    int     listenfd, connfd;##  5 ##src/tcpcliserv/tcpserv04.c##
+    pid_t   childpid;##  6 ##src/tcpcliserv/tcpserv04.c##
+    socklen_t clilen;##  7 ##src/tcpcliserv/tcpserv04.c##
+    struct sockaddr_in cliaddr, servaddr;##  8 ##src/tcpcliserv/tcpserv04.c##
+    void    sig_chld(int);##  9 ##src/tcpcliserv/tcpserv04.c##
+
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);## 10 ##src/tcpcliserv/tcpserv04.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 11 ##src/tcpcliserv/tcpserv04.c##
+    servaddr.sin_family = AF_INET;## 12 ##src/tcpcliserv/tcpserv04.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 13 ##src/tcpcliserv/tcpserv04.c##
+    servaddr.sin_port = htons(SERV_PORT);## 14 ##src/tcpcliserv/tcpserv04.c##
+
+    Bind(listenfd, (SA *) &servaddr, sizeof(servaddr));## 15 ##src/tcpcliserv/tcpserv04.c##
+
+    Listen(listenfd, LISTENQ);## 16 ##src/tcpcliserv/tcpserv04.c##
+
+    Signal(SIGCHLD, sig_chld);  /* must call waitpid() */## 17 ##src/tcpcliserv/tcpserv04.c##
+
+    for (;;) {## 18 ##src/tcpcliserv/tcpserv04.c##
+        clilen = sizeof(cliaddr);## 19 ##src/tcpcliserv/tcpserv04.c##
+        if ((connfd = accept(listenfd, (SA *) &cliaddr, &clilen)) < 0) {## 20 ##src/tcpcliserv/tcpserv04.c##
+            if (errno == EINTR)## 21 ##src/tcpcliserv/tcpserv04.c##
+                continue;       /* back to for() */## 22 ##src/tcpcliserv/tcpserv04.c##
+            else## 23 ##src/tcpcliserv/tcpserv04.c##
+                err_sys("accept error");## 24 ##src/tcpcliserv/tcpserv04.c##
+        }## 25 ##src/tcpcliserv/tcpserv04.c##
+
+        if ((childpid = Fork()) == 0) { /* child process */## 26 ##src/tcpcliserv/tcpserv04.c##
+            Close(listenfd);    /* close listening socket */## 27 ##src/tcpcliserv/tcpserv04.c##
+            str_echo(connfd);   /* process the request */## 28 ##src/tcpcliserv/tcpserv04.c##
+            exit(0);## 29 ##src/tcpcliserv/tcpserv04.c##
+        }## 30 ##src/tcpcliserv/tcpserv04.c##
+        Close(connfd);          /* parent closes connected socket */## 31 ##src/tcpcliserv/tcpserv04.c##
+    }## 32 ##src/tcpcliserv/tcpserv04.c##
+}## 33 ##src/tcpcliserv/tcpserv04.c##

@@ -1,0 +1,41 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/getnameinfo.c##
+
+/* include getnameinfo */
+int##  2 ##src/libgai/getnameinfo.c##
+getnameinfo(const struct sockaddr *sa, socklen_t salen,##  3 ##src/libgai/getnameinfo.c##
+            char *host, size_t hostlen,##  4 ##src/libgai/getnameinfo.c##
+            char *serv, size_t servlen, int flags)##  5 ##src/libgai/getnameinfo.c##
+{##  6 ##src/libgai/getnameinfo.c##
+
+    switch (sa->sa_family) {##  7 ##src/libgai/getnameinfo.c##
+    case AF_INET:{##  8 ##src/libgai/getnameinfo.c##
+            struct sockaddr_in *sain = (struct sockaddr_in *) sa;##  9 ##src/libgai/getnameinfo.c##
+
+            return (gn_ipv46(host, hostlen, serv, servlen,## 10 ##src/libgai/getnameinfo.c##
+                             &sain->sin_addr, sizeof(struct in_addr),## 11 ##src/libgai/getnameinfo.c##
+                             AF_INET, sain->sin_port, flags));## 12 ##src/libgai/getnameinfo.c##
+        }## 13 ##src/libgai/getnameinfo.c##
+
+    case AF_INET6:{## 14 ##src/libgai/getnameinfo.c##
+            struct sockaddr_in6 *sain = (struct sockaddr_in6 *) sa;## 15 ##src/libgai/getnameinfo.c##
+
+            return (gn_ipv46(host, hostlen, serv, servlen,## 16 ##src/libgai/getnameinfo.c##
+                             &sain->sin6_addr, sizeof(struct in6_addr),## 17 ##src/libgai/getnameinfo.c##
+                             AF_INET6, sain->sin6_port, flags));## 18 ##src/libgai/getnameinfo.c##
+        }## 19 ##src/libgai/getnameinfo.c##
+
+    case AF_LOCAL:{## 20 ##src/libgai/getnameinfo.c##
+            struct sockaddr_un *un = (struct sockaddr_un *) sa;## 21 ##src/libgai/getnameinfo.c##
+
+            if (hostlen > 0)## 22 ##src/libgai/getnameinfo.c##
+                snprintf(host, hostlen, "%s", "/local");## 23 ##src/libgai/getnameinfo.c##
+            if (servlen > 0)## 24 ##src/libgai/getnameinfo.c##
+                snprintf(serv, servlen, "%s", un->sun_path);## 25 ##src/libgai/getnameinfo.c##
+            return (0);## 26 ##src/libgai/getnameinfo.c##
+        }## 27 ##src/libgai/getnameinfo.c##
+
+    default:## 28 ##src/libgai/getnameinfo.c##
+        return (1);## 29 ##src/libgai/getnameinfo.c##
+    }## 30 ##src/libgai/getnameinfo.c##
+}## 31 ##src/libgai/getnameinfo.c##
+/* end getnameinfo */

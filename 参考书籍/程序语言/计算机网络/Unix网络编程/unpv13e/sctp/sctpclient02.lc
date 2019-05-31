@@ -1,0 +1,42 @@
+
+int##  1 ##src/sctp/sctpclient02.c##
+main(int argc, char **argv)##  2 ##src/sctp/sctpclient02.c##
+{##  3 ##src/sctp/sctpclient02.c##
+    int     sock_fd;##  4 ##src/sctp/sctpclient02.c##
+    struct sockaddr_in servaddr;##  5 ##src/sctp/sctpclient02.c##
+    struct sctp_event_subscribe evnts;##  6 ##src/sctp/sctpclient02.c##
+    int     echo_to_all = 0;##  7 ##src/sctp/sctpclient02.c##
+    char    byemsg[10];##  8 ##src/sctp/sctpclient02.c##
+
+    if (argc < 2)##  9 ##src/sctp/sctpclient02.c##
+        err_quit("Missing host argument - use '%s host [echo]'\n", argv[0]);## 10 ##src/sctp/sctpclient02.c##
+    if (argc > 2) {## 11 ##src/sctp/sctpclient02.c##
+        printf("Echoing messages to all streams\n");## 12 ##src/sctp/sctpclient02.c##
+        echo_to_all = 1;## 13 ##src/sctp/sctpclient02.c##
+    }## 14 ##src/sctp/sctpclient02.c##
+    sock_fd = Socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);## 15 ##src/sctp/sctpclient02.c##
+    bzero(&servaddr, sizeof(servaddr));## 16 ##src/sctp/sctpclient02.c##
+    servaddr.sin_family = AF_INET;## 17 ##src/sctp/sctpclient02.c##
+#ifdef HAVE_SOCKADDR_SA_LEN## 18 ##src/sctp/sctpclient02.c##
+    servaddr.sin_len = sizeof(servaddr);## 19 ##src/sctp/sctpclient02.c##
+#endif## 20 ##src/sctp/sctpclient02.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 21 ##src/sctp/sctpclient02.c##
+    servaddr.sin_port = htons(SERV_PORT);## 22 ##src/sctp/sctpclient02.c##
+    Inet_pton(AF_INET, argv[1], &servaddr.sin_addr);## 23 ##src/sctp/sctpclient02.c##
+
+    bzero(&evnts, sizeof(evnts));## 24 ##src/sctp/sctpclient02.c##
+    evnts.sctp_data_io_event = 1;## 25 ##src/sctp/sctpclient02.c##
+    Setsockopt(sock_fd, IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts));## 26 ##src/sctp/sctpclient02.c##
+    /* include modified_client02 */## 27 ##src/sctp/sctpclient02.c##
+    if (echo_to_all == 0)## 28 ##src/sctp/sctpclient02.c##
+        sctpstr_cli(stdin, sock_fd, (SA *) &servaddr, sizeof(servaddr));## 29 ##src/sctp/sctpclient02.c##
+    else## 30 ##src/sctp/sctpclient02.c##
+        sctpstr_cli_echoall(stdin, sock_fd, (SA *) &servaddr,## 31 ##src/sctp/sctpclient02.c##
+                            sizeof(servaddr));## 32 ##src/sctp/sctpclient02.c##
+    strcpy(byemsg, "goodbye");## 33 ##src/sctp/sctpclient02.c##
+    Sctp_sendmsg(sock_fd, byemsg, strlen(byemsg),## 34 ##src/sctp/sctpclient02.c##
+                 (SA *) &servaddr, sizeof(servaddr), 0, MSG_ABORT, 0, 0, 0);## 35 ##src/sctp/sctpclient02.c##
+    Close(sock_fd);## 36 ##src/sctp/sctpclient02.c##
+    /* end modified_client02 */## 37 ##src/sctp/sctpclient02.c##
+    return (0);## 38 ##src/sctp/sctpclient02.c##
+}## 39 ##src/sctp/sctpclient02.c##

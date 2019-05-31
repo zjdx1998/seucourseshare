@@ -1,0 +1,40 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/ga_unix.c##
+#include    <sys/utsname.h>##  2 ##src/libgai/ga_unix.c##
+
+/* include ga_unix */
+int##  3 ##src/libgai/ga_unix.c##
+ga_unix(const char *path, struct addrinfo *hintsp, struct addrinfo **result)##  4 ##src/libgai/ga_unix.c##
+{##  5 ##src/libgai/ga_unix.c##
+    int     rc;##  6 ##src/libgai/ga_unix.c##
+    struct addrinfo *aihead, **aipnext;##  7 ##src/libgai/ga_unix.c##
+
+    aihead = NULL;##  8 ##src/libgai/ga_unix.c##
+    aipnext = &aihead;##  9 ##src/libgai/ga_unix.c##
+
+    if (hintsp->ai_family != AF_UNSPEC && hintsp->ai_family != AF_LOCAL)## 10 ##src/libgai/ga_unix.c##
+        return (EAI_ADDRFAMILY);## 11 ##src/libgai/ga_unix.c##
+
+    if (hintsp->ai_socktype == 0) {## 12 ##src/libgai/ga_unix.c##
+        /* 4no socket type specified: return stream then dgram */## 13 ##src/libgai/ga_unix.c##
+        hintsp->ai_socktype = SOCK_STREAM;## 14 ##src/libgai/ga_unix.c##
+        if ((rc = ga_aistruct(&aipnext, hintsp, path, AF_LOCAL)) != 0)## 15 ##src/libgai/ga_unix.c##
+            return (rc);## 16 ##src/libgai/ga_unix.c##
+        hintsp->ai_socktype = SOCK_DGRAM;## 17 ##src/libgai/ga_unix.c##
+    }## 18 ##src/libgai/ga_unix.c##
+
+    if ((rc = ga_aistruct(&aipnext, hintsp, path, AF_LOCAL)) != 0)## 19 ##src/libgai/ga_unix.c##
+        return (rc);## 20 ##src/libgai/ga_unix.c##
+
+    if (hintsp->ai_flags & AI_CANONNAME) {## 21 ##src/libgai/ga_unix.c##
+        struct utsname myname;## 22 ##src/libgai/ga_unix.c##
+
+        if (uname(&myname) < 0)## 23 ##src/libgai/ga_unix.c##
+            return (EAI_SYSTEM);## 24 ##src/libgai/ga_unix.c##
+        if ((aihead->ai_canonname = strdup(myname.nodename)) == NULL)## 25 ##src/libgai/ga_unix.c##
+            return (EAI_MEMORY);## 26 ##src/libgai/ga_unix.c##
+    }## 27 ##src/libgai/ga_unix.c##
+
+    *result = aihead;           /* pointer to first structure in linked list */## 28 ##src/libgai/ga_unix.c##
+    return (0);## 29 ##src/libgai/ga_unix.c##
+}## 30 ##src/libgai/ga_unix.c##
+/* end ga_unix */

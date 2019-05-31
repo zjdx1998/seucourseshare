@@ -1,0 +1,90 @@
+#include    "unp.h"##  1 ##src/lib/sock_ntop.c##
+
+#ifdef  HAVE_SOCKADDR_DL_STRUCT##  2 ##src/lib/sock_ntop.c##
+#include    <net/if_dl.h>##  3 ##src/lib/sock_ntop.c##
+#endif##  4 ##src/lib/sock_ntop.c##
+
+/* include sock_ntop */
+char   *##  5 ##src/lib/sock_ntop.c##
+sock_ntop(const struct sockaddr *sa, socklen_t salen)##  6 ##src/lib/sock_ntop.c##
+{##  7 ##src/lib/sock_ntop.c##
+    char    portstr[8];##  8 ##src/lib/sock_ntop.c##
+    static char str[128];       /* Unix domain is largest */##  9 ##src/lib/sock_ntop.c##
+
+    switch (sa->sa_family) {## 10 ##src/lib/sock_ntop.c##
+    case AF_INET:{## 11 ##src/lib/sock_ntop.c##
+            struct sockaddr_in *sin = (struct sockaddr_in *) sa;## 12 ##src/lib/sock_ntop.c##
+
+            if (inet_ntop(AF_INET, &sin->sin_addr, str, sizeof(str)) == NULL)## 13 ##src/lib/sock_ntop.c##
+                return (NULL);## 14 ##src/lib/sock_ntop.c##
+            if (ntohs(sin->sin_port) != 0) {## 15 ##src/lib/sock_ntop.c##
+                snprintf(portstr, sizeof(portstr), ":%d",## 16 ##src/lib/sock_ntop.c##
+                         ntohs(sin->sin_port));## 17 ##src/lib/sock_ntop.c##
+                strcat(str, portstr);## 18 ##src/lib/sock_ntop.c##
+            }## 19 ##src/lib/sock_ntop.c##
+            return (str);## 20 ##src/lib/sock_ntop.c##
+        }## 21 ##src/lib/sock_ntop.c##
+/* end sock_ntop */
+
+#ifdef  IPV6## 22 ##src/lib/sock_ntop.c##
+    case AF_INET6:{## 23 ##src/lib/sock_ntop.c##
+            struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sa;## 24 ##src/lib/sock_ntop.c##
+
+            str[0] = '[';## 25 ##src/lib/sock_ntop.c##
+            if (inet_ntop## 26 ##src/lib/sock_ntop.c##
+                (AF_INET6, &sin6->sin6_addr, str + 1,## 27 ##src/lib/sock_ntop.c##
+                 sizeof(str) - 1) == NULL)## 28 ##src/lib/sock_ntop.c##
+                return (NULL);## 29 ##src/lib/sock_ntop.c##
+            if (ntohs(sin6->sin6_port) != 0) {## 30 ##src/lib/sock_ntop.c##
+                snprintf(portstr, sizeof(portstr), "]:%d",## 31 ##src/lib/sock_ntop.c##
+                         ntohs(sin6->sin6_port));## 32 ##src/lib/sock_ntop.c##
+                strcat(str, portstr);## 33 ##src/lib/sock_ntop.c##
+                return (str);## 34 ##src/lib/sock_ntop.c##
+            }## 35 ##src/lib/sock_ntop.c##
+            return (str + 1);## 36 ##src/lib/sock_ntop.c##
+        }## 37 ##src/lib/sock_ntop.c##
+#endif## 38 ##src/lib/sock_ntop.c##
+
+#ifdef  AF_UNIX## 39 ##src/lib/sock_ntop.c##
+    case AF_UNIX:{## 40 ##src/lib/sock_ntop.c##
+            struct sockaddr_un *unp = (struct sockaddr_un *) sa;## 41 ##src/lib/sock_ntop.c##
+
+            /* OK to have no pathname bound to the socket: happens on every connect() unless client calls bind() first. */## 42 ##src/lib/sock_ntop.c##
+            if (unp->sun_path[0] == 0)## 43 ##src/lib/sock_ntop.c##
+                strcpy(str, "(no pathname bound)");## 44 ##src/lib/sock_ntop.c##
+            else## 45 ##src/lib/sock_ntop.c##
+                snprintf(str, sizeof(str), "%s", unp->sun_path);## 46 ##src/lib/sock_ntop.c##
+            return (str);## 47 ##src/lib/sock_ntop.c##
+        }## 48 ##src/lib/sock_ntop.c##
+#endif## 49 ##src/lib/sock_ntop.c##
+
+#ifdef  HAVE_SOCKADDR_DL_STRUCT## 50 ##src/lib/sock_ntop.c##
+    case AF_LINK:{## 51 ##src/lib/sock_ntop.c##
+            struct sockaddr_dl *sdl = (struct sockaddr_dl *) sa;## 52 ##src/lib/sock_ntop.c##
+
+            if (sdl->sdl_nlen > 0)## 53 ##src/lib/sock_ntop.c##
+                snprintf(str, sizeof(str), "%*s (index %d)",## 54 ##src/lib/sock_ntop.c##
+                         sdl->sdl_nlen, &sdl->sdl_data[0], sdl->sdl_index);## 55 ##src/lib/sock_ntop.c##
+            else## 56 ##src/lib/sock_ntop.c##
+                snprintf(str, sizeof(str), "AF_LINK, index=%d",## 57 ##src/lib/sock_ntop.c##
+                         sdl->sdl_index);## 58 ##src/lib/sock_ntop.c##
+            return (str);## 59 ##src/lib/sock_ntop.c##
+        }## 60 ##src/lib/sock_ntop.c##
+#endif## 61 ##src/lib/sock_ntop.c##
+    default:## 62 ##src/lib/sock_ntop.c##
+        snprintf(str, sizeof(str), "sock_ntop: unknown AF_xxx: %d, len %d",## 63 ##src/lib/sock_ntop.c##
+                 sa->sa_family, salen);## 64 ##src/lib/sock_ntop.c##
+        return (str);## 65 ##src/lib/sock_ntop.c##
+    }## 66 ##src/lib/sock_ntop.c##
+    return (NULL);## 67 ##src/lib/sock_ntop.c##
+}## 68 ##src/lib/sock_ntop.c##
+
+char   *## 69 ##src/lib/sock_ntop.c##
+Sock_ntop(const struct sockaddr *sa, socklen_t salen)## 70 ##src/lib/sock_ntop.c##
+{## 71 ##src/lib/sock_ntop.c##
+    char   *ptr;## 72 ##src/lib/sock_ntop.c##
+
+    if ((ptr = sock_ntop(sa, salen)) == NULL)## 73 ##src/lib/sock_ntop.c##
+        err_sys("sock_ntop error"); /* inet_ntop() sets errno */## 74 ##src/lib/sock_ntop.c##
+    return (ptr);## 75 ##src/lib/sock_ntop.c##
+}## 76 ##src/lib/sock_ntop.c##

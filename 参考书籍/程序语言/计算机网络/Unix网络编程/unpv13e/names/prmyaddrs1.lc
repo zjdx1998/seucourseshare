@@ -1,0 +1,19 @@
+#include    "unp.h"##  1 ##src/names/prmyaddrs1.c##
+
+char  **my_addrs(int *);##  2 ##src/names/prmyaddrs1.c##
+
+int##  3 ##src/names/prmyaddrs1.c##
+main(int argc, char **argv)##  4 ##src/names/prmyaddrs1.c##
+{##  5 ##src/names/prmyaddrs1.c##
+    int     addrtype;##  6 ##src/names/prmyaddrs1.c##
+    char  **pptr, buf[INET6_ADDRSTRLEN];##  7 ##src/names/prmyaddrs1.c##
+
+    if ((pptr = my_addrs(&addrtype)) == NULL)##  8 ##src/names/prmyaddrs1.c##
+        err_quit("my_addrs error");##  9 ##src/names/prmyaddrs1.c##
+
+    for (; *pptr != NULL; pptr++)## 10 ##src/names/prmyaddrs1.c##
+        printf("\taddress: %s\n",## 11 ##src/names/prmyaddrs1.c##
+               Inet_ntop(addrtype, *pptr, buf, sizeof(buf)));## 12 ##src/names/prmyaddrs1.c##
+
+    exit(0);## 13 ##src/names/prmyaddrs1.c##
+}## 14 ##src/names/prmyaddrs1.c##

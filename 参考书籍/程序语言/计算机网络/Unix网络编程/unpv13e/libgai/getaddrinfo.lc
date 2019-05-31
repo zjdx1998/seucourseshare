@@ -1,0 +1,164 @@
+/* include ga1 */
+#include    "gai_hdr.h"##  1 ##src/libgai/getaddrinfo.c##
+#include    <arpa/nameser.h>    /* needed for <resolv.h> */##  2 ##src/libgai/getaddrinfo.c##
+#include    <resolv.h>          /* res_init, _res */##  3 ##src/libgai/getaddrinfo.c##
+
+int##  4 ##src/libgai/getaddrinfo.c##
+getaddrinfo(const char *hostname, const char *servname,##  5 ##src/libgai/getaddrinfo.c##
+            const struct addrinfo *hintsp, struct addrinfo **result)##  6 ##src/libgai/getaddrinfo.c##
+{##  7 ##src/libgai/getaddrinfo.c##
+    int     rc, error, nsearch;##  8 ##src/libgai/getaddrinfo.c##
+    char  **ap, *canon;##  9 ##src/libgai/getaddrinfo.c##
+    struct hostent *hptr;## 10 ##src/libgai/getaddrinfo.c##
+    struct search search[3], *sptr;## 11 ##src/libgai/getaddrinfo.c##
+    struct addrinfo hints, *aihead, **aipnext;## 12 ##src/libgai/getaddrinfo.c##
+
+    /* ## 13 ##src/libgai/getaddrinfo.c##
+     * If we encounter an error we want to free() any dynamic memory## 14 ##src/libgai/getaddrinfo.c##
+     * that we've allocated.  This is our hack to simplify the code.## 15 ##src/libgai/getaddrinfo.c##
+     */## 16 ##src/libgai/getaddrinfo.c##
+#define error(e) { error = (e); goto bad; }## 17 ##src/libgai/getaddrinfo.c##
+
+    aihead = NULL;              /* initialize automatic variables */## 18 ##src/libgai/getaddrinfo.c##
+    aipnext = &aihead;## 19 ##src/libgai/getaddrinfo.c##
+    canon = NULL;## 20 ##src/libgai/getaddrinfo.c##
+
+    if (hintsp == NULL) {## 21 ##src/libgai/getaddrinfo.c##
+        bzero(&hints, sizeof(hints));## 22 ##src/libgai/getaddrinfo.c##
+        hints.ai_family = AF_UNSPEC;## 23 ##src/libgai/getaddrinfo.c##
+    } else## 24 ##src/libgai/getaddrinfo.c##
+        hints = *hintsp;        /* struct copy */## 25 ##src/libgai/getaddrinfo.c##
+
+    /* 4first some basic error checking */## 26 ##src/libgai/getaddrinfo.c##
+    if ((rc = ga_echeck(hostname, servname, hints.ai_flags, hints.ai_family,## 27 ##src/libgai/getaddrinfo.c##
+                        hints.ai_socktype, hints.ai_protocol)) != 0)## 28 ##src/libgai/getaddrinfo.c##
+        error(rc);## 29 ##src/libgai/getaddrinfo.c##
+
+    /* 4special case Unix domain first */## 30 ##src/libgai/getaddrinfo.c##
+    if (hostname != NULL &&## 31 ##src/libgai/getaddrinfo.c##
+        (strcmp(hostname, "/local") == 0 || strcmp(hostname, "/unix") == 0)## 32 ##src/libgai/getaddrinfo.c##
+        && (servname != NULL && servname[0] == '/'))## 33 ##src/libgai/getaddrinfo.c##
+        return (ga_unix(servname, &hints, result));## 34 ##src/libgai/getaddrinfo.c##
+/* end ga1 */
+
+/* include ga3 */
+    /* 4remainder of function for IPv4/IPv6 */## 35 ##src/libgai/getaddrinfo.c##
+    nsearch = ga_nsearch(hostname, &hints, &search[0]);## 36 ##src/libgai/getaddrinfo.c##
+    for (sptr = &search[0]; sptr < &search[nsearch]; sptr++) {## 37 ##src/libgai/getaddrinfo.c##
+        /* 4check for an IPv4 dotted-decimal string */## 38 ##src/libgai/getaddrinfo.c##
+        if (isdigit(sptr->host[0])) {## 39 ##src/libgai/getaddrinfo.c##
+            struct in_addr inaddr;## 40 ##src/libgai/getaddrinfo.c##
+
+            if (inet_pton(AF_INET, sptr->host, &inaddr) == 1) {## 41 ##src/libgai/getaddrinfo.c##
+                if (hints.ai_family != AF_UNSPEC &&## 42 ##src/libgai/getaddrinfo.c##
+                    hints.ai_family != AF_INET)## 43 ##src/libgai/getaddrinfo.c##
+                    error(EAI_ADDRFAMILY);## 44 ##src/libgai/getaddrinfo.c##
+                if (sptr->family != AF_INET)## 45 ##src/libgai/getaddrinfo.c##
+                    continue;   /* ignore */## 46 ##src/libgai/getaddrinfo.c##
+                rc = ga_aistruct(&aipnext, &hints, &inaddr, AF_INET);## 47 ##src/libgai/getaddrinfo.c##
+                if (rc != 0)## 48 ##src/libgai/getaddrinfo.c##
+                    error(rc);## 49 ##src/libgai/getaddrinfo.c##
+                continue;## 50 ##src/libgai/getaddrinfo.c##
+            }## 51 ##src/libgai/getaddrinfo.c##
+        }## 52 ##src/libgai/getaddrinfo.c##
+
+        /* 4check for an IPv6 hex string */## 53 ##src/libgai/getaddrinfo.c##
+        if ((isxdigit(sptr->host[0]) || sptr->host[0] == ':') &&## 54 ##src/libgai/getaddrinfo.c##
+            (strchr(sptr->host, ':') != NULL)) {## 55 ##src/libgai/getaddrinfo.c##
+            struct in6_addr in6addr;## 56 ##src/libgai/getaddrinfo.c##
+
+            if (inet_pton(AF_INET6, sptr->host, &in6addr) == 1) {## 57 ##src/libgai/getaddrinfo.c##
+                if (hints.ai_family != AF_UNSPEC &&## 58 ##src/libgai/getaddrinfo.c##
+                    hints.ai_family != AF_INET6)## 59 ##src/libgai/getaddrinfo.c##
+                    error(EAI_ADDRFAMILY);## 60 ##src/libgai/getaddrinfo.c##
+                if (sptr->family != AF_INET6)## 61 ##src/libgai/getaddrinfo.c##
+                    continue;   /* ignore */## 62 ##src/libgai/getaddrinfo.c##
+                rc = ga_aistruct(&aipnext, &hints, &in6addr, AF_INET6);## 63 ##src/libgai/getaddrinfo.c##
+                if (rc != 0)## 64 ##src/libgai/getaddrinfo.c##
+                    error(rc);## 65 ##src/libgai/getaddrinfo.c##
+                continue;## 66 ##src/libgai/getaddrinfo.c##
+            }## 67 ##src/libgai/getaddrinfo.c##
+        }## 68 ##src/libgai/getaddrinfo.c##
+/* end ga3 */
+/* include ga4 */
+        /* 4remainder of for() to look up hostname */## 69 ##src/libgai/getaddrinfo.c##
+        if ((_res.options & RES_INIT) == 0)## 70 ##src/libgai/getaddrinfo.c##
+            res_init();         /* need this to set _res.options */## 71 ##src/libgai/getaddrinfo.c##
+
+        if (nsearch == 2) {## 72 ##src/libgai/getaddrinfo.c##
+            _res.options &= ~RES_USE_INET6;## 73 ##src/libgai/getaddrinfo.c##
+            hptr = gethostbyname2(sptr->host, sptr->family);## 74 ##src/libgai/getaddrinfo.c##
+        } else {## 75 ##src/libgai/getaddrinfo.c##
+            if (sptr->family == AF_INET6)## 76 ##src/libgai/getaddrinfo.c##
+                _res.options |= RES_USE_INET6;## 77 ##src/libgai/getaddrinfo.c##
+            else## 78 ##src/libgai/getaddrinfo.c##
+                _res.options &= ~RES_USE_INET6;## 79 ##src/libgai/getaddrinfo.c##
+            hptr = gethostbyname(sptr->host);## 80 ##src/libgai/getaddrinfo.c##
+        }## 81 ##src/libgai/getaddrinfo.c##
+        if (hptr == NULL) {## 82 ##src/libgai/getaddrinfo.c##
+            if (nsearch == 2)## 83 ##src/libgai/getaddrinfo.c##
+                continue;       /* failure OK if multiple searches */## 84 ##src/libgai/getaddrinfo.c##
+
+            switch (h_errno) {## 85 ##src/libgai/getaddrinfo.c##
+            case HOST_NOT_FOUND:## 86 ##src/libgai/getaddrinfo.c##
+                error(EAI_NONAME);## 87 ##src/libgai/getaddrinfo.c##
+            case TRY_AGAIN:## 88 ##src/libgai/getaddrinfo.c##
+                error(EAI_AGAIN);## 89 ##src/libgai/getaddrinfo.c##
+            case NO_RECOVERY:## 90 ##src/libgai/getaddrinfo.c##
+                error(EAI_FAIL);## 91 ##src/libgai/getaddrinfo.c##
+            case NO_DATA:## 92 ##src/libgai/getaddrinfo.c##
+                error(EAI_NODATA);## 93 ##src/libgai/getaddrinfo.c##
+            default:## 94 ##src/libgai/getaddrinfo.c##
+                error(EAI_NONAME);## 95 ##src/libgai/getaddrinfo.c##
+            }## 96 ##src/libgai/getaddrinfo.c##
+        }## 97 ##src/libgai/getaddrinfo.c##
+
+        /* 4check for address family mismatch if one specified */## 98 ##src/libgai/getaddrinfo.c##
+        if (hints.ai_family != AF_UNSPEC## 99 ##src/libgai/getaddrinfo.c##
+            && hints.ai_family != hptr->h_addrtype)##100 ##src/libgai/getaddrinfo.c##
+            error(EAI_ADDRFAMILY);##101 ##src/libgai/getaddrinfo.c##
+
+        /* 4save canonical name first time */##102 ##src/libgai/getaddrinfo.c##
+        if (hostname != NULL && hostname[0] != '\0' &&##103 ##src/libgai/getaddrinfo.c##
+            (hints.ai_flags & AI_CANONNAME) && canon == NULL) {##104 ##src/libgai/getaddrinfo.c##
+            if ((canon = strdup(hptr->h_name)) == NULL)##105 ##src/libgai/getaddrinfo.c##
+                error(EAI_MEMORY);##106 ##src/libgai/getaddrinfo.c##
+        }##107 ##src/libgai/getaddrinfo.c##
+
+        /* 4create one addrinfo{} for each returned address */##108 ##src/libgai/getaddrinfo.c##
+        for (ap = hptr->h_addr_list; *ap != NULL; ap++) {##109 ##src/libgai/getaddrinfo.c##
+            rc = ga_aistruct(&aipnext, &hints, *ap, hptr->h_addrtype);##110 ##src/libgai/getaddrinfo.c##
+            if (rc != 0)##111 ##src/libgai/getaddrinfo.c##
+                error(rc);##112 ##src/libgai/getaddrinfo.c##
+        }##113 ##src/libgai/getaddrinfo.c##
+    }##114 ##src/libgai/getaddrinfo.c##
+    if (aihead == NULL)##115 ##src/libgai/getaddrinfo.c##
+        error(EAI_NONAME);      /* nothing found */##116 ##src/libgai/getaddrinfo.c##
+/* end ga4 */
+
+/* include ga5 */
+    /* 4return canonical name */##117 ##src/libgai/getaddrinfo.c##
+    if (hostname != NULL && hostname[0] != '\0' &&##118 ##src/libgai/getaddrinfo.c##
+        hints.ai_flags & AI_CANONNAME) {##119 ##src/libgai/getaddrinfo.c##
+        if (canon != NULL)##120 ##src/libgai/getaddrinfo.c##
+            aihead->ai_canonname = canon;   /* strdup'ed earlier */##121 ##src/libgai/getaddrinfo.c##
+        else {##122 ##src/libgai/getaddrinfo.c##
+            if ((aihead->ai_canonname = strdup(search[0].host)) == NULL)##123 ##src/libgai/getaddrinfo.c##
+                error(EAI_MEMORY);##124 ##src/libgai/getaddrinfo.c##
+        }##125 ##src/libgai/getaddrinfo.c##
+    }##126 ##src/libgai/getaddrinfo.c##
+
+    /* 4now process the service name */##127 ##src/libgai/getaddrinfo.c##
+    if (servname != NULL && servname[0] != '\0') {##128 ##src/libgai/getaddrinfo.c##
+        if ((rc = ga_serv(aihead, &hints, servname)) != 0)##129 ##src/libgai/getaddrinfo.c##
+            error(rc);##130 ##src/libgai/getaddrinfo.c##
+    }##131 ##src/libgai/getaddrinfo.c##
+
+    *result = aihead;           /* pointer to first structure in linked list */##132 ##src/libgai/getaddrinfo.c##
+    return (0);##133 ##src/libgai/getaddrinfo.c##
+
+  bad:##134 ##src/libgai/getaddrinfo.c##
+    freeaddrinfo(aihead);       /* free any alloc'ed memory */##135 ##src/libgai/getaddrinfo.c##
+    return (error);##136 ##src/libgai/getaddrinfo.c##
+}##137 ##src/libgai/getaddrinfo.c##
+/* end ga5 */

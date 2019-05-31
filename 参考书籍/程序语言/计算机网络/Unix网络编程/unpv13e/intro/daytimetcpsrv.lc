@@ -1,0 +1,32 @@
+#include    "unp.h"##  1 ##src/intro/daytimetcpsrv.c##
+#include    <time.h>##  2 ##src/intro/daytimetcpsrv.c##
+
+int##  3 ##src/intro/daytimetcpsrv.c##
+main(int argc, char **argv)##  4 ##src/intro/daytimetcpsrv.c##
+{##  5 ##src/intro/daytimetcpsrv.c##
+    int     listenfd, connfd;##  6 ##src/intro/daytimetcpsrv.c##
+    struct sockaddr_in servaddr;##  7 ##src/intro/daytimetcpsrv.c##
+    char    buff[MAXLINE];##  8 ##src/intro/daytimetcpsrv.c##
+    time_t  ticks;##  9 ##src/intro/daytimetcpsrv.c##
+
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);## 10 ##src/intro/daytimetcpsrv.c##
+
+    bzero(&servaddr, sizeof(servaddr));## 11 ##src/intro/daytimetcpsrv.c##
+    servaddr.sin_family = AF_INET;## 12 ##src/intro/daytimetcpsrv.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 13 ##src/intro/daytimetcpsrv.c##
+    servaddr.sin_port = htons(13);  /* daytime server */## 14 ##src/intro/daytimetcpsrv.c##
+
+    Bind(listenfd, (SA *) &servaddr, sizeof(servaddr));## 15 ##src/intro/daytimetcpsrv.c##
+
+    Listen(listenfd, LISTENQ);## 16 ##src/intro/daytimetcpsrv.c##
+
+    for (;;) {## 17 ##src/intro/daytimetcpsrv.c##
+        connfd = Accept(listenfd, (SA *) NULL, NULL);## 18 ##src/intro/daytimetcpsrv.c##
+
+        ticks = time(NULL);## 19 ##src/intro/daytimetcpsrv.c##
+        snprintf(buff, sizeof(buff), "%.24s\r\n", ctime(&ticks));## 20 ##src/intro/daytimetcpsrv.c##
+        Write(connfd, buff, strlen(buff));## 21 ##src/intro/daytimetcpsrv.c##
+
+        Close(connfd);## 22 ##src/intro/daytimetcpsrv.c##
+    }## 23 ##src/intro/daytimetcpsrv.c##
+}## 24 ##src/intro/daytimetcpsrv.c##

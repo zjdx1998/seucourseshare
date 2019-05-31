@@ -1,0 +1,91 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/ga_nsearch.c##
+
+/*##  2 ##src/libgai/ga_nsearch.c##
+ * Set up the search[] array with the hostnames and address families##  3 ##src/libgai/ga_nsearch.c##
+ * that we are to look up.##  4 ##src/libgai/ga_nsearch.c##
+ */##  5 ##src/libgai/ga_nsearch.c##
+
+/* include ga_nsearch1 */
+int##  6 ##src/libgai/ga_nsearch.c##
+ga_nsearch(const char *hostname, const struct addrinfo *hintsp,##  7 ##src/libgai/ga_nsearch.c##
+           struct search *search)##  8 ##src/libgai/ga_nsearch.c##
+{##  9 ##src/libgai/ga_nsearch.c##
+    int     nsearch = 0;## 10 ##src/libgai/ga_nsearch.c##
+
+    if (hostname == NULL || hostname[0] == '\0') {## 11 ##src/libgai/ga_nsearch.c##
+        if (hintsp->ai_flags & AI_PASSIVE) {## 12 ##src/libgai/ga_nsearch.c##
+            /* 4no hostname and AI_PASSIVE: implies wildcard bind */## 13 ##src/libgai/ga_nsearch.c##
+            switch (hintsp->ai_family) {## 14 ##src/libgai/ga_nsearch.c##
+            case AF_INET:## 15 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "0.0.0.0";## 16 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET;## 17 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 18 ##src/libgai/ga_nsearch.c##
+                break;## 19 ##src/libgai/ga_nsearch.c##
+            case AF_INET6:## 20 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "0::0";## 21 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET6;## 22 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 23 ##src/libgai/ga_nsearch.c##
+                break;## 24 ##src/libgai/ga_nsearch.c##
+            case AF_UNSPEC:## 25 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "0::0";  /* IPv6 first, then IPv4 */## 26 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET6;## 27 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 28 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "0.0.0.0";## 29 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET;## 30 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 31 ##src/libgai/ga_nsearch.c##
+                break;## 32 ##src/libgai/ga_nsearch.c##
+            }## 33 ##src/libgai/ga_nsearch.c##
+/* end ga_nsearch1 */
+/* include ga_nsearch2 */
+        } else {## 34 ##src/libgai/ga_nsearch.c##
+            /* 4no host and not AI_PASSIVE: connect to local host */## 35 ##src/libgai/ga_nsearch.c##
+            switch (hintsp->ai_family) {## 36 ##src/libgai/ga_nsearch.c##
+            case AF_INET:## 37 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "localhost"; /* 127.0.0.1 */## 38 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET;## 39 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 40 ##src/libgai/ga_nsearch.c##
+                break;## 41 ##src/libgai/ga_nsearch.c##
+            case AF_INET6:## 42 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "0::1";## 43 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET6;## 44 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 45 ##src/libgai/ga_nsearch.c##
+                break;## 46 ##src/libgai/ga_nsearch.c##
+            case AF_UNSPEC:## 47 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "0::1";  /* IPv6 first, then IPv4 */## 48 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET6;## 49 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 50 ##src/libgai/ga_nsearch.c##
+                search[nsearch].host = "localhost";## 51 ##src/libgai/ga_nsearch.c##
+                search[nsearch].family = AF_INET;## 52 ##src/libgai/ga_nsearch.c##
+                nsearch++;## 53 ##src/libgai/ga_nsearch.c##
+                break;## 54 ##src/libgai/ga_nsearch.c##
+            }## 55 ##src/libgai/ga_nsearch.c##
+        }## 56 ##src/libgai/ga_nsearch.c##
+/* end ga_nsearch2 */
+/* include ga_nsearch3 */
+    } else {                    /* host is specified */## 57 ##src/libgai/ga_nsearch.c##
+        switch (hintsp->ai_family) {## 58 ##src/libgai/ga_nsearch.c##
+        case AF_INET:## 59 ##src/libgai/ga_nsearch.c##
+            search[nsearch].host = hostname;## 60 ##src/libgai/ga_nsearch.c##
+            search[nsearch].family = AF_INET;## 61 ##src/libgai/ga_nsearch.c##
+            nsearch++;## 62 ##src/libgai/ga_nsearch.c##
+            break;## 63 ##src/libgai/ga_nsearch.c##
+        case AF_INET6:## 64 ##src/libgai/ga_nsearch.c##
+            search[nsearch].host = hostname;## 65 ##src/libgai/ga_nsearch.c##
+            search[nsearch].family = AF_INET6;## 66 ##src/libgai/ga_nsearch.c##
+            nsearch++;## 67 ##src/libgai/ga_nsearch.c##
+            break;## 68 ##src/libgai/ga_nsearch.c##
+        case AF_UNSPEC:## 69 ##src/libgai/ga_nsearch.c##
+            search[nsearch].host = hostname;## 70 ##src/libgai/ga_nsearch.c##
+            search[nsearch].family = AF_INET6;  /* IPv6 first */## 71 ##src/libgai/ga_nsearch.c##
+            nsearch++;## 72 ##src/libgai/ga_nsearch.c##
+            search[nsearch].host = hostname;## 73 ##src/libgai/ga_nsearch.c##
+            search[nsearch].family = AF_INET;   /* then IPv4 */## 74 ##src/libgai/ga_nsearch.c##
+            nsearch++;## 75 ##src/libgai/ga_nsearch.c##
+            break;## 76 ##src/libgai/ga_nsearch.c##
+        }## 77 ##src/libgai/ga_nsearch.c##
+    }## 78 ##src/libgai/ga_nsearch.c##
+    if (nsearch < 1 || nsearch > 2)## 79 ##src/libgai/ga_nsearch.c##
+        err_quit("nsearch = %d", nsearch);## 80 ##src/libgai/ga_nsearch.c##
+    return (nsearch);## 81 ##src/libgai/ga_nsearch.c##
+}## 82 ##src/libgai/ga_nsearch.c##
+/* end ga_nsearch3 */

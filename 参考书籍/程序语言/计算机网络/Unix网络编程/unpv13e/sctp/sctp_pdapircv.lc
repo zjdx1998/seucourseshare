@@ -1,0 +1,49 @@
+
+static uint8_t *sctp_pdapi_readbuf = NULL;##  1 ##src/sctp/sctp_pdapircv.c##
+static int sctp_pdapi_rdbuf_sz = 0;##  2 ##src/sctp/sctp_pdapircv.c##
+
+uint8_t *##  3 ##src/sctp/sctp_pdapircv.c##
+pdapi_recvmsg(int sock_fd,##  4 ##src/sctp/sctp_pdapircv.c##
+              int *rdlen,##  5 ##src/sctp/sctp_pdapircv.c##
+              SA *from,##  6 ##src/sctp/sctp_pdapircv.c##
+              int *from_len, struct sctp_sndrcvinfo *sri, int *msg_flags)##  7 ##src/sctp/sctp_pdapircv.c##
+{##  8 ##src/sctp/sctp_pdapircv.c##
+    int     rdsz, left, at_in_buf;##  9 ##src/sctp/sctp_pdapircv.c##
+    int     frmlen = 0;## 10 ##src/sctp/sctp_pdapircv.c##
+
+    if (sctp_pdapi_readbuf == NULL) {## 11 ##src/sctp/sctp_pdapircv.c##
+        sctp_pdapi_readbuf = (uint8_t *) Malloc(SCTP_PDAPI_INCR_SZ);## 12 ##src/sctp/sctp_pdapircv.c##
+        sctp_pdapi_rdbuf_sz = SCTP_PDAPI_INCR_SZ;## 13 ##src/sctp/sctp_pdapircv.c##
+    }## 14 ##src/sctp/sctp_pdapircv.c##
+    at_in_buf =## 15 ##src/sctp/sctp_pdapircv.c##
+        Sctp_recvmsg(sock_fd, sctp_pdapi_readbuf, sctp_pdapi_rdbuf_sz, from,## 16 ##src/sctp/sctp_pdapircv.c##
+                     from_len, sri, msg_flags);## 17 ##src/sctp/sctp_pdapircv.c##
+    if (at_in_buf < 1) {## 18 ##src/sctp/sctp_pdapircv.c##
+        *rdlen = at_in_buf;## 19 ##src/sctp/sctp_pdapircv.c##
+        return (NULL);## 20 ##src/sctp/sctp_pdapircv.c##
+    }## 21 ##src/sctp/sctp_pdapircv.c##
+    while ((*msg_flags & MSG_EOR) == 0) {## 22 ##src/sctp/sctp_pdapircv.c##
+        left = sctp_pdapi_rdbuf_sz - at_in_buf;## 23 ##src/sctp/sctp_pdapircv.c##
+        if (left < SCTP_PDAPI_NEED_MORE_THRESHOLD) {## 24 ##src/sctp/sctp_pdapircv.c##
+            uint8_t *more;## 25 ##src/sctp/sctp_pdapircv.c##
+            more =## 26 ##src/sctp/sctp_pdapircv.c##
+                (uint8_t *) malloc(sctp_pdapi_rdbuf_sz + SCTP_PDAPI_INCR_SZ);## 27 ##src/sctp/sctp_pdapircv.c##
+            if (more == NULL) {## 28 ##src/sctp/sctp_pdapircv.c##
+                printf("Warning:memory exhausted - partial message loss\n");## 29 ##src/sctp/sctp_pdapircv.c##
+                left = sctp_pdapi_rdbuf_sz;## 30 ##src/sctp/sctp_pdapircv.c##
+                at_in_buf = 0;## 31 ##src/sctp/sctp_pdapircv.c##
+            } else {## 32 ##src/sctp/sctp_pdapircv.c##
+                memcpy(more, sctp_pdapi_readbuf, at_in_buf);## 33 ##src/sctp/sctp_pdapircv.c##
+                free(sctp_pdapi_readbuf);## 34 ##src/sctp/sctp_pdapircv.c##
+                sctp_pdapi_readbuf = more;## 35 ##src/sctp/sctp_pdapircv.c##
+                sctp_pdapi_rdbuf_sz += SCTP_PDAPI_INCR_SZ;## 36 ##src/sctp/sctp_pdapircv.c##
+                left = sctp_pdapi_rdbuf_sz - at_in_buf;## 37 ##src/sctp/sctp_pdapircv.c##
+            }## 38 ##src/sctp/sctp_pdapircv.c##
+        }## 39 ##src/sctp/sctp_pdapircv.c##
+        rdsz = Sctp_recvmsg(sock_fd, &sctp_pdapi_readbuf[at_in_buf],## 40 ##src/sctp/sctp_pdapircv.c##
+                            left, NULL, &frmlen, NULL, msg_flags);## 41 ##src/sctp/sctp_pdapircv.c##
+        at_in_buf += rdsz;## 42 ##src/sctp/sctp_pdapircv.c##
+    }## 43 ##src/sctp/sctp_pdapircv.c##
+    *rdlen = at_in_buf;## 44 ##src/sctp/sctp_pdapircv.c##
+    return (sctp_pdapi_readbuf);## 45 ##src/sctp/sctp_pdapircv.c##
+}## 46 ##src/sctp/sctp_pdapircv.c##

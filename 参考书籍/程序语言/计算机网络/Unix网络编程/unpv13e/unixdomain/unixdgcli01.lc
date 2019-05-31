@@ -1,0 +1,24 @@
+#include    "unp.h"##  1 ##src/unixdomain/unixdgcli01.c##
+
+int##  2 ##src/unixdomain/unixdgcli01.c##
+main(int argc, char **argv)##  3 ##src/unixdomain/unixdgcli01.c##
+{##  4 ##src/unixdomain/unixdgcli01.c##
+    int     sockfd;##  5 ##src/unixdomain/unixdgcli01.c##
+    struct sockaddr_un cliaddr, servaddr;##  6 ##src/unixdomain/unixdgcli01.c##
+
+    sockfd = Socket(AF_LOCAL, SOCK_DGRAM, 0);##  7 ##src/unixdomain/unixdgcli01.c##
+
+    bzero(&cliaddr, sizeof(cliaddr));   /* bind an address for us */##  8 ##src/unixdomain/unixdgcli01.c##
+    cliaddr.sun_family = AF_LOCAL;##  9 ##src/unixdomain/unixdgcli01.c##
+    strcpy(cliaddr.sun_path, tmpnam(NULL));## 10 ##src/unixdomain/unixdgcli01.c##
+
+    Bind(sockfd, (SA *) &cliaddr, sizeof(cliaddr));## 11 ##src/unixdomain/unixdgcli01.c##
+
+    bzero(&servaddr, sizeof(servaddr)); /* fill in server's address */## 12 ##src/unixdomain/unixdgcli01.c##
+    servaddr.sun_family = AF_LOCAL;## 13 ##src/unixdomain/unixdgcli01.c##
+    strcpy(servaddr.sun_path, UNIXDG_PATH);## 14 ##src/unixdomain/unixdgcli01.c##
+
+    dg_cli(stdin, sockfd, (SA *) &servaddr, sizeof(servaddr));## 15 ##src/unixdomain/unixdgcli01.c##
+
+    exit(0);## 16 ##src/unixdomain/unixdgcli01.c##
+}## 17 ##src/unixdomain/unixdgcli01.c##

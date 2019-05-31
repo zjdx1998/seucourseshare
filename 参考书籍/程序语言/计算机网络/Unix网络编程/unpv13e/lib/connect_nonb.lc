@@ -1,0 +1,53 @@
+#include    "unp.h"##  1 ##src/lib/connect_nonb.c##
+
+int##  2 ##src/lib/connect_nonb.c##
+connect_nonb(int sockfd, const SA *saptr, socklen_t salen, int nsec)##  3 ##src/lib/connect_nonb.c##
+{##  4 ##src/lib/connect_nonb.c##
+    int     flags, n, error;##  5 ##src/lib/connect_nonb.c##
+    socklen_t len;##  6 ##src/lib/connect_nonb.c##
+    fd_set  rset, wset;##  7 ##src/lib/connect_nonb.c##
+    struct timeval tval;##  8 ##src/lib/connect_nonb.c##
+
+    flags = Fcntl(sockfd, F_GETFL, 0);##  9 ##src/lib/connect_nonb.c##
+    Fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);## 10 ##src/lib/connect_nonb.c##
+
+    error = 0;## 11 ##src/lib/connect_nonb.c##
+    if ((n = connect(sockfd, saptr, salen)) < 0)## 12 ##src/lib/connect_nonb.c##
+        if (errno != EINPROGRESS)## 13 ##src/lib/connect_nonb.c##
+            return (-1);## 14 ##src/lib/connect_nonb.c##
+
+    /* Do whatever we want while the connect is taking place. */## 15 ##src/lib/connect_nonb.c##
+
+    if (n == 0)## 16 ##src/lib/connect_nonb.c##
+        goto done;              /* connect completed immediately */## 17 ##src/lib/connect_nonb.c##
+
+    FD_ZERO(&rset);## 18 ##src/lib/connect_nonb.c##
+    FD_SET(sockfd, &rset);## 19 ##src/lib/connect_nonb.c##
+    wset = rset;## 20 ##src/lib/connect_nonb.c##
+    tval.tv_sec = nsec;## 21 ##src/lib/connect_nonb.c##
+    tval.tv_usec = 0;## 22 ##src/lib/connect_nonb.c##
+
+    if ((n = Select(sockfd + 1, &rset, &wset, NULL,## 23 ##src/lib/connect_nonb.c##
+                    nsec ? &tval : NULL)) == 0) {## 24 ##src/lib/connect_nonb.c##
+        close(sockfd);          /* timeout */## 25 ##src/lib/connect_nonb.c##
+        errno = ETIMEDOUT;## 26 ##src/lib/connect_nonb.c##
+        return (-1);## 27 ##src/lib/connect_nonb.c##
+    }## 28 ##src/lib/connect_nonb.c##
+
+    if (FD_ISSET(sockfd, &rset) || FD_ISSET(sockfd, &wset)) {## 29 ##src/lib/connect_nonb.c##
+        len = sizeof(error);## 30 ##src/lib/connect_nonb.c##
+        if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len) < 0)## 31 ##src/lib/connect_nonb.c##
+            return (-1);        /* Solaris pending error */## 32 ##src/lib/connect_nonb.c##
+    } else## 33 ##src/lib/connect_nonb.c##
+        err_quit("select error: sockfd not set");## 34 ##src/lib/connect_nonb.c##
+
+  done:## 35 ##src/lib/connect_nonb.c##
+    Fcntl(sockfd, F_SETFL, flags);  /* restore file status flags */## 36 ##src/lib/connect_nonb.c##
+
+    if (error) {## 37 ##src/lib/connect_nonb.c##
+        close(sockfd);          /* just in case */## 38 ##src/lib/connect_nonb.c##
+        errno = error;## 39 ##src/lib/connect_nonb.c##
+        return (-1);## 40 ##src/lib/connect_nonb.c##
+    }## 41 ##src/lib/connect_nonb.c##
+    return (0);## 42 ##src/lib/connect_nonb.c##
+}## 43 ##src/lib/connect_nonb.c##

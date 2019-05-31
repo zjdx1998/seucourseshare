@@ -1,0 +1,16 @@
+#include    "unpxti.h"##  1 ##src/debug/test01.c##
+
+int##  2 ##src/debug/test01.c##
+main(int argc, char **argv)##  3 ##src/debug/test01.c##
+{##  4 ##src/debug/test01.c##
+    int     tfd;##  5 ##src/debug/test01.c##
+
+    if (argc != 3)##  6 ##src/debug/test01.c##
+        err_quit("usage: test01 <hostname/IPaddress> <service/port#>");##  7 ##src/debug/test01.c##
+
+    tfd = Tcp_connect(argv[1], argv[2]);##  8 ##src/debug/test01.c##
+
+    t_snd(tfd, "", 1, T_EXPEDITED);##  9 ##src/debug/test01.c##
+
+    exit(0);## 10 ##src/debug/test01.c##
+}## 11 ##src/debug/test01.c##

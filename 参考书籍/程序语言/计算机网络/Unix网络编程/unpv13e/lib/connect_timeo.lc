@@ -1,0 +1,39 @@
+/* include connect_timeo */
+#include    "unp.h"##  1 ##src/lib/connect_timeo.c##
+
+static void connect_alarm(int);##  2 ##src/lib/connect_timeo.c##
+
+int##  3 ##src/lib/connect_timeo.c##
+connect_timeo(int sockfd, const SA *saptr, socklen_t salen, int nsec)##  4 ##src/lib/connect_timeo.c##
+{##  5 ##src/lib/connect_timeo.c##
+    Sigfunc *sigfunc;##  6 ##src/lib/connect_timeo.c##
+    int     n;##  7 ##src/lib/connect_timeo.c##
+
+    sigfunc = Signal(SIGALRM, connect_alarm);##  8 ##src/lib/connect_timeo.c##
+    if (alarm(nsec) != 0)##  9 ##src/lib/connect_timeo.c##
+        err_msg("connect_timeo: alarm was already set");## 10 ##src/lib/connect_timeo.c##
+
+    if ((n = connect(sockfd, saptr, salen)) < 0) {## 11 ##src/lib/connect_timeo.c##
+        close(sockfd);## 12 ##src/lib/connect_timeo.c##
+        if (errno == EINTR)## 13 ##src/lib/connect_timeo.c##
+            errno = ETIMEDOUT;## 14 ##src/lib/connect_timeo.c##
+    }## 15 ##src/lib/connect_timeo.c##
+    alarm(0);                   /* turn off the alarm */## 16 ##src/lib/connect_timeo.c##
+    Signal(SIGALRM, sigfunc);   /* restore previous signal handler */## 17 ##src/lib/connect_timeo.c##
+
+    return (n);## 18 ##src/lib/connect_timeo.c##
+}## 19 ##src/lib/connect_timeo.c##
+
+static void## 20 ##src/lib/connect_timeo.c##
+connect_alarm(int signo)## 21 ##src/lib/connect_timeo.c##
+{## 22 ##src/lib/connect_timeo.c##
+    return;                     /* just interrupt the connect() */## 23 ##src/lib/connect_timeo.c##
+}## 24 ##src/lib/connect_timeo.c##
+/* end connect_timeo */
+
+void## 25 ##src/lib/connect_timeo.c##
+Connect_timeo(int fd, const SA *sa, socklen_t salen, int sec)## 26 ##src/lib/connect_timeo.c##
+{## 27 ##src/lib/connect_timeo.c##
+    if (connect_timeo(fd, sa, salen, sec) < 0)## 28 ##src/lib/connect_timeo.c##
+        err_sys("connect_timeo error");## 29 ##src/lib/connect_timeo.c##
+}## 30 ##src/lib/connect_timeo.c##

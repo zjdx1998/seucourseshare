@@ -1,0 +1,79 @@
+#include    "udpcksum.h"##  1 ##src/udpcksum/senddnsquery-libnet.c##
+#include    <libnet.h>##  2 ##src/udpcksum/senddnsquery-libnet.c##
+
+/*##  3 ##src/udpcksum/senddnsquery-libnet.c##
+ * Build a DNS A query for "a.root-servers.net" and write it to##  4 ##src/udpcksum/senddnsquery-libnet.c##
+ * the raw socket.##  5 ##src/udpcksum/senddnsquery-libnet.c##
+ */##  6 ##src/udpcksum/senddnsquery-libnet.c##
+
+/* include open_output_libnet */
+static libnet_t *l;             /* libnet descriptor */##  7 ##src/udpcksum/senddnsquery-libnet.c##
+
+void##  8 ##src/udpcksum/senddnsquery-libnet.c##
+open_output(void)##  9 ##src/udpcksum/senddnsquery-libnet.c##
+{## 10 ##src/udpcksum/senddnsquery-libnet.c##
+    char    errbuf[LIBNET_ERRBUF_SIZE];## 11 ##src/udpcksum/senddnsquery-libnet.c##
+
+    /* Initialize libnet, with an IPv4 raw socket. */## 12 ##src/udpcksum/senddnsquery-libnet.c##
+    l = libnet_init(LIBNET_RAW4, NULL, errbuf);## 13 ##src/udpcksum/senddnsquery-libnet.c##
+    if (l == NULL) {## 14 ##src/udpcksum/senddnsquery-libnet.c##
+        err_quit("Can't initialize libnet: %s", errbuf);## 15 ##src/udpcksum/senddnsquery-libnet.c##
+    }## 16 ##src/udpcksum/senddnsquery-libnet.c##
+}## 17 ##src/udpcksum/senddnsquery-libnet.c##
+/* end open_output_libnet */
+
+/* include send_dns_query_libnet */
+void## 18 ##src/udpcksum/senddnsquery-libnet.c##
+send_dns_query(void)## 19 ##src/udpcksum/senddnsquery-libnet.c##
+{## 20 ##src/udpcksum/senddnsquery-libnet.c##
+    char    qbuf[24], *ptr;## 21 ##src/udpcksum/senddnsquery-libnet.c##
+    u_int16_t one;## 22 ##src/udpcksum/senddnsquery-libnet.c##
+    int     packet_size = LIBNET_UDP_H + LIBNET_DNSV4_H + 24;## 23 ##src/udpcksum/senddnsquery-libnet.c##
+    static libnet_ptag_t ip_tag, udp_tag, dns_tag;## 24 ##src/udpcksum/senddnsquery-libnet.c##
+
+    /* Build the query portion of the DNS packet. */## 25 ##src/udpcksum/senddnsquery-libnet.c##
+    ptr = qbuf;## 26 ##src/udpcksum/senddnsquery-libnet.c##
+    memcpy(ptr, "\001a\014root-servers\003net\000", 20);## 27 ##src/udpcksum/senddnsquery-libnet.c##
+    ptr += 20;## 28 ##src/udpcksum/senddnsquery-libnet.c##
+    one = htons(1);## 29 ##src/udpcksum/senddnsquery-libnet.c##
+    memcpy(ptr, &one, 2);       /* query type = A */## 30 ##src/udpcksum/senddnsquery-libnet.c##
+    ptr += 2;## 31 ##src/udpcksum/senddnsquery-libnet.c##
+    memcpy(ptr, &one, 2);       /* query class = 1 (IP addr) */## 32 ##src/udpcksum/senddnsquery-libnet.c##
+
+    /* Build the DNS packet. */## 33 ##src/udpcksum/senddnsquery-libnet.c##
+    dns_tag = libnet_build_dnsv4(1234 /* identification */ ,## 34 ##src/udpcksum/senddnsquery-libnet.c##
+                                 0x0100 /* flags: recursion desired */ ,## 35 ##src/udpcksum/senddnsquery-libnet.c##
+                                 1 /* #questions */ , 0 /* #answer RRs */ ,## 36 ##src/udpcksum/senddnsquery-libnet.c##
+                                 0 /* #authority RRs */ ,## 37 ##src/udpcksum/senddnsquery-libnet.c##
+                                 0 /* #additional RRs */ ,## 38 ##src/udpcksum/senddnsquery-libnet.c##
+                                 qbuf /* query */ ,## 39 ##src/udpcksum/senddnsquery-libnet.c##
+                                 24 /* length of query */ , l, dns_tag);## 40 ##src/udpcksum/senddnsquery-libnet.c##
+    /* Build the UDP header. */## 41 ##src/udpcksum/senddnsquery-libnet.c##
+    udp_tag = libnet_build_udp(((struct sockaddr_in *) local)->## 42 ##src/udpcksum/senddnsquery-libnet.c##
+                               sin_port /* source port */ ,## 43 ##src/udpcksum/senddnsquery-libnet.c##
+                               ((struct sockaddr_in *) dest)->## 44 ##src/udpcksum/senddnsquery-libnet.c##
+                               sin_port /* dest port */ ,## 45 ##src/udpcksum/senddnsquery-libnet.c##
+                               packet_size /* length */ , 0 /* checksum */ ,## 46 ##src/udpcksum/senddnsquery-libnet.c##
+                               NULL /* payload */ , 0 /* payload length */ ,## 47 ##src/udpcksum/senddnsquery-libnet.c##
+                               l, udp_tag);## 48 ##src/udpcksum/senddnsquery-libnet.c##
+    /* Since we specified the checksum as 0, libnet will automatically */## 49 ##src/udpcksum/senddnsquery-libnet.c##
+    /* calculate the udp checksum.  Turn it off if the user doesn't want it */## 50 ##src/udpcksum/senddnsquery-libnet.c##
+    if (zerosum)## 51 ##src/udpcksum/senddnsquery-libnet.c##
+        if (libnet_toggle_checksum(l, udp_tag, LIBNET_OFF) < 0)## 52 ##src/udpcksum/senddnsquery-libnet.c##
+            err_quit("turning off checksums: %s\n", libnet_geterror(l));## 53 ##src/udpcksum/senddnsquery-libnet.c##
+    /* Build the IP header. */## 54 ##src/udpcksum/senddnsquery-libnet.c##
+    ip_tag = libnet_build_ipv4(packet_size + LIBNET_IPV4_H /* len */,## 55 ##src/udpcksum/senddnsquery-libnet.c##
+            0 /* tos */, 0 /* IP ID */, 0 /* fragment */,## 56 ##src/udpcksum/senddnsquery-libnet.c##
+            TTL_OUT /* ttl */, IPPROTO_UDP /* protocol */,## 57 ##src/udpcksum/senddnsquery-libnet.c##
+            0 /* checksum */,## 58 ##src/udpcksum/senddnsquery-libnet.c##
+            ((struct sockaddr_in *) local)->sin_addr.s_addr /* source */,## 59 ##src/udpcksum/senddnsquery-libnet.c##
+            ((struct sockaddr_in *) dest)->sin_addr.s_addr /* dest */,## 60 ##src/udpcksum/senddnsquery-libnet.c##
+            NULL /* payload */, 0 /* payload length */, l, ip_tag);## 61 ##src/udpcksum/senddnsquery-libnet.c##
+
+    if (libnet_write(l) < 0) {## 62 ##src/udpcksum/senddnsquery-libnet.c##
+        err_quit("libnet_write: %s\n", libnet_geterror(l));## 63 ##src/udpcksum/senddnsquery-libnet.c##
+    }## 64 ##src/udpcksum/senddnsquery-libnet.c##
+    if (verbose)## 65 ##src/udpcksum/senddnsquery-libnet.c##
+        printf("sent: %d bytes of data\n", packet_size);## 66 ##src/udpcksum/senddnsquery-libnet.c##
+}## 67 ##src/udpcksum/senddnsquery-libnet.c##
+/* end send_dns_query_libnet */

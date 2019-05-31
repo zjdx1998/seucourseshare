@@ -1,0 +1,36 @@
+#include    "unp.h"##  1 ##src/names/hostent.c##
+
+int##  2 ##src/names/hostent.c##
+main(int argc, char **argv)##  3 ##src/names/hostent.c##
+{##  4 ##src/names/hostent.c##
+    char   *ptr, **pptr;##  5 ##src/names/hostent.c##
+    char    str[INET_ADDRSTRLEN];##  6 ##src/names/hostent.c##
+    struct hostent *hptr;##  7 ##src/names/hostent.c##
+
+    while (--argc > 0) {##  8 ##src/names/hostent.c##
+        ptr = *++argv;##  9 ##src/names/hostent.c##
+        if ((hptr = gethostbyname(ptr)) == NULL) {## 10 ##src/names/hostent.c##
+            err_msg("gethostbyname error for host: %s: %s",## 11 ##src/names/hostent.c##
+                    ptr, hstrerror(h_errno));## 12 ##src/names/hostent.c##
+            continue;## 13 ##src/names/hostent.c##
+        }## 14 ##src/names/hostent.c##
+        printf("official hostname: %s\n", hptr->h_name);## 15 ##src/names/hostent.c##
+
+        for (pptr = hptr->h_aliases; *pptr != NULL; pptr++)## 16 ##src/names/hostent.c##
+            printf("\talias: %s\n", *pptr);## 17 ##src/names/hostent.c##
+
+        switch (hptr->h_addrtype) {## 18 ##src/names/hostent.c##
+        case AF_INET:## 19 ##src/names/hostent.c##
+            pptr = hptr->h_addr_list;## 20 ##src/names/hostent.c##
+            for (; *pptr != NULL; pptr++)## 21 ##src/names/hostent.c##
+                printf("\taddress: %s\n",## 22 ##src/names/hostent.c##
+                       Inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));## 23 ##src/names/hostent.c##
+            break;## 24 ##src/names/hostent.c##
+
+        default:## 25 ##src/names/hostent.c##
+            err_ret("unknown address type");## 26 ##src/names/hostent.c##
+            break;## 27 ##src/names/hostent.c##
+        }## 28 ##src/names/hostent.c##
+    }## 29 ##src/names/hostent.c##
+    exit(0);## 30 ##src/names/hostent.c##
+}## 31 ##src/names/hostent.c##

@@ -1,0 +1,52 @@
+/* include serv02 */
+#include    "unp.h"##  1 ##src/server/serv02.c##
+
+static int nchildren;##  2 ##src/server/serv02.c##
+static pid_t *pids;##  3 ##src/server/serv02.c##
+
+int##  4 ##src/server/serv02.c##
+main(int argc, char **argv)##  5 ##src/server/serv02.c##
+{##  6 ##src/server/serv02.c##
+    int     listenfd, i;##  7 ##src/server/serv02.c##
+    socklen_t addrlen;##  8 ##src/server/serv02.c##
+    void    sig_int(int);##  9 ##src/server/serv02.c##
+    pid_t   child_make(int, int, int);## 10 ##src/server/serv02.c##
+
+    if (argc == 3)## 11 ##src/server/serv02.c##
+        listenfd = Tcp_listen(NULL, argv[1], &addrlen);## 12 ##src/server/serv02.c##
+    else if (argc == 4)## 13 ##src/server/serv02.c##
+        listenfd = Tcp_listen(argv[1], argv[2], &addrlen);## 14 ##src/server/serv02.c##
+    else## 15 ##src/server/serv02.c##
+        err_quit("usage: serv02 [ <host> ] <port#> <#children>");## 16 ##src/server/serv02.c##
+    nchildren = atoi(argv[argc - 1]);## 17 ##src/server/serv02.c##
+    pids = Calloc(nchildren, sizeof(pid_t));## 18 ##src/server/serv02.c##
+
+    for (i = 0; i < nchildren; i++)## 19 ##src/server/serv02.c##
+        pids[i] = child_make(i, listenfd, addrlen); /* parent returns */## 20 ##src/server/serv02.c##
+
+    Signal(SIGINT, sig_int);## 21 ##src/server/serv02.c##
+
+    for (;;)## 22 ##src/server/serv02.c##
+        pause();                /* everything done by children */## 23 ##src/server/serv02.c##
+}## 24 ##src/server/serv02.c##
+/* end serv02 */
+
+/* include sigint */
+void## 25 ##src/server/serv02.c##
+sig_int(int signo)## 26 ##src/server/serv02.c##
+{## 27 ##src/server/serv02.c##
+    int     i;## 28 ##src/server/serv02.c##
+    void    pr_cpu_time(void);## 29 ##src/server/serv02.c##
+
+    /* 4terminate all children */## 30 ##src/server/serv02.c##
+    for (i = 0; i < nchildren; i++)## 31 ##src/server/serv02.c##
+        kill(pids[i], SIGTERM);## 32 ##src/server/serv02.c##
+    while (wait(NULL) > 0)      /* wait for all children */## 33 ##src/server/serv02.c##
+        ;## 34 ##src/server/serv02.c##
+    if (errno != ECHILD)## 35 ##src/server/serv02.c##
+        err_sys("wait error");## 36 ##src/server/serv02.c##
+
+    pr_cpu_time();## 37 ##src/server/serv02.c##
+    exit(0);## 38 ##src/server/serv02.c##
+}## 39 ##src/server/serv02.c##
+/* end sigint */

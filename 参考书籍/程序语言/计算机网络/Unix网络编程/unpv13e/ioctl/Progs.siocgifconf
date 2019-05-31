@@ -1,0 +1,93 @@
+	if (ioctl(s, SIOCGIFCONF, (char *) &ifc) < 0)
+./games/hunt/hunt/hunt.c
+	i =  ioctl(sock, SIOCGIFCONF, (char *)&ifc);
+./lib/libc/net/getifaddrs.c
+	if (ioctl(s, SIOCGIFCONF, (char *)&ifc) < 0) {
+./lib/librpc/rpc/get_myaddress.c
+        if (ioctl(sock, SIOCGIFCONF, (char *)&ifc) < 0) {
+./lib/librpc/rpc/pmap_rmt.c
+		ioc.ic_cmd = SIOCGIFCONF;
+		m = ioctl(s, SIOCGIFCONF, (caddr_t) & ifconf);
+			report(LOG_ERR, "ioctl SIOCGIFCONF");
+./libexec/bootpd/bootpd/getif.c
+	if (ioctl(fd, SIOCGIFCONF, (char *) &ifc) < 0 ||
+		report(LOG_ERR, "getether: SIOCGIFCONF: %s", get_errmsg);
+./libexec/bootpd/bootptest/getether.c
+#ifdef OSIOCGIFCONF
+	if (ioctl(fd, OSIOCGIFCONF, (char *)&ifc) < 0 ||
+		(void) strcpy(errbuf, "bpf: ioctl(OSIOCGIFCONF): %m");
+	if (ioctl(fd, SIOCGIFCONF, (char *)&ifc) < 0 ||
+		(void) strcpy(errbuf, "bpf: ioctl(SIOCGIFCONF): %m");
+./libexec/rbootd/bpf.c
+#define	SCO_SIOCGIFCONF		0xc0084911
+	if ((r = ioctl(f, SIOCGIFCONF, &bifc)) == -1) {
+	case SCO_SIOCGIFCONF:
+./sco/emulator/sco_sockops.c
+	case SIOCGIFCONF:
+	case OSIOCGIFCONF:
+			if (cmd == OSIOCGIFCONF) {
+./sys/net/if.c
+	case SIOCGIFCONF_X25:
+./sys/netccitt/pk_usrreq.c
+	if (ioctl(sk, SIOCGIFCONF, (caddr_t) &ifc) < 0)
+./usr.sbin/amd/amd/wire.c
+	if (ioctl(vs, SIOCGIFCONF, (char *)&ifc) < 0) {
+./usr.sbin/named/named/ns_main.c
+	if (ioctl(fd, SIOCGIFCONF, (caddr_t)&ifc) < 0 ||
+		err(FATAL, "init_all: SIOCGIFCONF: %s", strerror(errno));
+	   We must instead get all the interfaces with SIOCGIFCONF
+	if (ioctl(fd, SIOCGIFCONF, (caddr_t)&ifc) < 0 ||
+./usr.sbin/rarpd/rarpd.c
+#ifdef SIOCGIFCONF
+#ifdef SIOCGIFCONF
+	if (ioctl(s, SIOCGIFCONF, (char *)&ifc) < 0)
+./usr.sbin/sendmail/src/conf.c
+	if (ioctl(fd, SIOCGIFCONF, (char *)&ifc) < 0 ||
+		(void)sprintf(errbuf, "SIOCGIFCONF: %s", pcap_strerror(errno));
+./usr.sbin/tcpdump/libpcap/inet.c
+	if (ioctl(sock, SIOCGIFCONF, (char *)&ifc) < 0) {
+./usr.sbin/timed/timed/timed.c
+	ioc.ic_cmd = SIOCGIFCONF;
+	if (ioctl(vs, SIOCGIFCONF, (char *)&ifc) < 0) {
+#ifdef SIOCGIFCONF
+#endif /* SIOCGIFCONF */
+./usr.sbin/xntp/xntpd/ntp_io.c
+#if ((defined(SVR4) && !defined(sun)) || defined(ISC)) && defined(SIOCGIFCONF)
+#define SYSV_SIOCGIFCONF
+#ifdef SYSV_SIOCGIFCONF
+/* Deal with different SIOCGIFCONF ioctl semantics on SYSV, SVR4 */
+    if (cmd == SIOCGIFCONF)
+	/* SIOCGIFCONF is somewhat brain damaged on ISC. The argument
+    if (ret >= 0 && cmd == SIOCGIFCONF)
+#else /* SYSV_SIOCGIFCONF */
+#endif /* SYSV_SIOCGIFCONF */
+#if defined(STREAMSCONN) && !defined(SYSV_SIOCGIFCONF) && !defined(NCR)
+#ifdef SIOCGIFCONF
+    if (ifioctl (fd, SIOCGIFCONF, (char *) &ifc) < 0)
+	 * this is ugly but SIOCGIFCONF returns decnet addresses in
+#else /* SIOCGIFCONF */
+#endif /* SIOCGIFCONF else */
+#endif /* STREAMSCONN && !SYSV_SIOCGIFCONF else */
+./X11/xc/programs/xdm/auth.c
+#if ((defined(SVR4) && !defined(sun) && !defined(NCR)) || defined(ISC)) && defined(SIOCGIFCONF)
+/* Deal with different SIOCGIFCONF ioctl semantics on these OSs */
+    if (cmd == SIOCGIFCONF)
+	/* SIOCGIFCONF is somewhat brain damaged on ISC. The argument
+    if (ret >= 0 && cmd == SIOCGIFCONF)
+#else /* ((SVR4 && !sun && !NCR) || ISC) && SIOCGIFCONF */
+#endif /* ((SVR4 && !sun) || ISC) && SIOCGIFCONF */
+	if (ifioctl (socketFD, (int) SIOCGIFCONF, (char *) &ifc) < 0)
+./X11/xc/programs/xdm/chooser.c
+#if ((defined(SVR4) && !defined(sun) && !defined(NCR)) || defined(ISC)) && defined(SIOCGIFCONF)
+/* Deal with different SIOCGIFCONF ioctl semantics on these OSs */
+    if (cmd == SIOCGIFCONF)
+	/* SIOCGIFCONF is somewhat brain damaged on ISC. The argument
+    if (ret >= 0 && cmd == SIOCGIFCONF)
+#else /* ((SVR4 && !sun) || ISC) && SIOCGIFCONF */
+#endif /* ((SVR4 && !sun) || ISC) && SIOCGIFCONF */
+#if !defined(SIOCGIFCONF) || (defined (hpux) && ! defined (HAS_IFREQ))
+    if (ifioctl (fd, (int) SIOCGIFCONF, (pointer) &ifc) < 0)
+./X11/xc/programs/Xserver/os/access.c
+#if !defined(SIOCGIFCONF) || (defined (hpux) && ! defined (HAS_IFREQ))
+    if (ioctl (fd, (int) SIOCGIFCONF, (pointer) &ifc) < 0)
+./X11/xc/workInProgress/lbx/programs/lbxproxy/os/access.c

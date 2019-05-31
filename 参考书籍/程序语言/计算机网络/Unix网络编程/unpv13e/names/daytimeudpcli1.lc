@@ -1,0 +1,26 @@
+#include    "unp.h"##  1 ##src/names/daytimeudpcli1.c##
+
+int##  2 ##src/names/daytimeudpcli1.c##
+main(int argc, char **argv)##  3 ##src/names/daytimeudpcli1.c##
+{##  4 ##src/names/daytimeudpcli1.c##
+    int     sockfd, n;##  5 ##src/names/daytimeudpcli1.c##
+    char    recvline[MAXLINE + 1];##  6 ##src/names/daytimeudpcli1.c##
+    socklen_t salen;##  7 ##src/names/daytimeudpcli1.c##
+    struct sockaddr *sa;##  8 ##src/names/daytimeudpcli1.c##
+
+    if (argc != 3)##  9 ##src/names/daytimeudpcli1.c##
+        err_quit## 10 ##src/names/daytimeudpcli1.c##
+            ("usage: daytimeudpcli1 <hostname/IPaddress> <service/port#>");## 11 ##src/names/daytimeudpcli1.c##
+
+    sockfd = Udp_client(argv[1], argv[2], (void **) &sa, &salen);## 12 ##src/names/daytimeudpcli1.c##
+
+    printf("sending to %s\n", Sock_ntop_host(sa, salen));## 13 ##src/names/daytimeudpcli1.c##
+
+    Sendto(sockfd, "", 1, 0, sa, salen);    /* send 1-byte datagram */## 14 ##src/names/daytimeudpcli1.c##
+
+    n = Recvfrom(sockfd, recvline, MAXLINE, 0, NULL, NULL);## 15 ##src/names/daytimeudpcli1.c##
+    recvline[n] = '\0';         /* null terminate */## 16 ##src/names/daytimeudpcli1.c##
+    Fputs(recvline, stdout);## 17 ##src/names/daytimeudpcli1.c##
+
+    exit(0);## 18 ##src/names/daytimeudpcli1.c##
+}## 19 ##src/names/daytimeudpcli1.c##

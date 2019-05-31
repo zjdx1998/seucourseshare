@@ -1,0 +1,62 @@
+/* include open_pcap */
+#include    "udpcksum.h"##  1 ##src/udpcksum/pcap.c##
+
+#define CMD     "udp and src host %s and src port %d"##  2 ##src/udpcksum/pcap.c##
+
+void##  3 ##src/udpcksum/pcap.c##
+open_pcap(void)##  4 ##src/udpcksum/pcap.c##
+{##  5 ##src/udpcksum/pcap.c##
+    uint32_t localnet, netmask;##  6 ##src/udpcksum/pcap.c##
+    char    cmd[MAXLINE], errbuf[PCAP_ERRBUF_SIZE],##  7 ##src/udpcksum/pcap.c##
+        str1[INET_ADDRSTRLEN], str2[INET_ADDRSTRLEN];##  8 ##src/udpcksum/pcap.c##
+    struct bpf_program fcode;##  9 ##src/udpcksum/pcap.c##
+
+    if (device == NULL) {## 10 ##src/udpcksum/pcap.c##
+        if ((device = pcap_lookupdev(errbuf)) == NULL)## 11 ##src/udpcksum/pcap.c##
+            err_quit("pcap_lookup: %s", errbuf);## 12 ##src/udpcksum/pcap.c##
+    }## 13 ##src/udpcksum/pcap.c##
+    printf("device = %s\n", device);## 14 ##src/udpcksum/pcap.c##
+
+    /* 4hardcode: promisc=0, to_ms=500 */## 15 ##src/udpcksum/pcap.c##
+    if ((pd = pcap_open_live(device, snaplen, 0, 500, errbuf)) == NULL)## 16 ##src/udpcksum/pcap.c##
+        err_quit("pcap_open_live: %s", errbuf);## 17 ##src/udpcksum/pcap.c##
+
+    if (pcap_lookupnet(device, &localnet, &netmask, errbuf) < 0)## 18 ##src/udpcksum/pcap.c##
+        err_quit("pcap_lookupnet: %s", errbuf);## 19 ##src/udpcksum/pcap.c##
+    if (verbose)## 20 ##src/udpcksum/pcap.c##
+        printf("localnet = %s, netmask = %s\n",## 21 ##src/udpcksum/pcap.c##
+               Inet_ntop(AF_INET, &localnet, str1, sizeof(str1)),## 22 ##src/udpcksum/pcap.c##
+               Inet_ntop(AF_INET, &netmask, str2, sizeof(str2)));## 23 ##src/udpcksum/pcap.c##
+
+    snprintf(cmd, sizeof(cmd), CMD,## 24 ##src/udpcksum/pcap.c##
+             Sock_ntop_host(dest, destlen),## 25 ##src/udpcksum/pcap.c##
+             ntohs(sock_get_port(dest, destlen)));## 26 ##src/udpcksum/pcap.c##
+    if (verbose)## 27 ##src/udpcksum/pcap.c##
+        printf("cmd = %s\n", cmd);## 28 ##src/udpcksum/pcap.c##
+    if (pcap_compile(pd, &fcode, cmd, 0, netmask) < 0)## 29 ##src/udpcksum/pcap.c##
+        err_quit("pcap_compile: %s", pcap_geterr(pd));## 30 ##src/udpcksum/pcap.c##
+
+    if (pcap_setfilter(pd, &fcode) < 0)## 31 ##src/udpcksum/pcap.c##
+        err_quit("pcap_setfilter: %s", pcap_geterr(pd));## 32 ##src/udpcksum/pcap.c##
+
+    if ((datalink = pcap_datalink(pd)) < 0)## 33 ##src/udpcksum/pcap.c##
+        err_quit("pcap_datalink: %s", pcap_geterr(pd));## 34 ##src/udpcksum/pcap.c##
+    if (verbose)## 35 ##src/udpcksum/pcap.c##
+        printf("datalink = %d\n", datalink);## 36 ##src/udpcksum/pcap.c##
+}## 37 ##src/udpcksum/pcap.c##
+/* end open_pcap */
+
+/* include next_pcap */
+char   *## 38 ##src/udpcksum/pcap.c##
+next_pcap(int *len)## 39 ##src/udpcksum/pcap.c##
+{## 40 ##src/udpcksum/pcap.c##
+    char   *ptr;## 41 ##src/udpcksum/pcap.c##
+    struct pcap_pkthdr hdr;## 42 ##src/udpcksum/pcap.c##
+
+    /* 4keep looping until packet ready */## 43 ##src/udpcksum/pcap.c##
+    while ((ptr = (char *) pcap_next(pd, &hdr)) == NULL) ;## 44 ##src/udpcksum/pcap.c##
+
+    *len = hdr.caplen;          /* captured length */## 45 ##src/udpcksum/pcap.c##
+    return (ptr);## 46 ##src/udpcksum/pcap.c##
+}## 47 ##src/udpcksum/pcap.c##
+/* end next_pcap */

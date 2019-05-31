@@ -1,0 +1,81 @@
+#include    "udpcksum.h"##  1 ##src/udpcksum/udpread.c##
+
+struct udpiphdr *udp_check(char *, int);##  2 ##src/udpcksum/udpread.c##
+
+/*##  3 ##src/udpcksum/udpread.c##
+ * Read from the network until a UDP datagram is read that matches##  4 ##src/udpcksum/udpread.c##
+ * the arguments.##  5 ##src/udpcksum/udpread.c##
+ */##  6 ##src/udpcksum/udpread.c##
+
+/* include udp_read */
+struct udpiphdr *##  7 ##src/udpcksum/udpread.c##
+udp_read(void)##  8 ##src/udpcksum/udpread.c##
+{##  9 ##src/udpcksum/udpread.c##
+    int     len;## 10 ##src/udpcksum/udpread.c##
+    char   *ptr;## 11 ##src/udpcksum/udpread.c##
+    struct ether_header *eptr;## 12 ##src/udpcksum/udpread.c##
+
+    for (;;) {## 13 ##src/udpcksum/udpread.c##
+        ptr = next_pcap(&len);## 14 ##src/udpcksum/udpread.c##
+
+        switch (datalink) {## 15 ##src/udpcksum/udpread.c##
+        case DLT_NULL:          /* loopback header = 4 bytes */## 16 ##src/udpcksum/udpread.c##
+            return (udp_check(ptr + 4, len - 4));## 17 ##src/udpcksum/udpread.c##
+
+        case DLT_EN10MB:## 18 ##src/udpcksum/udpread.c##
+            eptr = (struct ether_header *) ptr;## 19 ##src/udpcksum/udpread.c##
+            if (ntohs(eptr->ether_type) != ETHERTYPE_IP)## 20 ##src/udpcksum/udpread.c##
+                err_quit("Ethernet type %x not IP", ntohs(eptr->ether_type));## 21 ##src/udpcksum/udpread.c##
+            return (udp_check(ptr + 14, len - 14));## 22 ##src/udpcksum/udpread.c##
+
+        case DLT_SLIP:          /* SLIP header = 24 bytes */## 23 ##src/udpcksum/udpread.c##
+            return (udp_check(ptr + 24, len - 24));## 24 ##src/udpcksum/udpread.c##
+
+        case DLT_PPP:           /* PPP header = 24 bytes */## 25 ##src/udpcksum/udpread.c##
+            return (udp_check(ptr + 24, len - 24));## 26 ##src/udpcksum/udpread.c##
+
+        default:## 27 ##src/udpcksum/udpread.c##
+            err_quit("unsupported datalink (%d)", datalink);## 28 ##src/udpcksum/udpread.c##
+        }## 29 ##src/udpcksum/udpread.c##
+    }## 30 ##src/udpcksum/udpread.c##
+}## 31 ##src/udpcksum/udpread.c##
+/* end udp_read */
+
+/*## 32 ##src/udpcksum/udpread.c##
+ * Check the received packet.## 33 ##src/udpcksum/udpread.c##
+ * If UDP and OK, return pointer to packet.## 34 ##src/udpcksum/udpread.c##
+ * If ICMP error, return NULL.## 35 ##src/udpcksum/udpread.c##
+ * We assume the filter picks out desired UDP datagrams.## 36 ##src/udpcksum/udpread.c##
+ */## 37 ##src/udpcksum/udpread.c##
+
+/* include udp_check */
+struct udpiphdr *## 38 ##src/udpcksum/udpread.c##
+udp_check(char *ptr, int len)## 39 ##src/udpcksum/udpread.c##
+{## 40 ##src/udpcksum/udpread.c##
+    int     hlen;## 41 ##src/udpcksum/udpread.c##
+    struct ip *ip;## 42 ##src/udpcksum/udpread.c##
+    struct udpiphdr *ui;## 43 ##src/udpcksum/udpread.c##
+
+    if (len < sizeof(struct ip) + sizeof(struct udphdr))## 44 ##src/udpcksum/udpread.c##
+        err_quit("len = %d", len);## 45 ##src/udpcksum/udpread.c##
+
+    /* 4minimal verification of IP header */## 46 ##src/udpcksum/udpread.c##
+    ip = (struct ip *) ptr;## 47 ##src/udpcksum/udpread.c##
+    if (ip->ip_v != IPVERSION)## 48 ##src/udpcksum/udpread.c##
+        err_quit("ip_v = %d", ip->ip_v);## 49 ##src/udpcksum/udpread.c##
+    hlen = ip->ip_hl << 2;## 50 ##src/udpcksum/udpread.c##
+    if (hlen < sizeof(struct ip))## 51 ##src/udpcksum/udpread.c##
+        err_quit("ip_hl = %d", ip->ip_hl);## 52 ##src/udpcksum/udpread.c##
+    if (len < hlen + sizeof(struct udphdr))## 53 ##src/udpcksum/udpread.c##
+        err_quit("len = %d, hlen = %d", len, hlen);## 54 ##src/udpcksum/udpread.c##
+
+    if ((ip->ip_sum = in_cksum((uint16_t *) ip, hlen)) != 0)## 55 ##src/udpcksum/udpread.c##
+        err_quit("ip checksum error");## 56 ##src/udpcksum/udpread.c##
+
+    if (ip->ip_p == IPPROTO_UDP) {## 57 ##src/udpcksum/udpread.c##
+        ui = (struct udpiphdr *) ip;## 58 ##src/udpcksum/udpread.c##
+        return (ui);## 59 ##src/udpcksum/udpread.c##
+    } else## 60 ##src/udpcksum/udpread.c##
+        err_quit("not a UDP packet");## 61 ##src/udpcksum/udpread.c##
+}## 62 ##src/udpcksum/udpread.c##
+/* end udp_check */

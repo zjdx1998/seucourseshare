@@ -1,0 +1,44 @@
+#include    "udpcksum.h"##  1 ##src/udpcksum/senddnsquery-raw.c##
+
+/*##  2 ##src/udpcksum/senddnsquery-raw.c##
+ * Build a DNS A query for "a.root-servers.net" and write it to##  3 ##src/udpcksum/senddnsquery-raw.c##
+ * the raw socket.##  4 ##src/udpcksum/senddnsquery-raw.c##
+ */##  5 ##src/udpcksum/senddnsquery-raw.c##
+
+/* include send_dns_query */
+void##  6 ##src/udpcksum/senddnsquery-raw.c##
+send_dns_query(void)##  7 ##src/udpcksum/senddnsquery-raw.c##
+{##  8 ##src/udpcksum/senddnsquery-raw.c##
+    size_t  nbytes;##  9 ##src/udpcksum/senddnsquery-raw.c##
+    char    buf[sizeof(struct udpiphdr) + 100], *ptr;## 10 ##src/udpcksum/senddnsquery-raw.c##
+    uint16_t one;## 11 ##src/udpcksum/senddnsquery-raw.c##
+
+    ptr = buf + sizeof(struct udpiphdr);    /* leave room for IP/UDP headers */## 12 ##src/udpcksum/senddnsquery-raw.c##
+
+    *((uint16_t *) ptr) = htons(1234);  /* identification */## 13 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 14 ##src/udpcksum/senddnsquery-raw.c##
+    *((uint16_t *) ptr) = htons(0x0100);    /* flags: recursion desired */## 15 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 16 ##src/udpcksum/senddnsquery-raw.c##
+    *((uint16_t *) ptr) = htons(1); /* #questions */## 17 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 18 ##src/udpcksum/senddnsquery-raw.c##
+    *((uint16_t *) ptr) = 0;    /* #answer RRs */## 19 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 20 ##src/udpcksum/senddnsquery-raw.c##
+    *((uint16_t *) ptr) = 0;    /* #authority RRs */## 21 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 22 ##src/udpcksum/senddnsquery-raw.c##
+    *((uint16_t *) ptr) = 0;    /* #additional RRs */## 23 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 24 ##src/udpcksum/senddnsquery-raw.c##
+
+    memcpy(ptr, "\001a\014root-servers\003net\000", 20);## 25 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 20;## 26 ##src/udpcksum/senddnsquery-raw.c##
+    one = htons(1);## 27 ##src/udpcksum/senddnsquery-raw.c##
+    memcpy(ptr, &one, 2);       /* query type = A */## 28 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 29 ##src/udpcksum/senddnsquery-raw.c##
+    memcpy(ptr, &one, 2);       /* query class = 1 (IP addr) */## 30 ##src/udpcksum/senddnsquery-raw.c##
+    ptr += 2;## 31 ##src/udpcksum/senddnsquery-raw.c##
+
+    nbytes = 36;## 32 ##src/udpcksum/senddnsquery-raw.c##
+    udp_write(buf, nbytes);## 33 ##src/udpcksum/senddnsquery-raw.c##
+    if (verbose)## 34 ##src/udpcksum/senddnsquery-raw.c##
+        printf("sent: %d bytes of data\n", nbytes);## 35 ##src/udpcksum/senddnsquery-raw.c##
+}## 36 ##src/udpcksum/senddnsquery-raw.c##
+/* end send_dns_query */

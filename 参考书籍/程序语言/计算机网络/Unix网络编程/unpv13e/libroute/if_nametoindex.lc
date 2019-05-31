@@ -1,0 +1,50 @@
+/* include if_nametoindex */
+#include    "unpifi.h"##  1 ##src/libroute/if_nametoindex.c##
+#include    "unproute.h"##  2 ##src/libroute/if_nametoindex.c##
+
+unsigned int##  3 ##src/libroute/if_nametoindex.c##
+if_nametoindex(const char *name)##  4 ##src/libroute/if_nametoindex.c##
+{##  5 ##src/libroute/if_nametoindex.c##
+    unsigned int index;##  6 ##src/libroute/if_nametoindex.c##
+    char   *buf, *next, *lim;##  7 ##src/libroute/if_nametoindex.c##
+    size_t  len;##  8 ##src/libroute/if_nametoindex.c##
+    struct if_msghdr *ifm;##  9 ##src/libroute/if_nametoindex.c##
+    struct sockaddr *sa, *rti_info[RTAX_MAX];## 10 ##src/libroute/if_nametoindex.c##
+    struct sockaddr_dl *sdl;## 11 ##src/libroute/if_nametoindex.c##
+
+    if ((buf = net_rt_iflist(0, 0, &len)) == NULL)## 12 ##src/libroute/if_nametoindex.c##
+        return (0);## 13 ##src/libroute/if_nametoindex.c##
+
+    lim = buf + len;## 14 ##src/libroute/if_nametoindex.c##
+    for (next = buf; next < lim; next += ifm->ifm_msglen) {## 15 ##src/libroute/if_nametoindex.c##
+        ifm = (struct if_msghdr *) next;## 16 ##src/libroute/if_nametoindex.c##
+        if (ifm->ifm_type == RTM_IFINFO) {## 17 ##src/libroute/if_nametoindex.c##
+            sa = (struct sockaddr *) (ifm + 1);## 18 ##src/libroute/if_nametoindex.c##
+            get_rtaddrs(ifm->ifm_addrs, sa, rti_info);## 19 ##src/libroute/if_nametoindex.c##
+            if ((sa = rti_info[RTAX_IFP]) != NULL) {## 20 ##src/libroute/if_nametoindex.c##
+                if (sa->sa_family == AF_LINK) {## 21 ##src/libroute/if_nametoindex.c##
+                    sdl = (struct sockaddr_dl *) sa;## 22 ##src/libroute/if_nametoindex.c##
+                    if (strncmp(&sdl->sdl_data[0], name, sdl->sdl_nlen) == 0) {## 23 ##src/libroute/if_nametoindex.c##
+                        index = sdl->sdl_index; /* save before free() */## 24 ##src/libroute/if_nametoindex.c##
+                        free(buf);## 25 ##src/libroute/if_nametoindex.c##
+                        return (index);## 26 ##src/libroute/if_nametoindex.c##
+                    }## 27 ##src/libroute/if_nametoindex.c##
+                }## 28 ##src/libroute/if_nametoindex.c##
+            }## 29 ##src/libroute/if_nametoindex.c##
+
+        }## 30 ##src/libroute/if_nametoindex.c##
+    }## 31 ##src/libroute/if_nametoindex.c##
+    free(buf);## 32 ##src/libroute/if_nametoindex.c##
+    return (0);                 /* no match for name */## 33 ##src/libroute/if_nametoindex.c##
+}## 34 ##src/libroute/if_nametoindex.c##
+/* end if_nametoindex */
+
+unsigned int## 35 ##src/libroute/if_nametoindex.c##
+If_nametoindex(const char *name)## 36 ##src/libroute/if_nametoindex.c##
+{## 37 ##src/libroute/if_nametoindex.c##
+    int     index;## 38 ##src/libroute/if_nametoindex.c##
+
+    if ((index = if_nametoindex(name)) == 0)## 39 ##src/libroute/if_nametoindex.c##
+        err_quit("if_nametoindex error for %s", name);## 40 ##src/libroute/if_nametoindex.c##
+    return (index);## 41 ##src/libroute/if_nametoindex.c##
+}## 42 ##src/libroute/if_nametoindex.c##

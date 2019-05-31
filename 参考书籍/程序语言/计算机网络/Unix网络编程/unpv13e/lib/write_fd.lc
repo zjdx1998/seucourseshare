@@ -1,0 +1,51 @@
+/* include write_fd */
+#include    "unp.h"##  1 ##src/lib/write_fd.c##
+
+ssize_t##  2 ##src/lib/write_fd.c##
+write_fd(int fd, void *ptr, size_t nbytes, int sendfd)##  3 ##src/lib/write_fd.c##
+{##  4 ##src/lib/write_fd.c##
+    struct msghdr msg;##  5 ##src/lib/write_fd.c##
+    struct iovec iov[1];##  6 ##src/lib/write_fd.c##
+
+#ifdef  HAVE_MSGHDR_MSG_CONTROL##  7 ##src/lib/write_fd.c##
+    union {##  8 ##src/lib/write_fd.c##
+        struct cmsghdr cm;##  9 ##src/lib/write_fd.c##
+        char    control[CMSG_SPACE(sizeof(int))];## 10 ##src/lib/write_fd.c##
+    } control_un;## 11 ##src/lib/write_fd.c##
+    struct cmsghdr *cmptr;## 12 ##src/lib/write_fd.c##
+
+    msg.msg_control = control_un.control;## 13 ##src/lib/write_fd.c##
+    msg.msg_controllen = sizeof(control_un.control);## 14 ##src/lib/write_fd.c##
+
+    cmptr = CMSG_FIRSTHDR(&msg);## 15 ##src/lib/write_fd.c##
+    cmptr->cmsg_len = CMSG_LEN(sizeof(int));## 16 ##src/lib/write_fd.c##
+    cmptr->cmsg_level = SOL_SOCKET;## 17 ##src/lib/write_fd.c##
+    cmptr->cmsg_type = SCM_RIGHTS;## 18 ##src/lib/write_fd.c##
+    *((int *) CMSG_DATA(cmptr)) = sendfd;## 19 ##src/lib/write_fd.c##
+#else## 20 ##src/lib/write_fd.c##
+    msg.msg_accrights = (caddr_t) & sendfd;## 21 ##src/lib/write_fd.c##
+    msg.msg_accrightslen = sizeof(int);## 22 ##src/lib/write_fd.c##
+#endif## 23 ##src/lib/write_fd.c##
+
+    msg.msg_name = NULL;## 24 ##src/lib/write_fd.c##
+    msg.msg_namelen = 0;## 25 ##src/lib/write_fd.c##
+
+    iov[0].iov_base = ptr;## 26 ##src/lib/write_fd.c##
+    iov[0].iov_len = nbytes;## 27 ##src/lib/write_fd.c##
+    msg.msg_iov = iov;## 28 ##src/lib/write_fd.c##
+    msg.msg_iovlen = 1;## 29 ##src/lib/write_fd.c##
+
+    return (sendmsg(fd, &msg, 0));## 30 ##src/lib/write_fd.c##
+}## 31 ##src/lib/write_fd.c##
+/* end write_fd */
+
+ssize_t## 32 ##src/lib/write_fd.c##
+Write_fd(int fd, void *ptr, size_t nbytes, int sendfd)## 33 ##src/lib/write_fd.c##
+{## 34 ##src/lib/write_fd.c##
+    ssize_t n;## 35 ##src/lib/write_fd.c##
+
+    if ((n = write_fd(fd, ptr, nbytes, sendfd)) < 0)## 36 ##src/lib/write_fd.c##
+        err_sys("write_fd error");## 37 ##src/lib/write_fd.c##
+
+    return (n);## 38 ##src/lib/write_fd.c##
+}## 39 ##src/lib/write_fd.c##

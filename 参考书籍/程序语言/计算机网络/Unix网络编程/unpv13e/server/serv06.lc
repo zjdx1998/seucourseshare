@@ -1,0 +1,51 @@
+/* include serv06 */
+#include    "unpthread.h"##  1 ##src/server/serv06.c##
+
+int##  2 ##src/server/serv06.c##
+main(int argc, char **argv)##  3 ##src/server/serv06.c##
+{##  4 ##src/server/serv06.c##
+    int     listenfd, connfd;##  5 ##src/server/serv06.c##
+    void    sig_int(int);##  6 ##src/server/serv06.c##
+    void   *doit(void *);##  7 ##src/server/serv06.c##
+    pthread_t tid;##  8 ##src/server/serv06.c##
+    socklen_t clilen, addrlen;##  9 ##src/server/serv06.c##
+    struct sockaddr *cliaddr;## 10 ##src/server/serv06.c##
+
+    if (argc == 2)## 11 ##src/server/serv06.c##
+        listenfd = Tcp_listen(NULL, argv[1], &addrlen);## 12 ##src/server/serv06.c##
+    else if (argc == 3)## 13 ##src/server/serv06.c##
+        listenfd = Tcp_listen(argv[1], argv[2], &addrlen);## 14 ##src/server/serv06.c##
+    else## 15 ##src/server/serv06.c##
+        err_quit("usage: serv06 [ <host> ] <port#>");## 16 ##src/server/serv06.c##
+    cliaddr = Malloc(addrlen);## 17 ##src/server/serv06.c##
+
+    Signal(SIGINT, sig_int);## 18 ##src/server/serv06.c##
+
+    for (;;) {## 19 ##src/server/serv06.c##
+        clilen = addrlen;## 20 ##src/server/serv06.c##
+        connfd = Accept(listenfd, cliaddr, &clilen);## 21 ##src/server/serv06.c##
+
+        Pthread_create(&tid, NULL, &doit, (void *) connfd);## 22 ##src/server/serv06.c##
+    }## 23 ##src/server/serv06.c##
+}## 24 ##src/server/serv06.c##
+
+void   *## 25 ##src/server/serv06.c##
+doit(void *arg)## 26 ##src/server/serv06.c##
+{## 27 ##src/server/serv06.c##
+    void    web_child(int);## 28 ##src/server/serv06.c##
+
+    Pthread_detach(pthread_self());## 29 ##src/server/serv06.c##
+    web_child((int) arg);## 30 ##src/server/serv06.c##
+    Close((int) arg);## 31 ##src/server/serv06.c##
+    return (NULL);## 32 ##src/server/serv06.c##
+}## 33 ##src/server/serv06.c##
+/* end serv06 */
+
+void## 34 ##src/server/serv06.c##
+sig_int(int signo)## 35 ##src/server/serv06.c##
+{## 36 ##src/server/serv06.c##
+    void    pr_cpu_time(void);## 37 ##src/server/serv06.c##
+
+    pr_cpu_time();## 38 ##src/server/serv06.c##
+    exit(0);## 39 ##src/server/serv06.c##
+}## 40 ##src/server/serv06.c##

@@ -1,0 +1,19 @@
+#include    "unp.h"##  1 ##src/tcpcliserv/str_cli11.c##
+
+void##  2 ##src/tcpcliserv/str_cli11.c##
+str_cli(FILE *fp, int sockfd)##  3 ##src/tcpcliserv/str_cli11.c##
+{##  4 ##src/tcpcliserv/str_cli11.c##
+    char    sendline[MAXLINE], recvline[MAXLINE];##  5 ##src/tcpcliserv/str_cli11.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {##  6 ##src/tcpcliserv/str_cli11.c##
+
+        Writen(sockfd, sendline, 1);##  7 ##src/tcpcliserv/str_cli11.c##
+        sleep(1);##  8 ##src/tcpcliserv/str_cli11.c##
+        Writen(sockfd, sendline + 1, strlen(sendline) - 1);##  9 ##src/tcpcliserv/str_cli11.c##
+
+        if (Readline(sockfd, recvline, MAXLINE) == 0)## 10 ##src/tcpcliserv/str_cli11.c##
+            err_quit("str_cli: server terminated prematurely");## 11 ##src/tcpcliserv/str_cli11.c##
+
+        Fputs(recvline, stdout);## 12 ##src/tcpcliserv/str_cli11.c##
+    }## 13 ##src/tcpcliserv/str_cli11.c##
+}## 14 ##src/tcpcliserv/str_cli11.c##

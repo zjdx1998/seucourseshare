@@ -1,0 +1,23 @@
+#include    "unp.h"##  1 ##src/libgai/gai_hdr.h##
+#include    <ctype.h>           /* isxdigit(), etc. */##  2 ##src/libgai/gai_hdr.h##
+
+        /* following internal flag cannot overlap with other AI_xxx flags */##  3 ##src/libgai/gai_hdr.h##
+#define AI_CLONE         4      /* clone this entry for other socket types */##  4 ##src/libgai/gai_hdr.h##
+
+struct search {##  5 ##src/libgai/gai_hdr.h##
+    const char *host;           /* hostname or address string */##  6 ##src/libgai/gai_hdr.h##
+    int     family;             /* AF_xxx */##  7 ##src/libgai/gai_hdr.h##
+};##  8 ##src/libgai/gai_hdr.h##
+
+        /* 4function prototypes for our own internal functions */##  9 ##src/libgai/gai_hdr.h##
+int     ga_aistruct(struct addrinfo ***, const struct addrinfo *,## 10 ##src/libgai/gai_hdr.h##
+                    const void *, int);## 11 ##src/libgai/gai_hdr.h##
+struct addrinfo *ga_clone(struct addrinfo *);## 12 ##src/libgai/gai_hdr.h##
+int     ga_echeck(const char *, const char *, int, int, int, int);## 13 ##src/libgai/gai_hdr.h##
+int     ga_nsearch(const char *, const struct addrinfo *, struct search *);## 14 ##src/libgai/gai_hdr.h##
+int     ga_port(struct addrinfo *, int, int);## 15 ##src/libgai/gai_hdr.h##
+int     ga_serv(struct addrinfo *, const struct addrinfo *, const char *);## 16 ##src/libgai/gai_hdr.h##
+int     ga_unix(const char *, struct addrinfo *, struct addrinfo **);## 17 ##src/libgai/gai_hdr.h##
+
+int     gn_ipv46(char *, size_t, char *, size_t, void *, size_t,## 18 ##src/libgai/gai_hdr.h##
+                 int, int, int);## 19 ##src/libgai/gai_hdr.h##

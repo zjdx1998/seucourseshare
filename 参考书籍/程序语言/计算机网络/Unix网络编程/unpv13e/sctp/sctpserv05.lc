@@ -1,0 +1,54 @@
+#include    "unp.h"##  1 ##src/sctp/sctpserv05.c##
+
+int##  2 ##src/sctp/sctpserv05.c##
+main(int argc, char **argv)##  3 ##src/sctp/sctpserv05.c##
+{##  4 ##src/sctp/sctpserv05.c##
+    uint8_t *readbuf;##  5 ##src/sctp/sctpserv05.c##
+    int     sock_fd, msg_flags;##  6 ##src/sctp/sctpserv05.c##
+    struct sockaddr_in servaddr, cliaddr;##  7 ##src/sctp/sctpserv05.c##
+    struct sctp_sndrcvinfo sri;##  8 ##src/sctp/sctpserv05.c##
+    struct sctp_event_subscribe evnts;##  9 ##src/sctp/sctpserv05.c##
+    int     stream_increment = 1;## 10 ##src/sctp/sctpserv05.c##
+    socklen_t len;## 11 ##src/sctp/sctpserv05.c##
+    size_t  rd_sz;## 12 ##src/sctp/sctpserv05.c##
+
+    if (argc == 2)## 13 ##src/sctp/sctpserv05.c##
+        stream_increment = atoi(argv[1]);## 14 ##src/sctp/sctpserv05.c##
+    sock_fd = Socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);## 15 ##src/sctp/sctpserv05.c##
+    bzero(&servaddr, sizeof(servaddr));## 16 ##src/sctp/sctpserv05.c##
+    servaddr.sin_family = AF_INET;## 17 ##src/sctp/sctpserv05.c##
+#ifdef HAVE_SOCKADDR_SA_LEN## 18 ##src/sctp/sctpserv05.c##
+    servaddr.sin_len = sizeof(servaddr);## 19 ##src/sctp/sctpserv05.c##
+#endif## 20 ##src/sctp/sctpserv05.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 21 ##src/sctp/sctpserv05.c##
+    servaddr.sin_port = htons(SERV_PORT);## 22 ##src/sctp/sctpserv05.c##
+
+    Bind(sock_fd, (SA *) &servaddr, sizeof(servaddr));## 23 ##src/sctp/sctpserv05.c##
+
+    bzero(&evnts, sizeof(evnts));## 24 ##src/sctp/sctpserv05.c##
+    evnts.sctp_data_io_event = 1;## 25 ##src/sctp/sctpserv05.c##
+    Setsockopt(sock_fd, IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts));## 26 ##src/sctp/sctpserv05.c##
+
+    Listen(sock_fd, LISTENQ);## 27 ##src/sctp/sctpserv05.c##
+    rd_sz = 0;## 28 ##src/sctp/sctpserv05.c##
+    /* include mod_serv05 */## 29 ##src/sctp/sctpserv05.c##
+    for (;;) {## 30 ##src/sctp/sctpserv05.c##
+        len = sizeof(struct sockaddr_in);## 31 ##src/sctp/sctpserv05.c##
+        bzero(&sri, sizeof(sri));## 32 ##src/sctp/sctpserv05.c##
+        readbuf = pdapi_recvmsg(sock_fd, &rd_sz,## 33 ##src/sctp/sctpserv05.c##
+                                (SA *) &cliaddr, &len, &sri, &msg_flags);## 34 ##src/sctp/sctpserv05.c##
+        if (readbuf == NULL)## 35 ##src/sctp/sctpserv05.c##
+            continue;## 36 ##src/sctp/sctpserv05.c##
+        /* end mod_serv05 */## 37 ##src/sctp/sctpserv05.c##
+        if (stream_increment) {## 38 ##src/sctp/sctpserv05.c##
+            sri.sinfo_stream++;## 39 ##src/sctp/sctpserv05.c##
+            if (sri.sinfo_stream >=## 40 ##src/sctp/sctpserv05.c##
+                sctp_get_no_strms(sock_fd, (SA *) &cliaddr, len))## 41 ##src/sctp/sctpserv05.c##
+                sri.sinfo_stream = 0;## 42 ##src/sctp/sctpserv05.c##
+        }## 43 ##src/sctp/sctpserv05.c##
+        Sctp_sendmsg(sock_fd, readbuf, rd_sz,## 44 ##src/sctp/sctpserv05.c##
+                     (SA *) &cliaddr, len,## 45 ##src/sctp/sctpserv05.c##
+                     sri.sinfo_ppid,## 46 ##src/sctp/sctpserv05.c##
+                     sri.sinfo_flags, sri.sinfo_stream, 0, 0);## 47 ##src/sctp/sctpserv05.c##
+    }## 48 ##src/sctp/sctpserv05.c##
+}## 49 ##src/sctp/sctpserv05.c##

@@ -1,0 +1,43 @@
+#include    "unp.h"##  1 ##src/bcast/dgclibcast5.c##
+#include    <setjmp.h>##  2 ##src/bcast/dgclibcast5.c##
+
+static void recvfrom_alarm(int);##  3 ##src/bcast/dgclibcast5.c##
+static sigjmp_buf jmpbuf;##  4 ##src/bcast/dgclibcast5.c##
+
+void##  5 ##src/bcast/dgclibcast5.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  6 ##src/bcast/dgclibcast5.c##
+{##  7 ##src/bcast/dgclibcast5.c##
+    int     n;##  8 ##src/bcast/dgclibcast5.c##
+    const int on = 1;##  9 ##src/bcast/dgclibcast5.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];## 10 ##src/bcast/dgclibcast5.c##
+    socklen_t len;## 11 ##src/bcast/dgclibcast5.c##
+    struct sockaddr *preply_addr;## 12 ##src/bcast/dgclibcast5.c##
+
+    preply_addr = Malloc(servlen);## 13 ##src/bcast/dgclibcast5.c##
+
+    Setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on));## 14 ##src/bcast/dgclibcast5.c##
+
+    Signal(SIGALRM, recvfrom_alarm);## 15 ##src/bcast/dgclibcast5.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {## 16 ##src/bcast/dgclibcast5.c##
+
+        Sendto(sockfd, sendline, strlen(sendline), 0, pservaddr, servlen);## 17 ##src/bcast/dgclibcast5.c##
+
+        alarm(5);## 18 ##src/bcast/dgclibcast5.c##
+        for (;;) {## 19 ##src/bcast/dgclibcast5.c##
+            if (sigsetjmp(jmpbuf, 1) != 0)## 20 ##src/bcast/dgclibcast5.c##
+                break;## 21 ##src/bcast/dgclibcast5.c##
+            len = servlen;## 22 ##src/bcast/dgclibcast5.c##
+            n = Recvfrom(sockfd, recvline, MAXLINE, 0, preply_addr, &len);## 23 ##src/bcast/dgclibcast5.c##
+            recvline[n] = 0;    /* null terminate */## 24 ##src/bcast/dgclibcast5.c##
+            printf("from %s: %s",## 25 ##src/bcast/dgclibcast5.c##
+                   Sock_ntop_host(preply_addr, len), recvline);## 26 ##src/bcast/dgclibcast5.c##
+        }## 27 ##src/bcast/dgclibcast5.c##
+    }## 28 ##src/bcast/dgclibcast5.c##
+}## 29 ##src/bcast/dgclibcast5.c##
+
+static void## 30 ##src/bcast/dgclibcast5.c##
+recvfrom_alarm(int signo)## 31 ##src/bcast/dgclibcast5.c##
+{## 32 ##src/bcast/dgclibcast5.c##
+    siglongjmp(jmpbuf, 1);## 33 ##src/bcast/dgclibcast5.c##
+}## 34 ##src/bcast/dgclibcast5.c##

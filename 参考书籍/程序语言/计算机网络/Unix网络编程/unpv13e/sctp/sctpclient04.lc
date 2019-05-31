@@ -1,0 +1,31 @@
+#include    "unp.h"##  1 ##src/sctp/sctpclient04.c##
+
+int##  2 ##src/sctp/sctpclient04.c##
+main(int argc, char **argv)##  3 ##src/sctp/sctpclient04.c##
+{##  4 ##src/sctp/sctpclient04.c##
+    int     sock_fd;##  5 ##src/sctp/sctpclient04.c##
+    struct sockaddr_in servaddr;##  6 ##src/sctp/sctpclient04.c##
+    struct sctp_event_subscribe evnts;##  7 ##src/sctp/sctpclient04.c##
+
+    if (argc != 2)##  8 ##src/sctp/sctpclient04.c##
+        err_quit("Missing host argument - use '%s host'\n", argv[0]);##  9 ##src/sctp/sctpclient04.c##
+    sock_fd = Socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);## 10 ##src/sctp/sctpclient04.c##
+    bzero(&servaddr, sizeof(servaddr));## 11 ##src/sctp/sctpclient04.c##
+    servaddr.sin_family = AF_INET;## 12 ##src/sctp/sctpclient04.c##
+#ifdef HAVE_SOCKADDR_SA_LEN## 13 ##src/sctp/sctpclient04.c##
+    servaddr.sin_len = sizeof(servaddr);## 14 ##src/sctp/sctpclient04.c##
+#endif## 15 ##src/sctp/sctpclient04.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 16 ##src/sctp/sctpclient04.c##
+    servaddr.sin_port = htons(SERV_PORT);## 17 ##src/sctp/sctpclient04.c##
+    Inet_pton(AF_INET, argv[1], &servaddr.sin_addr);## 18 ##src/sctp/sctpclient04.c##
+    /* include mod_client04 */## 19 ##src/sctp/sctpclient04.c##
+    bzero(&evnts, sizeof(evnts));## 20 ##src/sctp/sctpclient04.c##
+    evnts.sctp_data_io_event = 1;## 21 ##src/sctp/sctpclient04.c##
+    evnts.sctp_association_event = 1;## 22 ##src/sctp/sctpclient04.c##
+    Setsockopt(sock_fd, IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts));## 23 ##src/sctp/sctpclient04.c##
+
+    sctpstr_cli(stdin, sock_fd, (SA *) &servaddr, sizeof(servaddr));## 24 ##src/sctp/sctpclient04.c##
+    /* end mod_client04 */## 25 ##src/sctp/sctpclient04.c##
+    close(sock_fd);## 26 ##src/sctp/sctpclient04.c##
+    return (0);## 27 ##src/sctp/sctpclient04.c##
+}## 28 ##src/sctp/sctpclient04.c##

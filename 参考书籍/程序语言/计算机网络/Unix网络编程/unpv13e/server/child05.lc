@@ -1,0 +1,52 @@
+/* include child_make */
+#include    "unp.h"##  1 ##src/server/child05.c##
+#include    "child.h"##  2 ##src/server/child05.c##
+
+pid_t##  3 ##src/server/child05.c##
+child_make(int i, int listenfd, int addrlen)##  4 ##src/server/child05.c##
+{##  5 ##src/server/child05.c##
+    int     sockfd[2];##  6 ##src/server/child05.c##
+    pid_t   pid;##  7 ##src/server/child05.c##
+    void    child_main(int, int, int);##  8 ##src/server/child05.c##
+
+    Socketpair(AF_LOCAL, SOCK_STREAM, 0, sockfd);##  9 ##src/server/child05.c##
+
+    if ((pid = Fork()) > 0) {## 10 ##src/server/child05.c##
+        Close(sockfd[1]);## 11 ##src/server/child05.c##
+        cptr[i].child_pid = pid;## 12 ##src/server/child05.c##
+        cptr[i].child_pipefd = sockfd[0];## 13 ##src/server/child05.c##
+        cptr[i].child_status = 0;## 14 ##src/server/child05.c##
+        return (pid);           /* parent */## 15 ##src/server/child05.c##
+    }## 16 ##src/server/child05.c##
+
+    Dup2(sockfd[1], STDERR_FILENO); /* child's stream pipe to parent */## 17 ##src/server/child05.c##
+    Close(sockfd[0]);## 18 ##src/server/child05.c##
+    Close(sockfd[1]);## 19 ##src/server/child05.c##
+    Close(listenfd);            /* child does not need this open */## 20 ##src/server/child05.c##
+    child_main(i, listenfd, addrlen);   /* never returns */## 21 ##src/server/child05.c##
+}## 22 ##src/server/child05.c##
+/* end child_make */
+
+/* include child_main */
+void## 23 ##src/server/child05.c##
+child_main(int i, int listenfd, int addrlen)## 24 ##src/server/child05.c##
+{## 25 ##src/server/child05.c##
+    char    c;## 26 ##src/server/child05.c##
+    int     connfd;## 27 ##src/server/child05.c##
+    ssize_t n;## 28 ##src/server/child05.c##
+    void    web_child(int);## 29 ##src/server/child05.c##
+
+    printf("child %ld starting\n", (long) getpid());## 30 ##src/server/child05.c##
+    for (;;) {## 31 ##src/server/child05.c##
+        if ((n = Read_fd(STDERR_FILENO, &c, 1, &connfd)) == 0)## 32 ##src/server/child05.c##
+            err_quit("read_fd returned 0");## 33 ##src/server/child05.c##
+        if (connfd < 0)## 34 ##src/server/child05.c##
+            err_quit("no descriptor from read_fd");## 35 ##src/server/child05.c##
+
+        web_child(connfd);      /* process the request */## 36 ##src/server/child05.c##
+        Close(connfd);## 37 ##src/server/child05.c##
+
+        Write(STDERR_FILENO, "", 1);    /* tell parent we're ready again */## 38 ##src/server/child05.c##
+    }## 39 ##src/server/child05.c##
+}## 40 ##src/server/child05.c##
+/* end child_main */

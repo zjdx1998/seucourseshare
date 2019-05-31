@@ -1,0 +1,119 @@
+#include    "unpxti.h"##  1 ##src/debug/qlen.c##
+
+#define PORT        9999##  2 ##src/debug/qlen.c##
+#define ADDR        "127.0.0.1"##  3 ##src/debug/qlen.c##
+#define MAXBACKLOG  100##  4 ##src/debug/qlen.c##
+
+            /* globals */##  5 ##src/debug/qlen.c##
+struct sockaddr_in serv;##  6 ##src/debug/qlen.c##
+pid_t   pid;                    /* of child */##  7 ##src/debug/qlen.c##
+
+int     pipefd[2];##  8 ##src/debug/qlen.c##
+#define pfd pipefd[1]           /* parent's end */##  9 ##src/debug/qlen.c##
+#define cfd pipefd[0]           /* child's end */## 10 ##src/debug/qlen.c##
+
+            /* function prototypes */## 11 ##src/debug/qlen.c##
+void    do_parent(void);## 12 ##src/debug/qlen.c##
+void    do_child(void);## 13 ##src/debug/qlen.c##
+
+int## 14 ##src/debug/qlen.c##
+main(int argc, char **argv)## 15 ##src/debug/qlen.c##
+{## 16 ##src/debug/qlen.c##
+    if (argc != 1)## 17 ##src/debug/qlen.c##
+        err_quit("usage: qlen");## 18 ##src/debug/qlen.c##
+
+    Socketpair(AF_UNIX, SOCK_STREAM, 0, pipefd);## 19 ##src/debug/qlen.c##
+
+    bzero(&serv, sizeof(serv));## 20 ##src/debug/qlen.c##
+    serv.sin_family = AF_INET;## 21 ##src/debug/qlen.c##
+    serv.sin_port = htons(PORT);## 22 ##src/debug/qlen.c##
+    Inet_pton(AF_INET, ADDR, &serv.sin_addr);## 23 ##src/debug/qlen.c##
+
+    if ((pid = Fork()) == 0)## 24 ##src/debug/qlen.c##
+        do_child();## 25 ##src/debug/qlen.c##
+    else## 26 ##src/debug/qlen.c##
+        do_parent();## 27 ##src/debug/qlen.c##
+
+    exit(0);## 28 ##src/debug/qlen.c##
+}## 29 ##src/debug/qlen.c##
+
+void## 30 ##src/debug/qlen.c##
+parent_alrm(int signo)## 31 ##src/debug/qlen.c##
+{## 32 ##src/debug/qlen.c##
+    return;                     /* just interrupt blocked connect() */## 33 ##src/debug/qlen.c##
+}## 34 ##src/debug/qlen.c##
+
+/* include qlen */
+void## 35 ##src/debug/qlen.c##
+do_parent(void)## 36 ##src/debug/qlen.c##
+{## 37 ##src/debug/qlen.c##
+    int     qlen, j, k, junk, fd[MAXBACKLOG + 1];## 38 ##src/debug/qlen.c##
+    struct t_call tcall;## 39 ##src/debug/qlen.c##
+
+    Close(cfd);## 40 ##src/debug/qlen.c##
+    Signal(SIGALRM, parent_alrm);## 41 ##src/debug/qlen.c##
+
+    for (qlen = 0; qlen <= 14; qlen++) {## 42 ##src/debug/qlen.c##
+        printf("qlen = %d: ", qlen);## 43 ##src/debug/qlen.c##
+        Write(pfd, &qlen, sizeof(int)); /* tell child value */## 44 ##src/debug/qlen.c##
+        Read(pfd, &junk, sizeof(int));  /* wait for child */## 45 ##src/debug/qlen.c##
+
+        for (j = 0; j <= MAXBACKLOG; j++) {## 46 ##src/debug/qlen.c##
+            fd[j] = T_open(XTI_TCP, O_RDWR, NULL);## 47 ##src/debug/qlen.c##
+            T_bind(fd[j], NULL, NULL);## 48 ##src/debug/qlen.c##
+
+            tcall.addr.maxlen = sizeof(serv);## 49 ##src/debug/qlen.c##
+            tcall.addr.len = sizeof(serv);## 50 ##src/debug/qlen.c##
+            tcall.addr.buf = &serv;## 51 ##src/debug/qlen.c##
+            tcall.opt.len = 0;## 52 ##src/debug/qlen.c##
+            tcall.udata.len = 0;## 53 ##src/debug/qlen.c##
+
+            alarm(2);## 54 ##src/debug/qlen.c##
+            if (t_connect(fd[j], &tcall, NULL) < 0) {## 55 ##src/debug/qlen.c##
+                if (errno != EINTR)## 56 ##src/debug/qlen.c##
+                    err_xti("t_connect error, j = %d", j);## 57 ##src/debug/qlen.c##
+                printf("timeout, %d connections completed\n", j - 1);## 58 ##src/debug/qlen.c##
+                for (k = 1; k < j; k++)## 59 ##src/debug/qlen.c##
+                    T_close(fd[k]);## 60 ##src/debug/qlen.c##
+                break;          /* next value of qlen */## 61 ##src/debug/qlen.c##
+            }## 62 ##src/debug/qlen.c##
+            alarm(0);## 63 ##src/debug/qlen.c##
+        }## 64 ##src/debug/qlen.c##
+        if (j > MAXBACKLOG)## 65 ##src/debug/qlen.c##
+            printf("%d connections?\n", MAXBACKLOG);## 66 ##src/debug/qlen.c##
+    }## 67 ##src/debug/qlen.c##
+    qlen = -1;                  /* tell child we're all done */## 68 ##src/debug/qlen.c##
+    Write(pfd, &qlen, sizeof(int));## 69 ##src/debug/qlen.c##
+}## 70 ##src/debug/qlen.c##
+
+void## 71 ##src/debug/qlen.c##
+do_child(void)## 72 ##src/debug/qlen.c##
+{## 73 ##src/debug/qlen.c##
+    int     listenfd, qlen, junk;## 74 ##src/debug/qlen.c##
+    struct t_bind tbind, tbindret;## 75 ##src/debug/qlen.c##
+
+    Close(pipefd[1]);## 76 ##src/debug/qlen.c##
+
+    Read(cfd, &qlen, sizeof(int));  /* wait for parent */## 77 ##src/debug/qlen.c##
+    while (qlen >= 0) {## 78 ##src/debug/qlen.c##
+        listenfd = T_open(XTI_TCP, O_RDWR, NULL);## 79 ##src/debug/qlen.c##
+
+        tbind.addr.maxlen = sizeof(serv);## 80 ##src/debug/qlen.c##
+        tbind.addr.len = sizeof(serv);## 81 ##src/debug/qlen.c##
+        tbind.addr.buf = &serv;## 82 ##src/debug/qlen.c##
+        tbind.qlen = qlen;## 83 ##src/debug/qlen.c##
+
+        tbindret.addr.maxlen = 0;## 84 ##src/debug/qlen.c##
+        tbindret.addr.len = 0;## 85 ##src/debug/qlen.c##
+
+        T_bind(listenfd, &tbind, &tbindret);## 86 ##src/debug/qlen.c##
+        printf("returned qlen = %d, ", tbindret.qlen);## 87 ##src/debug/qlen.c##
+        fflush(stdout);## 88 ##src/debug/qlen.c##
+
+        Write(cfd, &junk, sizeof(int)); /* tell parent */## 89 ##src/debug/qlen.c##
+
+        Read(cfd, &qlen, sizeof(int));  /* just wait for parent */## 90 ##src/debug/qlen.c##
+        T_close(listenfd);      /* closes all queued connections too */## 91 ##src/debug/qlen.c##
+    }## 92 ##src/debug/qlen.c##
+}## 93 ##src/debug/qlen.c##
+/* end qlen */

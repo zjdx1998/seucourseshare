@@ -1,0 +1,135 @@
+/* include rtt1 */
+#include    "unprtt.h"##  1 ##src/lib/rtt.c##
+
+int     rtt_d_flag = 0;         /* debug flag; can be set nonzero by caller */##  2 ##src/lib/rtt.c##
+
+/*##  3 ##src/lib/rtt.c##
+ * Calculate the RTO value based on current estimators:##  4 ##src/lib/rtt.c##
+ *      smoothed RTT plus four times the deviation.##  5 ##src/lib/rtt.c##
+ */##  6 ##src/lib/rtt.c##
+#define RTT_RTOCALC(ptr) ((ptr)->rtt_srtt + (4.0 * (ptr)->rtt_rttvar))##  7 ##src/lib/rtt.c##
+
+static float##  8 ##src/lib/rtt.c##
+rtt_minmax(float rto)##  9 ##src/lib/rtt.c##
+{## 10 ##src/lib/rtt.c##
+    if (rto < RTT_RXTMIN)## 11 ##src/lib/rtt.c##
+        rto = RTT_RXTMIN;## 12 ##src/lib/rtt.c##
+    else if (rto > RTT_RXTMAX)## 13 ##src/lib/rtt.c##
+        rto = RTT_RXTMAX;## 14 ##src/lib/rtt.c##
+    return (rto);## 15 ##src/lib/rtt.c##
+}## 16 ##src/lib/rtt.c##
+
+void## 17 ##src/lib/rtt.c##
+rtt_init(struct rtt_info *ptr)## 18 ##src/lib/rtt.c##
+{## 19 ##src/lib/rtt.c##
+    struct timeval tv;## 20 ##src/lib/rtt.c##
+
+    Gettimeofday(&tv, NULL);## 21 ##src/lib/rtt.c##
+    ptr->rtt_base = tv.tv_sec;  /* #sec since 1/1/1970 at start */## 22 ##src/lib/rtt.c##
+
+    ptr->rtt_rtt = 0;## 23 ##src/lib/rtt.c##
+    ptr->rtt_srtt = 0;## 24 ##src/lib/rtt.c##
+    ptr->rtt_rttvar = 0.75;## 25 ##src/lib/rtt.c##
+    ptr->rtt_rto = rtt_minmax(RTT_RTOCALC(ptr));## 26 ##src/lib/rtt.c##
+    /* first RTO at (srtt + (4 * rttvar)) = 3 seconds */## 27 ##src/lib/rtt.c##
+}## 28 ##src/lib/rtt.c##
+/* end rtt1 */
+
+/*## 29 ##src/lib/rtt.c##
+ * Return the current timestamp.## 30 ##src/lib/rtt.c##
+ * Our timestamps are 32-bit integers that count milliseconds since## 31 ##src/lib/rtt.c##
+ * rtt_init() was called.## 32 ##src/lib/rtt.c##
+ */## 33 ##src/lib/rtt.c##
+
+/* include rtt_ts */
+uint32_t## 34 ##src/lib/rtt.c##
+rtt_ts(struct rtt_info *ptr)## 35 ##src/lib/rtt.c##
+{## 36 ##src/lib/rtt.c##
+    uint32_t ts;## 37 ##src/lib/rtt.c##
+    struct timeval tv;## 38 ##src/lib/rtt.c##
+
+    Gettimeofday(&tv, NULL);## 39 ##src/lib/rtt.c##
+    ts = ((tv.tv_sec - ptr->rtt_base) * 1000) + (tv.tv_usec / 1000);## 40 ##src/lib/rtt.c##
+    return (ts);## 41 ##src/lib/rtt.c##
+}## 42 ##src/lib/rtt.c##
+
+void## 43 ##src/lib/rtt.c##
+rtt_newpack(struct rtt_info *ptr)## 44 ##src/lib/rtt.c##
+{## 45 ##src/lib/rtt.c##
+    ptr->rtt_nrexmt = 0;## 46 ##src/lib/rtt.c##
+}## 47 ##src/lib/rtt.c##
+
+int## 48 ##src/lib/rtt.c##
+rtt_start(struct rtt_info *ptr)## 49 ##src/lib/rtt.c##
+{## 50 ##src/lib/rtt.c##
+    return ((int) (ptr->rtt_rto + 0.5));    /* round float to int */## 51 ##src/lib/rtt.c##
+    /* 4return value can be used as: alarm(rtt_start(&foo)) */## 52 ##src/lib/rtt.c##
+}## 53 ##src/lib/rtt.c##
+/* end rtt_ts */
+
+/*## 54 ##src/lib/rtt.c##
+ * A response was received.## 55 ##src/lib/rtt.c##
+ * Stop the timer and update the appropriate values in the structure## 56 ##src/lib/rtt.c##
+ * based on this packet's RTT.  We calculate the RTT, then update the## 57 ##src/lib/rtt.c##
+ * estimators of the RTT and its mean deviation.## 58 ##src/lib/rtt.c##
+ * This function should be called right after turning off the## 59 ##src/lib/rtt.c##
+ * timer with alarm(0), or right after a timeout occurs.## 60 ##src/lib/rtt.c##
+ */## 61 ##src/lib/rtt.c##
+
+/* include rtt_stop */
+void## 62 ##src/lib/rtt.c##
+rtt_stop(struct rtt_info *ptr, uint32_t ms)## 63 ##src/lib/rtt.c##
+{## 64 ##src/lib/rtt.c##
+    double  delta;## 65 ##src/lib/rtt.c##
+
+    ptr->rtt_rtt = ms / 1000.0; /* measured RTT in seconds */## 66 ##src/lib/rtt.c##
+
+    /* ## 67 ##src/lib/rtt.c##
+     * Update our estimators of RTT and mean deviation of RTT.## 68 ##src/lib/rtt.c##
+     * See Jacobson's SIGCOMM '88 paper, Appendix A, for the details.## 69 ##src/lib/rtt.c##
+     * We use floating point here for simplicity.## 70 ##src/lib/rtt.c##
+     */## 71 ##src/lib/rtt.c##
+
+    delta = ptr->rtt_rtt - ptr->rtt_srtt;## 72 ##src/lib/rtt.c##
+    ptr->rtt_srtt += delta / 8; /* g = 1/8 */## 73 ##src/lib/rtt.c##
+
+    if (delta < 0.0)## 74 ##src/lib/rtt.c##
+        delta = -delta;         /* |delta| */## 75 ##src/lib/rtt.c##
+
+    ptr->rtt_rttvar += (delta - ptr->rtt_rttvar) / 4;   /* h = 1/4 */## 76 ##src/lib/rtt.c##
+
+    ptr->rtt_rto = rtt_minmax(RTT_RTOCALC(ptr));## 77 ##src/lib/rtt.c##
+}## 78 ##src/lib/rtt.c##
+/* end rtt_stop */
+
+/*## 79 ##src/lib/rtt.c##
+ * A timeout has occurred.## 80 ##src/lib/rtt.c##
+ * Return -1 if it's time to give up, else return 0.## 81 ##src/lib/rtt.c##
+ */## 82 ##src/lib/rtt.c##
+
+/* include rtt_timeout */
+int## 83 ##src/lib/rtt.c##
+rtt_timeout(struct rtt_info *ptr)## 84 ##src/lib/rtt.c##
+{## 85 ##src/lib/rtt.c##
+    ptr->rtt_rto *= 2;          /* next RTO */## 86 ##src/lib/rtt.c##
+
+    if (++ptr->rtt_nrexmt > RTT_MAXNREXMT)## 87 ##src/lib/rtt.c##
+        return (-1);            /* time to give up for this packet */## 88 ##src/lib/rtt.c##
+    return (0);## 89 ##src/lib/rtt.c##
+}## 90 ##src/lib/rtt.c##
+/* end rtt_timeout */
+
+/*## 91 ##src/lib/rtt.c##
+ * Print debugging information on stderr, if the "rtt_d_flag" is nonzero.## 92 ##src/lib/rtt.c##
+ */## 93 ##src/lib/rtt.c##
+
+void## 94 ##src/lib/rtt.c##
+rtt_debug(struct rtt_info *ptr)## 95 ##src/lib/rtt.c##
+{## 96 ##src/lib/rtt.c##
+    if (rtt_d_flag == 0)## 97 ##src/lib/rtt.c##
+        return;## 98 ##src/lib/rtt.c##
+
+    fprintf(stderr, "rtt = %.3f, srtt = %.3f, rttvar = %.3f, rto = %.3f\n",## 99 ##src/lib/rtt.c##
+            ptr->rtt_rtt, ptr->rtt_srtt, ptr->rtt_rttvar, ptr->rtt_rto);##100 ##src/lib/rtt.c##
+    fflush(stderr);##101 ##src/lib/rtt.c##
+}##102 ##src/lib/rtt.c##

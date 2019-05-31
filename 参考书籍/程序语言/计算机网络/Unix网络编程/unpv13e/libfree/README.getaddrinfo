@@ -1,0 +1,19 @@
+09Sep96
+
+Please read the comments at the begiinning of getaddrinfo.c.
+
+Supplied with this function are the two files inet_pton.c and
+inet_ntop.c from the BIND-4.9.4 release.  The arguments of
+these two functions differ from the current (but old) Internet
+Draft "ipngwg-bsd-api-05.txt", but the next revision of this
+draft will document these functions as they exist in BIND-4.9.4.
+
+Beware that most IPv6 releases are "alpha" at this time.  The
+use of the RES_USE_INET6 option in getaddrinfo() is again from
+the BIND-4.9.4 release, as this is what will become the standard.
+But few implementations, if any, support this unless you install
+BIND-4.9.4 (or later) yourself.
+
+Buf fixes, suggestions, etc. are welcome.
+
+	Rich Stevens  (rstevens@kohala.com)

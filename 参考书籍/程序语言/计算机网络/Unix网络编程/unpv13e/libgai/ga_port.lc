@@ -1,0 +1,62 @@
+#include    "gai_hdr.h"##  1 ##src/libgai/ga_port.c##
+
+/*##  2 ##src/libgai/ga_port.c##
+ * Go through all the addrinfo structures, checking for a match of the##  3 ##src/libgai/ga_port.c##
+ * socket type and filling in the socket type, and then the port number##  4 ##src/libgai/ga_port.c##
+ * in the corresponding socket address structures.##  5 ##src/libgai/ga_port.c##
+ *##  6 ##src/libgai/ga_port.c##
+ * The AI_CLONE flag works as follows.  Consider a multihomed host with##  7 ##src/libgai/ga_port.c##
+ * two IP addresses and no socket type specified by the caller.  After##  8 ##src/libgai/ga_port.c##
+ * the "host" search there are two addrinfo structures, one per IP address.##  9 ##src/libgai/ga_port.c##
+ * Assuming a service supported by both TCP and UDP (say the daytime## 10 ##src/libgai/ga_port.c##
+ * service) we need to return *four* addrinfo structures:## 11 ##src/libgai/ga_port.c##
+ *      IP#1, SOCK_STREAM, TCP port,## 12 ##src/libgai/ga_port.c##
+ *      IP#1, SOCK_DGRAM, UDP port,## 13 ##src/libgai/ga_port.c##
+ *      IP#2, SOCK_STREAM, TCP port,## 14 ##src/libgai/ga_port.c##
+ *      IP#2, SOCK_DGRAM, UDP port.## 15 ##src/libgai/ga_port.c##
+ * To do this, when the "host" loop creates an addrinfo structure, if the## 16 ##src/libgai/ga_port.c##
+ * caller has not specified a socket type (hintsp->ai_socktype == 0), the## 17 ##src/libgai/ga_port.c##
+ * AI_CLONE flag is set.  When the following function finds an entry like## 18 ##src/libgai/ga_port.c##
+ * this it is handled as follows: If the entry's ai_socktype is still 0,## 19 ##src/libgai/ga_port.c##
+ * this is the first use of the structure, and the ai_socktype field is set.## 20 ##src/libgai/ga_port.c##
+ * But, if the entry's ai_socktype is nonzero, then we clone a new addrinfo## 21 ##src/libgai/ga_port.c##
+ * structure and set it's ai_socktype to the new value.  Although we only## 22 ##src/libgai/ga_port.c##
+ * need two socket types today (SOCK_STREAM and SOCK_DGRAM) this algorithm## 23 ##src/libgai/ga_port.c##
+ * will handle any number.  Also notice that Posix.1g requires all socket## 24 ##src/libgai/ga_port.c##
+ * types to be nonzero.## 25 ##src/libgai/ga_port.c##
+ */## 26 ##src/libgai/ga_port.c##
+
+/* include ga_port */
+int## 27 ##src/libgai/ga_port.c##
+ga_port(struct addrinfo *aihead, int port, int socktype)## 28 ##src/libgai/ga_port.c##
+        /* port must be in network byte order */## 29 ##src/libgai/ga_port.c##
+{## 30 ##src/libgai/ga_port.c##
+    int     nfound = 0;## 31 ##src/libgai/ga_port.c##
+    struct addrinfo *ai;## 32 ##src/libgai/ga_port.c##
+
+    for (ai = aihead; ai != NULL; ai = ai->ai_next) {## 33 ##src/libgai/ga_port.c##
+        if (ai->ai_flags & AI_CLONE) {## 34 ##src/libgai/ga_port.c##
+            if (ai->ai_socktype != 0) {## 35 ##src/libgai/ga_port.c##
+                if ((ai = ga_clone(ai)) == NULL)## 36 ##src/libgai/ga_port.c##
+                    return (-1);    /* memory allocation error */## 37 ##src/libgai/ga_port.c##
+                /* ai points to newly cloned entry, which is what we want */## 38 ##src/libgai/ga_port.c##
+            }## 39 ##src/libgai/ga_port.c##
+        } else if (ai->ai_socktype != socktype)## 40 ##src/libgai/ga_port.c##
+            continue;           /* ignore if mismatch on socket type */## 41 ##src/libgai/ga_port.c##
+
+        ai->ai_socktype = socktype;## 42 ##src/libgai/ga_port.c##
+
+        switch (ai->ai_family) {## 43 ##src/libgai/ga_port.c##
+        case AF_INET:## 44 ##src/libgai/ga_port.c##
+            ((struct sockaddr_in *) ai->ai_addr)->sin_port = port;## 45 ##src/libgai/ga_port.c##
+            nfound++;## 46 ##src/libgai/ga_port.c##
+            break;## 47 ##src/libgai/ga_port.c##
+        case AF_INET6:## 48 ##src/libgai/ga_port.c##
+            ((struct sockaddr_in6 *) ai->ai_addr)->sin6_port = port;## 49 ##src/libgai/ga_port.c##
+            nfound++;## 50 ##src/libgai/ga_port.c##
+            break;## 51 ##src/libgai/ga_port.c##
+        }## 52 ##src/libgai/ga_port.c##
+    }## 53 ##src/libgai/ga_port.c##
+    return (nfound);## 54 ##src/libgai/ga_port.c##
+}## 55 ##src/libgai/ga_port.c##
+/* end ga_port */

@@ -1,0 +1,42 @@
+#include    "unp.h"##  1 ##src/oob/tcprecv02.c##
+
+int##  2 ##src/oob/tcprecv02.c##
+main(int argc, char **argv)##  3 ##src/oob/tcprecv02.c##
+{##  4 ##src/oob/tcprecv02.c##
+    int     listenfd, connfd, n;##  5 ##src/oob/tcprecv02.c##
+    char    buff[100];##  6 ##src/oob/tcprecv02.c##
+    fd_set  rset, xset;##  7 ##src/oob/tcprecv02.c##
+
+    if (argc == 2)##  8 ##src/oob/tcprecv02.c##
+        listenfd = Tcp_listen(NULL, argv[1], NULL);##  9 ##src/oob/tcprecv02.c##
+    else if (argc == 3)## 10 ##src/oob/tcprecv02.c##
+        listenfd = Tcp_listen(argv[1], argv[2], NULL);## 11 ##src/oob/tcprecv02.c##
+    else## 12 ##src/oob/tcprecv02.c##
+        err_quit("usage: tcprecv02 [ <host> ] <port#>");## 13 ##src/oob/tcprecv02.c##
+
+    connfd = Accept(listenfd, NULL, NULL);## 14 ##src/oob/tcprecv02.c##
+
+    FD_ZERO(&rset);## 15 ##src/oob/tcprecv02.c##
+    FD_ZERO(&xset);## 16 ##src/oob/tcprecv02.c##
+    for (;;) {## 17 ##src/oob/tcprecv02.c##
+        FD_SET(connfd, &rset);## 18 ##src/oob/tcprecv02.c##
+        FD_SET(connfd, &xset);## 19 ##src/oob/tcprecv02.c##
+
+        Select(connfd + 1, &rset, NULL, &xset, NULL);## 20 ##src/oob/tcprecv02.c##
+
+        if (FD_ISSET(connfd, &xset)) {## 21 ##src/oob/tcprecv02.c##
+            n = Recv(connfd, buff, sizeof(buff) - 1, MSG_OOB);## 22 ##src/oob/tcprecv02.c##
+            buff[n] = 0;        /* null terminate */## 23 ##src/oob/tcprecv02.c##
+            printf("read %d OOB byte: %s\n", n, buff);## 24 ##src/oob/tcprecv02.c##
+        }## 25 ##src/oob/tcprecv02.c##
+
+        if (FD_ISSET(connfd, &rset)) {## 26 ##src/oob/tcprecv02.c##
+            if ((n = Read(connfd, buff, sizeof(buff) - 1)) == 0) {## 27 ##src/oob/tcprecv02.c##
+                printf("received EOF\n");## 28 ##src/oob/tcprecv02.c##
+                exit(0);## 29 ##src/oob/tcprecv02.c##
+            }## 30 ##src/oob/tcprecv02.c##
+            buff[n] = 0;        /* null terminate */## 31 ##src/oob/tcprecv02.c##
+            printf("read %d bytes: %s\n", n, buff);## 32 ##src/oob/tcprecv02.c##
+        }## 33 ##src/oob/tcprecv02.c##
+    }## 34 ##src/oob/tcprecv02.c##
+}## 35 ##src/oob/tcprecv02.c##

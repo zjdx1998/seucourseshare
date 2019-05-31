@@ -1,0 +1,79 @@
+#include    "tpi_daytime.h"##  1 ##src/streams/tpi_connect.c##
+
+void##  2 ##src/streams/tpi_connect.c##
+tpi_connect(int fd, const void *addr, size_t addrlen)##  3 ##src/streams/tpi_connect.c##
+{##  4 ##src/streams/tpi_connect.c##
+    struct {##  5 ##src/streams/tpi_connect.c##
+        struct T_conn_req msg_hdr;##  6 ##src/streams/tpi_connect.c##
+        char    addr[128];##  7 ##src/streams/tpi_connect.c##
+    } conn_req;##  8 ##src/streams/tpi_connect.c##
+    struct {##  9 ##src/streams/tpi_connect.c##
+        struct T_conn_con msg_hdr;## 10 ##src/streams/tpi_connect.c##
+        char    addr[128];## 11 ##src/streams/tpi_connect.c##
+    } conn_con;## 12 ##src/streams/tpi_connect.c##
+    struct strbuf ctlbuf;## 13 ##src/streams/tpi_connect.c##
+    union T_primitives rcvbuf;## 14 ##src/streams/tpi_connect.c##
+    struct T_error_ack *error_ack;## 15 ##src/streams/tpi_connect.c##
+    struct T_discon_ind *discon_ind;## 16 ##src/streams/tpi_connect.c##
+    int     flags;## 17 ##src/streams/tpi_connect.c##
+
+    conn_req.msg_hdr.PRIM_type = T_CONN_REQ;## 18 ##src/streams/tpi_connect.c##
+    conn_req.msg_hdr.DEST_length = addrlen;## 19 ##src/streams/tpi_connect.c##
+    conn_req.msg_hdr.DEST_offset = sizeof(struct T_conn_req);## 20 ##src/streams/tpi_connect.c##
+    conn_req.msg_hdr.OPT_length = 0;## 21 ##src/streams/tpi_connect.c##
+    conn_req.msg_hdr.OPT_offset = 0;## 22 ##src/streams/tpi_connect.c##
+    memcpy(conn_req.addr, addr, addrlen);   /* sockaddr_in{} */## 23 ##src/streams/tpi_connect.c##
+
+    ctlbuf.len = sizeof(struct T_conn_req) + addrlen;## 24 ##src/streams/tpi_connect.c##
+    ctlbuf.buf = (char *) &conn_req;## 25 ##src/streams/tpi_connect.c##
+    Putmsg(fd, &ctlbuf, NULL, 0);## 26 ##src/streams/tpi_connect.c##
+
+    ctlbuf.maxlen = sizeof(union T_primitives);## 27 ##src/streams/tpi_connect.c##
+    ctlbuf.len = 0;## 28 ##src/streams/tpi_connect.c##
+    ctlbuf.buf = (char *) &rcvbuf;## 29 ##src/streams/tpi_connect.c##
+    flags = RS_HIPRI;## 30 ##src/streams/tpi_connect.c##
+    Getmsg(fd, &ctlbuf, NULL, &flags);## 31 ##src/streams/tpi_connect.c##
+
+    if (ctlbuf.len < (int) sizeof(long))## 32 ##src/streams/tpi_connect.c##
+        err_quit("tpi_connect: bad length from getmsg");## 33 ##src/streams/tpi_connect.c##
+
+    switch (rcvbuf.type) {## 34 ##src/streams/tpi_connect.c##
+    case T_OK_ACK:## 35 ##src/streams/tpi_connect.c##
+        break;## 36 ##src/streams/tpi_connect.c##
+
+    case T_ERROR_ACK:## 37 ##src/streams/tpi_connect.c##
+        if (ctlbuf.len < (int) sizeof(struct T_error_ack))## 38 ##src/streams/tpi_connect.c##
+            err_quit("tpi_connect: bad length for T_ERROR_ACK");## 39 ##src/streams/tpi_connect.c##
+        error_ack = (struct T_error_ack *) &rcvbuf;## 40 ##src/streams/tpi_connect.c##
+        err_quit("tpi_connect: T_ERROR_ACK from conn (%d, %d)",## 41 ##src/streams/tpi_connect.c##
+                 error_ack->TLI_error, error_ack->UNIX_error);## 42 ##src/streams/tpi_connect.c##
+
+    default:## 43 ##src/streams/tpi_connect.c##
+        err_quit("tpi_connect: unexpected message type: %d", rcvbuf.type);## 44 ##src/streams/tpi_connect.c##
+    }## 45 ##src/streams/tpi_connect.c##
+
+    ctlbuf.maxlen = sizeof(conn_con);## 46 ##src/streams/tpi_connect.c##
+    ctlbuf.len = 0;## 47 ##src/streams/tpi_connect.c##
+    ctlbuf.buf = (char *) &conn_con;## 48 ##src/streams/tpi_connect.c##
+    flags = 0;## 49 ##src/streams/tpi_connect.c##
+    Getmsg(fd, &ctlbuf, NULL, &flags);## 50 ##src/streams/tpi_connect.c##
+
+    if (ctlbuf.len < (int) sizeof(long))## 51 ##src/streams/tpi_connect.c##
+        err_quit("tpi_connect2: bad length from getmsg");## 52 ##src/streams/tpi_connect.c##
+
+    switch (conn_con.msg_hdr.PRIM_type) {## 53 ##src/streams/tpi_connect.c##
+    case T_CONN_CON:## 54 ##src/streams/tpi_connect.c##
+        break;## 55 ##src/streams/tpi_connect.c##
+
+    case T_DISCON_IND:## 56 ##src/streams/tpi_connect.c##
+        if (ctlbuf.len < (int) sizeof(struct T_discon_ind))## 57 ##src/streams/tpi_connect.c##
+            err_quit("tpi_connect2: bad length for T_DISCON_IND");## 58 ##src/streams/tpi_connect.c##
+        discon_ind = (struct T_discon_ind *) &conn_con.msg_hdr;## 59 ##src/streams/tpi_connect.c##
+        err_quit("tpi_connect2: T_DISCON_IND from conn (%d)",## 60 ##src/streams/tpi_connect.c##
+                 discon_ind->DISCON_reason);## 61 ##src/streams/tpi_connect.c##
+
+    default:## 62 ##src/streams/tpi_connect.c##
+        err_quit("tpi_connect2: unexpected message type: %d",## 63 ##src/streams/tpi_connect.c##
+                 conn_con.msg_hdr.PRIM_type);## 64 ##src/streams/tpi_connect.c##
+    }## 65 ##src/streams/tpi_connect.c##
+}## 66 ##src/streams/tpi_connect.c##

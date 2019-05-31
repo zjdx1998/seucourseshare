@@ -1,0 +1,123 @@
+#include    "unpifi.h"##  1 ##src/route/get_ifi_info.c##
+#include    "unproute.h"##  2 ##src/route/get_ifi_info.c##
+
+/* include get_ifi_info1 */
+struct ifi_info *##  3 ##src/route/get_ifi_info.c##
+get_ifi_info(int family, int doaliases)##  4 ##src/route/get_ifi_info.c##
+{##  5 ##src/route/get_ifi_info.c##
+    int     flags;##  6 ##src/route/get_ifi_info.c##
+    char   *buf, *next, *lim;##  7 ##src/route/get_ifi_info.c##
+    size_t  len;##  8 ##src/route/get_ifi_info.c##
+    struct if_msghdr *ifm;##  9 ##src/route/get_ifi_info.c##
+    struct ifa_msghdr *ifam;## 10 ##src/route/get_ifi_info.c##
+    struct sockaddr *sa, *rti_info[RTAX_MAX];## 11 ##src/route/get_ifi_info.c##
+    struct sockaddr_dl *sdl;## 12 ##src/route/get_ifi_info.c##
+    struct ifi_info *ifi, *ifisave, *ifihead, **ifipnext;## 13 ##src/route/get_ifi_info.c##
+
+    buf = Net_rt_iflist(family, 0, &len);## 14 ##src/route/get_ifi_info.c##
+
+    ifihead = NULL;## 15 ##src/route/get_ifi_info.c##
+    ifipnext = &ifihead;## 16 ##src/route/get_ifi_info.c##
+
+    lim = buf + len;## 17 ##src/route/get_ifi_info.c##
+    for (next = buf; next < lim; next += ifm->ifm_msglen) {## 18 ##src/route/get_ifi_info.c##
+        ifm = (struct if_msghdr *) next;## 19 ##src/route/get_ifi_info.c##
+        if (ifm->ifm_type == RTM_IFINFO) {## 20 ##src/route/get_ifi_info.c##
+            if (((flags = ifm->ifm_flags) & IFF_UP) == 0)## 21 ##src/route/get_ifi_info.c##
+                continue;       /* ignore if interface not up */## 22 ##src/route/get_ifi_info.c##
+
+            sa = (struct sockaddr *) (ifm + 1);## 23 ##src/route/get_ifi_info.c##
+            get_rtaddrs(ifm->ifm_addrs, sa, rti_info);## 24 ##src/route/get_ifi_info.c##
+            if ((sa = rti_info[RTAX_IFP]) != NULL) {## 25 ##src/route/get_ifi_info.c##
+                ifi = Calloc(1, sizeof(struct ifi_info));## 26 ##src/route/get_ifi_info.c##
+                *ifipnext = ifi;    /* prev points to this new one */## 27 ##src/route/get_ifi_info.c##
+                ifipnext = &ifi->ifi_next;  /* ptr to next one goes here */## 28 ##src/route/get_ifi_info.c##
+
+                ifi->ifi_flags = flags;## 29 ##src/route/get_ifi_info.c##
+                if (sa->sa_family == AF_LINK) {## 30 ##src/route/get_ifi_info.c##
+                    sdl = (struct sockaddr_dl *) sa;## 31 ##src/route/get_ifi_info.c##
+                    if (sdl->sdl_nlen > 0)## 32 ##src/route/get_ifi_info.c##
+                        snprintf(ifi->ifi_name, IFI_NAME, "%*s",## 33 ##src/route/get_ifi_info.c##
+                                 sdl->sdl_nlen, &sdl->sdl_data[0]);## 34 ##src/route/get_ifi_info.c##
+                    else## 35 ##src/route/get_ifi_info.c##
+                        snprintf(ifi->ifi_name, IFI_NAME, "index %d",## 36 ##src/route/get_ifi_info.c##
+                                 sdl->sdl_index);## 37 ##src/route/get_ifi_info.c##
+
+                    if ((ifi->ifi_hlen = sdl->sdl_alen) > 0)## 38 ##src/route/get_ifi_info.c##
+                        memcpy(ifi->ifi_haddr, LLADDR(sdl),## 39 ##src/route/get_ifi_info.c##
+                               min(IFI_HADDR, sdl->sdl_alen));## 40 ##src/route/get_ifi_info.c##
+                }## 41 ##src/route/get_ifi_info.c##
+            }## 42 ##src/route/get_ifi_info.c##
+/* end get_ifi_info1 */
+
+/* include get_ifi_info3 */
+        } else if (ifm->ifm_type == RTM_NEWADDR) {## 43 ##src/route/get_ifi_info.c##
+            if (ifi->ifi_addr) {    /* already have an IP addr for i/f */## 44 ##src/route/get_ifi_info.c##
+                if (doaliases == 0)## 45 ##src/route/get_ifi_info.c##
+                    continue;## 46 ##src/route/get_ifi_info.c##
+
+                /* 4we have a new IP addr for existing interface */## 47 ##src/route/get_ifi_info.c##
+                ifisave = ifi;## 48 ##src/route/get_ifi_info.c##
+                ifi = Calloc(1, sizeof(struct ifi_info));## 49 ##src/route/get_ifi_info.c##
+                *ifipnext = ifi;    /* prev points to this new one */## 50 ##src/route/get_ifi_info.c##
+                ifipnext = &ifi->ifi_next;  /* ptr to next one goes here */## 51 ##src/route/get_ifi_info.c##
+                ifi->ifi_flags = ifisave->ifi_flags;## 52 ##src/route/get_ifi_info.c##
+                ifi->ifi_hlen = ifisave->ifi_hlen;## 53 ##src/route/get_ifi_info.c##
+                memcpy(ifi->ifi_name, ifisave->ifi_name, IFI_NAME);## 54 ##src/route/get_ifi_info.c##
+                memcpy(ifi->ifi_haddr, ifisave->ifi_haddr, IFI_HADDR);## 55 ##src/route/get_ifi_info.c##
+            }## 56 ##src/route/get_ifi_info.c##
+
+            ifam = (struct ifa_msghdr *) next;## 57 ##src/route/get_ifi_info.c##
+            sa = (struct sockaddr *) (ifam + 1);## 58 ##src/route/get_ifi_info.c##
+            get_rtaddrs(ifam->ifam_addrs, sa, rti_info);## 59 ##src/route/get_ifi_info.c##
+
+            if ((sa = rti_info[RTAX_IFA]) != NULL) {## 60 ##src/route/get_ifi_info.c##
+                ifi->ifi_addr = Calloc(1, sa->sa_len);## 61 ##src/route/get_ifi_info.c##
+                memcpy(ifi->ifi_addr, sa, sa->sa_len);## 62 ##src/route/get_ifi_info.c##
+            }## 63 ##src/route/get_ifi_info.c##
+
+            if ((flags & IFF_BROADCAST) && (sa = rti_info[RTAX_BRD]) != NULL) {## 64 ##src/route/get_ifi_info.c##
+                ifi->ifi_brdaddr = Calloc(1, sa->sa_len);## 65 ##src/route/get_ifi_info.c##
+                memcpy(ifi->ifi_brdaddr, sa, sa->sa_len);## 66 ##src/route/get_ifi_info.c##
+            }## 67 ##src/route/get_ifi_info.c##
+
+            if ((flags & IFF_POINTOPOINT) &&## 68 ##src/route/get_ifi_info.c##
+                (sa = rti_info[RTAX_BRD]) != NULL) {## 69 ##src/route/get_ifi_info.c##
+                ifi->ifi_dstaddr = Calloc(1, sa->sa_len);## 70 ##src/route/get_ifi_info.c##
+                memcpy(ifi->ifi_dstaddr, sa, sa->sa_len);## 71 ##src/route/get_ifi_info.c##
+            }## 72 ##src/route/get_ifi_info.c##
+
+        } else## 73 ##src/route/get_ifi_info.c##
+            err_quit("unexpected message type %d", ifm->ifm_type);## 74 ##src/route/get_ifi_info.c##
+    }## 75 ##src/route/get_ifi_info.c##
+    /* "ifihead" points to the first structure in the linked list */## 76 ##src/route/get_ifi_info.c##
+    return (ifihead);           /* ptr to first structure in linked list */## 77 ##src/route/get_ifi_info.c##
+}## 78 ##src/route/get_ifi_info.c##
+/* end get_ifi_info3 */
+
+void## 79 ##src/route/get_ifi_info.c##
+free_ifi_info(struct ifi_info *ifihead)## 80 ##src/route/get_ifi_info.c##
+{## 81 ##src/route/get_ifi_info.c##
+    struct ifi_info *ifi, *ifinext;## 82 ##src/route/get_ifi_info.c##
+
+    for (ifi = ifihead; ifi != NULL; ifi = ifinext) {## 83 ##src/route/get_ifi_info.c##
+        if (ifi->ifi_addr != NULL)## 84 ##src/route/get_ifi_info.c##
+            free(ifi->ifi_addr);## 85 ##src/route/get_ifi_info.c##
+        if (ifi->ifi_brdaddr != NULL)## 86 ##src/route/get_ifi_info.c##
+            free(ifi->ifi_brdaddr);## 87 ##src/route/get_ifi_info.c##
+        if (ifi->ifi_dstaddr != NULL)## 88 ##src/route/get_ifi_info.c##
+            free(ifi->ifi_dstaddr);## 89 ##src/route/get_ifi_info.c##
+        ifinext = ifi->ifi_next;    /* can't fetch ifi_next after free() */## 90 ##src/route/get_ifi_info.c##
+        free(ifi);              /* the ifi_info{} itself */## 91 ##src/route/get_ifi_info.c##
+    }## 92 ##src/route/get_ifi_info.c##
+}## 93 ##src/route/get_ifi_info.c##
+
+struct ifi_info *## 94 ##src/route/get_ifi_info.c##
+Get_ifi_info(int family, int doaliases)## 95 ##src/route/get_ifi_info.c##
+{## 96 ##src/route/get_ifi_info.c##
+    struct ifi_info *ifi;## 97 ##src/route/get_ifi_info.c##
+
+    if ((ifi = get_ifi_info(family, doaliases)) == NULL)## 98 ##src/route/get_ifi_info.c##
+        err_quit("get_ifi_info error");## 99 ##src/route/get_ifi_info.c##
+    return (ifi);##100 ##src/route/get_ifi_info.c##
+}##101 ##src/route/get_ifi_info.c##

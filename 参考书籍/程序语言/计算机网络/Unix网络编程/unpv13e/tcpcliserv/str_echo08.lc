@@ -1,0 +1,22 @@
+#include    "unp.h"##  1 ##src/tcpcliserv/str_echo08.c##
+
+void##  2 ##src/tcpcliserv/str_echo08.c##
+str_echo(int sockfd)##  3 ##src/tcpcliserv/str_echo08.c##
+{##  4 ##src/tcpcliserv/str_echo08.c##
+    long    arg1, arg2;##  5 ##src/tcpcliserv/str_echo08.c##
+    ssize_t n;##  6 ##src/tcpcliserv/str_echo08.c##
+    char    line[MAXLINE];##  7 ##src/tcpcliserv/str_echo08.c##
+
+    for (;;) {##  8 ##src/tcpcliserv/str_echo08.c##
+        if ((n = Readline(sockfd, line, MAXLINE)) == 0)##  9 ##src/tcpcliserv/str_echo08.c##
+            return;             /* connection closed by other end */## 10 ##src/tcpcliserv/str_echo08.c##
+
+        if (sscanf(line, "%ld%ld", &arg1, &arg2) == 2)## 11 ##src/tcpcliserv/str_echo08.c##
+            snprintf(line, sizeof(line), "%ld\n", arg1 + arg2);## 12 ##src/tcpcliserv/str_echo08.c##
+        else## 13 ##src/tcpcliserv/str_echo08.c##
+            snprintf(line, sizeof(line), "input error\n");## 14 ##src/tcpcliserv/str_echo08.c##
+
+        n = strlen(line);## 15 ##src/tcpcliserv/str_echo08.c##
+        Writen(sockfd, line, n);## 16 ##src/tcpcliserv/str_echo08.c##
+    }## 17 ##src/tcpcliserv/str_echo08.c##
+}## 18 ##src/tcpcliserv/str_echo08.c##

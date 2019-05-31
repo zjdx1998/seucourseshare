@@ -1,0 +1,16 @@
+#include    "tpi_daytime.h"##  1 ##src/streams/tpi_close.c##
+
+void##  2 ##src/streams/tpi_close.c##
+tpi_close(int fd)##  3 ##src/streams/tpi_close.c##
+{##  4 ##src/streams/tpi_close.c##
+    struct T_ordrel_req ordrel_req;##  5 ##src/streams/tpi_close.c##
+    struct strbuf ctlbuf;##  6 ##src/streams/tpi_close.c##
+
+    ordrel_req.PRIM_type = T_ORDREL_REQ;##  7 ##src/streams/tpi_close.c##
+
+    ctlbuf.len = sizeof(struct T_ordrel_req);##  8 ##src/streams/tpi_close.c##
+    ctlbuf.buf = (char *) &ordrel_req;##  9 ##src/streams/tpi_close.c##
+    Putmsg(fd, &ctlbuf, NULL, 0);## 10 ##src/streams/tpi_close.c##
+
+    Close(fd);## 11 ##src/streams/tpi_close.c##
+}## 12 ##src/streams/tpi_close.c##

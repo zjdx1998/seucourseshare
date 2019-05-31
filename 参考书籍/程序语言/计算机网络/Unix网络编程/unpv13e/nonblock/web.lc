@@ -1,0 +1,83 @@
+/* include web1 */
+#include    "web.h"##  1 ##src/nonblock/web.c##
+
+int##  2 ##src/nonblock/web.c##
+main(int argc, char **argv)##  3 ##src/nonblock/web.c##
+{##  4 ##src/nonblock/web.c##
+    int     i, fd, n, maxnconn, flags, error;##  5 ##src/nonblock/web.c##
+    char    buf[MAXLINE];##  6 ##src/nonblock/web.c##
+    fd_set  rs, ws;##  7 ##src/nonblock/web.c##
+
+    if (argc < 5)##  8 ##src/nonblock/web.c##
+        err_quit("usage: web <#conns> <hostname> <homepage> <file1> ...");##  9 ##src/nonblock/web.c##
+    maxnconn = atoi(argv[1]);## 10 ##src/nonblock/web.c##
+
+    nfiles = min(argc - 4, MAXFILES);## 11 ##src/nonblock/web.c##
+    for (i = 0; i < nfiles; i++) {## 12 ##src/nonblock/web.c##
+        file[i].f_name = argv[i + 4];## 13 ##src/nonblock/web.c##
+        file[i].f_host = argv[2];## 14 ##src/nonblock/web.c##
+        file[i].f_flags = 0;## 15 ##src/nonblock/web.c##
+    }## 16 ##src/nonblock/web.c##
+    printf("nfiles = %d\n", nfiles);## 17 ##src/nonblock/web.c##
+
+    home_page(argv[2], argv[3]);## 18 ##src/nonblock/web.c##
+
+    FD_ZERO(&rset);## 19 ##src/nonblock/web.c##
+    FD_ZERO(&wset);## 20 ##src/nonblock/web.c##
+    maxfd = -1;## 21 ##src/nonblock/web.c##
+    nlefttoread = nlefttoconn = nfiles;## 22 ##src/nonblock/web.c##
+    nconn = 0;## 23 ##src/nonblock/web.c##
+/* end web1 */
+/* include web2 */
+    while (nlefttoread > 0) {## 24 ##src/nonblock/web.c##
+        while (nconn < maxnconn && nlefttoconn > 0) {## 25 ##src/nonblock/web.c##
+            /* 4find a file to read */## 26 ##src/nonblock/web.c##
+            for (i = 0; i < nfiles; i++)## 27 ##src/nonblock/web.c##
+                if (file[i].f_flags == 0)## 28 ##src/nonblock/web.c##
+                    break;## 29 ##src/nonblock/web.c##
+            if (i == nfiles)## 30 ##src/nonblock/web.c##
+                err_quit("nlefttoconn = %d but nothing found", nlefttoconn);## 31 ##src/nonblock/web.c##
+            start_connect(&file[i]);## 32 ##src/nonblock/web.c##
+            nconn++;## 33 ##src/nonblock/web.c##
+            nlefttoconn--;## 34 ##src/nonblock/web.c##
+        }## 35 ##src/nonblock/web.c##
+
+        rs = rset;## 36 ##src/nonblock/web.c##
+        ws = wset;## 37 ##src/nonblock/web.c##
+        n = Select(maxfd + 1, &rs, &ws, NULL, NULL);## 38 ##src/nonblock/web.c##
+
+        for (i = 0; i < nfiles; i++) {## 39 ##src/nonblock/web.c##
+            flags = file[i].f_flags;## 40 ##src/nonblock/web.c##
+            if (flags == 0 || flags & F_DONE)## 41 ##src/nonblock/web.c##
+                continue;## 42 ##src/nonblock/web.c##
+            fd = file[i].f_fd;## 43 ##src/nonblock/web.c##
+            if (flags & F_CONNECTING &&## 44 ##src/nonblock/web.c##
+                (FD_ISSET(fd, &rs) || FD_ISSET(fd, &ws))) {## 45 ##src/nonblock/web.c##
+                n = sizeof(error);## 46 ##src/nonblock/web.c##
+                if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &n) < 0 ||## 47 ##src/nonblock/web.c##
+                    error != 0) {## 48 ##src/nonblock/web.c##
+                    err_ret("nonblocking connect failed for %s",## 49 ##src/nonblock/web.c##
+                            file[i].f_name);## 50 ##src/nonblock/web.c##
+                }## 51 ##src/nonblock/web.c##
+                /* 4connection established */## 52 ##src/nonblock/web.c##
+                printf("connection established for %s\n", file[i].f_name);## 53 ##src/nonblock/web.c##
+                FD_CLR(fd, &wset);  /* no more writeability test */## 54 ##src/nonblock/web.c##
+                write_get_cmd(&file[i]);    /* write() the GET command */## 55 ##src/nonblock/web.c##
+
+            } else if (flags & F_READING && FD_ISSET(fd, &rs)) {## 56 ##src/nonblock/web.c##
+                if ((n = Read(fd, buf, sizeof(buf))) == 0) {## 57 ##src/nonblock/web.c##
+                    printf("end-of-file on %s\n", file[i].f_name);## 58 ##src/nonblock/web.c##
+                    Close(fd);## 59 ##src/nonblock/web.c##
+                    file[i].f_flags = F_DONE;   /* clears F_READING */## 60 ##src/nonblock/web.c##
+                    FD_CLR(fd, &rset);## 61 ##src/nonblock/web.c##
+                    nconn--;## 62 ##src/nonblock/web.c##
+                    nlefttoread--;## 63 ##src/nonblock/web.c##
+                } else {## 64 ##src/nonblock/web.c##
+                    printf("read %d bytes from %s\n", n, file[i].f_name);## 65 ##src/nonblock/web.c##
+                }## 66 ##src/nonblock/web.c##
+            }## 67 ##src/nonblock/web.c##
+        }## 68 ##src/nonblock/web.c##
+    }## 69 ##src/nonblock/web.c##
+    exit(0);## 70 ##src/nonblock/web.c##
+}## 71 ##src/nonblock/web.c##
+/* end web2 */

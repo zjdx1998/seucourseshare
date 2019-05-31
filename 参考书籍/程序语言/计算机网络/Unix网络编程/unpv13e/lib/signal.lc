@@ -1,0 +1,35 @@
+/* include signal */
+#include    "unp.h"##  1 ##src/lib/signal.c##
+
+Sigfunc *##  2 ##src/lib/signal.c##
+signal(int signo, Sigfunc *func)##  3 ##src/lib/signal.c##
+{##  4 ##src/lib/signal.c##
+    struct sigaction act, oact;##  5 ##src/lib/signal.c##
+
+    act.sa_handler = func;##  6 ##src/lib/signal.c##
+    sigemptyset(&act.sa_mask);##  7 ##src/lib/signal.c##
+    act.sa_flags = 0;##  8 ##src/lib/signal.c##
+    if (signo == SIGALRM) {##  9 ##src/lib/signal.c##
+#ifdef  SA_INTERRUPT## 10 ##src/lib/signal.c##
+        act.sa_flags |= SA_INTERRUPT;   /* SunOS 4.x */## 11 ##src/lib/signal.c##
+#endif## 12 ##src/lib/signal.c##
+    } else {## 13 ##src/lib/signal.c##
+#ifdef  SA_RESTART## 14 ##src/lib/signal.c##
+        act.sa_flags |= SA_RESTART; /* SVR4, 44BSD */## 15 ##src/lib/signal.c##
+#endif## 16 ##src/lib/signal.c##
+    }## 17 ##src/lib/signal.c##
+    if (sigaction(signo, &act, &oact) < 0)## 18 ##src/lib/signal.c##
+        return (SIG_ERR);## 19 ##src/lib/signal.c##
+    return (oact.sa_handler);## 20 ##src/lib/signal.c##
+}## 21 ##src/lib/signal.c##
+/* end signal */
+
+Sigfunc *## 22 ##src/lib/signal.c##
+Signal(int signo, Sigfunc *func)## 23 ##src/lib/signal.c##
+{                               /* for our signal() function */## 24 ##src/lib/signal.c##
+    Sigfunc *sigfunc;## 25 ##src/lib/signal.c##
+
+    if ((sigfunc = signal(signo, func)) == SIG_ERR)## 26 ##src/lib/signal.c##
+        err_sys("signal error");## 27 ##src/lib/signal.c##
+    return (sigfunc);## 28 ##src/lib/signal.c##
+}## 29 ##src/lib/signal.c##

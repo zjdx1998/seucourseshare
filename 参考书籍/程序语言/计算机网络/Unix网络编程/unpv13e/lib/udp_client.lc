@@ -1,0 +1,42 @@
+/* include udp_client */
+#include    "unp.h"##  1 ##src/lib/udp_client.c##
+
+int##  2 ##src/lib/udp_client.c##
+udp_client(const char *host, const char *serv, SA **saptr, socklen_t *lenp)##  3 ##src/lib/udp_client.c##
+{##  4 ##src/lib/udp_client.c##
+    int     sockfd, n;##  5 ##src/lib/udp_client.c##
+    struct addrinfo hints, *res, *ressave;##  6 ##src/lib/udp_client.c##
+
+    bzero(&hints, sizeof(struct addrinfo));##  7 ##src/lib/udp_client.c##
+    hints.ai_family = AF_UNSPEC;##  8 ##src/lib/udp_client.c##
+    hints.ai_socktype = SOCK_DGRAM;##  9 ##src/lib/udp_client.c##
+
+    if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)## 10 ##src/lib/udp_client.c##
+        err_quit("udp_client error for %s, %s: %s",## 11 ##src/lib/udp_client.c##
+                 host, serv, gai_strerror(n));## 12 ##src/lib/udp_client.c##
+    ressave = res;## 13 ##src/lib/udp_client.c##
+
+    do {## 14 ##src/lib/udp_client.c##
+        sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);## 15 ##src/lib/udp_client.c##
+        if (sockfd >= 0)## 16 ##src/lib/udp_client.c##
+            break;              /* success */## 17 ##src/lib/udp_client.c##
+    } while ((res = res->ai_next) != NULL);## 18 ##src/lib/udp_client.c##
+
+    if (res == NULL)            /* errno set from final socket() */## 19 ##src/lib/udp_client.c##
+        err_sys("udp_client error for %s, %s", host, serv);## 20 ##src/lib/udp_client.c##
+
+    *saptr = Malloc(res->ai_addrlen);## 21 ##src/lib/udp_client.c##
+    memcpy(*saptr, res->ai_addr, res->ai_addrlen);## 22 ##src/lib/udp_client.c##
+    *lenp = res->ai_addrlen;## 23 ##src/lib/udp_client.c##
+
+    freeaddrinfo(ressave);## 24 ##src/lib/udp_client.c##
+
+    return (sockfd);## 25 ##src/lib/udp_client.c##
+}## 26 ##src/lib/udp_client.c##
+/* end udp_client */
+
+int## 27 ##src/lib/udp_client.c##
+Udp_client(const char *host, const char *serv, SA **saptr, socklen_t *lenptr)## 28 ##src/lib/udp_client.c##
+{## 29 ##src/lib/udp_client.c##
+    return (udp_client(host, serv, saptr, lenptr));## 30 ##src/lib/udp_client.c##
+}## 31 ##src/lib/udp_client.c##

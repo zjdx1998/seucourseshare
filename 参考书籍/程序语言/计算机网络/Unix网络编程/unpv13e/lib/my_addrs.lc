@@ -1,0 +1,30 @@
+/* include my_addrs */
+#include    "unp.h"##  1 ##src/lib/my_addrs.c##
+#include    <sys/utsname.h>##  2 ##src/lib/my_addrs.c##
+
+char  **##  3 ##src/lib/my_addrs.c##
+my_addrs(int *addrtype)##  4 ##src/lib/my_addrs.c##
+{##  5 ##src/lib/my_addrs.c##
+    struct hostent *hptr;##  6 ##src/lib/my_addrs.c##
+    struct utsname myname;##  7 ##src/lib/my_addrs.c##
+
+    if (uname(&myname) < 0)##  8 ##src/lib/my_addrs.c##
+        return (NULL);##  9 ##src/lib/my_addrs.c##
+
+    if ((hptr = gethostbyname(myname.nodename)) == NULL)## 10 ##src/lib/my_addrs.c##
+        return (NULL);## 11 ##src/lib/my_addrs.c##
+
+    *addrtype = hptr->h_addrtype;## 12 ##src/lib/my_addrs.c##
+    return (hptr->h_addr_list);## 13 ##src/lib/my_addrs.c##
+}## 14 ##src/lib/my_addrs.c##
+/* end my_addrs */
+
+char  **## 15 ##src/lib/my_addrs.c##
+My_addrs(int *pfamily)## 16 ##src/lib/my_addrs.c##
+{## 17 ##src/lib/my_addrs.c##
+    char  **pptr;## 18 ##src/lib/my_addrs.c##
+
+    if ((pptr = my_addrs(pfamily)) == NULL)## 19 ##src/lib/my_addrs.c##
+        err_sys("my_addrs error");## 20 ##src/lib/my_addrs.c##
+    return (pptr);## 21 ##src/lib/my_addrs.c##
+}## 22 ##src/lib/my_addrs.c##

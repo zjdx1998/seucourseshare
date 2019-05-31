@@ -1,0 +1,46 @@
+#include    "unp.h"##  1 ##src/bcast/dgclibcast1.c##
+
+static void recvfrom_alarm(int);##  2 ##src/bcast/dgclibcast1.c##
+
+void##  3 ##src/bcast/dgclibcast1.c##
+dg_cli(FILE *fp, int sockfd, const SA *pservaddr, socklen_t servlen)##  4 ##src/bcast/dgclibcast1.c##
+{##  5 ##src/bcast/dgclibcast1.c##
+    int     n;##  6 ##src/bcast/dgclibcast1.c##
+    const int on = 1;##  7 ##src/bcast/dgclibcast1.c##
+    char    sendline[MAXLINE], recvline[MAXLINE + 1];##  8 ##src/bcast/dgclibcast1.c##
+    socklen_t len;##  9 ##src/bcast/dgclibcast1.c##
+    struct sockaddr *preply_addr;## 10 ##src/bcast/dgclibcast1.c##
+
+    preply_addr = Malloc(servlen);## 11 ##src/bcast/dgclibcast1.c##
+
+    Setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on));## 12 ##src/bcast/dgclibcast1.c##
+
+    Signal(SIGALRM, recvfrom_alarm);## 13 ##src/bcast/dgclibcast1.c##
+
+    while (Fgets(sendline, MAXLINE, fp) != NULL) {## 14 ##src/bcast/dgclibcast1.c##
+
+        Sendto(sockfd, sendline, strlen(sendline), 0, pservaddr, servlen);## 15 ##src/bcast/dgclibcast1.c##
+
+        alarm(5);## 16 ##src/bcast/dgclibcast1.c##
+        for (;;) {## 17 ##src/bcast/dgclibcast1.c##
+            len = servlen;## 18 ##src/bcast/dgclibcast1.c##
+            n = recvfrom(sockfd, recvline, MAXLINE, 0, preply_addr, &len);## 19 ##src/bcast/dgclibcast1.c##
+            if (n < 0) {## 20 ##src/bcast/dgclibcast1.c##
+                if (errno == EINTR)## 21 ##src/bcast/dgclibcast1.c##
+                    break;      /* waited long enough for replies */## 22 ##src/bcast/dgclibcast1.c##
+                else## 23 ##src/bcast/dgclibcast1.c##
+                    err_sys("recvfrom error");## 24 ##src/bcast/dgclibcast1.c##
+            } else {## 25 ##src/bcast/dgclibcast1.c##
+                recvline[n] = 0;    /* null terminate */## 26 ##src/bcast/dgclibcast1.c##
+                printf("from %s: %s",## 27 ##src/bcast/dgclibcast1.c##
+                       Sock_ntop_host(preply_addr, len), recvline);## 28 ##src/bcast/dgclibcast1.c##
+            }## 29 ##src/bcast/dgclibcast1.c##
+        }## 30 ##src/bcast/dgclibcast1.c##
+    }## 31 ##src/bcast/dgclibcast1.c##
+}## 32 ##src/bcast/dgclibcast1.c##
+
+static void## 33 ##src/bcast/dgclibcast1.c##
+recvfrom_alarm(int signo)## 34 ##src/bcast/dgclibcast1.c##
+{## 35 ##src/bcast/dgclibcast1.c##
+    return;                     /* just interrupt the recvfrom() */## 36 ##src/bcast/dgclibcast1.c##
+}## 37 ##src/bcast/dgclibcast1.c##

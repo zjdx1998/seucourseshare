@@ -1,0 +1,28 @@
+kohala % ./prifinfo 4 1
+trying len = 64
+ioctl error
+trying len = 96
+ioctl error
+trying len = 128
+ioctl error
+trying len = 160
+ioctl error
+trying len = 192
+returned len = 160
+trying len = 224
+returned len = 160
+success, len = 160
+lo0: <UP MCAST LOOP >
+  IP addr: 127.0.0.1
+le0: <UP BCAST MCAST >
+  IP addr: 206.62.226.33
+  broadcast addr: 206.62.226.63
+le0:1: <UP BCAST MCAST >
+  IP addr: 140.252.13.47
+  broadcast addr: 140.252.13.63
+le0:2: <UP BCAST MCAST >
+  IP addr: 140.252.13.48
+  broadcast addr: 140.252.13.63
+le0:3: <UP BCAST MCAST >
+  IP addr: 140.252.13.49
+  broadcast addr: 140.252.13.63

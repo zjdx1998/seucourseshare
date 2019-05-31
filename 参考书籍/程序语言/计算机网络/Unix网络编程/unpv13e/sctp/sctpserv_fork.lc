@@ -1,0 +1,59 @@
+#include    "unp.h"##  1 ##src/sctp/sctpserv_fork.c##
+
+int##  2 ##src/sctp/sctpserv_fork.c##
+main(int argc, char **argv)##  3 ##src/sctp/sctpserv_fork.c##
+{##  4 ##src/sctp/sctpserv_fork.c##
+    int     sock_fd, msg_flags, connfd, childpid;##  5 ##src/sctp/sctpserv_fork.c##
+    sctp_assoc_t assoc;##  6 ##src/sctp/sctpserv_fork.c##
+    char    readbuf[BUFFSIZE];##  7 ##src/sctp/sctpserv_fork.c##
+    struct sockaddr_in servaddr, cliaddr;##  8 ##src/sctp/sctpserv_fork.c##
+    struct sctp_sndrcvinfo sri;##  9 ##src/sctp/sctpserv_fork.c##
+    struct sctp_event_subscribe evnts;## 10 ##src/sctp/sctpserv_fork.c##
+    socklen_t len;## 11 ##src/sctp/sctpserv_fork.c##
+    size_t  rd_sz;## 12 ##src/sctp/sctpserv_fork.c##
+
+    sock_fd = Socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);## 13 ##src/sctp/sctpserv_fork.c##
+    bzero(&servaddr, sizeof(servaddr));## 14 ##src/sctp/sctpserv_fork.c##
+    servaddr.sin_family = AF_INET;## 15 ##src/sctp/sctpserv_fork.c##
+#ifdef HAVE_SOCKADDR_SA_LEN## 16 ##src/sctp/sctpserv_fork.c##
+    servaddr.sin_len = sizeof(servaddr);## 17 ##src/sctp/sctpserv_fork.c##
+#endif## 18 ##src/sctp/sctpserv_fork.c##
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);## 19 ##src/sctp/sctpserv_fork.c##
+    servaddr.sin_port = htons(SERV_PORT);## 20 ##src/sctp/sctpserv_fork.c##
+
+    Bind(sock_fd, (SA *) &servaddr, sizeof(servaddr));## 21 ##src/sctp/sctpserv_fork.c##
+
+    bzero(&evnts, sizeof(evnts));## 22 ##src/sctp/sctpserv_fork.c##
+    evnts.sctp_data_io_event = 1;## 23 ##src/sctp/sctpserv_fork.c##
+    Setsockopt(sock_fd, IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts));## 24 ##src/sctp/sctpserv_fork.c##
+
+    Listen(sock_fd, LISTENQ);## 25 ##src/sctp/sctpserv_fork.c##
+    /* include mod_servfork */## 26 ##src/sctp/sctpserv_fork.c##
+    for (;;) {## 27 ##src/sctp/sctpserv_fork.c##
+        len = sizeof(struct sockaddr_in);## 28 ##src/sctp/sctpserv_fork.c##
+        rd_sz = Sctp_recvmsg(sock_fd, readbuf, sizeof(readbuf),## 29 ##src/sctp/sctpserv_fork.c##
+                             (SA *) &cliaddr, &len, &sri, &msg_flags);## 30 ##src/sctp/sctpserv_fork.c##
+        Sctp_sendmsg(sock_fd, readbuf, rd_sz,## 31 ##src/sctp/sctpserv_fork.c##
+                     (SA *) &cliaddr, len,## 32 ##src/sctp/sctpserv_fork.c##
+                     sri.sinfo_ppid,## 33 ##src/sctp/sctpserv_fork.c##
+                     sri.sinfo_flags, sri.sinfo_stream, 0, 0);## 34 ##src/sctp/sctpserv_fork.c##
+        assoc = sctp_address_to_associd(sock_fd, (SA *) &cliaddr, len);## 35 ##src/sctp/sctpserv_fork.c##
+        if ((int) assoc == 0) {## 36 ##src/sctp/sctpserv_fork.c##
+            err_ret("Can't get association id");## 37 ##src/sctp/sctpserv_fork.c##
+            continue;## 38 ##src/sctp/sctpserv_fork.c##
+        }## 39 ##src/sctp/sctpserv_fork.c##
+        connfd = sctp_peeloff(sock_fd, assoc);## 40 ##src/sctp/sctpserv_fork.c##
+        if (connfd == -1) {## 41 ##src/sctp/sctpserv_fork.c##
+            err_ret("sctp_peeloff fails");## 42 ##src/sctp/sctpserv_fork.c##
+            continue;## 43 ##src/sctp/sctpserv_fork.c##
+        }## 44 ##src/sctp/sctpserv_fork.c##
+        if ((childpid = fork()) == 0) {## 45 ##src/sctp/sctpserv_fork.c##
+            Close(sock_fd);## 46 ##src/sctp/sctpserv_fork.c##
+            str_echo(connfd);## 47 ##src/sctp/sctpserv_fork.c##
+            exit(0);## 48 ##src/sctp/sctpserv_fork.c##
+        } else {## 49 ##src/sctp/sctpserv_fork.c##
+            Close(connfd);## 50 ##src/sctp/sctpserv_fork.c##
+        }## 51 ##src/sctp/sctpserv_fork.c##
+    }## 52 ##src/sctp/sctpserv_fork.c##
+    /* end mod_servfork */## 53 ##src/sctp/sctpserv_fork.c##
+}## 54 ##src/sctp/sctpserv_fork.c##

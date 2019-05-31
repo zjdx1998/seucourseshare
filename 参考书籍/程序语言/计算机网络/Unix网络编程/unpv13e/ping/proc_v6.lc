@@ -1,0 +1,42 @@
+#include    "ping.h"##  1 ##src/ping/proc_v6.c##
+
+void##  2 ##src/ping/proc_v6.c##
+proc_v6(char *ptr, ssize_t len, struct timeval *tvrecv)##  3 ##src/ping/proc_v6.c##
+{##  4 ##src/ping/proc_v6.c##
+#ifdef  IPV6##  5 ##src/ping/proc_v6.c##
+    int     hlen1, icmp6len;##  6 ##src/ping/proc_v6.c##
+    double  rtt;##  7 ##src/ping/proc_v6.c##
+    struct ip6_hdr *ip6;##  8 ##src/ping/proc_v6.c##
+    struct icmp6_hdr *icmp6;##  9 ##src/ping/proc_v6.c##
+    struct timeval *tvsend;## 10 ##src/ping/proc_v6.c##
+
+    ip6 = (struct ip6_hdr *) ptr;   /* start of IPv6 header */## 11 ##src/ping/proc_v6.c##
+    hlen1 = sizeof(struct ip6_hdr);## 12 ##src/ping/proc_v6.c##
+    if (ip6->ip6_nxt != IPPROTO_ICMPV6)## 13 ##src/ping/proc_v6.c##
+        err_quit("next header not IPPROTO_ICMPV6");## 14 ##src/ping/proc_v6.c##
+
+    icmp6 = (struct icmp6_hdr *) (ptr + hlen1);## 15 ##src/ping/proc_v6.c##
+    if ((icmp6len = len - hlen1) < 8)## 16 ##src/ping/proc_v6.c##
+        err_quit("icmp6len (%d) < 8", icmp6len);## 17 ##src/ping/proc_v6.c##
+
+    if (icmp6->icmp6_type == ICMP6_ECHO_REPLY) {## 18 ##src/ping/proc_v6.c##
+        if (icmp6->icmp6_id != pid)## 19 ##src/ping/proc_v6.c##
+            return;             /* not a response to our ECHO_REQUEST */## 20 ##src/ping/proc_v6.c##
+        if (icmp6len < 16)## 21 ##src/ping/proc_v6.c##
+            err_quit("icmp6len (%d) < 16", icmp6len);## 22 ##src/ping/proc_v6.c##
+
+        tvsend = (struct timeval *) (icmp6 + 1);## 23 ##src/ping/proc_v6.c##
+        tv_sub(tvrecv, tvsend);## 24 ##src/ping/proc_v6.c##
+        rtt = tvrecv->tv_sec * 1000.0 + tvrecv->tv_usec / 1000.0;## 25 ##src/ping/proc_v6.c##
+
+        printf("%d bytes from %s: seq=%u, hlim=%d, rtt=%.3f ms\n",## 26 ##src/ping/proc_v6.c##
+               icmp6len, Sock_ntop_host(pr->sarecv, pr->salen),## 27 ##src/ping/proc_v6.c##
+               icmp6->icmp6_seq, ip6->ip6_hlim, rtt);## 28 ##src/ping/proc_v6.c##
+
+    } else if (verbose) {## 29 ##src/ping/proc_v6.c##
+        printf("  %d bytes from %s: type = %d, code = %d\n",## 30 ##src/ping/proc_v6.c##
+               icmp6len, Sock_ntop_host(pr->sarecv, pr->salen),## 31 ##src/ping/proc_v6.c##
+               icmp6->icmp6_type, icmp6->icmp6_code);## 32 ##src/ping/proc_v6.c##
+    }## 33 ##src/ping/proc_v6.c##
+#endif  /* IPV6 */## 34 ##src/ping/proc_v6.c##
+}## 35 ##src/ping/proc_v6.c##

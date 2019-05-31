@@ -1,0 +1,41 @@
+#include    "unp.h"##  1 ##src/unixdomain/unixstrserv01.c##
+
+int##  2 ##src/unixdomain/unixstrserv01.c##
+main(int argc, char **argv)##  3 ##src/unixdomain/unixstrserv01.c##
+{##  4 ##src/unixdomain/unixstrserv01.c##
+    int     listenfd, connfd;##  5 ##src/unixdomain/unixstrserv01.c##
+    pid_t   childpid;##  6 ##src/unixdomain/unixstrserv01.c##
+    socklen_t clilen;##  7 ##src/unixdomain/unixstrserv01.c##
+    struct sockaddr_un cliaddr, servaddr;##  8 ##src/unixdomain/unixstrserv01.c##
+    void    sig_chld(int);##  9 ##src/unixdomain/unixstrserv01.c##
+
+    listenfd = Socket(AF_LOCAL, SOCK_STREAM, 0);## 10 ##src/unixdomain/unixstrserv01.c##
+
+    unlink(UNIXSTR_PATH);## 11 ##src/unixdomain/unixstrserv01.c##
+    bzero(&servaddr, sizeof(servaddr));## 12 ##src/unixdomain/unixstrserv01.c##
+    servaddr.sun_family = AF_LOCAL;## 13 ##src/unixdomain/unixstrserv01.c##
+    strcpy(servaddr.sun_path, UNIXSTR_PATH);## 14 ##src/unixdomain/unixstrserv01.c##
+
+    Bind(listenfd, (SA *) &servaddr, sizeof(servaddr));## 15 ##src/unixdomain/unixstrserv01.c##
+
+    Listen(listenfd, LISTENQ);## 16 ##src/unixdomain/unixstrserv01.c##
+
+    Signal(SIGCHLD, sig_chld);## 17 ##src/unixdomain/unixstrserv01.c##
+
+    for (;;) {## 18 ##src/unixdomain/unixstrserv01.c##
+        clilen = sizeof(cliaddr);## 19 ##src/unixdomain/unixstrserv01.c##
+        if ((connfd = accept(listenfd, (SA *) &cliaddr, &clilen)) < 0) {## 20 ##src/unixdomain/unixstrserv01.c##
+            if (errno == EINTR)## 21 ##src/unixdomain/unixstrserv01.c##
+                continue;       /* back to for() */## 22 ##src/unixdomain/unixstrserv01.c##
+            else## 23 ##src/unixdomain/unixstrserv01.c##
+                err_sys("accept error");## 24 ##src/unixdomain/unixstrserv01.c##
+        }## 25 ##src/unixdomain/unixstrserv01.c##
+
+        if ((childpid = Fork()) == 0) { /* child process */## 26 ##src/unixdomain/unixstrserv01.c##
+            Close(listenfd);    /* close listening socket */## 27 ##src/unixdomain/unixstrserv01.c##
+            str_echo(connfd);   /* process the request */## 28 ##src/unixdomain/unixstrserv01.c##
+            exit(0);## 29 ##src/unixdomain/unixstrserv01.c##
+        }## 30 ##src/unixdomain/unixstrserv01.c##
+        Close(connfd);          /* parent closes connected socket */## 31 ##src/unixdomain/unixstrserv01.c##
+    }## 32 ##src/unixdomain/unixstrserv01.c##
+}## 33 ##src/unixdomain/unixstrserv01.c##

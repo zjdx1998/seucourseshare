@@ -1,0 +1,30 @@
+#ifndef __unp_rtt_h##  1 ##src/lib/unprtt.h##
+#define __unp_rtt_h##  2 ##src/lib/unprtt.h##
+
+#include    "unp.h"##  3 ##src/lib/unprtt.h##
+
+struct rtt_info {##  4 ##src/lib/unprtt.h##
+    float   rtt_rtt;            /* most recent measured RTT, seconds */##  5 ##src/lib/unprtt.h##
+    float   rtt_srtt;           /* smoothed RTT estimator, seconds */##  6 ##src/lib/unprtt.h##
+    float   rtt_rttvar;         /* smoothed mean deviation, seconds */##  7 ##src/lib/unprtt.h##
+    float   rtt_rto;            /* current RTO to use, seconds */##  8 ##src/lib/unprtt.h##
+    int     rtt_nrexmt;         /* #times retransmitted: 0, 1, 2, ... */##  9 ##src/lib/unprtt.h##
+    uint32_t rtt_base;          /* #sec since 1/1/1970 at start */## 10 ##src/lib/unprtt.h##
+};## 11 ##src/lib/unprtt.h##
+
+#define RTT_RXTMIN      2       /* min retransmit timeout value, seconds */## 12 ##src/lib/unprtt.h##
+#define RTT_RXTMAX     60       /* max retransmit timeout value, seconds */## 13 ##src/lib/unprtt.h##
+#define RTT_MAXNREXMT   3       /* max #times to retransmit */## 14 ##src/lib/unprtt.h##
+
+                /* function prototypes */## 15 ##src/lib/unprtt.h##
+void    rtt_debug(struct rtt_info *);## 16 ##src/lib/unprtt.h##
+void    rtt_init(struct rtt_info *);## 17 ##src/lib/unprtt.h##
+void    rtt_newpack(struct rtt_info *);## 18 ##src/lib/unprtt.h##
+int     rtt_start(struct rtt_info *);## 19 ##src/lib/unprtt.h##
+void    rtt_stop(struct rtt_info *, uint32_t);## 20 ##src/lib/unprtt.h##
+int     rtt_timeout(struct rtt_info *);## 21 ##src/lib/unprtt.h##
+uint32_t rtt_ts(struct rtt_info *);## 22 ##src/lib/unprtt.h##
+
+extern int rtt_d_flag;          /* can be set nonzero for addl info */## 23 ##src/lib/unprtt.h##
+
+#endif  /* __unp_rtt_h */## 24 ##src/lib/unprtt.h##
