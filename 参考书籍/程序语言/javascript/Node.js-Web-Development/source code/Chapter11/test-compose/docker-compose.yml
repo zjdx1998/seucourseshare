@@ -1,0 +1,97 @@
+version: '3'
+services:  
+
+  db-userauth-test:
+    build: ../authnet
+    container_name: db-userauth-test
+    networks:
+      - authnet-test
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_USER: userauth-test
+      MYSQL_PASSWORD: userauth-test
+      MYSQL_DATABASE: userauth-test
+    volumes:
+      - db-userauth-test-data:/var/lib/mysql
+    restart: always
+
+  userauth-test:
+    build: ../users
+    container_name: userauth-test
+    depends_on:
+      - db-userauth-test
+    networks:
+      - authnet-test
+      - frontnet-test
+    environment:
+      DEBUG: "users:*"
+      NODE_ENV: "test"
+      SEQUELIZE_CONNECT: "sequelize-docker-test-mysql.yaml"
+      URL_USERS_TEST: "http://localhost:3333"
+    restart: always
+    volumes:
+      - ./reports-userauth:/reports
+      - ./userauth/sequelize-docker-test-mysql.yaml:/userauth/sequelize-docker-test-mysql.yaml
+      - ./userauth/test.js:/userauth/test.js
+
+  db-notes-test:
+    build: ../frontnet
+    container_name: db-notes-test
+    networks:
+      - frontnet-test
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_USER: notes-test
+      MYSQL_PASSWORD: notes12345
+      MYSQL_DATABASE: notes-test
+    volumes:
+      - db-notes-test-data:/var/lib/mysql
+    restart: always
+
+  # db-notes-mongo-test:
+  #   image: mongo:3.6-jessie
+  #   container_name: db-notes-mongo-test
+  #   networks:
+  #     - frontnet-test
+  #   volumes:
+  #     - ./db-notes-mongo:/data/db
+
+  notes-test:
+    build: ../notes
+    container_name: notes-test
+    depends_on:
+      - db-notes-test
+    networks:
+      - frontnet-test
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      NODE_ENV: "test"
+      SEQUELIZE_CONNECT: "test/sequelize-mysql.yaml"
+      USER_SERVICE_URL: "http://userauth-test:3333"
+    volumes:
+      - ./reports-notes:/reports
+      - ../notes/test:/notesapp/test
+  
+  # puppeteer-test:
+  #   build: ./notesui
+  #   container_name: puppeteer-test
+  #   depends_on:
+  #     - notes-test
+  #   volumes:
+  #     - ./notesui:/notesui
+  #   networks:
+  #     - frontnet-test
+  #   environment:
+  #     NOTES_HOME_URL: "http://notes-test:3000"
+
+networks:
+  frontnet-test:
+    driver: bridge
+  authnet-test:
+    driver: bridge
+
+volumes: 
+  db-userauth-test-data: 
+  db-notes-test-data: 

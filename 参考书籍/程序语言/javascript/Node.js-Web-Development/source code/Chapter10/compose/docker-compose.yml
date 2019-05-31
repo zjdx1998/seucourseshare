@@ -1,0 +1,53 @@
+
+version: '3'
+services:
+
+  db-userauth:
+    build: ../authnet
+    container_name: db-userauth
+    networks:
+      - authnet
+    volumes:
+      - db-userauth-data:/var/lib/mysql
+    restart: always
+
+  userauth:
+    build: ../users
+    container_name: userauth
+    depends_on:
+      - db-userauth
+    networks:
+      - authnet
+      - frontnet
+    restart: always
+
+  db-notes:
+    build: ../frontnet
+    container_name: db-notes
+    networks:
+      - frontnet
+    volumes:
+      - db-notes-data:/var/lib/mysql
+    restart: always
+
+  notes:
+    build: ../notes
+    container_name: notes
+    depends_on:
+      - db-notes
+    networks:
+      - frontnet
+    ports:
+      - "3000:3000"
+    restart: always
+  
+
+networks:
+  frontnet:
+    driver: bridge
+  authnet:
+    driver: bridge
+
+volumes: 
+  db-userauth-data: 
+  db-notes-data: 

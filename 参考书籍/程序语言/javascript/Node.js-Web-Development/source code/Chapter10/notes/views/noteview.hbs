@@ -1,0 +1,185 @@
+<div class="container-fluid">
+    <div class="row"><div class="col-xs-12">
+        {{#if note}}<h3 id="notetitle">{{ note.title }}</h3>{{/if}}
+        {{#if note}}<div id="notebody">{{ note.body }}</div>{{/if}}
+        <p>Key: {{ notekey }}</p>
+    </div></div>
+    {{#if user }}
+    {{#if notekey }}
+        <div class="row"><div class="col-xs-12">
+        <div class="btn-group">
+            <a class="btn btn-outline-dark" 
+                href="/notes/destroy?key={{notekey}}" 
+                role="button">
+                Delete
+            </a>
+            <a class="btn btn-outline-dark" 
+                href="/notes/edit?key={{notekey}}" 
+                role="button">
+                Edit
+            </a>
+            <button type="button" class="btn btn-outline-dark" 
+                data-toggle="modal" 
+                data-target="#notes-comment-modal">Comment</button> 
+        </div>
+        </div></div>
+
+        <div id="noteMessages"></div> 
+    {{/if}}
+    {{/if}}
+</div>
+
+{{> footerjs}}
+
+{{#if notekey}}
+{{#if user}}
+<div class="modal fade" id="notes-comment-modal" tabindex="-1" 
+        role="dialog" aria-labelledby="noteCommentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+            <span aria-hidden="true">&times;</span> 
+          </button> 
+          <h4 class="modal-title" id="noteCommentModalLabel">Leave a Comment</h4> 
+      </div>
+      <div class="modal-body">
+            <form id="submit-comment" class="well" 
+                    data-async data-target="#rating-modal" 
+                    action="/notes/make-comment" method="POST"> 
+            <input type="hidden" name="from"  
+                    value="{{ user.id }}"> 
+            <input type="hidden" name="namespace" 
+                    value="/view-{{notekey}}"> 
+            <input type="hidden" name="key"  
+                    value="{{notekey}}"> 
+            <fieldset> 
+            <div class="form-group"> 
+                <label for="noteCommentTextArea"> 
+                    Your Excellent Thoughts, Please</label> 
+                <textarea id="noteCommentTextArea" name="message" 
+                        class="form-control" rows="3"></textarea> 
+            </div> 
+                    
+            <div class="form-group"> 
+                <div class="col-sm-offset-2 col-sm-10"> 
+                    <button id="submitNewComment" type="submit" class="btn btn-default">
+                        Make Comment</button> 
+                </div> 
+            </div> 
+            </fieldset> 
+            </form> 
+      </div>
+    </div>
+  </div>
+</div>
+{{/if}} 
+{{/if}} 
+
+{{#if notekey}}
+<script src="/socket.io/socket.io.js"></script> 
+<script> 
+$(document).ready(function () { 
+    io('/view').on('noteupdate', function(note) { 
+        if (note.key === "{{ notekey }}") { 
+            $('h3#notetitle').empty(); 
+            $('h3#notetitle').text(note.title); 
+            $('#notebody').empty(); 
+            $('#notebody').text(note.body); 
+        } 
+    }); 
+    io('/view').on('notedestroy', function(data) { 
+        if (data.key === "{{ notekey }}") { 
+            window.location.href = "/"; 
+        } 
+    });
+});
+</script>
+{{/if}}
+{{#if notekey}}
+{{#if user}}
+<script> 
+$(document).ready(function () { 
+    console.log('EMIT getnotemessages');
+    io('/view').emit('getnotemessages', '/view-{{notekey}}', function(msgs) {
+        console.log("RECEIVE getnotemessages reply "+ JSON.stringify(msgs));
+        $('#noteMessages').empty();
+        if (msgs.length > 0) {
+            msgs.forEach(function(newmsg) {
+                $('#noteMessages').append(formatMessage(newmsg));
+            });
+            $('#noteMessages').show();
+            connectMsgDelButton();
+        } else $('#noteMessages').hide();
+    });
+    var connectMsgDelButton = function() {
+        $('.message-del-button').on('click', function(event) {
+            $.post('/notes/del-message', {
+                id: $(this).data("id"),
+                namespace: $(this).data("namespace")
+            },
+            function(response) { });
+            event.preventDefault();
+        });
+    };
+    var formatMessage = function(newmsg) {
+        return '<div id="note-message-'+ newmsg.id +'" class="card">'
+            +'<div class="card-body">'
+            +'<h5 class="card-title">'+ newmsg.from +'</h5>'
+            +'<div class="card-text">'+ newmsg.message
+            +' <small style="display: block">'+ newmsg.timestamp +'</small></div>'
+            +' <button type="button" class="btn btn-primary message-del-button" data-id="'
+            + newmsg.id +'" data-namespace="'+ newmsg.namespace +'">'
+            +'Delete</button>'
+            +'</div>'
+            +'</div>';
+    };
+    io('/view').on('newmessage', function(newmsg) {
+        console.log('/view-{{notekey}} received newmessage '+ JSON.stringify(newmsg));
+        if (newmsg.namespace === '/view-{{notekey}}') {
+            $('#noteMessages').prepend(formatMessage(newmsg));
+            connectMsgDelButton();
+        }
+    });
+    io('/view').on('destroymessage', function(data) {
+        console.log('/view-{{notekey}} received destroymessage '+ JSON.stringify(data));
+        if (data.namespace === '/view-{{notekey}}') {
+            $('#noteMessages #note-message-'+ data.id).remove();
+        }
+    });
+
+    $('form#submit-comment').submit(function(event) {
+        
+        // Abort any pending request
+        if (request) {
+            request.abort();
+        }
+        
+        var $form = $('form#submit-comment');
+        var $target = $($form.attr('data-target'));
+
+        var request = $.ajax({
+            type: $form.attr('method'),
+            url:  $form.attr('action'),
+            data: $form.serialize()
+        });
+        
+        request.done(function (response, textStatus, jqXHR) { });
+        
+        request.fail(function (jqXHR, textStatus, errorThrown) {
+            alert("ERROR "+ jqXHR.responseText);
+        });
+        
+        request.always(function () {
+            // Reenable the inputs
+            // $inputs.prop("disabled", false);
+            $('#notes-comment-modal').modal('hide');
+        });
+        
+        event.preventDefault();
+    });
+    
+}); 
+</script> 
+{{/if}}
+{{/if}} 

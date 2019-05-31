@@ -1,0 +1,8 @@
+dbname: notes-test 
+username:  notes-test
+password: notes12345
+params: 
+    host: db-notes-test
+    port: 3306 
+    dialect: mysql 
+    logging: false 

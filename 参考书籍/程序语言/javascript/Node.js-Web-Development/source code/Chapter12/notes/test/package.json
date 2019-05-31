@@ -1,0 +1,22 @@
+{
+  "name": "notes-test",
+  "version": "1.0.0",
+  "scripts": {
+    "test-notes-memory": "NOTES_MODEL=memory mocha test-model",
+    "test-notes-levelup": "NOTES_MODEL=levelup mocha test-model",
+    "test-notes-fs": "NOTES_MODEL=fs mocha test-model",
+    "test-notes-sqlite3": "rm -f chap11.sqlite3 && sqlite3 chap11.sqlite3 --init ../models/chap07.sql </dev/null && NOTES_MODEL=sqlite3 SQLITE_FILE=chap11.sqlite3 mocha test-model",
+    "test-notes-sequelize-sqlite": "NOTES_MODEL=sequelize SEQUELIZE_CONNECT=sequelize-sqlite.yaml mocha test-model",
+    "test-notes-sequelize-mysql": "NOTES_MODEL=sequelize SEQUELIZE_CONNECT=sequelize-mysql.yaml mocha test-model",
+    "test-notes-mongodb": "MONGO_URL=mongodb://db-notes-mongo-test/ MONGO_DBNAME=chap11-test NOTES_MODEL=mongodb mocha --no-timeouts test-model"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0",
+    "@std/esm": "*"
+  },
+  "dependencies": {
+    "fs-extra": "^5.0.0",
+    "puppeteer": "*"
+  }
+}

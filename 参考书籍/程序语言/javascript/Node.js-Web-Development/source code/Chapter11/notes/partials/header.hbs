@@ -1,0 +1,46 @@
+<header class="page-header">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a id="btnGoHome" class="navbar-brand" href='/'>
+        <i data-feather="home"></i>
+    </a>
+    <!-- 
+        navbar-toggler buttons start out hidden with display:none
+        For a small screen they become visible, containing a hamburger icon,
+        and the .navbar-collapse is set to display:none.  
+
+        The effect is to instantiate a popup menu matching the
+        buttons in the navbar.
+
+        A navbar-toggler immediately to the right of
+        a navbar-brand gets pushed to the far right, otherwise
+        it pushes to the far left
+    -->
+    <button class="navbar-toggler" type="button"
+        data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    {{#if user}}
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <span class="navbar-text text-dark col">{{ title }}</span>
+            <a class="nav-item nav-link btn btn-dark col-auto"
+                id="btnLogout" href="/users/logout">
+            Log Out <span class="badge badge-light">{{ user.username }}</span></a>
+            <a class="nav-item nav-link btn btn-dark col-auto" 
+                id="btnAddNote" href='/notes/add'>ADD Note</a>
+        </div>
+    {{else}}
+        <div class="collapse navbar-collapse" id="navbarLogIn">
+            <span class="navbar-text text-dark col"></span>
+            <a class="nav-item nav-link btn btn-dark col-auto"
+                id="btnloginlocal" href="/users/login">Log in</a>
+            <a class="nav-item nav-link btn btn-dark col-auto" 
+                id="btnLoginTwitter" href="/users/auth/twitter">
+                <img width="15px" src="/assets/vendor/twitter/Twitter_Social_Icon_Rounded_Square_Color.png"/>
+                Log in with Twitter</a>
+        </div>
+    {{/if}}
+</nav>
+</header>

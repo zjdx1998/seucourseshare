@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "download": "wget -O - https://github.com/twbs/bootstrap/archive/v4.0.0.tar.gz | tar xvfz -",
+        "postdownload": "cd bootstrap-4.0.0 && npm install",
+        "prebuild": "cp _custom.scss bootstrap.scss bootstrap-4.0.0/scss",
+        "build": "cd bootstrap-4.0.0 && npm run dist",
+        "watch": "cd bootstrap-4.0.0 && npm run watch"
+    }
+}

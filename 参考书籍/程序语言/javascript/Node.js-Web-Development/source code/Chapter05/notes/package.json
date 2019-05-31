@@ -1,0 +1,19 @@
+{
+  "name": "notes",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "DEBUG=notes:* node ./bin/www", 
+    "server1": "DEBUG=notes:* PORT=3001 node ./bin/www", 
+    "server2": "DEBUG=notes:* PORT=3002 node ./bin/www" 
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "hbs": "~4.0.1",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5"
+  }
+}

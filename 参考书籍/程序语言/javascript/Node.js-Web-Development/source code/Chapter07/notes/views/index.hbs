@@ -1,0 +1,12 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 btn-group-vertical" role="group">
+      {{#each notelist}}
+      <a class="btn btn-lg btn-block btn-outline-dark" 
+          href="/notes/view?key={{ key }}">
+        {{ title }}
+      </a>
+      {{/each}}
+    </div>
+  </div>
+</div>

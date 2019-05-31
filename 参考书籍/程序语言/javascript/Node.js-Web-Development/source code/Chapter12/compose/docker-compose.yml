@@ -1,0 +1,74 @@
+
+version: '3'
+services:
+
+  db-userauth:
+    build: ../authnet
+    container_name: db-userauth
+    networks:
+      - authnet
+    volumes:
+      - db-userauth-data:/var/lib/mysql
+    restart: always
+
+  userauth:
+    build: ../users
+    container_name: userauth
+    depends_on:
+      - db-userauth
+    networks:
+      - authnet
+      - frontnet
+    restart: always
+    #environment:
+    #  - NODE_ENV="production" 
+
+  db-notes:
+    build: ../frontnet
+    container_name: db-notes
+    networks:
+      - frontnet
+    volumes:
+      - db-notes-data:/var/lib/mysql
+    restart: always
+
+  notes:
+    build: ../notes
+    container_name: notes
+    depends_on:
+      - db-notes
+    networks:
+      - frontnet
+    ports:
+      - "80:3000"
+      - "443:3443"
+    restart: always
+    environment:
+      - NOTES_USE_HTTPS=true
+      - NOTES_CERTS_DIR=/etc/letsencrypt/archive/evsoul.com
+    #   - NODE_ENV="production" 
+    volumes:
+      - certbot-webroot-evsoul:/notesapp/public/.well-known
+      - certbot-letsencrypt:/etc/letsencrypt
+  
+  certbot:
+    build: ../certbot
+    container_name: certbot
+    networks:
+      - frontnet
+    restart: always
+    volumes:
+      - certbot-webroot-evsoul:/webroots/evsoul.com/.well-known
+      - certbot-letsencrypt:/etc/letsencrypt
+
+networks:
+  frontnet:
+    driver: bridge
+  authnet:
+    driver: bridge
+
+volumes: 
+  db-userauth-data: 
+  db-notes-data: 
+  certbot-webroot-evsoul:
+  certbot-letsencrypt:

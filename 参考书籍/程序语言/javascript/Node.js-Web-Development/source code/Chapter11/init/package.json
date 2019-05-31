@@ -1,0 +1,15 @@
+{
+  "name": "pm2deploy",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "pm2 start ecosystem.json",
+    "stop": "pm2 stop ecosystem.json",
+    "restart": "pm2 restart ecosystem.json",
+    "status": "pm2 status",
+    "save": "pm2 save",
+    "startup": "pm2 startup"
+  },
+  "dependencies": {
+    "pm2": "^2.9.3"
+  }
+}

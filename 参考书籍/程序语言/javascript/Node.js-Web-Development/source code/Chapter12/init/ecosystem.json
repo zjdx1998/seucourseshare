@@ -1,0 +1,33 @@
+{
+  "apps" : [
+    {
+      "name": "User Authentication",
+      "script": "user-server.mjs",
+      "cwd": "/opt/users",
+      "node_args": "--experimental-modules",
+      "env": {
+        "PORT": "3333",
+        "SEQUELIZE_CONNECT": "sequelize-server-mysql.yaml"
+      },
+      "env_production": {
+        "NODE_ENV": "production"
+      }
+    },
+    {
+      "name": "Notes",
+      "script": "app.mjs",
+      "cwd": "/opt/notes",
+      "node_args": "--experimental-modules",
+      "env": {
+        "PORT": "3000",
+        "SEQUELIZE_CONNECT": "models/sequelize-server-mysql.yaml",
+        "NOTES_MODEL": "sequelize",
+        "USER_SERVICE_URL": "http://localhost:3333"
+      },
+      "env_production": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+
+}

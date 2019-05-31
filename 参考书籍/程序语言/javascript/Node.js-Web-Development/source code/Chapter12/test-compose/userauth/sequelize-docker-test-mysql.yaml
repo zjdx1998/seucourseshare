@@ -1,0 +1,7 @@
+dbname: userauth-test
+username: userauth-test
+password: userauth-test
+params:
+    host: db-userauth-test
+    port: 3306
+    dialect: mysql

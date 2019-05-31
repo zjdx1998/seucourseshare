@@ -1,0 +1,26 @@
+{
+  "name": "notes",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "DEBUG=notes:* node ./bin/www", 
+    "server1": "DEBUG=notes:* PORT=3001 node ./bin/www", 
+    "server2": "DEBUG=notes:* PORT=3002 node ./bin/www",
+    "dl-minty": "mkdir -p minty && npm run dl-minty-css && npm run dl-minty-min-css",
+    "dl-minty-css": "wget https://bootswatch.com/4/minty/bootstrap.css -O minty/bootstrap.css",
+    "dl-minty-min-css": "wget https://bootswatch.com/4/minty/bootstrap.min.css -O minty/bootstrap.min.css"
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "hbs": "~4.0.1",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5",
+    "bootstrap": "^4.0.0-beta.3",
+    "jquery": "1.9.1",
+    "popper.js": "^1.12.5",
+    "feather-icons": ">=4.5.x"
+  }
+}
