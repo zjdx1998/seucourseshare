@@ -20,8 +20,7 @@
    ![](https://github.com/zjdx1998/seucourseshare/blob/master/readme.assets/master_readme_downloadFile.png)
 
 ## 贡献方法
-
-* 申请成为某门课贡献者的条件是该门课满绩点或确在该门课有独到的理解且分数不低于90分。 
+ 
 * 每个院系建立自己的branch,通识基础类建议分成'大类通识基础（数学）'branch，下设'高等数学','几何与代数'等文件夹，'大类通识基础（物理）'branch,下设'大学物理','大学物理实验'等文件夹。
 * 每个branch下针对不同课程名建立相应的文件夹, 如'71-软件学院'branch下，有'面向对象程序设计2'文件夹。
 * 请各branch贡献者重写各branch下的readme。
